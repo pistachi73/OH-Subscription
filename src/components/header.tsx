@@ -1,6 +1,9 @@
+import Image from "next/image";
+
 import { AuthButton } from "./auth/auth-button";
 import { UserButton } from "./auth/user-button";
 import { MaxWidthWrapper } from "./max-width-wrapper";
+import logo from "./oh-logo.png";
 import { Button } from "./ui/button";
 
 import { currentUser } from "@/lib/auth";
@@ -12,6 +15,11 @@ export const Header = async () => {
       <MaxWidthWrapper className="flex items-center justify-between py-4">
         <nav>
           <ul className="flex items-center space-x-6">
+            <li>
+              <a href="/">
+                <Image src={logo} alt="logo" width={50} height={50} />
+              </a>
+            </li>
             <li>
               <a href="/">Learning capsules</a>
             </li>
