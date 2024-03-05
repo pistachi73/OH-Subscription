@@ -11,10 +11,10 @@ import { NewPasswordForm } from "@/components/auth/new-password-form";
 import { RegisterForm } from "@/components/auth/register-form";
 
 const checkPoints = [
-  "Add your check points here",
-  "Add your check points here",
-  "Add your check points here",
-  "Add your check points here",
+  "Learn English from the news and from your favourite songs",
+  "Get 1to1 coaching sessions",
+  "Access to tons of interactive content",
+  "Connect with other English students",
 ];
 
 type AuthFormProps = {
@@ -25,29 +25,29 @@ const AuthFormContent = () => {
   const { parentForm } = useAuthContext();
 
   return (
-    <div className="flex h-[100vh] w-full  flex-row overflow-hidden rounded-none border-none bg-white p-0 sm:h-[745px] sm:max-h-[90vh] sm:w-[475px] sm:rounded-md lg:w-[875px]">
-      <div className="relative hidden min-h-full w-full basis-1/2 bg-red-100 bg-[url(/images/auth-left.jpeg)] bg-cover lg:block">
-        <div className="h-full bg-slate-900 bg-opacity-35 p-10">
+    <div className="flex h-[100vh] w-full  flex-row overflow-hidden rounded-none border-none bg-white p-0 sm:h-[800px] sm:max-h-[90vh] sm:w-[475px] sm:rounded-md lg:w-[900px]">
+      <div className="relative hidden min-h-full w-full basis-1/2 bg-red-100 bg-[url(/images/auth-left.jpeg)] bg-cover bg-left lg:block">
+        <div className="h-full bg-slate-900 bg-opacity-80 p-10">
           {parentForm !== "reset-password" && (
             <>
-              <h3 className="py-6 text-3xl font-semibold tracking-tight text-white">
-                The only suscription you need
+              <h3 className="py-6 text-3xl font-semibold leading-tight tracking-tight text-white">
+                The only suscription you need.
               </h3>
-              {/* <ul className="space-y-4 py-4 text-lg text-white">
+              <ul className="space-y-4 py-4 text-white">
                 {checkPoints.map((checkPoint, index) => (
-                  <li key={index} className="flex items-start gap-2 text-xl">
+                  <li key={index} className="flex items-start gap-2 text-lg">
                     <div className="flex h-7 items-center justify-center">
                       <BsCheck2Circle size={20} />{" "}
                     </div>
                     <p>{checkPoint}</p>
                   </li>
                 ))}
-              </ul> */}
+              </ul>
             </>
           )}
         </div>
       </div>
-      <div className="items flex min-h-full flex-col justify-between gap-6 overflow-scroll px-10 py-8 lg:basis-1/2">
+      <div className="items flex min-h-full flex-col justify-between gap-6 overflow-y-auto px-10 py-8 lg:basis-1/2">
         {parentForm === "login" && <LoginForm />}
         {parentForm === "register" && <RegisterForm />}
         {parentForm === "reset-password" && <NewPasswordForm />}
