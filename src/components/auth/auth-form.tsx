@@ -26,7 +26,7 @@ const AuthFormContent = () => {
 
   return (
     <div className="flex h-[100vh] w-full  flex-row overflow-hidden rounded-none border-none bg-white p-0 sm:h-[745px] sm:max-h-[90vh] sm:w-[475px] sm:rounded-md lg:w-[875px]">
-      <div className="relative hidden min-h-full w-full basis-1/2 bg-red-100 bg-[url('https://source.unsplash.com/1600x900/?nature,water')] bg-cover lg:block">
+      <div className="relative hidden min-h-full w-full basis-1/2 bg-red-100 bg-[url(/images/auth-left.jpeg)] bg-cover lg:block">
         <div className="h-full bg-slate-900 bg-opacity-35 p-10">
           {parentForm !== "reset-password" && (
             <>
