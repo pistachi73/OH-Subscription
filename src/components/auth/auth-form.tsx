@@ -31,9 +31,9 @@ const AuthFormContent = () => {
           {parentForm !== "reset-password" && (
             <>
               <h3 className="py-6 text-3xl font-semibold tracking-tight text-white">
-                Add the title you
+                The only suscription you need
               </h3>
-              <ul className="space-y-4 py-4 text-lg text-white">
+              {/* <ul className="space-y-4 py-4 text-lg text-white">
                 {checkPoints.map((checkPoint, index) => (
                   <li key={index} className="flex items-start gap-2 text-xl">
                     <div className="flex h-7 items-center justify-center">
@@ -42,7 +42,7 @@ const AuthFormContent = () => {
                     <p>{checkPoint}</p>
                   </li>
                 ))}
-              </ul>
+              </ul> */}
             </>
           )}
         </div>
