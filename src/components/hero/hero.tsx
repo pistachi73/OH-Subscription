@@ -49,7 +49,7 @@ export const Hero = () => {
           <span>
             <i className="text-[#FF5C00]">really</i>
           </span>{" "}
-          need to boost your English.
+          need to boost your English
         </h1>
         <div className="w-3/4 space-y-4">
           <p className="w-full text-left text-xs text-primary-800 md:text-sm 2xl:w-[400px] 2xl:text-base">
