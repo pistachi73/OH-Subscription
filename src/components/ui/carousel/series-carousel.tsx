@@ -37,7 +37,7 @@ const SeriesCard = ({
   lazy: boolean;
 }) => {
   return (
-    <button className="group/video relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-sm border">
+    <button className="group/video relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-sm ">
       <span className="absolute left-1 top-1 h-fit shrink-0 rounded bg-primary-800/70 px-1 py-0.5 text-2xs font-medium text-white">
         B1 - B2
       </span>
