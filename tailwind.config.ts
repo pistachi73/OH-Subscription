@@ -18,13 +18,39 @@ const config = {
       },
     },
     extend: {
+      screens: {
+        xs: "500px",
+      },
+      fontFamily: {
+        inter: ["var(--font-inter)"],
+        open: ["var(--font-open-sans)"],
+        work: ["var(--font-work-sans)"],
+        mono: ["var(--font-mono)"],
+      },
+
+      fontSize: {
+        "3xs": "0.5rem",
+        "2xs": "0.625rem",
+      },
+
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+
         primary: {
+          50: "#f5f6f8",
+          100: "#e2e3eb",
+          200: "#babdd0",
+          300: "#898eae",
+          400: "#626993",
+          500: "#3b4378",
+          600: "#2f3660",
+          700: "#232848",
+          800: "#181b30",
+          900: "#0c0d18",
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },

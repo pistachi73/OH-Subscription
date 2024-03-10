@@ -10,31 +10,37 @@ import { currentUser } from "@/lib/auth";
 export const Header = async () => {
   const user = await currentUser();
   return (
-    <header className="border-b border-input bg-background">
-      <MaxWidthWrapper className="flex items-center justify-between py-4">
-        <nav>
+    <header className="text-pri sticky top-0 z-50 bg-white ">
+      <MaxWidthWrapper className="relative flex items-center justify-between py-4">
+        <nav className="">
           <ul className="flex items-center space-x-6">
+            <a href="/">
+              <Image
+                src={"/images/oh-logo.png"}
+                alt="logo"
+                width={40}
+                height={40}
+              />
+            </a>
             <li>
-              <a href="/">
-                <Image
-                  src={"/images/oh-logo.png"}
-                  alt="logo"
-                  width={50}
-                  height={50}
-                />
+              <a href="/" className="text-sm ">
+                Learning capsules
               </a>
             </li>
             <li>
-              <a href="/">Learning capsules</a>
+              <a href="/" className="text-sm">
+                Coaching
+              </a>
             </li>
             <li>
-              <a href="/">Coaching</a>
+              <a href="/" className="text-sm">
+                Our clubs
+              </a>
             </li>
             <li>
-              <a href="/">Our clubs</a>
-            </li>
-            <li>
-              <a href="/">Podcast</a>
+              <a href="/" className="text-sm">
+                Podcast
+              </a>
             </li>
           </ul>
         </nav>
@@ -43,12 +49,12 @@ export const Header = async () => {
         ) : (
           <div className="flex flex-row gap-2">
             <AuthButton asChild mode="modal" formType="login">
-              <Button variant="ghost" size="lg">
+              <Button variant="ghost" size="sm">
                 Log in
               </Button>
             </AuthButton>
             <AuthButton asChild mode="modal" formType="register">
-              <Button variant="default" size="lg">
+              <Button variant="default" size="sm">
                 Sign in
               </Button>
             </AuthButton>

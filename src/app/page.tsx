@@ -1,20 +1,16 @@
-import { Button } from "@/components/ui/button";
+import { Hero } from "@/components/hero/hero";
+import { BookCarousel } from "@/components/ui/carousel/book-carousel";
+import { SeriesCarousel } from "@/components/ui/carousel/series-carousel";
 
 export default async function Home() {
   return (
-    <main className="flex h-full min-h-[1000px] flex-col items-center justify-center bg-background">
-      <div className="flex flex-col items-center space-y-6">
-        <h1 className="text- max-w-[600px] text-center text-5xl font-semibold leading-tight">
-          The only subscription you really need to boost your English.
-        </h1>
-        <p className="max-w-[350px] text-center">
-          Dive into tailored video lessons, interactive clubs, and personalized
-          coaching sessions.
-        </p>
-        <Button variant="default" size="lg">
-          Subscribe for 4,99€
-        </Button>
-      </div>
+    <main className="h-full">
+      <Hero />
+      <SeriesCarousel title="Grammar" href="/" />
+      <SeriesCarousel title="Vocabulary" href="/" />
+      <SeriesCarousel title="Vocabulary" href="/" />
+
+      <BookCarousel title="Books to read" href="/" />
     </main>
   );
 }

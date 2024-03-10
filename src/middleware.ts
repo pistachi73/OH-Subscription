@@ -1,5 +1,9 @@
 import NextAuth from "next-auth";
 
+import { NextResponse, userAgent } from "next/server";
+
+import { type DeviceType } from "./components/ui/device-only/device-only-provider";
+
 import authConfig from "@/auth.config";
 import {
   DEFAULT_LOGIN_REDIRECT,
@@ -11,6 +15,17 @@ import {
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  const {
+    device: { type },
+  } = userAgent(req);
+  const country = req.geo?.country || "US";
+  const deviceType: DeviceType =
+    type === "mobile" ? "mobile" : type === "tablet" ? "tablet" : "desktop";
+
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-geo-country-code", country);
+  requestHeaders.set("x-device-type", deviceType);
+
   const isLoggedIn = !!req.auth;
   const { nextUrl } = req;
 
@@ -19,14 +34,18 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
-    return null;
+    return NextResponse.next({
+      headers: requestHeaders,
+    });
   }
 
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return null;
+    return NextResponse.next({
+      headers: requestHeaders,
+    });
   }
 
   if (!isLoggedIn && !isPublicRoute) {
@@ -41,8 +60,9 @@ export default auth((req) => {
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
     );
   }
-
-  return null;
+  return NextResponse.next({
+    headers: requestHeaders,
+  });
 });
 
 // Optionally, don't invoke Middleware on some paths
