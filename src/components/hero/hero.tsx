@@ -34,8 +34,8 @@ export const Hero = () => {
     // </div>
     <MaxWidthWrapper className="relative -mb-[200px]  w-full -translate-y-[80px] text-center ">
       <Image
-        src="/images/hero.png"
-        alt="hero-background"
+        src="/images/hero-background.png"
+        alt="Hero background image"
         fill
         className="absolute left-0 top-0 -z-10 w-full object-cover"
         priority
