@@ -8,9 +8,10 @@ export default async function Home() {
       <Hero />
       <SeriesCarousel title="Grammar" href="/" />
       <SeriesCarousel title="Vocabulary" href="/" />
-      <SeriesCarousel title="Vocabulary" href="/" />
+      <SeriesCarousel title="News" href="/" />
 
       <BookCarousel title="Books to read" href="/" />
+      <SeriesCarousel title="Learning capsules" href="/" />
     </main>
   );
 }

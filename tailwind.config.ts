@@ -29,8 +29,8 @@ const config = {
       },
 
       fontSize: {
-        "3xs": "0.5rem",
-        "2xs": "0.625rem",
+        "3xs": ["8px", "12px"],
+        "2xs": ["10px", "14px"],
       },
 
       colors: {

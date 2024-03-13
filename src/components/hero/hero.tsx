@@ -44,15 +44,15 @@ export const Hero = () => {
       <div className="absolute left-0 top-0 -z-10 h-full w-full bg-gradient-to-r from-white to-[75%] 2xl:to-[50%]" />
       <div className="absolute bottom-0 left-0 -z-10 h-6 w-full bg-gradient-to-t from-white " />
       <div className="flex h-full w-3/5  max-w-[600px] -translate-y-[200px] flex-col justify-end gap-4 pt-[360px] md:w-2/5">
-        <h1 className="text-left text-3xl font-semibold leading-tight tracking-tighter md:text-4xl 2xl:text-6xl ">
+        <h1 className="text-left text-3xl font-semibold leading-tight tracking-tighter md:text-4xl 2xl:text-6xl">
           The only subscription you{" "}
           <span>
             <i className="text-[#FF5C00]">really</i>
           </span>{" "}
           need to boost your English
         </h1>
-        <div className="w-3/4 space-y-4">
-          <p className="w-full text-left text-xs text-primary-800 md:text-sm 2xl:w-[400px] 2xl:text-base">
+        <div className="w-3/4 space-y-8">
+          <p className="w-full text-left text-xs text-gray-800 md:text-sm 2xl:w-[400px] 2xl:text-base">
             Dive into tailored video lessons, interactive clubs, and
             personalized coaching sessions.
           </p>

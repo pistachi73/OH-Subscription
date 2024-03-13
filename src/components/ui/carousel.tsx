@@ -3,6 +3,7 @@
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
+import { type Variants, motion } from "framer-motion";
 import * as React from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
@@ -18,8 +19,8 @@ type CarouselProps = {
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
-  currentSlide?: number;
-  totalSlides?: number;
+  slidesPerView: number;
+  totalItems: number;
   setApi?: (api: CarouselApi) => void;
 };
 
@@ -30,11 +31,15 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+  current?: number;
+  total?: number;
+  totalItems: number;
+  slidesPerView?: number;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 
-function useCarousel() {
+export function useCarousel() {
   const context = React.useContext(CarouselContext);
 
   if (!context) {
@@ -54,7 +59,9 @@ const Carousel = React.forwardRef<
       opts,
       setApi,
       plugins,
+      slidesPerView,
       className,
+      totalItems,
       children,
       ...props
     },
@@ -70,7 +77,7 @@ const Carousel = React.forwardRef<
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
     const [current, setCurrent] = React.useState(0);
-    const [count, setCount] = React.useState(0);
+    const [total, setTotal] = React.useState(0);
 
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
@@ -80,7 +87,7 @@ const Carousel = React.forwardRef<
       setCanScrollPrev(api.canScrollPrev());
       setCanScrollNext(api.canScrollNext());
 
-      setCount(api.scrollSnapList().length);
+      setTotal(api.scrollSnapList().length);
       setCurrent(api.selectedScrollSnap() + 1);
 
       api.on("select", () => {
@@ -121,15 +128,24 @@ const Carousel = React.forwardRef<
       if (!api) {
         return;
       }
-
       onSelect(api);
       api.on("reInit", onSelect);
       api.on("select", onSelect);
-
       return () => {
         api?.off("select", onSelect);
       };
     }, [api, onSelect]);
+
+    const variants: Variants = {
+      initial: {
+        zIndex: 1,
+        transition: { delay: 0.2, ease: [0, 1, 0, 1] },
+      },
+      hover: {
+        zIndex: 5,
+        transition: { delay: 0.3, ease: [0, 1, 0, 1] },
+      },
+    };
 
     return (
       <CarouselContext.Provider
@@ -143,11 +159,21 @@ const Carousel = React.forwardRef<
           scrollNext,
           canScrollPrev,
           canScrollNext,
+          slidesPerView,
+          current,
+          totalItems,
+          total,
         }}
       >
-        <div className="group/carousel relative">
+        <motion.div
+          whileHover="hover"
+          initial="initial"
+          animate="initial"
+          variants={variants}
+          className="group/carousel relative w-full"
+        >
           <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
-            {Array.from({ length: count }).map((_, index) => (
+            {Array.from({ length: total }).map((_, index) => (
               <div
                 key={index}
                 className={cn(
@@ -157,11 +183,12 @@ const Carousel = React.forwardRef<
               />
             ))}
           </div>
+
           <div
             ref={ref}
             onKeyDownCapture={handleKeyDown}
             className={cn(
-              "relative my-1 w-full overflow-x-hidden overflow-y-visible px-[4%] 2xl:px-14",
+              "relative my-1 w-full  overflow-x-clip overflow-y-visible px-[4%] 2xl:px-14",
               className,
             )}
             role="region"
@@ -170,7 +197,7 @@ const Carousel = React.forwardRef<
           >
             {children}
           </div>
-        </div>
+        </motion.div>
       </CarouselContext.Provider>
     );
   },

@@ -10,7 +10,6 @@ import { MaxWidthWrapper } from "./max-width-wrapper";
 import { Button } from "./ui/button";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { currentUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
@@ -38,33 +37,33 @@ export const Header = () => {
       )}
     >
       <MaxWidthWrapper className="bg relative flex items-center justify-between py-4">
-        <nav className="">
-          <ul className="flex items-center space-x-6">
-            <a href="/">
-              <Image
-                src={"/images/oh-logo.png"}
-                alt="logo"
-                width={40}
-                height={40}
-              />
-            </a>
+        <nav className="flex items-center gap-12">
+          <a href="/">
+            <Image
+              src={"/images/oh-logo.png"}
+              alt="logo"
+              width={40}
+              height={40}
+            />
+          </a>
+          <ul className="flex items-center gap-6">
             <li>
-              <a href="/" className="text-sm ">
+              <a href="/" className="text-sm text-gray-800 ">
                 Learning capsules
               </a>
             </li>
             <li>
-              <a href="/" className="text-sm">
+              <a href="/" className="text-sm text-gray-800">
                 Coaching
               </a>
             </li>
             <li>
-              <a href="/" className="text-sm">
+              <a href="/" className="text-sm text-gray-800">
                 Our clubs
               </a>
             </li>
             <li>
-              <a href="/" className="text-sm">
+              <a href="/" className="text-sm text-gray-800">
                 Podcast
               </a>
             </li>
