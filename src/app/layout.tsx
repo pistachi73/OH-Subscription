@@ -49,7 +49,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`font-inter ${inter.variable} ${workSans.variable} ${openSans.variable} min-h-screen  ${mono.variable}`}
+        className={`font-inter ${inter.variable} ${workSans.variable} ${openSans.variable} min-h-screen  ${mono.variable} bg-white`}
       >
         <DeviceOnlyProvider deviceType={deviceType}>
           <TRPCReactProvider cookies={cookies().toString()}>

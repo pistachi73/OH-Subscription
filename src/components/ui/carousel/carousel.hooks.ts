@@ -1,9 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { useCarousel } from "../carousel";
 import { useDeviceType } from "../device-only/device-only-provider";
-
-import { animationConfig } from "./utils";
 
 export const useCarouselSettings = () => {
   const { deviceSize } = useDeviceType();
@@ -53,32 +51,4 @@ export const useCarouselBorders = ({ index }: { index: number }) => {
   const isRightBorder = index === rightBorder;
 
   return { isLeftBorder, isRightBorder };
-};
-
-export const useCarouselItemAnimation = () => {
-  const [hovered, setHovered] = useState(false);
-  const [canHover, setCanHover] = useState(true);
-  const [animationTimeout, setAnimationTimeout] = useState<NodeJS.Timeout>();
-
-  const onMouseEnter = useCallback(() => {
-    if (canHover) {
-      const timeout = setTimeout(() => {
-        setHovered(true);
-        setCanHover(false);
-      }, animationConfig.delay * 1000);
-      setAnimationTimeout(timeout);
-    }
-  }, [canHover]);
-  const onMouseLeave = useCallback(() => {
-    setHovered(false);
-    clearTimeout(animationTimeout);
-    setAnimationTimeout(undefined);
-  }, [animationTimeout]);
-
-  return {
-    hovered,
-    onMouseEnter,
-    onMouseLeave,
-    setCanHover,
-  };
 };

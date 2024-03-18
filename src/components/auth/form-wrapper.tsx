@@ -1,4 +1,4 @@
-import { BsArrowLeft } from "react-icons/bs";
+import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +34,7 @@ export const FormWrapper = ({
             variant="link"
             className="text-sm text-muted-foreground hover:no-underline"
           >
-            <BsArrowLeft size={18} className="mr-2" />
+            <ArrowLeft size={18} className="mr-2" />
             Back
           </Button>
         )}

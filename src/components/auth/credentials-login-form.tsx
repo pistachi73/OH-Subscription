@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -27,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
 
 export const CredentialsForm = () => {
+  const { update } = useSession();
   const { setChildrenForm, childrenForm } = useAuthContext();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
@@ -43,13 +46,15 @@ export const CredentialsForm = () => {
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     startTransition(async () => {
-      const { twoFactor, success, error } = await login(values, callbackUrl);
+      const { error, success, twoFactor } = await login(values, callbackUrl);
+
       if (error) {
         toast.error(error);
       }
 
       if (success) {
         form.reset();
+        update();
       }
 
       if (twoFactor) {
@@ -144,6 +149,8 @@ export const CredentialsForm = () => {
           type="submit"
           className="w-full"
         >
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+
           {childrenForm === "two-factor" ? "Confirm" : "Continue"}
         </Button>
       </form>

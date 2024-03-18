@@ -1,7 +1,7 @@
 "use client";
 
+import { Mail } from "lucide-react";
 import { useEffect } from "react";
-import { BsEnvelope } from "react-icons/bs";
 import { toast } from "sonner";
 
 import { useSearchParams } from "next/navigation";
@@ -87,7 +87,7 @@ export const LoginForm = () => {
               setChildrenForm("credential");
             }}
           >
-            <BsEnvelope size={18} />
+            <Mail size={18} />
             <span className="block w-full text-center">
               Continue with email/username
             </span>

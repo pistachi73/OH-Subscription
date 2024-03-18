@@ -30,7 +30,7 @@ export const AuthButton = ({
       <Dialog>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
         <DialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
-          <AuthForm initialFormType="register" />
+          <AuthForm initialFormType={formType} />
         </DialogContent>
       </Dialog>
     );

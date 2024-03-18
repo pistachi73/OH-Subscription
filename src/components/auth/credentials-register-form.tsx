@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TRPCClientError } from "@trpc/client";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -69,7 +70,7 @@ export const CredentialsRegisterForm = () => {
       })
       .catch((error) => {
         if (error instanceof TRPCClientError) {
-          if (error.data.cause) {
+          if (error.data?.cause) {
             form.setError(error.data.cause as any, { message: error.message });
           } else {
             toast.error(error.message);
@@ -196,6 +197,9 @@ export const CredentialsRegisterForm = () => {
           )}
         </div>
         <Button disabled={register.isLoading} type="submit" className="w-full">
+          {register.isLoading && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Register
         </Button>
       </form>

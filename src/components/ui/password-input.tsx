@@ -1,6 +1,5 @@
-import { Eye, EyeOff } from "lucide-react";
+import { CheckCircle2Icon, Eye, EyeOff } from "lucide-react";
 import * as React from "react";
-import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
 
 import { Input } from "./input";
 
@@ -11,7 +10,6 @@ import { passwordRegex } from "@/schemas";
 export type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   withValidation?: boolean;
 };
-
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ className, disabled, withValidation, onChange, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
@@ -86,11 +84,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
                   )}
                   {...props}
                 >
-                  {valid ? (
-                    <BsCheckCircleFill size={16} />
-                  ) : (
-                    <BsCheckCircle size={16} />
-                  )}
+                  <CheckCircle2Icon size={16} />
                   {message}
                 </p>
               ))}

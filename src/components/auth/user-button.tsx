@@ -1,4 +1,4 @@
-import { BsBoxArrowRight, BsPerson } from "react-icons/bs";
+import { LogOut, User } from "lucide-react";
 
 import { LogoutButton } from "@/components/auth/logout-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,14 +17,14 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
         <Avatar>
           <AvatarImage src={user?.image || undefined} />
           <AvatarFallback className="bg-sky-500">
-            <BsPerson className="text-white" />
+            <User className="text-white" />
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="">
         <LogoutButton>
           <DropdownMenuItem>
-            <BsBoxArrowRight className="mr-2 h-4 w-4" />
+            <LogOut className="mr-2 h-4 w-4" />
             Logout
           </DropdownMenuItem>
         </LogoutButton>

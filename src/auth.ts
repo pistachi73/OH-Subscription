@@ -8,7 +8,7 @@ import { getUserById } from "./server/api/lib/user";
 
 import authConfig from "@/auth.config";
 import { db } from "@/server/db";
-import { mysqlTable, twoFactorConirmations, users } from "@/server/db/schema";
+import { twoFactorConirmations } from "@/server/db/schema";
 
 export const {
   handlers: { GET, POST },
@@ -22,12 +22,12 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
-      await db
-        .update(users)
-        .set({
-          emailVerified: new Date(),
-        })
-        .where(eq(users.id, user.id ?? ""));
+      // await db
+      //   .update(users)
+      //   .set({
+      //     emailVerified: new Date(),
+      //   })
+      //   .where(eq(users.id, user.id ?? ""));
     },
   },
   callbacks: {
@@ -39,8 +39,7 @@ export const {
 
       const existingUser = await getUserById({ db, id: user.id });
 
-      //Prevent signIn without email verification
-      if (!existingUser?.emailVerified) return false;
+      if (!existingUser) return false;
 
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConirmationByUserId({
@@ -56,8 +55,6 @@ export const {
           .delete(twoFactorConirmations)
           .where(eq(twoFactorConirmations.id, twoFactorConfirmation.id));
       }
-
-      ({ user });
 
       return true;
     },
@@ -102,7 +99,7 @@ export const {
       return session;
     },
   },
-  adapter: DrizzleAdapter(db, mysqlTable),
+  adapter: DrizzleAdapter(db),
   session: { strategy: "jwt" },
   ...authConfig,
 });

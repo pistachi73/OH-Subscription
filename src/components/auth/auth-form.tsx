@@ -1,6 +1,6 @@
 "use client";
 
-import { BsCheck2Circle } from "react-icons/bs";
+import { BadgeCheck } from "lucide-react";
 
 import { AuthProvider } from "./auth-form-context";
 import { type AuthFormType } from "./auth.types";
@@ -27,7 +27,7 @@ const AuthFormContent = () => {
   return (
     <div className="flex h-[100vh] w-full  flex-row overflow-hidden rounded-none border-none bg-white p-0 sm:h-[800px] sm:max-h-[90vh] sm:w-[475px] sm:rounded-md lg:w-[900px]">
       <div className="relative hidden min-h-full w-full basis-1/2 bg-red-100 bg-[url(/images/auth-left.jpeg)] bg-cover bg-left lg:block">
-        <div className="h-full bg-slate-900 bg-opacity-80 p-10">
+        <div className="h-full bg-primary-800 bg-opacity-80 p-10">
           {parentForm !== "reset-password" && (
             <>
               <h3 className="py-6 text-3xl font-semibold leading-tight tracking-tight text-white">
@@ -37,7 +37,7 @@ const AuthFormContent = () => {
                 {checkPoints.map((checkPoint, index) => (
                   <li key={index} className="flex items-start gap-2 text-lg">
                     <div className="flex h-7 items-center justify-center">
-                      <BsCheck2Circle size={20} />{" "}
+                      <BadgeCheck size={20} />{" "}
                     </div>
                     <p>{checkPoint}</p>
                   </li>

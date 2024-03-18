@@ -4,8 +4,9 @@ import { SeriesCarousel } from "@/components/ui/carousel/series-carousel";
 
 export default async function Home() {
   return (
-    <main className="h-full">
+    <main className="h-full bg-white">
       <Hero />
+
       <SeriesCarousel title="Grammar" href="/" />
       <SeriesCarousel title="Vocabulary" href="/" />
       <SeriesCarousel title="News" href="/" />

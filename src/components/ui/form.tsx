@@ -154,8 +154,6 @@ const FormMessage = React.forwardRef<
     return null;
   }
 
-  console.log({ error });
-
   return (
     <div className="relative !mt-0 h-[25px] animate-form-message-div-down">
       <p

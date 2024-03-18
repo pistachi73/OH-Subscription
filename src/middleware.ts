@@ -67,5 +67,8 @@ export default auth((req) => {
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images).*)"],
+  matcher: {
+    source: "/((?!api|_next/static|_next/image|favicon.ico|images).*)",
+    missing: [{ type: "header", key: "next-action" }],
+  },
 };

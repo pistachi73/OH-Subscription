@@ -15,11 +15,7 @@ import { getVerificationTokenByToken } from "../lib/verification-token";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
 import { NewPasswordSchema, RegisterSchema, ResetSchema } from "@/schemas";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import {
-  passwordResetTokens,
-  users,
-  verificationTokens,
-} from "@/server/db/schema";
+import { passwordResetTokens, users } from "@/server/db/schema";
 
 export const authRouter = createTRPCRouter({
   register: publicProcedure
@@ -33,7 +29,6 @@ export const authRouter = createTRPCRouter({
       let existingUser = await getUserByEmail({ db, email });
 
       if (existingUser) {
-        console.log("Email already in use!");
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Email already in use!",
@@ -52,7 +47,7 @@ export const authRouter = createTRPCRouter({
             email: verificationToken.email,
             token: verificationToken.token,
           });
-        } catch {
+        } catch (e) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Something went wront, please try again later.",
@@ -105,68 +100,6 @@ export const authRouter = createTRPCRouter({
       });
 
       return { success: "User created!" };
-    }),
-
-  newVerification: publicProcedure
-    .input(
-      z.object({
-        token: z.nullable(z.string()),
-      }),
-    )
-    .mutation(async ({ input: { token }, ctx: { db } }) => {
-      if (!token) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Missing token!",
-        });
-      }
-
-      const existingToken = await getVerificationTokenByToken({
-        token,
-        db,
-      });
-
-      if (!existingToken) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid token!",
-        });
-      }
-
-      const hasExpired = new Date(existingToken.expires) < new Date();
-
-      if (hasExpired) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Token has expired!",
-        });
-      }
-
-      const existingUser = await getUserByEmail({
-        db,
-        email: existingToken.email,
-      });
-
-      if (!existingUser) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Email does not exist!",
-        });
-      }
-
-      await db
-        .update(users)
-        .set({
-          emailVerified: new Date(),
-          email: existingToken.email,
-        })
-        .where(eq(users.id, existingUser.id));
-
-      await db
-        .delete(verificationTokens)
-        .where(eq(verificationTokens.token, token));
-
-      return { success: "Email verified!" };
     }),
 
   reset: publicProcedure

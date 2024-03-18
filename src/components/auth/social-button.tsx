@@ -1,13 +1,12 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { type IconType } from "react-icons/lib";
 
 import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { GithubIcon } from "@/components/ui/icons/github-icon";
+import { GoogleIcon } from "@/components/ui/icons/google-icon";
 import { cn } from "@/lib/utils";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
@@ -18,18 +17,18 @@ const socialButtonMapping: Record<
   {
     label: string;
     provider: Provider;
-    icon: IconType;
+    icon: ({ className }: { className: string }) => JSX.Element;
   }
 > = {
   google: {
     label: "Continue with google",
     provider: "google",
-    icon: FcGoogle,
+    icon: GoogleIcon,
   },
   github: {
     label: "Continue with Github",
     provider: "github",
-    icon: FaGithub,
+    icon: GithubIcon,
   },
 };
 
@@ -57,7 +56,7 @@ export const SocialButton = ({ provider, className }: SocialButtonProps) => {
       className={cn("flex w-full justify-between border", className)}
       onClick={onClick}
     >
-      <Icon size={18} />
+      <Icon className="h-[18px] w-[18px]" />
       <span className="block w-full text-center">{label}</span>
     </Button>
   );

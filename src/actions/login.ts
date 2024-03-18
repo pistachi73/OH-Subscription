@@ -23,7 +23,6 @@ export const login = async (
 ): Promise<{
   error?: string;
   success?: string;
-  newVerification?: boolean;
   twoFactor?: boolean;
 }> => {
   const verifiedCredentials = LoginSchema.safeParse(credentials);
@@ -32,14 +31,11 @@ export const login = async (
     return { error: "Invalid fields" };
   }
   const { email, password, code } = verifiedCredentials.data;
+
   const existingUser = await getUserByEmail({ db, email });
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: "Email does not exist!" };
-  }
-
-  if (!existingUser.emailVerified) {
-    return { error: "Someghing went wrong!" };
   }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
@@ -84,7 +80,7 @@ export const login = async (
           token: twoFactorToken.token,
           email: existingUser.email,
         });
-      } catch {
+      } catch (error) {
         return { error: "Someghing went wrong!" };
       }
 

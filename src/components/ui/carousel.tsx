@@ -4,8 +4,8 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { type Variants, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 import { type Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -136,6 +136,10 @@ const Carousel = React.forwardRef<
       };
     }, [api, onSelect]);
 
+    React.useEffect(() => {
+      api?.reInit({ ...opts });
+    }, [api, opts]);
+
     const variants: Variants = {
       initial: {
         zIndex: 1,
@@ -183,7 +187,6 @@ const Carousel = React.forwardRef<
               />
             ))}
           </div>
-
           <div
             ref={ref}
             onKeyDownCapture={handleKeyDown}
@@ -211,13 +214,13 @@ const CarouselContent = React.forwardRef<
   const { carouselRef, orientation } = useCarousel();
 
   return (
-    <div ref={carouselRef} className="">
+    <div ref={carouselRef}>
       <div
         ref={ref}
         className={cn(
           "flex",
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
-          "-ml-0.5 lg:-ml-1",
+          "-ml-0.5 lg:-ml-1 xl:-ml-2",
           className,
         )}
         {...props}
@@ -239,7 +242,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full pl-0.5 lg:pl-1",
+        "min-w-0 shrink-0 grow-0 basis-full pl-0.5 lg:pl-1 xl:pl-2",
         orientation === "horizontal" ? "" : "pt-4",
         className,
       )}
@@ -259,7 +262,7 @@ const CarouselPrevious = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-prev absolute flex h-full w-[calc(4%-2px)]  items-center justify-center rounded-none bg-primary-50/50 opacity-100  transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 lg:w-[calc(4%-4px)]  2xl:w-[54px]",
+        "group/chevron-prev absolute flex h-full w-[calc(4%-2px)]  items-center justify-center rounded-none rounded-r-sm bg-primary-50/50  opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0  lg:w-[calc(4%-4px)] xl:w-[calc(4%-8px)] 2xl:w-[48px]",
         orientation === "horizontal"
           ? "-left-0 top-1/2 -translate-y-1/2"
           : "-top-10 left-1/2 -translate-x-1/2 rotate-90",
@@ -269,7 +272,10 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <BsChevronLeft className="group-hover w-4/5 text-6xl text-primary-800 opacity-0 transition-transform  group-hover/chevron-prev:scale-125 group-hover/carousel:opacity-100 lg:w-3/5" />
+      <ChevronLeft
+        className="group-hover text-primary-800 opacity-0 transition-transform  group-hover/chevron-prev:scale-125 group-hover/carousel:opacity-100"
+        size={32}
+      />
       <span className="sr-only">Previous slide</span>
     </button>
   );
@@ -286,7 +292,7 @@ const CarouselNext = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-next absolute flex h-full w-[calc(4%-2px)] items-center justify-center rounded-none bg-primary-50/50 opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 lg:w-[calc(4%-4px)] 2xl:w-[54px]",
+        "group/chevron-next absolute flex h-full w-[calc(4%-2px)] items-center justify-center rounded-none rounded-l-sm bg-primary-50/50 opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 lg:w-[calc(4%-4px)] xl:w-[calc(4%-8px)] 2xl:w-[48px]",
         orientation === "horizontal"
           ? "-right-0 top-1/2 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -296,7 +302,10 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <BsChevronRight className="w-4/5 text-6xl text-primary-800 opacity-0 transition-transform group-hover/chevron-next:scale-125  group-hover/carousel:opacity-100 lg:w-3/5" />
+      <ChevronRight
+        className="text-primary-800 opacity-0 transition-transform group-hover/chevron-next:scale-125  group-hover/carousel:opacity-100"
+        size={32}
+      />
       <span className="sr-only">Next slide</span>
     </button>
   );

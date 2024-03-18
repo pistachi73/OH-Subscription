@@ -1,5 +1,5 @@
 "use client";
-import { BsEnvelope } from "react-icons/bs";
+import { Mail } from "lucide-react";
 
 import { useAuthContext } from "./auth-form-context";
 
@@ -65,7 +65,7 @@ export const RegisterForm = () => {
               setChildrenForm("credential");
             }}
           >
-            <BsEnvelope size={18} />
+            <Mail size={18} />
             <span className="block w-full text-center">
               Continue with email
             </span>

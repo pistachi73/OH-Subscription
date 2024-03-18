@@ -7,8 +7,9 @@ import Image from "next/image";
 import { AuthButton } from "./auth/auth-button";
 import { UserButton } from "./auth/user-button";
 import { MaxWidthWrapper } from "./max-width-wrapper";
-import { Button } from "./ui/button";
 
+import { Button } from "@/components/ui/button";
+import { SearchInput } from "@/components/ui/search-input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 
@@ -29,14 +30,11 @@ export const Header = () => {
 
   return (
     <header
-      className={cn(
-        "sticky top-0 z-50  bg-gradient-to-t transition-colors duration-200",
-        {
-          "bg-white": isScrolled,
-        },
-      )}
+      className={cn("sticky top-0 z-50   transition-colors duration-200", {
+        "bg-white": isScrolled,
+      })}
     >
-      <MaxWidthWrapper className="bg relative flex items-center justify-between py-4">
+      <MaxWidthWrapper className="bg relative flex items-center justify-between py-2">
         <nav className="flex items-center gap-12">
           <a href="/">
             <Image
@@ -69,22 +67,25 @@ export const Header = () => {
             </li>
           </ul>
         </nav>
-        {user ? (
-          <UserButton user={user} />
-        ) : (
-          <div className="flex flex-row gap-2">
-            <AuthButton asChild mode="modal" formType="login">
-              <Button variant="secondary" size="sm">
-                Log in
-              </Button>
-            </AuthButton>
-            <AuthButton asChild mode="modal" formType="register">
-              <Button variant="default" size="sm">
-                Sign in
-              </Button>
-            </AuthButton>
-          </div>
-        )}
+        <div className="flex flex-row items-center gap-2">
+          <SearchInput />
+          {user ? (
+            <UserButton user={user} />
+          ) : (
+            <>
+              <AuthButton asChild mode="modal" formType="login">
+                <Button variant="outline" size="sm">
+                  Join
+                </Button>
+              </AuthButton>
+              <AuthButton asChild mode="modal" formType="register">
+                <Button variant="default" size="sm">
+                  Sign in
+                </Button>
+              </AuthButton>
+            </>
+          )}
+        </div>
       </MaxWidthWrapper>
     </header>
   );
