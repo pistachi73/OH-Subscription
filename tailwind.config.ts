@@ -30,8 +30,6 @@ const config = {
       },
       fontFamily: {
         inter: ["var(--font-inter)"],
-        open: ["var(--font-open-sans)"],
-        work: ["var(--font-work-sans)"],
         mono: ["var(--font-mono)"],
       },
 

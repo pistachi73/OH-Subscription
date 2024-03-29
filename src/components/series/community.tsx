@@ -23,20 +23,20 @@ export const Community = () => {
   return (
     <MaxWidthWrapper className="my-8 max-w-[1600px] sm:mt-12">
       <div className="mb-4 flex flex-row items-center justify-between">
-        <h2 className="text-xl font-semibold">Discussion (20)</h2>
+        <h2 className="text-lg font-semibold sm:text-xl">Discussion (20)</h2>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              size="default"
-              className="flex items-center gap-2"
+              size="sm"
+              className="flex items-center gap-2 px-4"
             >
               {sort}
               <ChevronDown size={16} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent sideOffset={5} align="end" className="w-56">
+          <DropdownMenuContent sideOffset={5} align="end" className="w-44">
             <DropdownMenuItem
               onSelect={() => {
                 setSort("Newest");

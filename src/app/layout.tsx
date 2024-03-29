@@ -24,19 +24,9 @@ const mono = Red_Hat_Mono({
   variable: "--font-mono",
 });
 
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  variable: "--font-open-sans",
-});
-
-const workSans = Work_Sans({
-  subsets: ["latin"],
-  variable: "--font-work-sans",
-});
-
 export const metadata = {
   title: "OH Subscription",
-  description: "",
+  description: "OH Subscription",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
@@ -50,7 +40,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`font-inter ${inter.variable} ${workSans.variable} ${openSans.variable} min-h-screen  ${mono.variable} bg-white`}
+        className={`font-inter ${inter.variable} min-h-screen  ${mono.variable} bg-white`}
       >
         <DeviceOnlyProvider deviceType={deviceType}>
           <TRPCReactProvider cookies={cookies().toString()}>

@@ -73,6 +73,7 @@ export const HeroCarousel = () => {
               setCurrent(index);
             }}
             type="button"
+            name="hero-carousel-navigation"
           />
         ))}
       </MaxWidthWrapper>

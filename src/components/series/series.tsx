@@ -12,7 +12,7 @@ export const Series = () => {
   return (
     <>
       <SeriesHeroCard />
-      <Tabs defaultValue="community" className="w-full">
+      <Tabs defaultValue="chapters" className="w-full">
         <TabsList className="flex w-full items-center justify-center">
           <TabsTrigger value="chapters">Chapters</TabsTrigger>
           <TabsTrigger value="community">Community</TabsTrigger>

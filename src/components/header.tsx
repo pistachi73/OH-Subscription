@@ -132,6 +132,7 @@ export const Header = () => {
               <NavButton
                 justIcon
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
+                name="search"
               >
                 {isSearchOpen ? <X size={16} /> : <Search size={16} />}
               </NavButton>
@@ -218,6 +219,7 @@ export const Header = () => {
                   setIsSearchOpen(!isSearchOpen);
                 }}
                 justIcon
+                name="search"
               >
                 {isSearchOpen ? <X size={20} /> : <Search size={20} />}
               </NavButton>

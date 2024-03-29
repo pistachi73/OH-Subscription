@@ -98,14 +98,11 @@ export const Chapter = () => {
           <div className="p-4">
             <div className="flex flex-row items-center gap-3">
               <MotionButton
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-gray-800 bg-primary-50/70"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
                 variant="outline"
                 size="icon"
               >
-                <Play
-                  className="ml-1 fill-gray-800 stroke-gray-800"
-                  size={24}
-                />
+                <Play className="ml-1 fill-primary stroke-primary" size={24} />
               </MotionButton>
 
               <div className="space-y-1">
@@ -134,6 +131,7 @@ export const Chapter = () => {
                     <MotionLink
                       href="/"
                       className="relative block aspect-video w-full max-w-[400px]"
+                      onMouseDown={(e) => e.stopPropagation()}
                     >
                       <Image
                         src="/images/video-thumbnail.png"
@@ -142,7 +140,7 @@ export const Chapter = () => {
                         className="rounded-sm"
                       />
                     </MotionLink>
-                    <motion.p className="text-sm text-gray-600">
+                    <motion.p className="text-sm text-gray-800">
                       Vocabulary is the cornerstone of effective communication.
                       In this chapter, students embark on a journey to expand
                       their lexicon, exploring strategies for learning new
@@ -156,42 +154,6 @@ export const Chapter = () => {
               )}
             </AnimatePresence>
           </div>
-
-          {/* <div className="grid h-full w-full  grid-cols-2">
-            <Link href="/" className="relative block aspect-video">
-              <Image
-                src="/images/video-thumbnail.png"
-                alt="video"
-                fill
-                className="rounded-sm"
-              />
-              <MotionButton
-                className="absolute left-1/2 top-1/2 flex h-12 w-12 items-center justify-center rounded-full border-gray-800 bg-primary-50/70"
-                variant="outline"
-                size="icon"
-                variants={imageVariants}
-              >
-                <Play className="fill-gray-800 stroke-gray-800" size={24} />
-              </MotionButton>
-            </Link>
-            <DeviceOnly allowedDevices={["mobile"]}>hello</DeviceOnly>
-          </div>
-          <div className="max-w-[72ch] space-y-1">
-            <p className="text-lg font-semibold tracking-tight">
-              Episode 1 - Unlocking vocabulary
-            </p>
-            <p className="text-sm text-gray-600">
-              February 25, 2025 <span className="ml-3">14 min</span>
-            </p>
-            <p className="text-base text-gray-600">
-              Vocabulary is the cornerstone of effective communication. In this
-              chapter, students embark on a journey to expand their lexicon,
-              exploring strategies for learning new words, deciphering meanings
-              from context, and mastering techniques for retention and
-              application in both spoken and written language. Vocabulary is the
-              cornerstone of effective communication.
-            </p>
-          </div>*/}
         </motion.div>
       </DeviceOnly>
       <DeviceOnly allowedDevices={["tablet", "desktop"]}>
@@ -211,13 +173,13 @@ export const Chapter = () => {
                 className="rounded-sm"
               />
               <MotionButton
-                className="absolute left-1/2 top-1/2 flex h-12 w-12 items-center justify-center rounded-full border-gray-800 bg-primary-50/70"
+                className="absolute left-1/2 top-1/2 flex h-12 w-12 items-center justify-center rounded-full border-primary bg-white/70"
                 variant="outline"
                 size="icon"
                 variants={imageVariants}
               >
                 <Play
-                  className="ml-1 fill-gray-800 stroke-gray-800"
+                  className="ml-1 fill-primary-500 stroke-primary-500"
                   size={24}
                 />
               </MotionButton>
@@ -231,7 +193,7 @@ export const Chapter = () => {
             <p className="text-sm text-gray-600">
               February 25, 2025 <span className="ml-3">14 min</span>
             </p>
-            <p className="line-clamp-5 text-base text-gray-600">
+            <p className="line-clamp-5 text-base text-gray-800">
               Vocabulary is the cornerstone of effective communication. In this
               chapter, students embark on a journey to expand their lexicon,
               exploring strategies for learning new words, deciphering meanings

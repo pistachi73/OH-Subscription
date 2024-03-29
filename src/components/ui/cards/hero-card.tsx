@@ -3,6 +3,8 @@ import { type Transition, type Variants, motion } from "framer-motion";
 import { Info, Play } from "lucide-react";
 import React from "react";
 
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { DeviceOnly } from "@/components/ui/device-only/device-only";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
@@ -160,9 +162,12 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                   size="lg"
                   className="w-fit"
                   custom={{ isMobile: deviceType === "mobile" }}
+                  asChild
                 >
-                  <Play size={22} className="mr-2 fill-current" />
-                  Reproduce
+                  <Link href={"/series/id"}>
+                    <Play size={22} className="mr-2 fill-current" />
+                    Reproduce
+                  </Link>
                 </MotionButton>
                 <MotionButton
                   variants={buttonTwoVariants}
@@ -170,9 +175,12 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                   size="lg"
                   className="w-fit"
                   custom={{ isMobile: deviceType === "mobile" }}
+                  asChild
                 >
-                  <Info size={22} className="mr-2" />
-                  More information
+                  <Link href={"/series/id"}>
+                    <Info size={22} className="mr-2" />
+                    More information
+                  </Link>
                 </MotionButton>
               </DeviceOnly>
               <DeviceOnly allowedDevices={["mobile"]}>
@@ -182,9 +190,12 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                   size="sm"
                   className="w-full text-sm sm:text-base"
                   custom={{ isMobile: deviceType === "mobile" }}
+                  asChild
                 >
-                  <Play size={22} className="mr-2 fill-current" />
-                  Reproduce
+                  <Link href={"/series/id"}>
+                    <Play size={22} className="mr-2 fill-current" />
+                    Reproduce
+                  </Link>
                 </MotionButton>
                 <MotionButton
                   variants={buttonTwoVariants}
@@ -192,9 +203,12 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                   size="sm"
                   className="w-full text-sm sm:text-base"
                   custom={{ isMobile: deviceType === "mobile" }}
+                  asChild
                 >
-                  <Info size={22} className="mr-2" />
-                  More information
+                  <Link href={"/series/id"}>
+                    <Info size={22} className="mr-2" />
+                    More information
+                  </Link>
                 </MotionButton>
               </DeviceOnly>
             </div>

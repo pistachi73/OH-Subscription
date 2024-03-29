@@ -25,7 +25,7 @@ type SeriesHeroCardProps = {};
 
 export const SeriesHeroCard = ({}: SeriesHeroCardProps) => {
   return (
-    <div className="relative mb-12 max-h-[80vh] w-full sm:mb-0 sm:-translate-y-[var(--header-height)] lg:h-[76vw]">
+    <div className="relative mb-8 max-h-[80vh] w-full sm:mb-0 sm:-translate-y-[var(--header-height)] lg:h-[76vw]">
       <HeroImage
         src="/images/hero-thumbnail-2.jpg"
         alt="testing"
@@ -33,7 +33,7 @@ export const SeriesHeroCard = ({}: SeriesHeroCardProps) => {
       />
 
       <MaxWidthWrapper className="relative z-30 mx-0 flex  h-full  flex-col  gap-4  before:top-0 before:h-[45vw] before:min-h-[100px] before:content-[''] lg:justify-end lg:before:content-none">
-        <div className=" space-y-4 sm:w-3/4 lg:max-w-[650px] 2xl:max-w-[750px]">
+        <div className=" space-y-4 sm:w-3/4 lg:max-w-[56ch] 2xl:max-w-[64ch]">
           <h1 className="text-left font-sans text-3xl font-semibold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl">
             English around the world
           </h1>
