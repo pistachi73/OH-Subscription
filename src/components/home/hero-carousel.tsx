@@ -1,22 +1,21 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { HeroCard } from "../ui/cards/hero-card";
 
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
+import { useTabFocus } from "@/hooks/use-tab-focus";
 import { cn } from "@/lib/utils";
 
 export const HeroCarousel = () => {
   const length = 11;
   const [current, setCurrent] = useState<number>(0);
   const autoplayIntervalId = useRef<NodeJS.Timeout>();
+  const isTabFocused = useTabFocus();
 
-  const autoPlay = useCallback(
-    () => setCurrent((prev) => (prev + 1) % length),
-    [setCurrent],
-  );
+  const autoPlay = () => setCurrent((prev) => (prev + 1) % length);
 
   const stopInterval = () => {
     if (autoplayIntervalId.current) {
@@ -29,29 +28,21 @@ export const HeroCarousel = () => {
     if (autoplayIntervalId.current) {
       clearInterval(autoplayIntervalId.current);
     }
-    autoplayIntervalId.current = setInterval(autoPlay, 50000);
+    autoplayIntervalId.current = setInterval(autoPlay, 10000);
   };
 
   useEffect(() => {
-    startInterval();
-
-    return () => {
+    if (!isTabFocused) {
       stopInterval();
-    };
-  }, []);
+    } else {
+      startInterval();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTabFocused]);
 
   useEffect(() => {
-    const onVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        startInterval();
-      } else {
-        stopInterval();
-      }
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+      stopInterval();
     };
   }, []);
 
