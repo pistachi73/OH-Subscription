@@ -8,8 +8,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type * as z from "zod";
 
+import { childrenFormSignal, emailSignal } from "./auth-signals";
+
 import { login } from "@/actions/login";
-import { useAuthContext } from "@/components/auth/auth-form-context";
 import { Button } from "@/components/ui/button";
 import { CodeInput } from "@/components/ui/code-input";
 import {
@@ -28,7 +29,7 @@ import { api } from "@/trpc/react";
 
 export const CredentialsRegisterForm = () => {
   const [counter, setCounter] = useState(60);
-  const { setEmail, childrenForm, setChildrenForm } = useAuthContext();
+  // const { setEmail, childrenForm, setChildrenForm } = useAuthContext();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -55,8 +56,10 @@ export const CredentialsRegisterForm = () => {
       .mutateAsync(values)
       .then(async ({ emailVerification, success }) => {
         if (emailVerification) {
-          setEmail(values.email);
-          setChildrenForm("email-verification");
+          // setEmail(values.email);
+          // setChildrenForm("email-verification");
+          emailSignal.value = values.email;
+          childrenFormSignal.value = "email-verification";
           return;
         }
 
@@ -104,7 +107,7 @@ export const CredentialsRegisterForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          {childrenForm === "email-verification" && (
+          {childrenFormSignal.value === "email-verification" && (
             <FormField
               control={form.control}
               name="code"
@@ -136,7 +139,7 @@ export const CredentialsRegisterForm = () => {
               )}
             />
           )}
-          {childrenForm === "credential" && (
+          {childrenFormSignal.value === "credential" && (
             <>
               <FormField
                 control={form.control}
@@ -150,6 +153,7 @@ export const CredentialsRegisterForm = () => {
                         autoFocus
                         placeholder="John Done"
                         disabled={register.isLoading}
+                        autoComplete="name"
                       />
                     </FormControl>
                     <FormMessage />
@@ -167,6 +171,7 @@ export const CredentialsRegisterForm = () => {
                         {...field}
                         placeholder="name@example.com"
                         disabled={register.isLoading}
+                        autoComplete="email"
                       />
                     </FormControl>
                     <FormMessage />
@@ -184,6 +189,7 @@ export const CredentialsRegisterForm = () => {
                         {...field}
                         placeholder="******"
                         disabled={register.isLoading}
+                        autoComplete="new-password"
                         withValidation={
                           form.formState.dirtyFields.password ||
                           form.formState.errors.password !== undefined

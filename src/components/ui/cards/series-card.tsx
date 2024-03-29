@@ -5,6 +5,7 @@ import { Heart, Play, User } from "lucide-react";
 import React from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import { useCardAnimation } from "./cards.hooks";
 import { animationConfig } from "./utils";
@@ -40,7 +41,7 @@ const variants: Variants = {
   },
   animate: {
     scale: 1.3,
-    y: "-70%",
+    y: "-30%",
     zIndex: 50,
     transition: {
       duration: animationConfig.duration,
@@ -95,7 +96,8 @@ export const SeriesCard = ({
     useCardAnimation();
 
   return (
-    <div
+    <Link
+      href="/settings"
       className=" relative flex aspect-video h-full w-full cursor-pointer rounded-sm "
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -163,7 +165,7 @@ export const SeriesCard = ({
             </motion.div>
             <motion.div
               variants={textVariants}
-              className="  w-full -translate-y-px rounded-b-sm  bg-gray-50 p-4  shadow-md transition-opacity"
+              className="  w-full -translate-y-px rounded-b-sm  bg-slate-100 p-4  shadow-md transition-opacity"
             >
               <div className="mt-px space-y-4">
                 <div className="space-y-1">
@@ -213,6 +215,6 @@ export const SeriesCard = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Link>
   );
 };

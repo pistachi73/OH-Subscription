@@ -1,5 +1,5 @@
-import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { CardList } from "@/components/ui/cards/card-list";
+import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 
 const SearchPage = () => {
   return (

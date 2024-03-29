@@ -1,10 +1,12 @@
 "use client";
 
+import { useSignals } from "@preact/signals-react/runtime";
+
 import { useRouter } from "next/navigation";
 
-import { AuthForm } from "@/components/auth/auth-form";
+import { isAuthModalOpenSignal, parentFormSignal } from "./auth-signals";
+
 import { type AuthFormType } from "@/components/auth/auth.types";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 type LoginButtonProps = {
   children: React.ReactNode;
@@ -19,22 +21,28 @@ export const AuthButton = ({
   asChild,
   mode,
 }: LoginButtonProps) => {
+  useSignals();
   const router = useRouter();
 
   const onClick = () => {
-    router.push(`/auth/${formType || "login"}`);
+    if (mode === "redirect") {
+      router.push(`/auth/${formType || "login"}`);
+    } else {
+      isAuthModalOpenSignal.value = true;
+      parentFormSignal.value = formType;
+    }
   };
 
-  if (mode === "modal") {
-    return (
-      <Dialog>
-        <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
-        <DialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
-          <AuthForm initialFormType={formType} />
-        </DialogContent>
-      </Dialog>
-    );
-  }
+  // if (mode === "modal") {
+  //   return (
+  //     <Dialog>
+  //       <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
+  //       <DialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
+  //         <AuthForm initialFormType={formType} />
+  //       </DialogContent>
+  //     </Dialog>
+  //   );
+  // }
   return (
     <span onClick={onClick} className="cursor-pointer">
       {children}

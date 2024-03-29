@@ -1,4 +1,4 @@
-import { MaxWidthWrapper } from "./max-width-wrapper";
+import { MaxWidthWrapper } from "./ui/max-width-wrapper";
 
 export const Footer = () => {
   return (

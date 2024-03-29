@@ -7,9 +7,10 @@
     "build": "next build",
     "db:push": "drizzle-kit push:sqlite",
     "db:studio": "drizzle-kit studio",
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
+    "prod": "next build && next start",
     "email": "email dev --dir src/emails --port 4000"
   },
   "dependencies": {
@@ -18,13 +19,16 @@
     "@hookform/resolvers": "^3.3.4",
     "@libsql/client": "^0.5.6",
     "@planetscale/database": "^1.14.0",
+    "@preact/signals-react": "^2.0.1",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-email/components": "0.0.15",
     "@t3-oss/env-nextjs": "^0.9.2",
@@ -55,9 +59,11 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",
+    "vaul": "^0.9.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@preact/signals-react-transform": "^0.3.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/eslint": "^8.44.7",
     "@types/node": "^18.17.0",
@@ -75,7 +81,6 @@
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
     "tailwindcss": "^3.3.5",
-    "turbo": "latest",
     "typescript": "^5.1.6"
   },
   "ct3aMetadata": {

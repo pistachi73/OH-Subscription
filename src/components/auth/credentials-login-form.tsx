@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSignals } from "@preact/signals-react/runtime";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useTransition } from "react";
@@ -13,7 +14,7 @@ import { useSearchParams } from "next/navigation";
 import { CodeInput } from "../ui/code-input";
 import { PasswordInput } from "../ui/password-input";
 
-import { useAuthContext } from "./auth-form-context";
+import { childrenFormSignal } from "./auth-signals";
 
 import { login } from "@/actions/login";
 import { Button } from "@/components/ui/button";
@@ -29,8 +30,9 @@ import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
 
 export const CredentialsForm = () => {
+  useSignals();
   const { update } = useSession();
-  const { setChildrenForm, childrenForm } = useAuthContext();
+  // const { setChildrenForm, childrenFormSignal } = useAuthContext();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
@@ -58,20 +60,22 @@ export const CredentialsForm = () => {
       }
 
       if (twoFactor) {
-        setChildrenForm("two-factor");
+        // setChildrenForm("two-factor");
+        childrenFormSignal.value = "two-factor";
       }
     });
   };
 
   const isSubmitButtonDisabled =
     isPending ||
-    (childrenForm === "two-factor" && form.watch("code")?.length !== 6);
+    (childrenFormSignal.value === "two-factor" &&
+      form.watch("code")?.length !== 6);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-6">
-          {childrenForm === "two-factor" && (
+          {childrenFormSignal.value === "two-factor" && (
             <FormField
               control={form.control}
               name="code"
@@ -90,7 +94,7 @@ export const CredentialsForm = () => {
               )}
             />
           )}
-          {childrenForm === "credential" && (
+          {childrenFormSignal.value === "credential" && (
             <>
               <FormField
                 control={form.control}
@@ -103,6 +107,7 @@ export const CredentialsForm = () => {
                         {...field}
                         placeholder="John Done"
                         disabled={isPending}
+                        autoComplete="email"
                         autoFocus
                       />
                     </FormControl>
@@ -123,6 +128,7 @@ export const CredentialsForm = () => {
                         {...field}
                         placeholder="******"
                         disabled={isPending}
+                        autoComplete="current-password"
                       />
                     </FormControl>
                     <FormMessage />
@@ -132,7 +138,8 @@ export const CredentialsForm = () => {
                       className="text-sm font-light text-muted-foreground"
                       type="button"
                       onClick={() => {
-                        setChildrenForm("reset-password");
+                        // setChildrenForm("reset-password");
+                        childrenFormSignal.value = "reset-password";
                       }}
                     >
                       Forgot password?
@@ -151,7 +158,7 @@ export const CredentialsForm = () => {
         >
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 
-          {childrenForm === "two-factor" ? "Confirm" : "Continue"}
+          {childrenFormSignal.value === "two-factor" ? "Confirm" : "Continue"}
         </Button>
       </form>
     </Form>

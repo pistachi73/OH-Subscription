@@ -22,7 +22,7 @@ const getIsMobileUsingViewport = (
   viewportWidth: number,
 ): { deviceType: DeviceType; deviceSize: DeviceSize[] } => {
   const deviceType =
-    viewportWidth < SCREENS.MD
+    viewportWidth < SCREENS.SM
       ? "mobile"
       : viewportWidth < SCREENS.LG
         ? "tablet"

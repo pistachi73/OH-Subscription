@@ -1,12 +1,13 @@
 "use client";
 
+import { useSignals } from "@preact/signals-react/runtime";
 import { Mail } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
 import { useSearchParams } from "next/navigation";
 
-import { useAuthContext } from "./auth-form-context";
+import { childrenFormSignal, parentFormSignal } from "./auth-signals";
 
 import { type LoginFormType } from "@/components/auth/auth.types";
 import { CredentialsForm } from "@/components/auth/credentials-login-form";
@@ -16,7 +17,9 @@ import { SocialButton } from "@/components/auth/social-button";
 import { Button } from "@/components/ui/button";
 
 export const LoginForm = () => {
-  const { setParentForm, setChildrenForm, childrenForm } = useAuthContext();
+  useSignals();
+
+  // const { setParentForm, setChildrenForm, childrenFormSignal.value } = useAuthContext();
 
   const searchParams = useSearchParams();
   const urlError =
@@ -47,10 +50,12 @@ export const LoginForm = () => {
         <Button
           size="inline"
           variant="link"
-          className="font-light text-primary"
+          className="text-sm font-light text-primary sm:text-base"
           onClick={() => {
-            setParentForm("register");
-            setChildrenForm("default");
+            // setParentForm("register");
+            // setChildrenForm("default");
+            parentFormSignal.value = "register";
+            childrenFormSignal.value = "default";
           }}
         >
           Join here
@@ -63,28 +68,41 @@ export const LoginForm = () => {
       "Enter your email address and we'll send you a link to reset your password.",
   };
 
+  // const isCredentialForm =
+  //   childrenFormSignal.value === "credential" ||
+  //   childrenFormSignal.value === "two-factor" ||
+  //   childrenFormSignal.value === "credential" ||
+  //   childrenFormSignal.value === "two-factor";
+
+  // const isResetPasswordForm =
+  //   childrenFormSignal.value === "reset-password" ||
+  //   childrenFormSignal.value === "reset-password";
+
+  // const isDefaultForm =
+  //   childrenFormSignal.value === "default" || childrenFormSignal.value === "default";
+
   return (
     <FormWrapper
-      header={headerLabelMapping[childrenForm as LoginFormType]}
-      subHeader={subHeaderMapping[childrenForm as LoginFormType]}
-      backButton={childrenForm !== "default"}
+      header={headerLabelMapping[childrenFormSignal.value as LoginFormType]}
+      subHeader={subHeaderMapping[childrenFormSignal.value as LoginFormType]}
+      backButton={childrenFormSignal.value !== "default"}
       backButtonOnClick={() => {
-        setChildrenForm("default");
+        // setChildrenForm("default");
+        childrenFormSignal.value = "default";
       }}
     >
-      {(childrenForm === "credential" || childrenForm === "two-factor") && (
-        <CredentialsForm />
-      )}
-      {childrenForm === "reset-password" && <ResetPasswordForm />}
-      {childrenForm === "default" && (
+      {(childrenFormSignal.value === "credential" ||
+        childrenFormSignal.value === "two-factor") && <CredentialsForm />}
+      {childrenFormSignal.value === "reset-password" && <ResetPasswordForm />}
+      {childrenFormSignal.value === "default" && (
         <div className="space-y-4">
           <SocialButton provider="google" />
           <Button
             size="default"
             variant="outline"
-            className="flex w-full justify-between"
+            className="flex w-full justify-between border text-sm  sm:text-base"
             onClick={() => {
-              setChildrenForm("credential");
+              childrenFormSignal.value = "credential";
             }}
           >
             <Mail size={18} />
@@ -92,7 +110,7 @@ export const LoginForm = () => {
               Continue with email/username
             </span>
           </Button>
-          <span className=" block w-full text-center text-xs font-medium text-muted-foreground">
+          <span className=" block w-full text-center text-2xs font-medium text-muted-foreground sm:text-xs">
             OR
           </span>
           <SocialButton provider="github" />

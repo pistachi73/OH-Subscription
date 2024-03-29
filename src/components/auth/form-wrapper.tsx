@@ -40,8 +40,8 @@ export const FormWrapper = ({
         )}
       </div>
       <CardHeader className="px-0 py-6">
-        <CardTitle className="text-3xl sm:text-2xl">{header}</CardTitle>
-        <CardDescription className="mt-2 text-lg font-light sm:text-base">
+        <CardTitle className="text-xl sm:text-2xl">{header}</CardTitle>
+        <CardDescription className="mt-2 text-sm font-light sm:text-base">
           {subHeader}
         </CardDescription>
       </CardHeader>

@@ -171,12 +171,15 @@ const Carousel = React.forwardRef<
       >
         <motion.div
           whileHover="hover"
+          whileTap="hover"
+          whileFocus="hover"
+          whileDrag="hover"
           initial="initial"
           animate="initial"
           variants={variants}
           className="group/carousel relative w-full"
         >
-          <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
+          <div className="absolute -top-2 right-[3%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
             {Array.from({ length: total }).map((_, index) => (
               <div
                 key={index}
@@ -191,7 +194,7 @@ const Carousel = React.forwardRef<
             ref={ref}
             onKeyDownCapture={handleKeyDown}
             className={cn(
-              "relative my-1 w-full  overflow-x-clip overflow-y-visible px-[4%] 2xl:px-14",
+              "relative my-1 w-full  overflow-x-clip overflow-y-visible px-[3%] 2xl:px-14",
               className,
             )}
             role="region"
@@ -220,7 +223,7 @@ const CarouselContent = React.forwardRef<
         className={cn(
           "flex",
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
-          "-ml-0.5 lg:-ml-1 xl:-ml-2",
+          "-ml-1  lg:-ml-2 xl:-ml-3",
           className,
         )}
         {...props}
@@ -242,7 +245,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full pl-0.5 lg:pl-1 xl:pl-2",
+        "min-w-0 shrink-0 grow-0 basis-full pl-1 lg:pl-2 xl:pl-3",
         orientation === "horizontal" ? "" : "pt-4",
         className,
       )}
@@ -262,7 +265,7 @@ const CarouselPrevious = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-prev absolute flex h-full w-[calc(4%-2px)]  items-center justify-center rounded-none rounded-r-sm bg-primary-50/50  opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0  lg:w-[calc(4%-4px)] xl:w-[calc(4%-8px)] 2xl:w-[48px]",
+        "group/chevron-prev absolute flex h-full w-[calc(3%-2px)]  items-center justify-center rounded-none rounded-r-sm bg-primary-50/50  opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0  lg:w-[calc(3%-4px)] xl:w-[calc(3%-8px)] 2xl:w-[48px]",
         orientation === "horizontal"
           ? "-left-0 top-1/2 -translate-y-1/2"
           : "-top-10 left-1/2 -translate-x-1/2 rotate-90",
@@ -292,7 +295,7 @@ const CarouselNext = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-next absolute flex h-full w-[calc(4%-2px)] items-center justify-center rounded-none rounded-l-sm bg-primary-50/50 opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 lg:w-[calc(4%-4px)] xl:w-[calc(4%-8px)] 2xl:w-[48px]",
+        "group/chevron-next absolute flex h-full w-[calc(3%-2px)] items-center justify-center rounded-none rounded-l-sm bg-primary-50/50 opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 lg:w-[calc(3%-4px)] xl:w-[calc(3%-8px)] 2xl:w-[48px]",
         orientation === "horizontal"
           ? "-right-0 top-1/2 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",

@@ -51,9 +51,8 @@ export const SeriesCarousel = ({
   const length = videos?.length || 13;
   const { slideSizeClassname, slidesToScroll, slidesPerView } =
     useCarouselSettings();
-
   return (
-    <div className="my-8 lg:my-12">
+    <div className="my-4 lg:my-12">
       <CarouselHeader title={title} href={href} />
       <Carousel
         slidesPerView={slidesPerView}

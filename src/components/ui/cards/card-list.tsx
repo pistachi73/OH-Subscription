@@ -12,9 +12,10 @@ type PartialRecord<K extends keyof any, T> = {
 };
 type CardListProps = {
   cardsPerRow: PartialRecord<DeviceSize, number>;
+  totalCards?: number;
 };
 
-export const CardList = ({ cardsPerRow }: CardListProps) => {
+export const CardList = ({ cardsPerRow, totalCards = 20 }: CardListProps) => {
   const { deviceSize } = useDeviceType();
 
   const isBorder = (
@@ -39,7 +40,7 @@ export const CardList = ({ cardsPerRow }: CardListProps) => {
 
   return (
     <>
-      {Array.from({ length: 20 }).map((_, index) => {
+      {Array.from({ length: totalCards }).map((_, index) => {
         const { isLeftBorder, isRightBorder } = isBorder(index);
         return (
           <SeriesCard

@@ -1,4 +1,4 @@
-import { Hero } from "@/components/hero/hero";
+import { Hero } from "@/components/home/hero";
 import { BookCarousel } from "@/components/ui/carousel/book-carousel";
 import { SeriesCarousel } from "@/components/ui/carousel/series-carousel";
 

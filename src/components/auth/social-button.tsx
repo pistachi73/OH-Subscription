@@ -53,7 +53,10 @@ export const SocialButton = ({ provider, className }: SocialButtonProps) => {
     <Button
       size="default"
       variant="outline"
-      className={cn("flex w-full justify-between border", className)}
+      className={cn(
+        "flex w-full justify-between border text-sm  sm:text-base",
+        className,
+      )}
       onClick={onClick}
     >
       <Icon className="h-[18px] w-[18px]" />

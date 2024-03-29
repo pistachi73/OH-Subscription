@@ -25,6 +25,8 @@
       --input: 232 20% 50%;
       --ring: 232 34.1% 35.1%;
       --radius: 0.5rem;
+
+      --header-height: 48px;
     }
     .dark {
       --background: 232 10% 10%;
@@ -92,5 +94,9 @@
   .text-gradient {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  p {
+    font-weight: 300;
   }
 }

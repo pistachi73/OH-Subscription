@@ -1,7 +1,12 @@
 "use client";
+import { useSignals } from "@preact/signals-react/runtime";
 import { Mail } from "lucide-react";
 
-import { useAuthContext } from "./auth-form-context";
+import {
+  childrenFormSignal,
+  emailSignal,
+  parentFormSignal,
+} from "./auth-signals";
 
 import { type RegisterFormType } from "@/components/auth/auth.types";
 import { CredentialsRegisterForm } from "@/components/auth/credentials-register-form";
@@ -10,9 +15,9 @@ import { SocialButton } from "@/components/auth/social-button";
 import { Button } from "@/components/ui/button";
 
 export const RegisterForm = () => {
-  const { setParentForm, setChildrenForm, childrenForm, email } =
-    useAuthContext();
-
+  // const { setParentForm, setChildrenForm, childrenFormSignal, email } =
+  //   useAuthContext();
+  useSignals();
   const headerLabelMapping: Record<RegisterFormType, string> = {
     default: "Create a new account",
     credential: "Continue with your email or username",
@@ -29,10 +34,12 @@ export const RegisterForm = () => {
         <Button
           size="inline"
           variant="link"
-          className="font-light text-primary"
+          className="text-sm font-light text-primary sm:text-base"
           onClick={() => {
-            setParentForm("login");
-            setChildrenForm("default");
+            // setParentForm("login");
+            // setChildrenForm("default");
+            parentFormSignal.value = "login";
+            childrenFormSignal.value = "default";
           }}
         >
           Sign in
@@ -40,29 +47,31 @@ export const RegisterForm = () => {
       </span>
     ),
     credential: null,
-    "email-verification": email
-      ? `Enter the confirmation code we sent to ${email}.`
+    "email-verification": emailSignal.value
+      ? `Enter the confirmation code we sent to ${emailSignal.value}.`
       : "Enter the confirmation code we sent to your email.",
   };
 
   return (
     <FormWrapper
-      header={headerLabelMapping[childrenForm as RegisterFormType]}
-      subHeader={subHeaderMapping[childrenForm as RegisterFormType]}
-      backButton={childrenForm !== "default"}
+      header={headerLabelMapping[childrenFormSignal.value as RegisterFormType]}
+      subHeader={subHeaderMapping[childrenFormSignal.value as RegisterFormType]}
+      backButton={childrenFormSignal.value !== "default"}
       backButtonOnClick={() => {
-        setChildrenForm("default");
+        // setChildrenForm("default");
+        childrenFormSignal.value = "default";
       }}
     >
-      {childrenForm === "default" && (
+      {childrenFormSignal.value === "default" && (
         <div className="space-y-4">
           <SocialButton provider="google" />
           <Button
             size="default"
             variant="outline"
-            className="flex w-full justify-between"
+            className="flex w-full justify-between border text-sm  sm:text-base"
             onClick={() => {
-              setChildrenForm("credential");
+              // setChildrenForm("credential");
+              childrenFormSignal.value = "credential";
             }}
           >
             <Mail size={18} />
@@ -76,8 +85,10 @@ export const RegisterForm = () => {
           <SocialButton provider="github" />
         </div>
       )}
-      {(childrenForm === "credential" ||
-        childrenForm === "email-verification") && <CredentialsRegisterForm />}
+      {(childrenFormSignal.value === "credential" ||
+        childrenFormSignal.value === "email-verification") && (
+        <CredentialsRegisterForm />
+      )}
     </FormWrapper>
   );
 };

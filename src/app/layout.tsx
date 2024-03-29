@@ -6,6 +6,7 @@ import { Inter, Open_Sans, Red_Hat_Mono, Work_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 
 import { auth } from "@/auth";
+import { AuthModal } from "@/components/auth/auth-modal";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { DeviceOnlyProvider } from "@/components/ui/device-only/device-only-provider";
@@ -58,6 +59,7 @@ export default async function RootLayout({
               <Header />
               {children}
               <Footer />
+              <AuthModal />
             </SessionProvider>
           </TRPCReactProvider>
         </DeviceOnlyProvider>
