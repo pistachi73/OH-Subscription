@@ -124,7 +124,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
               : "/images/hero-thumbnail-2.jpg"
           }
           alt="Hero background image"
-          containerClassname="max-h-[85vh] sm:h-[140%]"
+          containerClassname="max-h-[100vh] sm:h-[140%]"
           shadowClassname="sm:to-10%"
         />
         <MaxWidthWrapper className="relative z-30 mx-0 flex  h-full  flex-col justify-end  gap-4  sm:-mt-8 sm:w-3/4 sm:max-w-[550px] md:-mt-16 xl:max-w-[750px]">
