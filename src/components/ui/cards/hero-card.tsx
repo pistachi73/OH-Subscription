@@ -48,7 +48,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
     const contentVariants = {
       initial: {
         opacity: 0,
-        y: "100%",
+        y: "50%",
       },
       animate: {
         opacity: 1,
@@ -129,32 +129,28 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
           containerClassname="max-h-[100vh] sm:h-[140%]"
           shadowClassname="sm:to-10%"
         />
-        <MaxWidthWrapper className="relative z-30 mx-0 flex  h-full  flex-col justify-end  gap-4  sm:-mt-8 sm:w-3/4 sm:max-w-[550px] md:-mt-16 xl:max-w-[750px]">
-          <div className="overflow-hidden">
-            <motion.h1
-              className="text-left font-sans text-2xl font-semibold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl"
-              variants={titleVariants}
-              custom={{
-                isMobile: deviceType === "mobile",
-              }}
-            >
-              English around the world
-            </motion.h1>
-          </div>
+        <MaxWidthWrapper className="relative z-30 mx-0 flex  h-full  flex-col justify-end  gap-4  sm:-mt-8 sm:w-3/4 md:-mt-16 lg:max-w-[56ch] 2xl:max-w-[64ch]">
+          <motion.h1
+            className="text-left font-sans text-2xl font-semibold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl"
+            variants={titleVariants}
+            custom={{
+              isMobile: deviceType === "mobile",
+            }}
+          >
+            English around the world
+          </motion.h1>
           <div className="space-y-8">
             <DeviceOnly allowedDevices={["tablet", "desktop"]}>
-              <div className="overflow-hidden">
-                <motion.p
-                  className="w-full text-left text-sm text-gray-800 sm:text-base xl:text-base"
-                  variants={subtitleVariants}
-                >
-                  {index % 2 === 0
-                    ? "Ideal for beginners to intermediate learners, this course provides comprehensive coverage of grammar essentials through interactive lessons and quizzes, boosting both written and spoken communication skills."
-                    : "Tailored for advanced learners, this course focuses on real-life scenarios, idiomatic expressions, and nuanced vocabulary to enhance conversational fluency through role-plays and discussions, empowering confident communication in English-speaking environments."}
-                </motion.p>
-              </div>
+              <motion.p
+                className="w-full text-left text-sm text-gray-800 sm:text-base lg:text-lg"
+                variants={subtitleVariants}
+              >
+                {index % 2 === 0
+                  ? "Ideal for beginners to intermediate learners, this course provides comprehensive coverage of grammar essentials through interactive lessons and quizzes, boosting both written and spoken communication skills."
+                  : "Tailored for advanced learners, this course focuses on real-life scenarios, idiomatic expressions, and nuanced vocabulary to enhance conversational fluency through role-plays and discussions, empowering confident communication in English-speaking environments."}
+              </motion.p>
             </DeviceOnly>
-            <div className="flex w-full flex-col items-center gap-2 overflow-y-clip sm:flex-row">
+            <div className="flex w-full flex-col items-center gap-2 sm:flex-row">
               <DeviceOnly allowedDevices={["tablet", "desktop"]}>
                 <MotionButton
                   variants={buttonOneVariants}

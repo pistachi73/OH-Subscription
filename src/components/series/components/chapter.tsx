@@ -87,7 +87,7 @@ export const Chapter = () => {
     <>
       <DeviceOnly allowedDevices={["mobile"]}>
         <motion.div
-          className="cursor-pointer rounded-lg bg-slate-200"
+          className="cursor-pointer rounded-lg bg-slate-100"
           whileHover="hover"
           layout="position"
           initial={false}

@@ -129,7 +129,7 @@ export const BookCard = ({
       onMouseLeave={onMouseLeave}
     >
       <div className="relative aspect-[3/4] shrink-0 overflow-visible ">
-        <span className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-primary-800/70 bg-opacity-80 px-1 py-0.5 text-2xs font-medium text-white">
+        <span className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-primary-800 px-1 py-0.5 text-2xs font-medium text-white">
           Beginner
         </span>
         <Image
@@ -139,9 +139,9 @@ export const BookCard = ({
           className="rounded-sm object-cover"
         />
         {publishDate && (
-          <div className="absolute bottom-1 left-1/2 z-10 -translate-x-1/2 rounded-sm bg-gradient-to-t from-primary-900 to-primary-700 p-1 px-2 text-center ">
-            <p className="text-3xs  text-primary-200">Coming soon</p>
-            <p className="text-xs font-medium text-primary-50"> 24/03/2024</p>
+          <div className="absolute bottom-1 left-1/2 z-10 -translate-x-1/2 rounded-sm bg-gradient-to-t from-primary-900 to-primary-800 p-1 px-2 text-center ">
+            <p className="text-3xs  text-gray-400">Coming soon</p>
+            <p className="text-xs font-medium text-gray-50"> 24/03/2024</p>
           </div>
         )}
       </div>
@@ -191,25 +191,29 @@ export const BookCard = ({
                     variants={buttonVariants}
                   >
                     <Button
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
+                      variant="outline"
                       size="icon"
-                      className="h-8 w-8 rounded-full"
-                      variant="default"
                     >
-                      <Play size={14} className="fill-current" />
+                      <Play
+                        className="ml-1 fill-primary stroke-primary"
+                        size={16}
+                      />
                     </Button>
+
                     <Button
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
+                      variant="outline"
                       size="icon"
-                      className="h-8 w-8 rounded-full"
-                      variant="secondary"
                     >
-                      <Heart size={14} />
+                      <Heart className="stroke-primary " size={16} />
                     </Button>
                   </motion.div>
                 </motion.div>
                 <motion.div
                   variants={textVariants}
                   className={cn(
-                    "h-full bg-gray-50 px-4 py-3",
+                    "h-full bg-slate-100 px-4 py-3",
                     { "-translate-x-1 rounded-r-sm": !isRightBorder },
                     { "translate-x-1 rounded-l-sm": isRightBorder },
                   )}
@@ -231,12 +235,12 @@ export const BookCard = ({
                             Beginner
                           </span>
                         </h3>
-                        <p className="text-3xs text-gray-600">
+                        <p className="text-2xs text-gray-400">
                           William Shakespeare
                         </p>
                       </div>
 
-                      <p className="w-full text-left text-2xs font-light text-primary-800">
+                      <p className="w-full text-left text-xs font-light text-primary-800">
                         Lorem ipsum dolor sit amet consectetur. Enim dolor
                         porttitor at scelerisque pellentesque imperdiet a enim
                         ullamcorper.
@@ -250,7 +254,7 @@ export const BookCard = ({
                               <TooltipTrigger asChild>
                                 <Avatar className="-ml-2 h-9 w-9 border border-gray-800 first:ml-0 hover:bg-gray-400">
                                   <AvatarImage src={undefined} />
-                                  <AvatarFallback className="bg-white">
+                                  <AvatarFallback className="bg-slate-50">
                                     <User className="text-gray-800" size={16} />
                                   </AvatarFallback>
                                 </Avatar>

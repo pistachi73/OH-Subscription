@@ -32,7 +32,7 @@ export const SeriesHeroCard = ({}: SeriesHeroCardProps) => {
         containerClassname=" max-h-[80vh]"
       />
 
-      <MaxWidthWrapper className="relative z-30 mx-0 flex  h-full  flex-col  gap-4  before:top-0 before:h-[45vw] before:min-h-[100px] before:content-[''] lg:justify-end lg:before:content-none">
+      <MaxWidthWrapper className="relative z-30 mx-0 flex  h-full  flex-col  gap-4  before:top-0 before:h-[46vw] before:min-h-[100px] before:content-[''] lg:justify-end lg:before:content-none">
         <div className=" space-y-4 sm:w-3/4 lg:max-w-[56ch] 2xl:max-w-[64ch]">
           <h1 className="text-left font-sans text-3xl font-semibold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl">
             English around the world
@@ -44,24 +44,24 @@ export const SeriesHeroCard = ({}: SeriesHeroCardProps) => {
           </p>
         </div>
 
-        <div className="flex flex-row flex-wrap gap-4">
-          <p className="flex flex-row items-center gap-2 text-sm text-gray-600 sm:text-base lg:text-lg">
+        <div className="flex flex-row flex-wrap gap-x-4 gap-y-2">
+          <p className="flex flex-row items-center gap-2 text-sm text-gray-800 sm:text-base lg:text-lg">
             <CalendarClock size={18} />
             Last update: 02/2024
           </p>
 
-          <p className="flex flex-row items-center gap-2 text-sm text-gray-600 sm:text-base lg:text-lg">
+          <p className="flex flex-row items-center gap-2 text-sm text-gray-800 sm:text-base lg:text-lg">
             <LibraryBig size={18} />
             12 chapters
           </p>
           <div className="flex flex-row gap-1">
-            <p className="rounded-sm  bg-gray-600  px-[6px] py-1 text-sm text-white sm:text-base lg:text-lg">
+            <p className="rounded-sm  bg-gray-800  px-[6px] py-1 text-xs text-white sm:text-sm lg:text-base">
               Grammar
             </p>
-            <p className="rounded-sm  bg-gray-600 px-[6px] py-1 text-sm text-white sm:text-base lg:text-lg">
+            <p className="rounded-sm  bg-gray-800 px-[6px] py-1 text-xs text-white sm:text-sm lg:text-base">
               HD
             </p>
-            <p className="rounded-sm  bg-gray-600 px-[6px] py-1 text-sm text-white sm:text-base lg:text-lg">
+            <p className="rounded-sm  bg-gray-800 px-[6px] py-1 text-xs text-white sm:text-sm lg:text-base">
               Vocabulary
             </p>
           </div>
@@ -73,6 +73,7 @@ export const SeriesHeroCard = ({}: SeriesHeroCardProps) => {
               <Play size={22} className="mr-2 fill-current" />
               Reproduce
             </Button>
+
             <Button
               variant="outline"
               size="icon"

@@ -104,7 +104,7 @@ export const SeriesCard = ({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <span className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-gray-800/70 px-1 py-0.5 text-2xs font-medium text-white">
+      <span className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-gray-800 px-1 py-0.5 text-2xs font-medium text-white">
         B1 - B2
       </span>
 
@@ -151,18 +151,22 @@ export const SeriesCard = ({
                   variants={textVariants}
                 >
                   <Button
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
+                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 rounded-full"
-                    variant="default"
                   >
-                    <Play size={14} className="fill-current" />
+                    <Play
+                      className="ml-1 fill-primary stroke-primary"
+                      size={16}
+                    />
                   </Button>
+
                   <Button
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
+                    variant="outline"
                     size="icon"
-                    className="h-8 w-8 rounded-full"
-                    variant="secondary"
                   >
-                    <Heart size={14} />
+                    <Heart className="stroke-primary " size={16} />
                   </Button>
                 </motion.div>
               </motion.div>
@@ -178,7 +182,7 @@ export const SeriesCard = ({
                         B1 - B2
                       </span>
                     </h3>
-                    <p className="w-4/5 text-left text-2xs font-light text-primary-800">
+                    <p className="w-4/5 text-left text-xs  text-primary-800">
                       Lorem ipsum dolor sit amet consectetur. Enim dolor
                       porttitor at scelerisque pellentesque imperdiet a enim
                       ullamcorper.
@@ -192,7 +196,7 @@ export const SeriesCard = ({
                             <TooltipTrigger asChild>
                               <Avatar className="-ml-2 h-9 w-9 border border-gray-800 first:ml-0 hover:bg-gray-400">
                                 <AvatarImage src={undefined} />
-                                <AvatarFallback className="bg-white">
+                                <AvatarFallback className="bg-slate-50">
                                   <User className="text-gray-800" size={16} />
                                 </AvatarFallback>
                               </Avatar>

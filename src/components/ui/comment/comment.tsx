@@ -71,8 +71,8 @@ export const Comment = ({ isReply }: CommentProps) => {
             <p className="text-sm font-medium sm:text-base">John Doe</p>
           </div>
           <div className="flex flex-row items-center  gap-2 sm:gap-3">
-            <p className="text-xs text-gray-600 sm:text-sm">2 hours ago</p>
-            <p className="text-xs text-gray-600 sm:text-sm">Edited on Nov 19</p>
+            <p className="text-xs text-gray-400 sm:text-sm">2 hours ago</p>
+            <p className="text-xs text-gray-400 sm:text-sm">Edited on Nov 19</p>
           </div>
         </div>
         <p className="max-w-[70ch] text-sm text-gray-800 sm:text-base">
