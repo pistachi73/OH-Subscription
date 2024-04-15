@@ -44,10 +44,6 @@ export const ResetSchema = z.object({
   }),
 });
 
-export const NewVerificationSchema = z.object({
-  code: z.string().min(6, { message: "Code is required" }),
-});
-
 export const NewPasswordSchema = z.object({
   password: z.string().min(6, { message: "Minimum 6 characters required" }),
 });
@@ -96,3 +92,62 @@ export const SettingsSchema = z
       path: ["newPassword"],
     },
   );
+
+export const ProgramSchema = z.object({
+  id: z.number().optional(),
+  title: z.string().min(1, { message: "Title is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+  published: z.boolean(),
+  level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"], {
+    required_error: "Level is required",
+  }),
+  totalChapters: z
+    .number({ required_error: "Total chapters is required" })
+    .min(1, { message: "Must be greater than 0" }),
+  duration: z
+    .number({ required_error: "Duration is required" })
+    .min(1, { message: "Must be greater than 0" }),
+  teachers: z.string().refine(
+    (data) => {
+      return data.split(",").filter(Boolean).length > 0;
+    },
+    { message: "Teachers are required" },
+  ),
+  categories: z.string().refine(
+    (data) => {
+      return data.split(",").filter(Boolean).length > 0;
+    },
+    { message: "Categories are required" },
+  ),
+});
+
+export const TeacherSchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(1, { message: "Name is required" }),
+  bio: z.string().min(1, { message: "Bio is required" }),
+  image: z
+    .any()
+    .refine((file) => Boolean(file), "Image is required.")
+    .refine((file) => file?.size <= 3000000, `Max image size is 3MB.`)
+    .optional(),
+});
+
+export const VideoSchema = z.object({
+  id: z.number().optional(),
+  title: z.string().min(1, { message: "Title is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+  url: z.string().min(1, { message: "URL is required" }),
+  duration: z.number().min(1, { message: "Duration is required" }),
+  transcript: z.string().optional(),
+  categories: z.string().refine(
+    (data) => {
+      return data.split(",").filter(Boolean).length > 0;
+    },
+    { message: "Categories are required" },
+  ),
+  thumbnail: z
+    .any()
+    .refine((file) => Boolean(file), "Image is required.")
+    .refine((file) => file?.size <= 3000000, `Max image size is 3MB.`)
+    .optional(),
+});

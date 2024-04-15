@@ -1,0 +1,27 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1713023892280,
+      "tag": "0000_sturdy_zodiak",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1713027877007,
+      "tag": "0001_uneven_scorpion",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1713031124893,
+      "tag": "0002_wonderful_mephisto",
+      "breakpoints": true
+    }
+  ]
+}

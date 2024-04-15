@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export const useTabFocus = () => {
-  const [focus, setFocus] = useState(document.hasFocus());
+  const [focus, setFocus] = useState(true);
 
   useEffect(() => {
     const onFocus = () => setFocus(true);

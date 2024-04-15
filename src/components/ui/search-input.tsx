@@ -10,7 +10,7 @@ export const SearchInput = (props: InputProps) => {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // router.push(`/search?q=${value}`);
+    router.push(`/search?q=${value}`);
   };
 
   return (

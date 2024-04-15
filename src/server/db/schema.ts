@@ -1,4 +1,5 @@
 import { type AdapterAccount } from "@auth/core/adapters";
+import { sql } from "drizzle-orm";
 import {
   integer,
   primaryKey,
@@ -101,3 +102,73 @@ export const twoFactorConirmations = sqliteTable("twoFactorConfirmation", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
+
+export const programs = sqliteTable("programs", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  level: text("role", {
+    enum: ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
+  }).notNull(),
+  totalChapters: integer("totalChapters").default(0).notNull(),
+  duration: integer("duration").default(0).notNull(),
+  published: integer("published", { mode: "boolean" }).default(false),
+  teachers: text("teachers").default(""),
+  categories: text("categories").default(""),
+  createdAt: text("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const videos = sqliteTable("video", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  transcript: text("transcript").default(""),
+  url: text("url").default("").notNull(),
+  duration: integer("duration").default(0).notNull(),
+  categories: text("categories").default("").notNull(),
+  thumbnail: text("thumbnail").default(""),
+  createdAt: text("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text("updated_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const programsVideos = sqliteTable(
+  "programsVideos",
+  {
+    id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+    programId: text("programId")
+      .notNull()
+      .references(() => programs.id, {
+        onDelete: "cascade",
+      }),
+    videoId: text("videoId")
+      .notNull()
+      .references(() => videos.id, {
+        onDelete: "cascade",
+      }),
+    chapterNumber: integer("chapterNumber").notNull(),
+  },
+  (t) => ({
+    unq: unique().on(t.videoId, t.programId, t.chapterNumber),
+  }),
+);
+
+export const teachers = sqliteTable("teachers", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  bio: text("bio").notNull(),
+  image: text("image"),
+});
+
+// export type InsertUser = typeof users.$inferInsert;
+export type SelectTeacher = typeof teachers.$inferSelect;
+export type SelectVideo = typeof videos.$inferSelect;
+export type SelectProgram = typeof programs.$inferSelect;

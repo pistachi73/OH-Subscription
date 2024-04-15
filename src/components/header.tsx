@@ -1,17 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Cross, LogIn, MenuIcon, Search, SearchCheck, X } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { LogIn, MenuIcon, Search, X } from "lucide-react";
+import React, { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { AuthButton } from "./auth/auth-button";
 import { UserButton } from "./auth/user-button";
 import { useDeviceType } from "./ui/device-only/device-only-provider";
-import { Input } from "./ui/input";
 import { MaxWidthWrapper } from "./ui/max-width-wrapper";
 
 import { Button, type ButtonProps } from "@/components/ui/button";

@@ -1,22 +1,9 @@
 "use client";
 
-import {
-  CalendarClock,
-  Heart,
-  Info,
-  LibraryBig,
-  Play,
-  Share,
-  Share2,
-  User,
-} from "lucide-react";
+import { CalendarClock, Heart, LibraryBig, Play, Share2 } from "lucide-react";
 
-import Image from "next/image";
-
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { DeviceOnly } from "../ui/device-only/device-only";
 import { HeroImage } from "../ui/hero-image";
-import { ChapterIcon } from "../ui/icons/chapter-icon";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 import { Button } from "@/components/ui/button";

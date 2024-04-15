@@ -12,6 +12,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "@/auth";
+import { isAdminAuthenticated } from "@/lib/is-admin-authenticated";
 import { db } from "@/server/db";
 
 /**
@@ -100,3 +101,23 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
+
+export const adminProtectedProcedure = t.procedure.use(
+  async ({ ctx, next }) => {
+    const { headers } = ctx;
+
+    const isAdminAuth = await isAdminAuthenticated(
+      headers.get("authorization") || headers.get("Authorization"),
+    );
+
+    if (!isAdminAuth) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    return next({
+      ctx: {
+        // session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  },
+);

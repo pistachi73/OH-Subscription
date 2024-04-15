@@ -2,7 +2,7 @@
 
 import { useSignals } from "@preact/signals-react/runtime";
 
-import { AuthForm, AuthFormContent, AuthFormContentSignals } from "./auth-form";
+import { AuthFormContentSignals } from "./auth-form";
 import { isAuthModalOpenSignal } from "./auth-signals";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";

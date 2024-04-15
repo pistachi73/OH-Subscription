@@ -36,6 +36,10 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: z.string(),
     RESEND_API_KEY: z.string(),
     EMAIL_FROM: z.string(),
+
+    // Admin credentials
+    ADMIN_USERNAME: z.string(),
+    ADMIN_HASHED_PASSWORD: z.string(),
   },
 
   /**
@@ -64,6 +68,8 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     EMAIL_FROM: process.env.EMAIL_FROM,
+    ADMIN_USERNAME: process.env.ADMIN_USERNAME,
+    ADMIN_HASHED_PASSWORD: process.env.ADMIN_HASHED_PASSWORD,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

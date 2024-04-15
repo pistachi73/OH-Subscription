@@ -5,6 +5,52 @@
 @layer base {
   @layer base {
     :root {
+      --background: 232 41% 100%;
+      --foreground: 232 68% 4%;
+      --muted: 232 100% 94.96%;
+      --muted-foreground: 232 5.24% 60.63%;
+      --popover: 232 41% 100%;
+      --popover-foreground: 232 68% 4%;
+      --card: 232 41% 100%;
+      --card-foreground: 232 68% 4%;
+      --border: 232 9% 90%;
+      --input: 232 9% 90%;
+      --primary: 232 34% 35%;
+      --primary-foreground: 232 17.24% 93.96%;
+      --secondary: 232.13 21.24% 93.16%;
+      --secondary-foreground: 232 3.64% 17.81%;
+      --accent: 231.43 20% 93.14%;
+      --accent-foreground: 240 3.3% 17.84%;
+      --destructive: 5 100% 44%;
+      --destructive-foreground: 0 0% 100%;
+      --ring: 232 34% 35%;
+      --radius: 0.5rem;
+
+      --header-height: 48px;
+    }
+
+    .dark {
+      --background: 232 52% 4%;
+      --foreground: 232 21% 100%;
+      --muted: 232 37% 12%;
+      --muted-foreground: 232 13% 61%;
+      --popover: 232 52% 4%;
+      --popover-foreground: 232 21% 100%;
+      --card: 232 52% 4%;
+      --card-foreground: 232 21% 100%;
+      --border: 232 9% 14%;
+      --input: 232 9% 14%;
+      --primary: 232 34% 35%;
+      --primary-foreground: 232 34% 95%;
+      --secondary: 232 10% 13%;
+      --secondary-foreground: 232 10% 73%;
+      --accent: 232 10% 13%;
+      --accent-foreground: 232 10% 73%;
+      --destructive: 5 100% 48%;
+      --destructive-foreground: 0 0% 100%;
+      --ring: 232 34% 35%;
+    }
+    /* :root {
       --background: 232 0% 100%;
       --foreground: 232 0% 10%;
       --card: 232 0% 100%;
@@ -49,7 +95,7 @@
       --input: 232 20% 50%;
       --ring: 232 34.1% 35.1%;
       --radius: 0.5rem;
-    }
+    } */
   }
 }
 
@@ -94,6 +140,16 @@
   .text-gradient {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  .remove-number-arrows::-webkit-inner-spin-button,
+  .remove-number-arrows::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .remove-number-arrows {
+    -moz-appearance: textfield;
   }
 
   p {

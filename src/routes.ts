@@ -19,6 +19,7 @@ export const authRoutes = [
   "/auth/reset-password",
 ];
 
+export const adminRoute = "/admin";
 /**
  * The prefix for the API authetication routes
  * Routes that start with this prefix are used for API autheintication purposes

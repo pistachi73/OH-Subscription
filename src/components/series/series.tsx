@@ -1,4 +1,3 @@
-import { SeriesCarousel } from "../ui/carousel/series-carousel";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 import { Chapters } from "./chapters";

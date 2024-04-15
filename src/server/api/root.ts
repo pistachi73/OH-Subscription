@@ -1,5 +1,8 @@
-import { authRouter } from "./routers/auth";
-import { userRouter } from "./routers/user";
+import { authRouter } from "./routers/auth.router";
+import { programRouter } from "./routers/program.router";
+import { teacherRouter } from "./routers/teacher.router";
+import { userRouter } from "./routers/user.router";
+import { videoRouter } from "./routers/video.router";
 
 import { createTRPCRouter } from "@/server/api/trpc";
 
@@ -11,6 +14,9 @@ import { createTRPCRouter } from "@/server/api/trpc";
 export const appRouter = createTRPCRouter({
   auth: authRouter,
   user: userRouter,
+  teacher: teacherRouter,
+  video: videoRouter,
+  program: programRouter,
 });
 
 // export type definition of API

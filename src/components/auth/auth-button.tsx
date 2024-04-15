@@ -15,12 +15,7 @@ type LoginButtonProps = {
   asChild?: boolean;
 };
 
-export const AuthButton = ({
-  formType,
-  children,
-  asChild,
-  mode,
-}: LoginButtonProps) => {
+export const AuthButton = ({ formType, children, mode }: LoginButtonProps) => {
   useSignals();
   const router = useRouter();
 

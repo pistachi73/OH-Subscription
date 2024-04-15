@@ -5,17 +5,18 @@ import { NextResponse, userAgent } from "next/server";
 import { type DeviceType } from "./components/ui/device-only/device-only-provider";
 
 import authConfig from "@/auth.config";
+import { isAdminAuthenticated } from "@/lib/is-admin-authenticated";
 import {
   DEFAULT_LOGIN_REDIRECT,
+  adminRoute,
   apiAuthPrefix,
   authRoutes,
   privateRoutes,
-  publicRoutes,
 } from "@/routes";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
+export default auth(async (req) => {
   const {
     device: { type },
   } = userAgent(req);
@@ -30,14 +31,24 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const { nextUrl } = req;
 
+  const isAdminRoute = nextUrl.pathname.startsWith(adminRoute);
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  if (isApiAuthRoute) {
-    return NextResponse.next({
-      headers: requestHeaders,
-    });
+  if (isAdminRoute) {
+    if (
+      (await isAdminAuthenticated(
+        req.headers.get("authorization") || req.headers.get("Authorization"),
+      )) === false
+    ) {
+      return new NextResponse("Unauthorized", {
+        status: 401,
+        headers: {
+          "WWW-Authenticate": "Basic",
+        },
+      });
+    }
   }
 
   if (isAuthRoute) {

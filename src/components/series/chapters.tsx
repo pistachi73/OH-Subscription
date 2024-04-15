@@ -1,7 +1,5 @@
 "use client";
 
-import { LayoutGroup } from "framer-motion";
-
 import { Chapter } from "./components/chapter";
 import { SimilarSeries } from "./similar-series";
 

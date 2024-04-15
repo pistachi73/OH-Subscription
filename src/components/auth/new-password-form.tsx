@@ -29,7 +29,7 @@ export const NewPasswordForm = () => {
   const form = useForm<z.infer<typeof NewPasswordSchema>>({
     resolver: zodResolver(NewPasswordSchema),
     defaultValues: {
-      password: "",
+      password: "https://picsum.photos/300",
     },
   });
 
