@@ -17,6 +17,10 @@ const config = {
         protocol: "https",
         hostname: "picsum.photos",
       },
+      {
+        protocol: "https",
+        hostname: "d2uddyg0p930fa.cloudfront.net",
+      },
     ],
   },
 };

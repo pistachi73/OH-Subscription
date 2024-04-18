@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { ChaptersTable } from "./chapters-table";
 
+import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
 import {
   AdminMultipleSelect,
   type Option,
@@ -243,6 +244,32 @@ export const ProgramForm = ({
                   )}
                 />
               </div>
+            </CardContent>
+          </Card>
+          <Card className="overflow-hidden">
+            <CardHeader>
+              <CardTitle>Program thumbnail</CardTitle>
+              <CardDescription>Upload the program thumbnail.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="thumbnail"
+                render={({ field: { value, onChange, ...fieldProps } }) => {
+                  return (
+                    <FormItem>
+                      <FormControl>
+                        <AdminFileInput
+                          value={value}
+                          onChange={onChange}
+                          {...fieldProps}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
             </CardContent>
           </Card>
           <Card className="w-full">

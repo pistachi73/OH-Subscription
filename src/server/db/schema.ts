@@ -1,12 +1,15 @@
 import { type AdapterAccount } from "@auth/core/adapters";
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   integer,
+  pgTable,
   primaryKey,
-  sqliteTable,
+  serial,
   text,
+  timestamp,
   unique,
-} from "drizzle-orm/sqlite-core";
+} from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -18,19 +21,17 @@ import {
 //   (name) => `${env.DATABASE_PREFIX}_${name}`,
 // );
 
-export const users = sqliteTable("user", {
+export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
   name: text("name"),
   email: text("email").notNull(),
   image: text("image"),
   password: text("password"),
   role: text("role", { enum: ["ADMIN", "USER"] }).default("USER"),
-  isTwoFactorEnabled: integer("isTwoFactorEnabled", {
-    mode: "boolean",
-  }).default(false),
+  isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
 });
 
-export const accounts = sqliteTable(
+export const accounts = pgTable(
   "account",
   {
     userId: text("userId")
@@ -53,25 +54,24 @@ export const accounts = sqliteTable(
     }),
   }),
 );
-
-export const verificationTokens = sqliteTable(
+export const verificationTokens = pgTable(
   "verificationToken",
   {
     token: text("token").notNull().primaryKey(),
     email: text("email").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (vt) => ({
     unique: unique().on(vt.email, vt.token),
   }),
 );
 
-export const passwordResetTokens = sqliteTable(
+export const passwordResetTokens = pgTable(
   "passwordResetToken",
   {
     token: text("token").notNull().primaryKey(),
     email: text("email").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (passwordResetToken) => ({
     passwordResetTokenUnique: unique("ss").on(
@@ -81,12 +81,12 @@ export const passwordResetTokens = sqliteTable(
   }),
 );
 
-export const twoFactorTokens = sqliteTable(
+export const twoFactorTokens = pgTable(
   "twoFactorToken",
   {
     token: text("token").notNull().primaryKey(),
     email: text("email").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (twoFactorToken) => ({
     twoFactorTokensUnique: unique().on(
@@ -96,15 +96,15 @@ export const twoFactorTokens = sqliteTable(
   }),
 );
 
-export const twoFactorConirmations = sqliteTable("twoFactorConfirmation", {
+export const twoFactorConirmations = pgTable("twoFactorConfirmation", {
   id: text("id").notNull().primaryKey(),
   userId: text("user")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
-export const programs = sqliteTable("programs", {
-  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+export const programs = pgTable("programs", {
+  id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   level: text("role", {
@@ -112,44 +112,40 @@ export const programs = sqliteTable("programs", {
   }).notNull(),
   totalChapters: integer("totalChapters").default(0).notNull(),
   duration: integer("duration").default(0).notNull(),
-  published: integer("published", { mode: "boolean" }).default(false),
+  published: boolean("published").default(false),
   teachers: text("teachers").default(""),
   categories: text("categories").default(""),
-  createdAt: text("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text("updated_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  thumbnail: text("thumbnail"),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" })
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
-export const videos = sqliteTable("video", {
-  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+export const videos = pgTable("video", {
+  id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
-  transcript: text("transcript").default(""),
-  url: text("url").default("").notNull(),
-  duration: integer("duration").default(0).notNull(),
-  categories: text("categories").default("").notNull(),
-  thumbnail: text("thumbnail").default(""),
-  createdAt: text("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text("updated_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  url: text("url").notNull(),
+  duration: integer("duration").notNull(),
+  thumbnail: text("thumbnail"),
+  categories: text("categories"),
+  transcript: text("transcript"),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" })
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
 
-export const programsVideos = sqliteTable(
-  "programsVideos",
+export const videosToPrograms = pgTable(
+  "videosToPrograms",
   {
-    id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-    programId: text("programId")
+    programId: integer("programId")
       .notNull()
       .references(() => programs.id, {
         onDelete: "cascade",
       }),
-    videoId: text("videoId")
+    videoId: integer("videoId")
       .notNull()
       .references(() => videos.id, {
         onDelete: "cascade",
@@ -158,11 +154,14 @@ export const programsVideos = sqliteTable(
   },
   (t) => ({
     unq: unique().on(t.videoId, t.programId, t.chapterNumber),
+    pk: primaryKey({
+      columns: [t.videoId, t.programId],
+    }),
   }),
 );
 
-export const teachers = sqliteTable("teachers", {
-  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+export const teachers = pgTable("teachers", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   bio: text("bio").notNull(),
   image: text("image"),

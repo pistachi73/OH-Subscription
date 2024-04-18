@@ -35,7 +35,7 @@ export const AdminFormLayout = <T extends FieldValues>({
     <div className="mx-auto w-full max-w-[1080px] ">
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSave)}
+          onSubmit={form.handleSubmit((data) => onSave(data))}
           className="flex flex-col gap-4"
         >
           <div className="flex items-center gap-4">

@@ -33,7 +33,7 @@ const EditSeriesPage = async () => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/admin/programs">All Program</Link>
+              <Link href="/admin/programs">All Programs</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />

@@ -15,7 +15,6 @@ export const env = createEnv({
         "You forgot to change the default URL",
       ),
     DATABASE_PREFIX: z.string(),
-    DATABASE_AUTH_TOKEN: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -40,6 +39,12 @@ export const env = createEnv({
     // Admin credentials
     ADMIN_USERNAME: z.string(),
     ADMIN_HASHED_PASSWORD: z.string(),
+
+    // AWS S3, Cloudfront
+    AWS_REGION: z.string(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
+    AWS_S3_BUCKET: z.string(),
   },
 
   /**
@@ -49,6 +54,7 @@ export const env = createEnv({
    */
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_AWS_CLOUDFRONT_URL: z.string(),
   },
 
   /**
@@ -58,7 +64,6 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     DATABASE_PREFIX: process.env.DATABASE_PREFIX,
-    DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
     NODE_ENV: process.env.NODE_ENV,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_URL: process.env.AUTH_URL,
@@ -70,6 +75,12 @@ export const env = createEnv({
     EMAIL_FROM: process.env.EMAIL_FROM,
     ADMIN_USERNAME: process.env.ADMIN_USERNAME,
     ADMIN_HASHED_PASSWORD: process.env.ADMIN_HASHED_PASSWORD,
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_S3_BUCKET: process.env.AWS_S3_BUCKET,
+
+    NEXT_PUBLIC_AWS_CLOUDFRONT_URL: process.env.NEXT_PUBLIC_AWS_CLOUDFRONT_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

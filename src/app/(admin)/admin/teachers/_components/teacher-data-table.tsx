@@ -3,6 +3,8 @@
 import { useSignals } from "@preact/signals-react/runtime";
 import { type ColumnDef } from "@tanstack/react-table";
 
+import Image from "next/image";
+
 import {
   isTeacherDeleteModalOpenSignal,
   teacherIdSignal,
@@ -17,12 +19,29 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
+import { getImageUrl } from "@/lib/utils";
 import { type SelectTeacher } from "@/server/db/schema";
 
 export const columns: ColumnDef<SelectTeacher>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
+    accessorKey: "image",
+    header: "Image",
+    cell: (row) => {
+      const value = row.getValue();
+
+      return (
+        <div className="relative aspect-square h-16 overflow-hidden rounded-md bg-muted">
+          {typeof value === "string" && (
+            <Image
+              src={getImageUrl(value)}
+              alt="thumbnail"
+              className=" object-cover"
+              fill
+            />
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "name",

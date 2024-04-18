@@ -15,12 +15,16 @@ import { api } from "@/trpc/server";
 
 type EditVideoPageProps = {
   params: {
-    id: string;
+    videoId: string;
   };
 };
 
-const EditVideoPage = async ({ params: { id } }: EditVideoPageProps) => {
-  const video = await api.video.getById.query(Number(id));
+const EditVideoPage = async ({ params: { videoId } }: EditVideoPageProps) => {
+  console.log({ videoId });
+
+  const video = await api.video.getById.query(Number(videoId));
+
+  console.log({ video });
 
   if (!video) {
     redirect("/admin/videos");

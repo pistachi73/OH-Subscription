@@ -19,7 +19,6 @@ export const NewTeacher = () => {
     defaultValues: {
       name: "",
       bio: "",
-      image: undefined,
     },
   });
 

@@ -1,5 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
@@ -8,7 +9,9 @@ import { useRouter } from "next/navigation";
 
 import { VideoForm } from "./video-form";
 
+import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
+import { uploadToS3 } from "@/lib/upload-to-s3";
 import { VideoSchema } from "@/schemas";
 import { api } from "@/trpc/react";
 
@@ -21,12 +24,13 @@ export const NewVideo = () => {
       categories: "",
       url: "",
       transcript: "",
-      duration: 0,
+      duration: undefined,
     },
   });
   const router = useRouter();
+  const [isSaving, startTransition] = useTransition();
 
-  const { mutateAsync, isLoading: isSaving } = api.video.create.useMutation({
+  const { mutateAsync } = api.video.create.useMutation({
     onSuccess: () => {
       router.push("/admin/videos");
     },
@@ -36,7 +40,20 @@ export const NewVideo = () => {
   });
 
   const onSave = async (values: z.infer<typeof VideoSchema>) => {
-    await mutateAsync(values);
+    startTransition(async () => {
+      const thumbnail = values.thumbnail;
+
+      if (thumbnail instanceof File) {
+        const { fileName } = await uploadToS3({
+          file: thumbnail,
+          createPresignedUrl: () => createPresignedUrl({}),
+        });
+        values.thumbnail = fileName;
+        form.setValue("thumbnail", fileName);
+      }
+
+      await mutateAsync({ ...values });
+    });
   };
 
   return (

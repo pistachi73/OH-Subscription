@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignals } from "@preact/signals-react/runtime";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
@@ -11,7 +12,9 @@ import {
   teacherIdSignal,
 } from "./teacher-signals";
 
+import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
+import { uploadToS3 } from "@/lib/upload-to-s3";
 import { TeacherSchema } from "@/schemas";
 import { type SelectTeacher } from "@/server/db/schema";
 import { api } from "@/trpc/react";
@@ -27,20 +30,37 @@ export const EditTeacher = ({ teacher }: EditTeacherProps) => {
     defaultValues: {
       name: teacher.name,
       bio: teacher.bio,
-      image: undefined,
+      image: teacher.image || undefined,
+    },
+  });
+  const [isSaving, startTransition] = useTransition();
+
+  const { mutateAsync: saveTeacher } = api.teacher.update.useMutation({
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
-  const { mutateAsync: saveTeacher, isLoading: isSaving } =
-    api.teacher.update.useMutation({
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    });
-
   const onSave = async (values: z.infer<typeof TeacherSchema>) => {
-    await saveTeacher({ ...values, id: teacher.id });
+    startTransition(async () => {
+      const image = values.image;
+
+      if (image instanceof File) {
+        const { fileName } = await uploadToS3({
+          file: image,
+          createPresignedUrl: () =>
+            createPresignedUrl({
+              fileName: teacher.image ?? undefined,
+            }),
+        });
+        values.image = fileName;
+        form.setValue("image", fileName);
+      }
+
+      await saveTeacher({ ...values, id: teacher.id });
+    });
   };
+
   const onDelete = async () => {
     isTeacherDeleteModalOpenSignal.value = true;
     teacherIdSignal.value = teacher.id;
@@ -49,7 +69,7 @@ export const EditTeacher = ({ teacher }: EditTeacherProps) => {
   return (
     <AdminFormLayout
       form={form}
-      title="New teacher"
+      title="Edit teacher"
       backHref="/admin/teachers"
       onSave={onSave}
       isSaving={isSaving}

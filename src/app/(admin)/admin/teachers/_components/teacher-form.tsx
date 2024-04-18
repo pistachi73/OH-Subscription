@@ -5,6 +5,7 @@ import { type z } from "zod";
 
 import Image from "next/image";
 
+import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
 import {
   Card,
   CardContent,
@@ -98,65 +99,11 @@ export const TeacherForm = ({ form }: TeacherFormProps) => {
                 return (
                   <FormItem>
                     <FormControl>
-                      <div>
-                        <Input
-                          type="file"
-                          onChange={(event) => {
-                            if (
-                              event.target.files &&
-                              event.target.files?.length > 0
-                            ) {
-                              onChange(event.target.files[0]);
-                            }
-                          }}
-                          {...fieldProps}
-                          ref={imageInputRef}
-                          className={cn("hidden text-sm")}
-                        />
-
-                        {typeof value === "string" ? (
-                          <button
-                            className="relative aspect-square w-full"
-                            onClick={() => {
-                              imageInputRef.current?.click();
-                            }}
-                            type="button"
-                          >
-                            <Image
-                              alt="Teacher image"
-                              className="aspect-square w-full rounded-md object-cover"
-                              src={value}
-                              fill
-                            />
-                          </button>
-                        ) : typeof value === "undefined" ? (
-                          <button
-                            className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed"
-                            onClick={() => {
-                              imageInputRef.current?.click();
-                            }}
-                            type="button"
-                          >
-                            <Upload className="h-4 w-4 text-muted-foreground" />
-                            <span className="sr-only">Upload</span>
-                          </button>
-                        ) : (
-                          <button
-                            className="relative aspect-square w-full"
-                            onClick={() => {
-                              imageInputRef.current?.click();
-                            }}
-                            type="button"
-                          >
-                            <Image
-                              alt="Teacher image"
-                              className="aspect-square w-full rounded-md object-cover"
-                              src={URL.createObjectURL(value)}
-                              fill
-                            />
-                          </button>
-                        )}
-                      </div>
+                      <AdminFileInput
+                        value={value}
+                        onChange={onChange}
+                        {...fieldProps}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

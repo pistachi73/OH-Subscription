@@ -24,7 +24,7 @@ const EditProgramPage = async ({ params: { id } }: EditProgramPageProps) => {
   const program = await api.program.getById.query(Number(id));
 
   if (!program) {
-    redirect("/admin/teachers");
+    redirect("/admin/programs");
   }
   const teachers = await api.teacher.getAll.query();
   const videos = await api.video.getAll.query();
@@ -50,7 +50,7 @@ const EditProgramPage = async ({ params: { id } }: EditProgramPageProps) => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/admin/programs">All Program</Link>
+              <Link href="/admin/programs">All Programs</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />

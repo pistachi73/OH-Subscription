@@ -23,6 +23,17 @@ export const passwordRegex = [
   },
 ] as const;
 
+export const FileSchema = z
+  .custom<File>()
+  .or(z.string())
+  .optional()
+  .refine((file) => {
+    if (typeof file !== "string" && file?.size) {
+      return file.size <= 3000000;
+    }
+    return true;
+  }, `Max image size is 3MB.`);
+
 export const PasswordSchema = z
   .string()
   .regex(passwordRegex[0].regex, { message: passwordRegex[0].message })
@@ -98,6 +109,7 @@ export const ProgramSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   published: z.boolean(),
+  thumbnail: FileSchema,
   level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"], {
     required_error: "Level is required",
   }),
@@ -125,11 +137,7 @@ export const TeacherSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(1, { message: "Name is required" }),
   bio: z.string().min(1, { message: "Bio is required" }),
-  image: z
-    .any()
-    .refine((file) => Boolean(file), "Image is required.")
-    .refine((file) => file?.size <= 3000000, `Max image size is 3MB.`)
-    .optional(),
+  image: FileSchema,
 });
 
 export const VideoSchema = z.object({
@@ -139,15 +147,6 @@ export const VideoSchema = z.object({
   url: z.string().min(1, { message: "URL is required" }),
   duration: z.number().min(1, { message: "Duration is required" }),
   transcript: z.string().optional(),
-  categories: z.string().refine(
-    (data) => {
-      return data.split(",").filter(Boolean).length > 0;
-    },
-    { message: "Categories are required" },
-  ),
-  thumbnail: z
-    .any()
-    .refine((file) => Boolean(file), "Image is required.")
-    .refine((file) => file?.size <= 3000000, `Max image size is 3MB.`)
-    .optional(),
+  categories: z.string().optional(),
+  thumbnail: FileSchema,
 });

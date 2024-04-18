@@ -8,6 +8,7 @@ import {
   publicProcedure,
 } from "../trpc";
 
+import { deleteFile } from "@/actions/delete-file";
 import { isNumber } from "@/lib/utils";
 import { TeacherSchema } from "@/schemas";
 import { teachers } from "@/server/db/schema";
@@ -24,6 +25,16 @@ export const teacherRouter = createTRPCRouter({
         });
       }
 
+      const teacher = await db
+        .select()
+        .from(teachers)
+        .where(eq(teachers.id, id));
+      const image = teacher?.[0]?.image;
+
+      if (image) {
+        await deleteFile({ fileName: image });
+      }
+
       await db.delete(teachers).where(eq(teachers.id, id));
 
       return { success: true };
@@ -32,11 +43,11 @@ export const teacherRouter = createTRPCRouter({
     .input(TeacherSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
-      const { name, bio } = input;
+      const { image, ...values } = input;
 
       await db.insert(teachers).values({
-        name,
-        bio,
+        ...values,
+        image: typeof image === "string" ? image : null,
       });
 
       return { success: true };
@@ -46,9 +57,8 @@ export const teacherRouter = createTRPCRouter({
     .input(TeacherSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
-      const { name, bio, id } = input;
-      console.log("id", id);
-      console.log("isNumber", isNumber(id));
+      const { id, image, ...values } = input;
+
       if (!id || !isNumber(id)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -56,11 +66,27 @@ export const teacherRouter = createTRPCRouter({
         });
       }
 
+      const teacher = await db
+        .select()
+        .from(teachers)
+        .where(eq(teachers.id, Number(id)));
+
+      let currentTeacherImage = teacher?.[0]?.image;
+
+      if (typeof image === "string") {
+        currentTeacherImage = image;
+      }
+
+      if (!image && currentTeacherImage) {
+        await deleteFile({ fileName: currentTeacherImage });
+        currentTeacherImage = null;
+      }
+
       await db
         .update(teachers)
         .set({
-          name,
-          bio,
+          ...values,
+          image: image ? currentTeacherImage : null,
         })
         .where(eq(teachers.id, Number(id)));
 

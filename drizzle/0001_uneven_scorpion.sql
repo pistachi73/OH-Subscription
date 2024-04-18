@@ -1,1 +1,0 @@
-ALTER TABLE video ADD `thumbnail` text DEFAULT '';

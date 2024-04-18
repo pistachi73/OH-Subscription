@@ -1,7 +1,9 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 
+import Image from "next/image";
 import Link from "next/link";
 
 import { isVideoDeleteModalOpenSignal, videoIdSignal } from "./video-signals";
@@ -16,13 +18,34 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
+import { getImageUrl } from "@/lib/utils";
 import { type SelectVideo } from "@/server/db/schema";
 
 export const columns: ColumnDef<SelectVideo>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
+    accessorKey: "thumbnail",
+    header: "Thumbnail",
+    cell: (row) => {
+      const value = row.getValue();
+
+      return (
+        <div className="relative aspect-[4/3] h-16 overflow-hidden rounded-md bg-muted">
+          {typeof value === "string" && (
+            <Image
+              src={getImageUrl(value)}
+              alt="thumbnail"
+              className=" object-cover"
+              fill
+            />
+          )}{" "}
+        </div>
+      );
+    },
   },
+  // {
+  //   accessorKey: "id",
+  //   header: "Id",
+  // },
   {
     accessorKey: "title",
     header: "Title",
@@ -41,7 +64,7 @@ export const columns: ColumnDef<SelectVideo>[] = [
     header: "Url",
     cell: (row) => {
       return (
-        <Button variant="link" className="p-0">
+        <Button variant="link" className="p-0 text-sm">
           <Link
             href={row.getValue() as string}
             target="_blank"
@@ -51,6 +74,15 @@ export const columns: ColumnDef<SelectVideo>[] = [
           </Link>
         </Button>
       );
+    },
+  },
+  {
+    accessorKey: "updatedAt",
+    header: "Updated at",
+    cell: (row) => {
+      const value = row.getValue() as string;
+      if (!value) return null;
+      return <p className="">{format(value, "d MMMM, yyyy")}</p>;
     },
   },
   actionColumn({

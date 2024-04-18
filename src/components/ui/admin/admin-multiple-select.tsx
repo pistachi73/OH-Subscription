@@ -26,15 +26,19 @@ export type Option = {
 
 type AdminMultipleSelectProps = {
   options: Option[];
-  value: string;
+  value?: string;
   onChange: (value: string) => void;
   children: React.ReactNode;
   showSelected?: boolean;
   disableSelected?: boolean;
 };
 
-const getSelectedOptionsValues = (value: string) => {
-  return value?.split(",").filter(Boolean).length > 0 ? value?.split(",") : [];
+const getSelectedOptionsValues = (value?: string) => {
+  return value
+    ? value?.split(",").filter(Boolean).length > 0
+      ? value?.split(",")
+      : []
+    : [];
 };
 
 export const AdminMultipleSelect = ({
@@ -57,8 +61,6 @@ export const AdminMultipleSelect = ({
   const [selectedOptionsValues, setSelectedOptionsValues] = useState<
     string[] | null
   >(getSelectedOptionsValues(value));
-
-  console.log(options, "selectedOptionsValues", selectedOptionsValues);
 
   useEffect(() => {
     setSelectedOptionsValues(getSelectedOptionsValues(value));

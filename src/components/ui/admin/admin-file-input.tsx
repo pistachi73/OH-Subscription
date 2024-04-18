@@ -1,11 +1,11 @@
-import { Upload } from "lucide-react";
+import { Trash, Upload } from "lucide-react";
 import React, { useRef } from "react";
 
 import Image from "next/image";
 
 import { Input, type InputProps } from "../input";
 
-import { cn } from "@/lib/utils";
+import { cn, getImageUrl } from "@/lib/utils";
 
 interface AdminFileInputProps extends Omit<InputProps, "onChange" | "value"> {
   onChange: (...event: any[]) => void;
@@ -20,9 +20,18 @@ export const AdminFileInput = React.forwardRef<
 
   return (
     <div>
+      {/* <button
+        onClick={() => {
+          console.log({ value });
+        }}
+        type="button"
+      >
+        teste
+      </button> */}
       <Input
         type="file"
         onChange={(event) => {
+          console.log("change");
           if (event.target.files && event.target.files?.length > 0) {
             onChange?.(event.target.files[0]);
           }
@@ -34,7 +43,7 @@ export const AdminFileInput = React.forwardRef<
 
       {typeof value === "string" ? (
         <button
-          className="relative aspect-square w-full"
+          className="group  relative aspect-square w-full"
           onClick={() => {
             imageInputRef.current?.click();
           }}
@@ -43,11 +52,20 @@ export const AdminFileInput = React.forwardRef<
           <Image
             alt="Video image"
             className="aspect-square w-full rounded-md object-cover"
-            src={value}
+            src={getImageUrl(value)}
             fill
           />
+          <div
+            className="absolute right-2 top-2 flex items-center justify-center rounded-sm bg-destructive/50 p-2 opacity-0 transition-all hover:bg-destructive group-hover:opacity-100"
+            onClick={(e) => {
+              e.stopPropagation();
+              onChange?.(null);
+            }}
+          >
+            <Trash className="text-destructive-foreground" size={16} />
+          </div>
         </button>
-      ) : typeof value === "undefined" ? (
+      ) : !value ? (
         <button
           className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
           onClick={() => {

@@ -1,6 +1,9 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+
+import Image from "next/image";
 
 import {
   isProgramDeleteModalOpenSignal,
@@ -17,12 +20,29 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
+import { getImageUrl } from "@/lib/utils";
 import { type SelectProgram } from "@/server/db/schema";
 
 export const columns: ColumnDef<SelectProgram>[] = [
   {
-    accessorKey: "id",
-    header: "Id",
+    accessorKey: "thumbnail",
+    header: "Thumbnail",
+    cell: (row) => {
+      const value = row.getValue();
+
+      return (
+        <div className="relative aspect-[4/3] h-16 overflow-hidden rounded-md bg-muted">
+          {typeof value === "string" && (
+            <Image
+              src={getImageUrl(value)}
+              alt="thumbnail"
+              className=" object-cover"
+              fill
+            />
+          )}{" "}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "title",
@@ -48,7 +68,7 @@ export const columns: ColumnDef<SelectProgram>[] = [
     cell: (row) => {
       const val = row.getValue() as string;
       return (
-        <div className="flex flex-row gap-1">
+        <div className="flex flex-row flex-wrap gap-1">
           {val.split(",").map((category) => (
             <Badge key={category} className="uppercase" variant="secondary">
               {category}
@@ -56,6 +76,15 @@ export const columns: ColumnDef<SelectProgram>[] = [
           ))}
         </div>
       );
+    },
+  },
+  {
+    accessorKey: "updatedAt",
+    header: "Updated at",
+    cell: (row) => {
+      const value = row.getValue() as string;
+      if (!value) return null;
+      return <p className="">{format(value, "MMMM d, yyyy")}</p>;
     },
   },
   actionColumn({

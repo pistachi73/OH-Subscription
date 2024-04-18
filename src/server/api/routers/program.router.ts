@@ -8,6 +8,7 @@ import {
   publicProcedure,
 } from "../trpc";
 
+import { deleteFile } from "@/actions/delete-file";
 import { isNumber } from "@/lib/utils";
 import { ProgramSchema } from "@/schemas";
 import { programs } from "@/server/db/schema";
@@ -24,6 +25,16 @@ export const programRouter = createTRPCRouter({
         });
       }
 
+      const program = await db
+        .select()
+        .from(programs)
+        .where(eq(programs.id, id));
+      const thumbnail = program?.[0]?.thumbnail;
+
+      if (thumbnail) {
+        await deleteFile({ fileName: thumbnail });
+      }
+
       await db.delete(programs).where(eq(programs.id, id));
 
       return { success: true };
@@ -32,9 +43,12 @@ export const programRouter = createTRPCRouter({
     .input(ProgramSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
-      //   const { values } = input;
+      const { thumbnail, ...values } = input;
 
-      await db.insert(programs).values(input);
+      await db.insert(programs).values({
+        ...values,
+        thumbnail: typeof thumbnail === "string" ? thumbnail : null,
+      });
 
       return { success: true };
     }),
@@ -43,7 +57,7 @@ export const programRouter = createTRPCRouter({
     .input(ProgramSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
-      const { id, ...values } = input;
+      const { id, thumbnail, ...values } = input;
 
       if (!id || !isNumber(id)) {
         throw new TRPCError({
@@ -52,9 +66,28 @@ export const programRouter = createTRPCRouter({
         });
       }
 
+      const program = await db
+        .select()
+        .from(programs)
+        .where(eq(programs.id, Number(id)));
+
+      let currentProgramThumbnail = program?.[0]?.thumbnail;
+
+      if (typeof thumbnail === "string") {
+        currentProgramThumbnail = thumbnail;
+      }
+
+      if (!thumbnail && currentProgramThumbnail) {
+        await deleteFile({ fileName: currentProgramThumbnail });
+        currentProgramThumbnail = null;
+      }
+
       await db
         .update(programs)
-        .set({ ...values, updatedAt: sql`CURRENT_TIMESTAMP` })
+        .set({
+          ...values,
+          thumbnail: thumbnail ? currentProgramThumbnail : null,
+        })
         .where(eq(programs.id, Number(id)));
 
       return { success: true, id: Number(id) };
