@@ -47,7 +47,6 @@ export const Chapter = () => {
     },
   };
 
-  //   const ease = cubicBezier(0.15, 0.8, 0.6, 1);
   const ease = cubicBezier(0.23, 1, 0.6, 1);
 
   const mobileContainerVariants: Variants = {
@@ -129,7 +128,7 @@ export const Chapter = () => {
                     variants={mobileContentVariants}
                   >
                     <MotionLink
-                      href="/"
+                      href="chapter/slug/id"
                       className="relative block aspect-video w-full max-w-[400px]"
                       onMouseDown={(e) => e.stopPropagation()}
                     >
@@ -165,7 +164,10 @@ export const Chapter = () => {
           variants={containerVariants}
         >
           <div className="h-full w-full">
-            <Link href="/" className="relative block aspect-video">
+            <Link
+              href="chapter/slug/id"
+              className="relative block aspect-video"
+            >
               <Image
                 src="/images/video-thumbnail.png"
                 alt="video"

@@ -8,9 +8,9 @@ import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 import { Button } from "@/components/ui/button";
 
-type SeriesHeroCardProps = {};
+type ProgramHeroCardProps = {};
 
-export const SeriesHeroCard = ({}: SeriesHeroCardProps) => {
+export const ProgramHeroCard = ({}: ProgramHeroCardProps) => {
   return (
     <div className="relative mb-8 max-h-[80vh] w-full sm:mb-0 sm:-translate-y-[var(--header-height)] lg:h-[76vw]">
       <HeroImage

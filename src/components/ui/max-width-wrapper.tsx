@@ -12,7 +12,7 @@ export const MaxWidthWrapper = forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("mx-auto w-full px-[3%] 2xl:px-14", className)}
+      className={cn("mx-auto w-full px-[4%] 2xl:px-14", className)}
     >
       {children}
     </div>

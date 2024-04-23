@@ -1,8 +1,9 @@
 "use client";
 
+import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { LogIn, MenuIcon, Search, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -42,18 +43,42 @@ export const Header = () => {
   const user = useCurrentUser();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { deviceType } = useDeviceType();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50   bg-slate-100 shadow-sm transition-colors duration-200 sm:h-header sm:translate-y-2 sm:bg-transparent sm:shadow-none",
+        "sticky top-0 z-50 bg-background sm:h-header sm:bg-transparent",
       )}
     >
-      <MaxWidthWrapper className="relative flex h-full items-center justify-center gap-4">
+      <MaxWidthWrapper
+        className={clsx(
+          "relative flex h-full items-center justify-center gap-4 transition-colors duration-200",
+          {
+            "bg-background": !isScrolled,
+            "bg-transparent": isScrolled,
+          },
+        )}
+      >
         <DeviceOnly allowedDevices={["mobile"]}>
           <div
             className={cn(
-              "relative flex w-full flex-row items-center justify-between gap-10 rounded-sm bg-slate-100 sm:px-2 sm:py-1 sm:shadow-sm",
+              "relative flex w-full flex-row items-center justify-between gap-10 rounded-sm bg-background sm:px-2 sm:py-1 sm:shadow-sm",
               {
                 "rounded-b-none": isSearchOpen,
                 "delay-200": !isSearchOpen,
@@ -141,7 +166,7 @@ export const Header = () => {
             <AnimatePresence mode="wait">
               {isSearchOpen && (
                 <motion.div
-                  className="absolute -left-[3%] top-full w-screen overflow-y-clip overflow-x-visible rounded-b-sm bg-slate-200 shadow-sm sm:w-full"
+                  className="absolute -left-[4%] top-full w-screen overflow-y-clip overflow-x-visible rounded-b-sm bg-accent shadow-sm sm:w-full"
                   initial={{ opacity: 1, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 1, height: 0 }}
@@ -163,10 +188,10 @@ export const Header = () => {
         <DeviceOnly allowedDevices={["desktop", "tablet"]}>
           <div
             className={cn(
-              "relative flex h-full flex-row items-center gap-10 rounded-sm bg-slate-100 px-4 py-1 shadow-sm",
+              "relative flex h-full flex-row items-center gap-14 rounded-sm  bg-background px-4 py-1 transition-transform duration-300 ease-out",
               {
                 "rounded-b-none": isSearchOpen,
-                "delay-200": !isSearchOpen,
+                "shadow-sm sm:translate-y-3": isScrolled,
               },
             )}
           >
@@ -193,7 +218,7 @@ export const Header = () => {
             <AnimatePresence mode="wait">
               {isSearchOpen && (
                 <motion.div
-                  className="absolute left-0 top-full w-full overflow-hidden rounded-b-sm bg-slate-200 shadow-sm"
+                  className="absolute left-0 top-full w-full overflow-hidden rounded-b-sm bg-accent shadow-sm"
                   initial={{ opacity: 1, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 1, height: 0 }}
@@ -254,7 +279,7 @@ const NavButton = React.forwardRef<
     <Button
       ref={ref}
       className={cn(
-        "font-normal text-primary-800 hover:bg-primary hover:text-primary-foreground",
+        "font-medium text-foreground hover:bg-primary hover:text-primary-foreground",
         { "h-9 w-9 px-2": justIcon, "px-3": !justIcon },
         className,
       )}

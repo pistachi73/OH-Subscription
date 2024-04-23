@@ -21,9 +21,11 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
 import { getImageUrl } from "@/lib/utils";
-import { type SelectProgram } from "@/server/db/schema";
+import { type RouterOutputs } from "@/trpc/shared";
 
-export const columns: ColumnDef<SelectProgram>[] = [
+export const columns: ColumnDef<
+  NonNullable<RouterOutputs["program"]["getAll"][0]>
+>[] = [
   {
     accessorKey: "thumbnail",
     header: "Thumbnail",
@@ -66,10 +68,12 @@ export const columns: ColumnDef<SelectProgram>[] = [
     accessorKey: "categories",
     header: "Categories",
     cell: (row) => {
-      const val = row.getValue() as string;
+      const val = row.getValue() as { category: { name: string } }[];
+      const categories = val.map(({ category }) => category.name).join(",");
+
       return (
         <div className="flex flex-row flex-wrap gap-1">
-          {val.split(",").map((category) => (
+          {categories.split(",").map((category) => (
             <Badge key={category} className="uppercase" variant="secondary">
               {category}
             </Badge>
@@ -94,7 +98,11 @@ export const columns: ColumnDef<SelectProgram>[] = [
   }),
 ];
 
-export const ProgramsTable = ({ data }: { data: SelectProgram[] }) => {
+export const ProgramsTable = ({
+  data,
+}: {
+  data: RouterOutputs["program"]["getAll"];
+}) => {
   return (
     <Card>
       <CardHeader>
@@ -106,7 +114,7 @@ export const ProgramsTable = ({ data }: { data: SelectProgram[] }) => {
           columns={columns}
           data={data}
           searchField="title"
-          newHref="programs/new"
+          newHref="new"
         />
       </CardContent>
     </Card>

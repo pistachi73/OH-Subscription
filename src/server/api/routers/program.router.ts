@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -10,8 +10,18 @@ import {
 
 import { deleteFile } from "@/actions/delete-file";
 import { isNumber } from "@/lib/utils";
-import { ProgramSchema } from "@/schemas";
-import { programs } from "@/server/db/schema";
+import {
+  CategoriesOnProgramsSchema,
+  ProgramSchema,
+  TeachersOnProgramsSchema,
+  VideosOnProgramsSchema,
+} from "@/schemas";
+import {
+  categoriesOnPrograms,
+  programs,
+  teachersOnPrograms,
+  videosOnPrograms,
+} from "@/server/db/schema";
 
 export const programRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -95,7 +105,39 @@ export const programRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
-    const allPrograms = await db.select().from(programs);
+    const allPrograms = await db.query.programs.findMany({
+      with: {
+        teachers: {
+          columns: {
+            teacherId: false,
+            programId: false,
+          },
+          with: {
+            teacher: {
+              columns: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+        categories: {
+          columns: {
+            categoryId: false,
+            programId: false,
+          },
+          with: {
+            category: {
+              columns: {
+                name: true,
+                id: true,
+              },
+            },
+          },
+        },
+        chapters: true,
+      },
+    });
     return allPrograms;
   }),
 
@@ -103,10 +145,120 @@ export const programRouter = createTRPCRouter({
     .input(z.number())
     .query(async ({ input: id, ctx }) => {
       const { db } = ctx;
-      const program = await db
-        .select()
-        .from(programs)
-        .where(eq(programs.id, id));
-      return program[0];
+      const program = await db.query.programs.findFirst({
+        where: eq(programs.id, id),
+        with: {
+          teachers: {
+            columns: {
+              teacherId: false,
+              programId: false,
+            },
+            with: {
+              teacher: {
+                columns: {
+                  name: true,
+                  id: true,
+                },
+              },
+            },
+          },
+          categories: {
+            columns: {
+              categoryId: false,
+              programId: false,
+            },
+            with: {
+              category: {
+                columns: {
+                  name: true,
+                  id: true,
+                },
+              },
+            },
+          },
+          chapters: true,
+        },
+      });
+
+      return program;
+    }),
+
+  addTeacher: adminProtectedProcedure
+    .input(TeachersOnProgramsSchema)
+    .mutation(async ({ input: { programId, teacherId }, ctx: { db } }) => {
+      await db.insert(teachersOnPrograms).values({
+        programId,
+        teacherId,
+      });
+
+      return true;
+    }),
+
+  removeTeacher: adminProtectedProcedure
+    .input(TeachersOnProgramsSchema)
+    .mutation(async ({ input: { programId, teacherId }, ctx: { db } }) => {
+      await db
+        .delete(teachersOnPrograms)
+        .where(
+          and(
+            eq(teachersOnPrograms.programId, programId),
+            eq(teachersOnPrograms.teacherId, teacherId),
+          ),
+        );
+
+      return true;
+    }),
+
+  addCategory: adminProtectedProcedure
+    .input(CategoriesOnProgramsSchema)
+    .mutation(async ({ input: { programId, categoryId }, ctx: { db } }) => {
+      await db.insert(categoriesOnPrograms).values({
+        programId,
+        categoryId,
+      });
+
+      return true;
+    }),
+
+  removeCategory: adminProtectedProcedure
+    .input(CategoriesOnProgramsSchema)
+    .mutation(async ({ input: { programId, categoryId }, ctx: { db } }) => {
+      await db
+        .delete(categoriesOnPrograms)
+        .where(
+          and(
+            eq(categoriesOnPrograms.programId, programId),
+            eq(categoriesOnPrograms.categoryId, categoryId),
+          ),
+        );
+
+      return true;
+    }),
+
+  addChapter: adminProtectedProcedure
+    .input(VideosOnProgramsSchema)
+    .mutation(async ({ input: { videoId, programId }, ctx: { db } }) => {
+      await db.insert(videosOnPrograms).values({
+        programId,
+        videoId,
+        chapterNumber: 0,
+      });
+
+      return true;
+    }),
+
+  removeChapter: adminProtectedProcedure
+    .input(VideosOnProgramsSchema)
+    .mutation(async ({ input: { videoId, programId }, ctx: { db } }) => {
+      await db
+        .delete(videosOnPrograms)
+        .where(
+          and(
+            eq(videosOnPrograms.programId, programId),
+            eq(videosOnPrograms.videoId, videoId),
+          ),
+        );
+
+      return true;
     }),
 });

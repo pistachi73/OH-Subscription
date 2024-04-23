@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Check, ChevronDown, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -28,9 +29,12 @@ type AdminMultipleSelectProps = {
   options: Option[];
   value?: string;
   onChange: (value: string) => void;
+  onSelect?: (value: any) => void;
+  onDeselect?: (value: any) => void;
   children: React.ReactNode;
   showSelected?: boolean;
   disableSelected?: boolean;
+  disabled?: boolean;
 };
 
 const getSelectedOptionsValues = (value?: string) => {
@@ -46,8 +50,11 @@ export const AdminMultipleSelect = ({
   value,
   onChange,
   children,
+  onSelect,
+  onDeselect,
   disableSelected = false,
   showSelected = true,
+  disabled = false,
 }: AdminMultipleSelectProps) => {
   const mappedOptions = useMemo(
     () =>
@@ -70,10 +77,12 @@ export const AdminMultipleSelect = ({
     let newSelectedOptionsValues = [...(selectedOptionsValues || [])];
 
     if (selectedOptionsValues?.includes(value)) {
+      onDeselect?.(value);
       newSelectedOptionsValues = selectedOptionsValues?.filter(
         (item) => item !== value,
       );
     } else {
+      onSelect?.(value);
       newSelectedOptionsValues.push(value);
     }
 
@@ -82,6 +91,7 @@ export const AdminMultipleSelect = ({
   };
 
   const onBadgeClick = (value: string) => {
+    onDeselect?.(value);
     let newSelectedOptionsValues = [
       ...(selectedOptionsValues?.filter((item) => item !== value) || []),
     ];
@@ -91,7 +101,11 @@ export const AdminMultipleSelect = ({
   };
 
   return (
-    <div className="flex flex-row flex-wrap items-center">
+    <div
+      className={clsx("flex flex-row flex-wrap items-center", {
+        "pointer-events-none opacity-50": disabled,
+      })}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

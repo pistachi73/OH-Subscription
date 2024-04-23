@@ -1,5 +1,5 @@
 import { type AdapterAccount } from "@auth/core/adapters";
-import { sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   integer,
@@ -54,6 +54,8 @@ export const accounts = pgTable(
     }),
   }),
 );
+
+// ----------------- Verification Tokens -----------------
 export const verificationTokens = pgTable(
   "verificationToken",
   {
@@ -66,6 +68,7 @@ export const verificationTokens = pgTable(
   }),
 );
 
+// ----------------- Password Reset Tokens -----------------
 export const passwordResetTokens = pgTable(
   "passwordResetToken",
   {
@@ -81,6 +84,7 @@ export const passwordResetTokens = pgTable(
   }),
 );
 
+// ----------------- Two Factor Tokens -----------------
 export const twoFactorTokens = pgTable(
   "twoFactorToken",
   {
@@ -96,6 +100,7 @@ export const twoFactorTokens = pgTable(
   }),
 );
 
+// ----------------- Two Factor Confirmations -----------------
 export const twoFactorConirmations = pgTable("twoFactorConfirmation", {
   id: text("id").notNull().primaryKey(),
   userId: text("user")
@@ -103,6 +108,7 @@ export const twoFactorConirmations = pgTable("twoFactorConfirmation", {
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
+// ----------------- Programs -----------------
 export const programs = pgTable("programs", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -113,8 +119,6 @@ export const programs = pgTable("programs", {
   totalChapters: integer("totalChapters").default(0).notNull(),
   duration: integer("duration").default(0).notNull(),
   published: boolean("published").default(false),
-  teachers: text("teachers").default(""),
-  categories: text("categories").default(""),
   thumbnail: text("thumbnail"),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" })
@@ -122,6 +126,13 @@ export const programs = pgTable("programs", {
     .$onUpdate(() => new Date()),
 });
 
+export const programRelations = relations(programs, ({ many }) => ({
+  chapters: many(videosOnPrograms),
+  teachers: many(teachersOnPrograms),
+  categories: many(categoriesOnPrograms),
+}));
+
+// ----------------- Videos -----------------
 export const videos = pgTable("video", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -137,8 +148,13 @@ export const videos = pgTable("video", {
     .$onUpdate(() => new Date()),
 });
 
-export const videosToPrograms = pgTable(
-  "videosToPrograms",
+export const videoRelations = relations(videos, ({ many }) => ({
+  programs: many(videosOnPrograms),
+}));
+
+// ----------------- Videos on Programs -----------------
+export const videosOnPrograms = pgTable(
+  "videos_programs",
   {
     programId: integer("programId")
       .notNull()
@@ -160,12 +176,113 @@ export const videosToPrograms = pgTable(
   }),
 );
 
+export const videosOnProgramsRelations = relations(
+  videosOnPrograms,
+  ({ one }) => ({
+    program: one(programs, {
+      fields: [videosOnPrograms.programId],
+      references: [programs.id],
+    }),
+    video: one(videos, {
+      fields: [videosOnPrograms.videoId],
+      references: [videos.id],
+    }),
+  }),
+);
+
+// ----------------- Teachers -----------------
 export const teachers = pgTable("teachers", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   bio: text("bio").notNull(),
   image: text("image"),
 });
+
+export const teachersRelations = relations(teachers, ({ many }) => ({
+  programs: many(teachersOnPrograms),
+}));
+
+// ----------------- Teachers on Programs -----------------
+export const teachersOnPrograms = pgTable(
+  "teachers_programs",
+  {
+    programId: integer("programId")
+      .notNull()
+      .references(() => programs.id, {
+        onDelete: "cascade",
+      }),
+    teacherId: integer("teacherId")
+      .notNull()
+      .references(() => teachers.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => ({
+    pk: primaryKey({
+      columns: [t.teacherId, t.programId],
+    }),
+  }),
+);
+
+export const teachersOnProgramsRelations = relations(
+  teachersOnPrograms,
+  ({ one }) => ({
+    program: one(programs, {
+      fields: [teachersOnPrograms.programId],
+      references: [programs.id],
+    }),
+    teacher: one(teachers, {
+      fields: [teachersOnPrograms.teacherId],
+      references: [teachers.id],
+    }),
+  }),
+);
+
+// ----------------- Categories -----------------
+export const categories = pgTable("categories", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+});
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  programs: many(categoriesOnPrograms),
+}));
+
+// ----------------- Category Programs -----------------
+export const categoriesOnPrograms = pgTable(
+  "categories_programs",
+  {
+    programId: integer("programId")
+      .notNull()
+      .references(() => programs.id, {
+        onDelete: "cascade",
+      }),
+    categoryId: integer("categoryId")
+      .notNull()
+      .references(() => categories.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => ({
+    pk: primaryKey({
+      columns: [t.categoryId, t.programId],
+    }),
+  }),
+);
+
+export const categoriesOnProgramsRelations = relations(
+  categoriesOnPrograms,
+  ({ one }) => ({
+    program: one(programs, {
+      fields: [categoriesOnPrograms.programId],
+      references: [programs.id],
+    }),
+    category: one(categories, {
+      fields: [categoriesOnPrograms.categoryId],
+      references: [categories.id],
+    }),
+  }),
+);
 
 // export type InsertUser = typeof users.$inferInsert;
 export type SelectTeacher = typeof teachers.$inferSelect;

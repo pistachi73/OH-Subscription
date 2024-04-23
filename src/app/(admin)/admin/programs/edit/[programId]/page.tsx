@@ -16,18 +16,21 @@ import { api } from "@/trpc/server";
 
 type EditProgramPageProps = {
   params: {
-    id: string;
+    programId: string;
   };
 };
 
-const EditProgramPage = async ({ params: { id } }: EditProgramPageProps) => {
-  const program = await api.program.getById.query(Number(id));
+const EditProgramPage = async ({
+  params: { programId },
+}: EditProgramPageProps) => {
+  const program = await api.program.getById.query(Number(programId));
 
   if (!program) {
     redirect("/admin/programs");
   }
   const teachers = await api.teacher.getAll.query();
   const videos = await api.video.getAll.query();
+  const categories = await api.category.getAll.query();
 
   const teachersOptions: Option[] = teachers.map((teacher) => ({
     value: teacher.id.toString(),
@@ -36,6 +39,11 @@ const EditProgramPage = async ({ params: { id } }: EditProgramPageProps) => {
   const videoOptions: Option[] = videos.map((video) => ({
     value: video.id.toString(),
     label: video.title,
+  }));
+
+  const categoryOptions: Option[] = categories.map((category) => ({
+    value: category.id.toString(),
+    label: category.name,
   }));
 
   return (
@@ -64,6 +72,7 @@ const EditProgramPage = async ({ params: { id } }: EditProgramPageProps) => {
         program={program}
         teacherOptions={teachersOptions}
         videoOptions={videoOptions}
+        categoryOptions={categoryOptions}
         videos={videos}
       />
     </>

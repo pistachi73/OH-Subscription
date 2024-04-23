@@ -1,4 +1,5 @@
 import { authRouter } from "./routers/auth.router";
+import { categoryRouter } from "./routers/category.router";
 import { programRouter } from "./routers/program.router";
 import { teacherRouter } from "./routers/teacher.router";
 import { userRouter } from "./routers/user.router";
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   teacher: teacherRouter,
   video: videoRouter,
   program: programRouter,
+  category: categoryRouter,
 });
 
 // export type definition of API

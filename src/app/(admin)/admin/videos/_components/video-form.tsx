@@ -23,7 +23,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { type VideoSchema } from "@/schemas";
-import { api } from "@/trpc/react";
 
 type VideoFormProps = {
   form: UseFormReturn<z.infer<typeof VideoSchema>>;

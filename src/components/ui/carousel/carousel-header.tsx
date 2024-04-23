@@ -13,7 +13,7 @@ export const CarouselHeader = ({ title, href }: CarouselHeaderProps) => {
   return (
     <HeaderTag
       href={href as string}
-      className="group/carousel-title relative mb-1 ml-[3%] flex w-fit items-center gap-3 2xl:ml-14 "
+      className="group/carousel-title relative mb-1 ml-[4%] flex w-fit items-center gap-3 2xl:ml-14 "
     >
       <span className="flex items-center gap-2 text-base font-medium tracking-tight lg:text-xl">
         {title}

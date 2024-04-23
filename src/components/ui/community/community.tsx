@@ -1,29 +1,24 @@
-"use client";
-
 import { ChevronDown, User } from "lucide-react";
 import { useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { AddComment } from "../ui/comment/add-comment";
-import { Comment } from "../ui/comment/comment";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { AddComment } from "@/components/ui/community/add-comment";
+import { Comment } from "@/components/ui/community/comment";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { MaxWidthWrapper } from "../ui/max-width-wrapper";
-
-import { SimilarSeries } from "./similar-series";
-
+} from "@/components/ui/dropdown-menu";
 export const Community = () => {
+  // Fetch comments
   const [sort, setSort] = useState("Sort");
 
   return (
-    <MaxWidthWrapper className="my-8 max-w-[1600px] sm:mt-12">
+    <>
       <div className="mb-4 flex flex-row items-center justify-between">
-        <h2 className="text-lg font-semibold sm:text-xl">Discussion (20)</h2>
+        <h2 className="text-lg font-medium lg:text-xl">Discussion (20)</h2>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -63,25 +58,28 @@ export const Community = () => {
       </div>
       <div className="w-full max-w-[750px] space-y-4">
         <div className="flex flex-row gap-3">
-          <Avatar className="h-11 w-11 border border-gray-800 first:ml-0 hover:bg-gray-400 sm:h-12 sm:w-12">
+          <Avatar className="h-9 w-9 border border-gray-800 first:ml-0 hover:bg-gray-400 sm:h-10 sm:w-10">
             <AvatarImage src={undefined} />
             <AvatarFallback className="bg-white">
-              <User className="text-gray-800" size={22} />
+              <User className="text-gray-800" size={20} />
             </AvatarFallback>
           </Avatar>
           <AddComment
             placeholder="Add your comment..."
             containerClassName="w-full"
-            className="min-h-[200px]"
+            className="min-h-[120px]"
             commentLabel="Comment"
           />
         </div>
         <Comment />
         <Comment isReply></Comment>
         <Comment />
+        <div className="flex w-full items-center">
+          <Button variant="ghost" size="sm" className=" w-fit">
+            Load more
+          </Button>
+        </div>
       </div>
-
-      <SimilarSeries />
-    </MaxWidthWrapper>
+    </>
   );
 };

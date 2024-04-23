@@ -21,10 +21,7 @@ export const AddComment = ({
   return (
     <div className={cn("relative", containerClassName)}>
       <Textarea
-        className={cn(
-          "min-h-[150px] border-slate-300 p-4 text-sm sm:text-base",
-          className,
-        )}
+        className={cn("min-h-[100px] border-slate-300 p-3 text-sm ", className)}
         placeholder="Add your comment..."
         {...props}
       />

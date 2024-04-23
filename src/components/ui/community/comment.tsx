@@ -32,7 +32,7 @@ export const Comment = ({ isReply }: CommentProps) => {
     <div className={cn({ "flex-end flex w-full flex-col items-end": isReply })}>
       <div
         className={cn(
-          "relative flex w-full flex-col  gap-2 rounded-md border border-slate-300 p-5 sm:gap-3 sm:p-6",
+          "relative flex w-full flex-col  gap-2 rounded-md border border-slate-300 p-4 sm:gap-3",
           {
             "w-11/12 justify-end sm:w-4/5": isReply,
             "w-full": !isReply,
@@ -68,14 +68,14 @@ export const Comment = ({ isReply }: CommentProps) => {
                 <User className="text-gray-800" size={16} />
               </AvatarFallback>
             </Avatar>
-            <p className="text-sm font-medium sm:text-base">John Doe</p>
+            <p className="text-xs font-medium sm:text-sm">John Doe</p>
           </div>
           <div className="flex flex-row items-center  gap-2 sm:gap-3">
             <p className="text-xs text-gray-400 sm:text-sm">2 hours ago</p>
             <p className="text-xs text-gray-400 sm:text-sm">Edited on Nov 19</p>
           </div>
         </div>
-        <p className="max-w-[70ch] text-sm text-gray-800 sm:text-base">
+        <p className="max-w-[70ch] text-xs text-gray-800 sm:text-sm">
           Just finished watching this video and I loved it! The production
           quality was top-notch, and the content was super informative.
           Can&apos;t wait for more videos like this! 😄👍

@@ -1,6 +1,7 @@
 import {
   BookOpen,
   GraduationCap,
+  Layers3,
   type LucideIcon,
   MonitorPlay,
 } from "lucide-react";
@@ -25,5 +26,10 @@ export const navigationItems: {
     label: "Teachers",
     href: "/admin/teachers",
     icon: GraduationCap,
+  },
+  {
+    label: "Categories",
+    href: "/admin/categories",
+    icon: Layers3,
   },
 ];

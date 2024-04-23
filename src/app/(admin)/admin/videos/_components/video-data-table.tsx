@@ -104,7 +104,7 @@ export const VideosTable = ({ data }: { data: SelectVideo[] }) => {
           columns={columns}
           data={data}
           searchField="title"
-          newHref="videos/new"
+          newHref="new"
         />
       </CardContent>
     </Card>

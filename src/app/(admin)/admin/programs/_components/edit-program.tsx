@@ -17,13 +17,15 @@ import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { type Option } from "@/components/ui/admin/admin-multiple-select";
 import { uploadToS3 } from "@/lib/upload-to-s3";
 import { ProgramSchema } from "@/schemas";
-import { type SelectProgram, type SelectVideo } from "@/server/db/schema";
+import { type SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { type RouterOutputs } from "@/trpc/shared";
 
 type EditProgramProps = {
-  program: SelectProgram;
+  program: NonNullable<RouterOutputs["program"]["getById"]>;
   teacherOptions: Option[];
   videoOptions: Option[];
+  categoryOptions: Option[];
   videos: SelectVideo[];
 };
 
@@ -31,9 +33,11 @@ export const EditProgram = ({
   program,
   teacherOptions,
   videoOptions,
+  categoryOptions,
   videos,
 }: EditProgramProps) => {
   const trpcUtils = api.useUtils();
+
   const form = useForm<z.infer<typeof ProgramSchema>>({
     resolver: zodResolver(ProgramSchema),
     defaultValues: {
@@ -42,11 +46,10 @@ export const EditProgram = ({
       level: program.level,
       duration: program.duration,
       published: program.published || false,
-      categories: program.categories || undefined,
-      teachers: program.teachers || undefined,
       totalChapters: program.totalChapters,
     },
   });
+
   const [isSaving, startTransition] = useTransition();
 
   const { mutateAsync: saveVideo } = api.program.update.useMutation({
@@ -59,6 +62,14 @@ export const EditProgram = ({
       toast.error(error.message);
     },
   });
+
+  const initialTeachers = program.teachers
+    .map(({ teacher }) => teacher.id.toString())
+    .join(",");
+
+  const initialCategories = program.categories
+    .map(({ category }) => category.id.toString())
+    .join(",");
 
   const onSave = async (values: z.infer<typeof ProgramSchema>) => {
     startTransition(async () => {
@@ -100,7 +111,10 @@ export const EditProgram = ({
         form={form}
         videoOptions={videoOptions}
         teacherOptions={teacherOptions}
+        categoryOptions={categoryOptions}
         videos={videos}
+        initialTeachers={initialTeachers}
+        initialCategories={initialCategories}
       />
     </AdminFormLayout>
   );

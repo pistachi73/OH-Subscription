@@ -26,8 +26,6 @@ export const NewProgram = ({ teacherOptions }: NewProgramProps) => {
       level: "BEGINNER",
       duration: 0,
       published: false,
-      categories: "",
-      teachers: "",
       totalChapters: 0,
     },
   });

@@ -119,18 +119,20 @@ export const ProgramSchema = z.object({
   duration: z
     .number({ required_error: "Duration is required" })
     .min(1, { message: "Must be greater than 0" }),
-  teachers: z.string().refine(
-    (data) => {
-      return data.split(",").filter(Boolean).length > 0;
-    },
-    { message: "Teachers are required" },
-  ),
-  categories: z.string().refine(
-    (data) => {
-      return data.split(",").filter(Boolean).length > 0;
-    },
-    { message: "Categories are required" },
-  ),
+});
+
+export const VideosOnProgramsSchema = z.object({
+  programId: z.number(),
+  videoId: z.number(),
+});
+export const TeachersOnProgramsSchema = z.object({
+  programId: z.number(),
+  teacherId: z.number(),
+});
+
+export const CategoriesOnProgramsSchema = z.object({
+  programId: z.number(),
+  categoryId: z.number(),
 });
 
 export const TeacherSchema = z.object({
@@ -149,4 +151,9 @@ export const VideoSchema = z.object({
   transcript: z.string().optional(),
   categories: z.string().optional(),
   thumbnail: FileSchema,
+});
+
+export const CategorySchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(1, { message: "Name is required" }),
 });

@@ -179,7 +179,7 @@ const Carousel = React.forwardRef<
           variants={variants}
           className="group/carousel relative w-full"
         >
-          <div className="absolute -top-2 right-[3%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
+          <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
             {Array.from({ length: total }).map((_, index) => (
               <div
                 key={index}
@@ -194,7 +194,7 @@ const Carousel = React.forwardRef<
             ref={ref}
             onKeyDownCapture={handleKeyDown}
             className={cn(
-              "relative my-1 w-full  overflow-x-clip overflow-y-visible px-[3%] 2xl:px-14",
+              "relative my-1 w-full  overflow-x-clip overflow-y-visible px-[4%] 2xl:px-14",
               className,
             )}
             role="region"

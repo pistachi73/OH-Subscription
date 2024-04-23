@@ -5,6 +5,8 @@ import { type z } from "zod";
 import { usePathname } from "next/navigation";
 
 import { ChaptersTable } from "./chapters-table";
+import { ProgramCategorySelect } from "./program-category-select";
+import { ProgramTeacherSelect } from "./program-teachers-select";
 
 import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
 import {
@@ -45,18 +47,12 @@ type ProgramFormProps = {
   form: UseFormReturn<z.infer<typeof ProgramSchema>>;
   teacherOptions: Option[];
   videoOptions?: Option[];
+  categoryOptions?: Option[];
   videos?: SelectVideo[];
+  initialTeachers?: string;
+  initialChapters?: string;
+  initialCategories?: string;
 };
-
-const CATEGORY_OPTIONS: Option[] = [
-  { label: "Idioms", value: "idions" },
-  { label: "Voacabulary", value: "vocabulary" },
-  { label: "Grammar", value: "grammar" },
-  { label: "Listening", value: "listening" },
-  { label: "Conversation", value: "conversation" },
-  { label: "Quizz", value: "quizz" },
-  { label: "Pronunciation", value: "pronunciation" },
-];
 
 const LEVEL_OPTIONS: Option[] = [
   { label: "A1 - A2 Beginner", value: "BEGINNER" },
@@ -66,9 +62,13 @@ const LEVEL_OPTIONS: Option[] = [
 
 export const ProgramForm = ({
   form,
+  videos,
   teacherOptions,
   videoOptions,
-  videos,
+  categoryOptions,
+  initialChapters,
+  initialTeachers,
+  initialCategories,
 }: ProgramFormProps) => {
   const pathname = usePathname();
 
@@ -272,58 +272,34 @@ export const ProgramForm = ({
               />
             </CardContent>
           </Card>
-          <Card className="w-full">
+          <Card
+            className={cn("w-full", {
+              "pointer-events-none opacity-40": pathname.includes("new"),
+            })}
+          >
             <CardHeader>
               <CardTitle>Program Teachers</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3">
-                <FormField
-                  control={form.control}
-                  name="teachers"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <AdminMultipleSelect
-                          value={field.value}
-                          onChange={field.onChange}
-                          options={teacherOptions}
-                        >
-                          Select teachers
-                        </AdminMultipleSelect>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <ProgramTeacherSelect
+                teacherOptions={teacherOptions}
+                initialTeachers={initialTeachers}
+              />
             </CardContent>
           </Card>
-          <Card className="w-full">
+          <Card
+            className={cn("w-full", {
+              "pointer-events-none opacity-40": pathname.includes("new"),
+            })}
+          >
             <CardHeader>
               <CardTitle>Program Categories</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3">
-                <FormField
-                  control={form.control}
-                  name="categories"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <AdminMultipleSelect
-                          value={field.value}
-                          onChange={field.onChange}
-                          options={CATEGORY_OPTIONS}
-                        >
-                          Select categories
-                        </AdminMultipleSelect>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <ProgramCategorySelect
+                categoryOptions={categoryOptions}
+                initialCategories={initialCategories}
+              />
             </CardContent>
           </Card>
         </div>

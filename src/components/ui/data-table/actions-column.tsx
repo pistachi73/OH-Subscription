@@ -45,7 +45,7 @@ export const actionColumn = <T extends { id: number | string }>({
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href={`${label}s/edit/${data.id}`}>
+              <Link href={`edit/${data.id}`}>
                 <Edit className="mr-2 h-4 w-4" />
                 Edit {label}
               </Link>

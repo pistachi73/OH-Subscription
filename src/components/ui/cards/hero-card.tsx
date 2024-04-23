@@ -160,7 +160,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                   custom={{ isMobile: deviceType === "mobile" }}
                   asChild
                 >
-                  <Link href={"/series/id"}>
+                  <Link href={"/program/slug/id"}>
                     <Play size={22} className="mr-2 fill-current" />
                     Reproduce
                   </Link>

@@ -74,7 +74,7 @@ export const TeachersTable = ({ data }: { data: SelectTeacher[] }) => {
           columns={columns}
           data={data}
           searchField="name"
-          newHref="teachers/new"
+          newHref="new"
         />
       </CardContent>
     </Card>
