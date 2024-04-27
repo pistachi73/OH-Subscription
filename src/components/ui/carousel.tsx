@@ -131,6 +131,7 @@ const Carousel = React.forwardRef<
       onSelect(api);
       api.on("reInit", onSelect);
       api.on("select", onSelect);
+
       return () => {
         api?.off("select", onSelect);
       };
@@ -179,23 +180,34 @@ const Carousel = React.forwardRef<
           variants={variants}
           className="group/carousel relative w-full"
         >
-          <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
-            {Array.from({ length: total }).map((_, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "h-0.5 w-3 rounded-sm bg-primary-800 opacity-25 transition-opacity",
-                  { "opacity-100": current === index + 1 },
-                )}
-              />
-            ))}
-          </div>
+          {orientation === "horizontal" && (
+            <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
+              {Array.from({ length: total }).map((_, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "h-0.5 w-3 rounded-sm bg-primary-800 opacity-25 transition-opacity",
+                    { "opacity-100": current === index + 1 },
+                  )}
+                />
+              ))}
+            </div>
+          )}
           <div
             ref={ref}
             onKeyDownCapture={handleKeyDown}
             className={cn(
-              "relative my-1 w-full  overflow-x-clip overflow-y-visible px-[4%] 2xl:px-14",
+              "relative w-full",
+
               className,
+              {
+                "my-1 overflow-x-clip overflow-y-visible px-[4%] 2xl:px-14 ":
+                  orientation === "horizontal",
+              },
+              {
+                "overflow-y-clip overflow-x-visible pb-4":
+                  orientation === "vertical",
+              },
             )}
             role="region"
             aria-roledescription="carousel"
@@ -222,8 +234,9 @@ const CarouselContent = React.forwardRef<
         ref={ref}
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
-          "-ml-1  lg:-ml-2 xl:-ml-3",
+          orientation === "horizontal"
+            ? "-ml-1  lg:-ml-2 xl:-ml-3"
+            : "-mt-4 flex-col",
           className,
         )}
         {...props}
@@ -245,8 +258,8 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full pl-1 lg:pl-2 xl:pl-3",
-        orientation === "horizontal" ? "" : "pt-4",
+        "min-w-0 shrink-0 grow-0 basis-full",
+        orientation === "horizontal" ? "pl-1 lg:pl-2 xl:pl-3" : "pt-4",
         className,
       )}
       {...props}

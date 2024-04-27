@@ -1,12 +1,12 @@
-import clsx from "clsx";
-import { CheckCheckIcon, LinkIcon, Mail, MailIcon } from "lucide-react";
+import { CheckCheckIcon, LinkIcon, MailIcon } from "lucide-react";
 import { useState } from "react";
 
 import Link from "next/link";
 
-import { Button, type ButtonProps } from "../button";
-
 import { ShareItemIcons } from "./share-icons";
+
+import { Button, type ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ShareItemSharedProps = { url: string };
 
@@ -25,15 +25,16 @@ const ShareItem = ({
       <Button
         variant="secondary"
         size="icon"
-        className={clsx(
-          "h-16 w-16 rounded-full border border-accent bg-accent/30",
+        className={cn(
+          "h-12 w-12 rounded-full border border-accent bg-accent/30",
+          "sm:h-16 sm:w-16",
           className,
         )}
         {...buttonProps}
       >
         {children}
       </Button>
-      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="text-xs text-muted-foreground sm:text-sm">{label}</p>
     </div>
   );
 };
@@ -136,7 +137,7 @@ export const LinkButton = ({ url }: ShareItemSharedProps) => {
   return (
     <ShareItem
       label={isLinkCopied ? "Copied!" : "Copy link"}
-      className={clsx({
+      className={cn({
         "border-accent bg-accent/30": !isLinkCopied,
         "border-green-600 bg-green-600/30 hover:bg-green-600/30": isLinkCopied,
       })}

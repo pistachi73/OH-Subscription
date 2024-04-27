@@ -29,10 +29,15 @@ export const Comment = ({ isReply }: CommentProps) => {
   const ease = cubicBezier(0.23, 1, 0.6, 1);
 
   return (
-    <div className={cn({ "flex-end flex w-full flex-col items-end": isReply })}>
+    <div
+      className={cn({
+        "flex-end flex w-full flex-col items-end": isReply,
+      })}
+    >
       <div
         className={cn(
-          "relative flex w-full flex-col  gap-2 rounded-md border border-slate-300 p-4 sm:gap-3",
+          "relative flex w-full flex-col gap-2  rounded-md border border-slate-300 bg-background p-4",
+          "sm:gap-3",
           {
             "w-11/12 justify-end sm:w-4/5": isReply,
             "w-full": !isReply,

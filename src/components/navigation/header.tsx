@@ -8,10 +8,12 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { AuthButton } from "./auth/auth-button";
-import { UserButton } from "./auth/user-button";
-import { useDeviceType } from "./ui/device-only/device-only-provider";
-import { MaxWidthWrapper } from "./ui/max-width-wrapper";
+import { AuthButton } from "../auth/auth-button";
+import { UserButton } from "../auth/user-button";
+import { useDeviceType } from "../ui/device-only/device-only-provider";
+import { MaxWidthWrapper } from "../ui/max-width-wrapper";
+
+import { headerNavItems, useCanRenderHeader } from "./helpers";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { DeviceOnly } from "@/components/ui/device-only/device-only";
@@ -20,30 +22,12 @@ import { SearchInput } from "@/components/ui/search-input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 
-const navItems = [
-  {
-    title: "Learning capsules",
-    href: "/",
-  },
-  {
-    title: "Coaching",
-    href: "/",
-  },
-  {
-    title: "Our clubs",
-    href: "/",
-  },
-  {
-    title: "Podcast",
-    href: "/",
-  },
-];
-
 export const Header = () => {
   const user = useCurrentUser();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { deviceType } = useDeviceType();
   const [isScrolled, setIsScrolled] = useState(false);
+  const canRender = useCanRenderHeader();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,6 +43,10 @@ export const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  if (!canRender) {
+    return null;
+  }
 
   return (
     <header
@@ -206,7 +194,7 @@ export const Header = () => {
 
             <nav>
               <ul className="flex h-full items-center gap-1">
-                {navItems.map((item) => (
+                {headerNavItems.map((item) => (
                   <li key={item.title}>
                     <NavButton>
                       <Link href={item.href}>{item.title}</Link>

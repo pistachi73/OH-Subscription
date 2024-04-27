@@ -55,15 +55,16 @@ const DrawerContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
   const { direction } = useDrawer();
+
   return (
     <DrawerPortal>
       <DrawerOverlay />
       <DrawerPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed z-50 flex h-auto flex-col border bg-background",
+          "fixed z-50 flex h-auto flex-col border bg-background p-4",
           {
-            "inset-x-0 bottom-0 mt-24  rounded-t-[10px] ":
+            "inset-x-0 bottom-0 mt-24 rounded-t-[10px] pt-2":
               !direction || direction === "bottom",
           },
           {
@@ -79,10 +80,9 @@ const DrawerContent = React.forwardRef<
         )}
         {...props}
       >
-        {!direction ||
-          (direction === "bottom" && (
-            <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
-          ))}
+        {(!direction || direction === "bottom") && (
+          <div className="mx-auto mb-2 h-1 w-1/5 rounded-full bg-accent" />
+        )}
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>

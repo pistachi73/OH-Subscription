@@ -17,16 +17,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { CardList } from "../ui/cards/card-list";
-import { Community } from "../ui/community/community";
-import { useDeviceType } from "../ui/device-only/device-only-provider";
-import { MaxWidthWrapper } from "../ui/max-width-wrapper";
-import { ShareButton } from "../ui/share-button/share-button";
-
 import { ChapterPlayList } from "./chapter-playlist";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -35,8 +28,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { CardList } from "@/components/ui/cards/card-list";
+import { Community } from "@/components/ui/community/community";
+import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
+import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
+import { ShareButton } from "@/components/ui/share-button/share-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toSentenceCase } from "@/lib/case-converters";
+import { cn } from "@/lib/utils";
 
 export const Chapter = () => {
   const params = useParams<{
@@ -51,15 +51,13 @@ export const Chapter = () => {
   const { deviceType, deviceSize } = useDeviceType();
 
   return (
-    <MaxWidthWrapper className="mt-4 max-w-[1400px] lg:mt-6">
-      <div className="mb-4 flex w-full flex-col justify-between gap-3 sm:flex-row sm:items-center">
-        {/* <p className="flex flex-row items-center text-sm tracking-wide text-muted-foreground">
-            <MonitorPlay size={14} className="mr-2" strokeWidth={1.5} />
-            PROGRAM
-          </p>
-          <h1 className=" text-2xl font-semibold tracking-tighter lg:text-3xl">
-            English around the world
-          </h1> */}
+    <MaxWidthWrapper className={cn("mt-4 max-w-[1400px]", "lg:mt-6")}>
+      <div
+        className={cn(
+          "mb-4 flex w-full flex-col justify-between gap-3",
+          "sm:flex-row sm:items-center",
+        )}
+      >
         <Breadcrumb className="flex">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -89,13 +87,6 @@ export const Chapter = () => {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        {/* <Button
-          size={deviceSize.includes("md") ? "default" : "sm"}
-          variant="outline"
-        >
-          <MonitorPlay size={18} className="mr-2" />
-          Go back to program
-        </Button> */}
       </div>
       <div
         className={clsx(
@@ -106,7 +97,12 @@ export const Chapter = () => {
           },
         )}
       >
-        <div className="group relative z-10 aspect-video overflow-hidden rounded-t-sm md:mr-2 md:rounded-sm">
+        <div
+          className={cn(
+            "group relative z-10 aspect-video overflow-hidden rounded-t-sm",
+            "md:mr-2 md:rounded-sm",
+          )}
+        >
           <MuxPlayer
             className="w-full"
             streamType="on-demand"
@@ -118,7 +114,11 @@ export const Chapter = () => {
             style={{ aspectRatio: 16 / 9 }}
           />
           <Button
-            className="absolute right-2 top-2 hidden h-8 w-8 bg-opacity-50 p-0 opacity-0 transition-opacity hover:bg-opacity-100 group-hover:opacity-100 md:flex"
+            className={cn(
+              "absolute right-2 top-2 hidden h-8 w-8 bg-opacity-50 p-0 opacity-0 transition-opacity",
+              "md:flex",
+              "hover:bg-opacity-100 group-hover:opacity-100",
+            )}
             variant="secondary"
             size="icon"
             onClick={() => setShowPlaylist(!showPlaylist)}
@@ -151,7 +151,12 @@ export const Chapter = () => {
           )}
         </AnimatePresence>
       </div>
-      <div className="mt-4 flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
+      <div
+        className={cn(
+          "mt-4 flex flex-col justify-between gap-3",
+          "lg:flex-row lg:items-center",
+        )}
+      >
         <h2 className="text-lg font-medium tracking-tight lg:text-xl">
           Episode 1 - Unlocking Vocabulary
         </h2>
@@ -179,8 +184,6 @@ export const Chapter = () => {
                 Check out this chapter from the program English around the world
               </span>
             }
-            variant="outline"
-            size={deviceSize.includes("lg") ? "default" : "sm"}
             videoTitle="Unlocking vocabulary learning Unlocking vocabulary learningg"
             videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
             config={{
@@ -198,12 +201,22 @@ export const Chapter = () => {
               },
             }}
           >
-            <Share size={18} className="mr-2" />
-            Share
+            <Button
+              variant="outline"
+              size={deviceSize.includes("lg") ? "default" : "sm"}
+            >
+              <Share size={18} className="mr-2" />
+              Share
+            </Button>
           </ShareButton>
         </div>
       </div>
-      <div className="mt-3 grid grid-rows-2 gap-16 lg:mt-2 lg:grid-cols-[1fr,310px] lg:grid-rows-1">
+      <div
+        className={cn(
+          "mt-3 grid grid-rows-2 gap-16",
+          "lg:mt-2 lg:grid-cols-[1fr,310px] lg:grid-rows-1",
+        )}
+      >
         <div className="w-full space-y-8 lg:space-y-12">
           <div className="space-y-3">
             <div className="flex flex-row gap-4">
