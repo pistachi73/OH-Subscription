@@ -42,8 +42,8 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
     <div
       className={cn(
         "relative",
-        "sm:h-[calc(100dvh-var(--header-height))] sm:pt-2",
-        "h-[calc(100vh)]",
+        "sm:h-[calc(100vh-var(--header-height))] sm:pt-2",
+        "h-[calc(100dvh)]",
       )}
     >
       <VerticalCarousel
