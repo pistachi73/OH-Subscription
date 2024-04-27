@@ -62,7 +62,7 @@ export const Shot = () => {
       }}
       transition={transition}
       className={cn(
-        "relative flex aspect-[9/16] h-full translate-x-0 items-end",
+        "relative flex h-full translate-x-0 items-end sm:aspect-[9/16]",
         "before:absolute  before:bottom-0 before:-z-10 before:h-[150px] before:w-full before:bg-gradient-to-t before:from-foreground before:content-[''] sm:before:rounded-b-md",
         "sm:rounded-md",
       )}
