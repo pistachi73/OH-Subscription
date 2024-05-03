@@ -1,4 +1,4 @@
-import { Filter, User, X } from "lucide-react";
+import { Filter, SendHorizonal, User, X } from "lucide-react";
 import { useState } from "react";
 
 import { ShotSideWrapper } from "./shot-side-wrapper";
@@ -41,11 +41,11 @@ export const ShotCommunity = ({
       >
         <div
           className={cn(
-            "flex flex-row items-center justify-between border-b p-4 pt-0",
-            "sm:pt-4",
+            "flex flex-row items-center justify-between border-b p-3 pt-0",
+            "sm:p-4",
           )}
         >
-          <h2 className={cn("text-lg font-medium", "lg:text-xl")}>
+          <h2 className={cn("text-base font-medium sm:text-lg", "lg:text-xl")}>
             Discussion (20)
           </h2>
           <div className="flex gap-2">
@@ -110,12 +110,10 @@ export const ShotCommunity = ({
                   <User className="text-gray-800" size={16} />
                 </AvatarFallback>
               </Avatar>
-              <AddComment
-                placeholder="Add your comment..."
-                containerClassName="w-full"
-                className="min-h-[120px]"
-                commentLabel="Comment"
-              />
+              <AddComment containerClassName="w-full" className="p-2" />
+              <div className="mb-1 flex items-end justify-end">
+                <SendHorizonal size={16} />
+              </div>
             </div>
           </div>
         </div>

@@ -29,11 +29,11 @@ export const ShotTranscript = ({
       >
         <div
           className={cn(
-            "flex flex-row items-center justify-between p-4 pt-0",
-            "sm:pt-4",
+            "flex flex-row items-center justify-between p-3 pt-0",
+            "sm:p-4",
           )}
         >
-          <h2 className={cn("text-lg font-medium", "lg:text-xl")}>
+          <h2 className={cn("text-base font-medium sm:text-lg", "lg:text-xl")}>
             Transcript
           </h2>
 
@@ -46,7 +46,7 @@ export const ShotTranscript = ({
             <X size={20} />
           </Button>
         </div>
-        <div className="p-4 pt-0">
+        <div className="p-3 pt-0">
           <p className="text-sm sm:text-base ">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
             eiusmod. Lorem ipsum dolor sit amet, consectetur adipiscing elit.

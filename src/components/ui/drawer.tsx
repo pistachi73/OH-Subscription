@@ -52,8 +52,10 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
+    hideClose?: boolean;
+  }
+>(({ className, children, hideClose = false, ...props }, ref) => {
   const { direction } = useDrawer();
 
   return (
@@ -80,7 +82,7 @@ const DrawerContent = React.forwardRef<
         )}
         {...props}
       >
-        {(!direction || direction === "bottom") && (
+        {(!direction || direction === "bottom") && !hideClose && (
           <div className="mx-auto mb-2 h-1 w-1/5 rounded-full bg-accent" />
         )}
         {children}

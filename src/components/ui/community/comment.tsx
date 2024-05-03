@@ -4,6 +4,8 @@ import { AnimatePresence, cubicBezier, motion } from "framer-motion";
 import { Edit, Heart, Menu, Reply, Trash, User } from "lucide-react";
 import { useState } from "react";
 
+import { useDeviceType } from "../device-only/device-only-provider";
+
 import { AddComment } from "./add-comment";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,6 +26,7 @@ type CommentProps = {
 };
 
 export const Comment = ({ isReply }: CommentProps) => {
+  const { deviceType } = useDeviceType();
   const [showReply, setShowReply] = useState(false);
 
   const ease = cubicBezier(0.23, 1, 0.6, 1);
@@ -49,12 +52,12 @@ export const Comment = ({ isReply }: CommentProps) => {
             <Button
               size="icon"
               variant="ghost"
-              className="absolute right-2 top-2"
+              className="absolute right-2 top-2 h-7 w-7"
             >
               <Menu size={16} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent sideOffset={5} align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-10">
             <DropdownMenuItem>
               <Edit size={16} className="mr-2" />
               Edit
@@ -77,7 +80,9 @@ export const Comment = ({ isReply }: CommentProps) => {
           </div>
           <div className="flex flex-row items-center  gap-2 sm:gap-3">
             <p className="text-xs text-gray-400 sm:text-sm">2 hours ago</p>
-            <p className="text-xs text-gray-400 sm:text-sm">Edited on Nov 19</p>
+            <p className="hidden text-xs text-gray-400 sm:inline-block sm:text-sm">
+              Edited on Nov 19
+            </p>
           </div>
         </div>
         <p className="max-w-[70ch] text-xs text-gray-800 sm:text-sm">
@@ -85,13 +90,14 @@ export const Comment = ({ isReply }: CommentProps) => {
           quality was top-notch, and the content was super informative.
           Can&apos;t wait for more videos like this! 😄👍
         </p>
-        <div className="flex flex-row  gap-2 sm:gap-3">
+        <div className="flex flex-row gap-3">
           <Button
             variant="ghost"
             className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
           >
-            <Heart size={16} className="mr-2 " />
-            11 Likes
+            <Heart size={16} className="sm:mr-2" />
+
+            <span className="hidden sm:inline">11 Likes</span>
           </Button>
 
           <Button
@@ -101,8 +107,8 @@ export const Comment = ({ isReply }: CommentProps) => {
               setShowReply(!showReply);
             }}
           >
-            <Reply size={16} className="mr-2 " />
-            Reply
+            <Reply size={16} className="sm:mr-2 " />
+            <span className="hidden sm:inline">Reply</span>
           </Button>
           <Button
             variant="ghost"
@@ -155,6 +161,7 @@ export const Comment = ({ isReply }: CommentProps) => {
               }}
               commentLabel="Reply"
               cancelLabel="Cancel"
+              placeholder="Add your reply..."
             />
           </motion.div>
         )}

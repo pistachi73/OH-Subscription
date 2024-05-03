@@ -1,6 +1,12 @@
 "use client";
 import { type Transition, cubicBezier, motion } from "framer-motion";
-import { Heart, MessageSquareText, NotebookText, Share } from "lucide-react";
+import {
+  Heart,
+  type LucideIcon,
+  MessageSquareText,
+  NotebookText,
+  Share,
+} from "lucide-react";
 import { User } from "lucide-react";
 import { useState } from "react";
 
@@ -31,6 +37,7 @@ export const Shot = () => {
       },
     },
     { icon: Heart, label: "Like" },
+
     {
       icon: MessageSquareText,
       label: "Comment",
@@ -39,7 +46,10 @@ export const Shot = () => {
         setShowComments((prev) => !prev);
       },
     },
-    { icon: Share, label: "Share" },
+    {
+      icon: Share,
+      label: "Share",
+    },
   ] as const;
 
   const isDesktop = deviceSize.includes("xl");
@@ -49,10 +59,6 @@ export const Shot = () => {
     delay: canAnimate ? 0 : 0.4,
     ease: cubicBezier(0.4, 0, 0.2, 1),
   };
-
-  console.log({
-    showComments,
-  });
 
   return (
     <motion.div
@@ -69,7 +75,7 @@ export const Shot = () => {
     >
       <div
         className={cn(
-          "flex w-full items-end gap-2 p-3 pr-1",
+          "flex w-full items-end justify-between gap-2 p-4 pr-1",
           "sm:flex-row sm:p-6 sm:pr-3",
         )}
       >
@@ -84,8 +90,7 @@ export const Shot = () => {
             <p className="text-sm sm:text-base">Jhon Doe</p>
           </div>
           <span className="line-clamp-3 text-sm">
-            Vocabulary is the cornerstone of effective communication. the
-            Vocabulary is the cornerstone of effective communication. the
+            Vocabulary is the cornerstone of effective communication.
           </span>
         </div>
         <motion.div
@@ -116,18 +121,15 @@ export const Shot = () => {
           transition={transition}
           className={cn(
             "flex flex-col gap-3 text-background",
-            "[--text-color-background:#fff] [--text-color-foreground:#9597a0]",
-            "dark:[--text-color-background:#050610] dark:[--text-color-foreground:#8f92a8]",
+            "[--text-color-background:#fff] [--text-color-foreground:#050610]",
+            "dark:[--text-color-background:#050610] dark:[--text-color-foreground:#fff]",
           )}
         >
           {shotOptionsButtons.map(({ icon: Icon, label, ...props }) => {
             const isShare = label === "Share";
 
             return (
-              <div
-                key={label}
-                className="flex flex-col items-center justify-center gap-1"
-              >
+              <button key={label} {...props}>
                 {isShare ? (
                   <ShareButton
                     title="Share"
@@ -144,26 +146,21 @@ export const Shot = () => {
                       },
                       link: true,
                     }}
-                    {...props}
                   >
-                    <Button
-                      variant={"secondary"}
-                      className={cn("h-12 w-12 rounded-full bg-accent/70 p-0")}
-                    >
-                      <Icon size={isDesktop ? 18 : 16} />
-                    </Button>
+                    <OptionButtonContent
+                      icon={Icon}
+                      label={label}
+                      canAnimate={canAnimate}
+                    />
                   </ShareButton>
                 ) : (
-                  <Button
-                    variant={"secondary"}
-                    className={cn("h-12 w-12 rounded-full bg-accent/70 p-0")}
-                    {...props}
-                  >
-                    <Icon size={isDesktop ? 18 : 16} />
-                  </Button>
+                  <OptionButtonContent
+                    icon={Icon}
+                    label={label}
+                    canAnimate={canAnimate}
+                  />
                 )}
-                <p className="text-sm">{label}</p>
-              </div>
+              </button>
             );
           })}
         </motion.div>
@@ -193,5 +190,32 @@ export const Shot = () => {
         setShowTranscript={setShowTranscript}
       />
     </motion.div>
+  );
+};
+
+const OptionButtonContent = ({
+  icon: Icon,
+  label,
+  canAnimate,
+}: {
+  icon: LucideIcon;
+  label: string;
+  canAnimate: boolean;
+}) => {
+  return (
+    <div className="flex flex-col items-center justify-center gap-1">
+      <div
+        className={cn(
+          "flex h-12 w-12 items-center justify-center rounded-full bg-foreground/70 p-0 text-background transition-colors",
+          "sm:h-14 sm:w-14",
+          "xl:delay-400 xl:bg-accent/70 xl:text-foreground xl:hover:bg-accent/100",
+          canAnimate &&
+            "xl:bg-foreground/70 xl:text-background xl:delay-0 xl:hover:bg-foreground/90 xl:hover:delay-0",
+        )}
+      >
+        <Icon size={18} />
+      </div>
+      <p className="text-xs sm:text-sm">{label}</p>
+    </div>
   );
 };

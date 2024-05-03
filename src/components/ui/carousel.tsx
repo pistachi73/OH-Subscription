@@ -201,7 +201,7 @@ const Carousel = React.forwardRef<
 
               className,
               {
-                "my-1 overflow-x-clip overflow-y-visible px-[4%] 2xl:px-14 ":
+                "my-1 overflow-x-clip overflow-y-visible px-[2%] sm:px-[4%] 2xl:px-14 ":
                   orientation === "horizontal",
               },
               {
@@ -278,7 +278,7 @@ const CarouselPrevious = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-prev absolute flex h-full w-[calc(3%-2px)]  items-center justify-center rounded-none rounded-r-sm bg-primary-50/50  opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0  lg:w-[calc(3%-4px)] xl:w-[calc(3%-8px)] 2xl:w-[48px]",
+        "group/chevron-prev absolute flex h-full w-[calc(2%-2px)]  items-center  justify-center rounded-none rounded-r-sm bg-primary-50/50 opacity-100  transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 sm:w-[calc(4%-2px)]  lg:sm:w-[calc(2%-4px)]  lg:w-[calc(4%-4px)] xl:sm:w-[calc(2%-8px)]  xl:w-[calc(4%-8px)] 2xl:w-[48px]",
         orientation === "horizontal"
           ? "-left-0 top-1/2 -translate-y-1/2"
           : "-top-10 left-1/2 -translate-x-1/2 rotate-90",
@@ -308,7 +308,7 @@ const CarouselNext = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-next absolute flex h-full w-[calc(3%-2px)] items-center justify-center rounded-none rounded-l-sm bg-primary-50/50 opacity-100 transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 lg:w-[calc(3%-4px)] xl:w-[calc(3%-8px)] 2xl:w-[48px]",
+        "group/chevron-prev absolute flex h-full w-[calc(2%-2px)]  items-center  justify-center rounded-none rounded-r-sm bg-primary-50/50 opacity-100  transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 sm:w-[calc(4%-2px)]  lg:sm:w-[calc(2%-4px)]  lg:w-[calc(4%-4px)] xl:sm:w-[calc(2%-8px)]  xl:w-[calc(4%-8px)] 2xl:w-[48px]",
         orientation === "horizontal"
           ? "-right-0 top-1/2 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",

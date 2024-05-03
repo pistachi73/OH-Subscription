@@ -77,11 +77,8 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
               <VerticalCarouselItem
                 key={index}
                 className={cn(
-                  "flex h-full w-full basis-full justify-center transition-opacity delay-200 duration-300",
+                  "flex h-full w-full basis-full justify-center",
                   "sm:max-h-[95%] sm:basis-[95%]",
-                  {
-                    "opacity-40": index !== current,
-                  },
                 )}
               >
                 <Shot />

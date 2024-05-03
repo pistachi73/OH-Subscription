@@ -2,24 +2,29 @@
 
 import { useSignals } from "@preact/signals-react/runtime";
 
+
 import { AuthFormContentSignals } from "./auth-form";
 import { isAuthModalOpenSignal } from "./auth-signals";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+} from "@/components/ui/responsive-dialog";
+
 
 export const AuthModal = () => {
   useSignals();
 
   return (
-    <Dialog
+    <ResponsiveDialog
       open={isAuthModalOpenSignal.value}
       onOpenChange={(isOpen) => {
         isAuthModalOpenSignal.value = isOpen;
       }}
     >
-      <DialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
+      <ResponsiveDialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
         <AuthFormContentSignals />
-      </DialogContent>
-    </Dialog>
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 };

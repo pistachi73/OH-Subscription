@@ -48,7 +48,7 @@ export const HeroCarousel = () => {
 
   return (
     <div
-      className="relative mb-14 h-[76vw] max-h-[70vh] w-full sm:aspect-video sm:-translate-y-[var(--header-height)]"
+      className="relative mb-14 h-[76vw] max-h-[70vh] w-full translate-y-[var(--header-height)] sm:aspect-video sm:-translate-y-[var(--header-height)]"
       onMouseEnter={stopInterval}
       onMouseLeave={startInterval}
     >

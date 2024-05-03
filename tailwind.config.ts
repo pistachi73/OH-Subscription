@@ -17,9 +17,13 @@ const config = {
         "2xl": "1400px",
       },
     },
+
     extend: {
       screens: {
         xs: "475px",
+      },
+      transitionDelay: {
+        400: "400ms",
       },
       backgroundImage: {
         "hero-gradient":

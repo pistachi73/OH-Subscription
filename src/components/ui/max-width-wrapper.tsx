@@ -5,17 +5,19 @@ import { cn } from "@/lib/utils";
 export const MaxWidthWrapper = forwardRef<
   HTMLDivElement,
   {
-    className?: string;
     children: ReactNode;
+    className?: string;
+    as?: string;
   }
->(({ className, children }, ref) => {
+>(({ className, children, as = "div" }, ref) => {
+  const Component = as as any;
   return (
-    <div
+    <Component
       ref={ref}
-      className={cn("mx-auto w-full px-[4%] 2xl:px-14", className)}
+      className={cn("mx-auto w-full px-[2%] sm:px-[4%] 2xl:px-14", className)}
     >
       {children}
-    </div>
+    </Component>
   );
 });
 

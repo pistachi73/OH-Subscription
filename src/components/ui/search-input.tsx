@@ -16,7 +16,7 @@ export const SearchInput = (props: InputProps) => {
   return (
     <div className=" relative flex w-full items-center rounded-sm bg-background">
       <Search
-        className="pointer-events-none absolute left-[10px] top-1/2 -translate-y-1/2 transform text-gray-800"
+        className="pointer-events-none absolute left-[10px] top-1/2 -translate-y-1/2 transform text-foreground"
         size={20}
       />
       <Input
