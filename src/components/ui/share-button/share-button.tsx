@@ -41,6 +41,7 @@ type ShareButtonProps = {
   description?: React.ReactNode;
   videoTitle?: string;
   videoThumbnailUrl?: string;
+  asChild?: boolean;
   config: ShareItemsConfig;
 };
 
@@ -51,13 +52,16 @@ export const ShareButton = ({
   description,
   videoTitle,
   videoThumbnailUrl,
+  asChild = false,
   config,
 }: ShareButtonProps) => {
   const hasPreview = videoTitle && videoThumbnailUrl;
 
   return (
     <ResponsiveDialog>
-      <ResponsiveDialogTrigger asChild>{children}</ResponsiveDialogTrigger>
+      <ResponsiveDialogTrigger asChild={asChild}>
+        {children}
+      </ResponsiveDialogTrigger>
       <ResponsiveDialogContent>
         <div className={cn("flex flex-col gap-4")}>
           <div className="space-y-1">

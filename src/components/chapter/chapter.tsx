@@ -200,6 +200,7 @@ export const Chapter = () => {
                 body: "I thought you might be interested in this chapter I found.",
               },
             }}
+            asChild
           >
             <Button
               variant="outline"
