@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 export const MobileHeader = () => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [position, setPosition] = useState(window.scrollY);
+  const [position, setPosition] = useState(window?.scrollY ?? 0);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -42,8 +42,11 @@ export const MobileHeader = () => {
       <MaxWidthWrapper
         as="section"
         className={cn(
-          "fixed top-0 z-50 flex h-header w-full items-center justify-between border-b bg-background transition-transform duration-300",
+          "fixed top-0 z-50 flex h-header w-full items-center justify-between border-b transition-transform duration-300",
           visible ? "translate-y-0" : "-translate-y-full",
+          // "bg-gradient-to-b from-background to-transparent",
+          // "bg-gradient-to-b from-background to-transparent",
+          "bg-background",
         )}
       >
         <Link href="/">
@@ -55,7 +58,6 @@ export const MobileHeader = () => {
           />
         </Link>
         <div>
-          {" "}
           <div className="flex items-center gap-1">
             <Button
               size="icon"
@@ -63,7 +65,7 @@ export const MobileHeader = () => {
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               name="search"
             >
-              {isSearchOpen ? <X size={18} /> : <Search size={18} />}
+              {isSearchOpen ? <X size={16} /> : <Search size={16} />}
             </Button>
             <AuthButton asChild mode="modal" formType="login">
               <Button
@@ -71,6 +73,7 @@ export const MobileHeader = () => {
                 variant="ghost"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 name="join"
+                className="text-sm"
               >
                 Join
               </Button>
@@ -100,23 +103,25 @@ export const MobileHeader = () => {
       </MaxWidthWrapper>
       <MaxWidthWrapper
         as="ol"
-        className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background py-1"
+        className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1"
       >
         {mobileNavItems.map(({ href, title, icon: Icon }) => {
           const isActive = pathname === href;
           return (
             <li
               key={href}
-              className="flex basis-1/5 items-center justify-center"
+              className={cn(
+                "relative flex basis-1/5 items-center justify-center pt-2 transition-colors",
+                isActive ? "text-foreground" : "text-muted-foreground",
+              )}
             >
               <Link
                 href={href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-px",
-                  isActive ? "text-foreground" : "text-muted-foreground",
                 )}
               >
-                <Icon size={24} />
+                <Icon size={24} strokeWidth={1} />
                 <span className="text-2xs">{title}</span>
               </Link>
             </li>

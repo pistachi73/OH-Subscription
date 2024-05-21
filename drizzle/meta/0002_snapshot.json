@@ -1,10 +1,8 @@
 {
-  "id": "0d18bd43-b0fe-48d9-a495-e423117ec93d",
-  "prevId": "125ba83a-7c02-416c-85f9-510df9f7cdfb",
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "tables": {
-    "account": {
+    "public.account": {
       "name": "account",
       "schema": "",
       "columns": {
@@ -80,15 +78,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -102,7 +100,7 @@
       },
       "uniqueConstraints": {}
     },
-    "categories": {
+    "public.categories": {
       "name": "categories",
       "schema": "",
       "columns": {
@@ -124,7 +122,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "categories_programs": {
+    "public.categories_programs": {
       "name": "categories_programs",
       "schema": "",
       "columns": {
@@ -146,28 +144,28 @@
         "categories_programs_programId_programs_id_fk": {
           "name": "categories_programs_programId_programs_id_fk",
           "tableFrom": "categories_programs",
-          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
+          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "categories_programs_categoryId_categories_id_fk": {
           "name": "categories_programs_categoryId_categories_id_fk",
           "tableFrom": "categories_programs",
-          "tableTo": "categories",
           "columnsFrom": [
             "categoryId"
           ],
+          "tableTo": "categories",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -181,7 +179,7 @@
       },
       "uniqueConstraints": {}
     },
-    "passwordResetToken": {
+    "public.passwordResetToken": {
       "name": "passwordResetToken",
       "schema": "",
       "columns": {
@@ -210,15 +208,15 @@
       "uniqueConstraints": {
         "ss": {
           "name": "ss",
-          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "programs": {
+    "public.programs": {
       "name": "programs",
       "schema": "",
       "columns": {
@@ -300,7 +298,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "teachers": {
+    "public.teachers": {
       "name": "teachers",
       "schema": "",
       "columns": {
@@ -334,7 +332,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "teachers_programs": {
+    "public.teachers_programs": {
       "name": "teachers_programs",
       "schema": "",
       "columns": {
@@ -356,28 +354,28 @@
         "teachers_programs_programId_programs_id_fk": {
           "name": "teachers_programs_programId_programs_id_fk",
           "tableFrom": "teachers_programs",
-          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
+          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "teachers_programs_teacherId_teachers_id_fk": {
           "name": "teachers_programs_teacherId_teachers_id_fk",
           "tableFrom": "teachers_programs",
-          "tableTo": "teachers",
           "columnsFrom": [
             "teacherId"
           ],
+          "tableTo": "teachers",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -391,7 +389,7 @@
       },
       "uniqueConstraints": {}
     },
-    "twoFactorConfirmation": {
+    "public.twoFactorConfirmation": {
       "name": "twoFactorConfirmation",
       "schema": "",
       "columns": {
@@ -413,21 +411,21 @@
         "twoFactorConfirmation_user_user_id_fk": {
           "name": "twoFactorConfirmation_user_user_id_fk",
           "tableFrom": "twoFactorConfirmation",
-          "tableTo": "user",
           "columnsFrom": [
             "user"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "twoFactorToken": {
+    "public.twoFactorToken": {
       "name": "twoFactorToken",
       "schema": "",
       "columns": {
@@ -456,15 +454,15 @@
       "uniqueConstraints": {
         "twoFactorToken_email_token_unique": {
           "name": "twoFactorToken_email_token_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "user": {
+    "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
@@ -518,7 +516,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "verificationToken": {
+    "public.verificationToken": {
       "name": "verificationToken",
       "schema": "",
       "columns": {
@@ -547,15 +545,15 @@
       "uniqueConstraints": {
         "verificationToken_email_token_unique": {
           "name": "verificationToken_email_token_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "video": {
+    "public.video": {
       "name": "video",
       "schema": "",
       "columns": {
@@ -627,7 +625,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "videos_programs": {
+    "public.videos_programs": {
       "name": "videos_programs",
       "schema": "",
       "columns": {
@@ -655,28 +653,28 @@
         "videos_programs_programId_programs_id_fk": {
           "name": "videos_programs_programId_programs_id_fk",
           "tableFrom": "videos_programs",
-          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
+          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "videos_programs_videoId_video_id_fk": {
           "name": "videos_programs_videoId_video_id_fk",
           "tableFrom": "videos_programs",
-          "tableTo": "video",
           "columnsFrom": [
             "videoId"
           ],
+          "tableTo": "video",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -691,12 +689,12 @@
       "uniqueConstraints": {
         "videos_programs_videoId_programId_chapterNumber_unique": {
           "name": "videos_programs_videoId_programId_chapterNumber_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "videoId",
             "programId",
             "chapterNumber"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     }
@@ -704,8 +702,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "0d18bd43-b0fe-48d9-a495-e423117ec93d",
+  "prevId": "125ba83a-7c02-416c-85f9-510df9f7cdfb"
 }

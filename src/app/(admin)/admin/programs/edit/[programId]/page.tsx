@@ -28,6 +28,7 @@ const EditProgramPage = async ({
   if (!program) {
     redirect("/admin/programs");
   }
+
   const teachers = await api.teacher.getAll.query();
   const videos = await api.video.getAll.query();
   const categories = await api.category.getAll.query();

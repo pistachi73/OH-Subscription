@@ -25,44 +25,41 @@ export const DesktopHeader = () => {
   const user = useCurrentUser();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { deviceType } = useDeviceType();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(true);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const offset = window.scrollY;
+  //     if (offset > 10) {
+  //       setIsScrolled(true);
+  //     } else {
+  //       setIsScrolled(false);
+  //     }
+  //   };
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 bg-background sm:h-header sm:bg-transparent",
-      )}
-    >
+    <header className={cn("sticky top-0 z-50 h-header")}>
       <MaxWidthWrapper
         className={clsx(
           "relative flex h-full items-center justify-center gap-4 transition-colors duration-200",
           {
-            "bg-background": !isScrolled,
+            "bg-gradient-to-b from-background/70 to-transparent": !isScrolled,
             "bg-transparent": isScrolled,
           },
         )}
       >
         <nav
           className={cn(
-            "relative flex h-full flex-row items-center gap-14 rounded-sm  bg-background px-4 py-1 transition-transform duration-300 ease-out",
+            "relative flex h-full flex-row items-center gap-14 rounded-sm px-4 py-1 transition-all duration-300 ease-out",
             {
+              "bg-background": isScrolled,
               "rounded-b-none": isSearchOpen,
-              "shadow-sm sm:translate-y-3": isScrolled,
+              "shadow-md sm:translate-y-2": isScrolled,
             },
           )}
         >

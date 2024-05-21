@@ -36,9 +36,10 @@ export const useCarouselBorders = ({ index }: { index: number }) => {
 
   let leftBorder, rightBorder;
 
+  console.log(current, total, slidesPerView);
   if (current === total) {
     rightBorder = totalItems - 1;
-    leftBorder = rightBorder - slidesPerView! + 1;
+    leftBorder = total === 1 ? 0 : rightBorder - slidesPerView! + 1;
   } else {
     leftBorder = (current! - 1) * slidesPerView!;
     rightBorder = current! * slidesPerView! - 1;
@@ -46,6 +47,14 @@ export const useCarouselBorders = ({ index }: { index: number }) => {
 
   const isLeftBorder = index === leftBorder;
   const isRightBorder = index === rightBorder;
+
+  console.log({
+    index,
+    leftBorder,
+    rightBorder,
+    isLeftBorder,
+    isRightBorder,
+  });
 
   return { isLeftBorder, isRightBorder };
 };

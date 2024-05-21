@@ -27,6 +27,7 @@
       --radius: 0.5rem;
 
       --header-height: 48px;
+      --muted-background: 228 100% 99%;
     }
 
     .dark {
@@ -49,6 +50,8 @@
       --destructive: 5 100% 48%;
       --destructive-foreground: 0 0% 100%;
       --ring: 232 34% 35%;
+
+      --muted-background: 232 37% 12%;
     }
     /* :root {
       --background: 232 0% 100%;
@@ -103,6 +106,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -154,5 +158,13 @@
 
   p {
     font-weight: 300;
+  }
+
+  .header-translate {
+    transform: translateY(var(--header-height));
+
+    @media (min-width: 640px) {
+      transform: translateY(calc(var(--header-height) * -1));
+    }
   }
 }

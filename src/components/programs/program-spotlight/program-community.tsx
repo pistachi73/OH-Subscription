@@ -3,18 +3,18 @@
 import { ChevronDown, User } from "lucide-react";
 import { useState } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { AddComment } from "../ui/community/add-comment";
-import { Comment } from "../ui/community/comment";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Button } from "../../ui/button";
+import { AddComment } from "../../ui/community/add-comment";
+import { Comment } from "../../ui/community/comment";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 
-import { SimilarPrograms } from "./similar-programs";
+import { SimilarPrograms } from "./program-similars";
 
 export const ProgramCommunity = () => {
   const [sort, setSort] = useState("Sort");

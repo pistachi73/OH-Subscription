@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { type z } from "zod";
 
+import { programs } from "../../../../../server/db/schema";
+
 import { ProgramForm } from "./program-form";
 import {
   isProgramDeleteModalOpenSignal,
@@ -17,6 +19,7 @@ import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { type Option } from "@/components/ui/admin/admin-multiple-select";
 import { uploadToS3 } from "@/lib/upload-to-s3";
 import { ProgramSchema } from "@/schemas";
+import { getProgramForCard } from "@/server/api/lib/programs";
 import { type SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { type RouterOutputs } from "@/trpc/shared";
@@ -52,6 +55,9 @@ export const EditProgram = ({
 
   const [isSaving, startTransition] = useTransition();
 
+  const { refetch } = api.program.getProgramsForCards.useQuery({});
+
+  refetch({});
   const { mutateAsync: saveVideo } = api.program.update.useMutation({
     onSuccess: ({ id }) => {
       trpcUtils.program.getById.invalidate(id);
@@ -71,6 +77,18 @@ export const EditProgram = ({
     .map(({ category }) => category.id.toString())
     .join(",");
 
+  const initialChapters = program.chapters
+    .map(({ videoId }) => videoId.toString())
+    .join(",");
+
+  const chaptersNumbers: Record<number, number> = program.chapters.reduce(
+    (acc, { videoId, chapterNumber }) => {
+      Object.assign(acc, { [videoId]: chapterNumber });
+      return acc;
+    },
+    {},
+  );
+
   const onSave = async (values: z.infer<typeof ProgramSchema>) => {
     startTransition(async () => {
       const thumbnail = values.thumbnail;
@@ -83,7 +101,6 @@ export const EditProgram = ({
               fileName: program.thumbnail ?? undefined,
             }),
         });
-        console.log("fileName", fileName);
 
         values.thumbnail = fileName;
         form.setValue("thumbnail", fileName);
@@ -115,6 +132,8 @@ export const EditProgram = ({
         videos={videos}
         initialTeachers={initialTeachers}
         initialCategories={initialCategories}
+        initialChapters={initialChapters}
+        chaptersNumbers={chaptersNumbers}
       />
     </AdminFormLayout>
   );

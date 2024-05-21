@@ -1,54 +1,119 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { useCallback, useMemo } from "react";
+
 import {
   type DeviceSize,
   useDeviceType,
 } from "../device-only/device-only-provider";
+import { Skeleton } from "../skeleton";
 
-import { SeriesCard } from "./series-card";
+import { ProgramCard } from "./program-card";
+
+import { regularEase } from "@/lib/animation";
+import { type RouterOutputs } from "@/trpc/shared";
 
 type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
 };
 type CardListProps = {
   cardsPerRow: PartialRecord<DeviceSize, number>;
-  totalCards?: number;
+  programs?: RouterOutputs["program"]["getProgramsForCards"];
+  isLoading?: boolean;
 };
 
-export const CardList = ({ cardsPerRow, totalCards = 20 }: CardListProps) => {
+export const CardList = ({
+  programs,
+  cardsPerRow,
+  isLoading = false,
+}: CardListProps) => {
   const { deviceSize } = useDeviceType();
 
-  const isBorder = (
-    index: number,
-  ): { isLeftBorder: boolean; isRightBorder: boolean } => {
+  const randomDelayArray = useMemo(() => {
+    if (!programs?.length) return;
+    const possibleIndexes = Array.from({ length: programs.length }).map(
+      (_, index) => index,
+    );
+
+    const random = [];
+
+    for (let i = 0; i < programs.length ?? 0; i++) {
+      const randomIndex = Math.floor(Math.random() * possibleIndexes.length);
+      random.push(possibleIndexes.splice(randomIndex, 1)[0]);
+    }
+
+    return random;
+  }, [programs]);
+
+  const isBorder = useCallback(
+    (index: number): { isLeftBorder: boolean; isRightBorder: boolean } => {
+      const reversedDeviceSize = deviceSize.slice().reverse();
+      let isLeftBorder = false,
+        isRightBorder = false;
+      for (const size of reversedDeviceSize) {
+        if (cardsPerRow[size]) {
+          if (index % cardsPerRow[size]! === 0) {
+            isLeftBorder = true;
+          }
+          if (index % cardsPerRow[size]! === cardsPerRow[size]! - 1) {
+            isRightBorder = true;
+          }
+          break;
+        }
+      }
+      return { isLeftBorder, isRightBorder };
+    },
+    [deviceSize, cardsPerRow],
+  );
+
+  const getLoadingCardsNumber = useCallback(() => {
     const reversedDeviceSize = deviceSize.slice().reverse();
-    let isLeftBorder = false,
-      isRightBorder = false;
     for (const size of reversedDeviceSize) {
       if (cardsPerRow[size]) {
-        if (index % cardsPerRow[size]! === 0) {
-          isLeftBorder = true;
-        }
-        if (index % cardsPerRow[size]! === cardsPerRow[size]! - 1) {
-          isRightBorder = true;
-        }
-        break;
+        return cardsPerRow[size] as number;
       }
     }
-    return { isLeftBorder, isRightBorder };
-  };
+    return 6;
+  }, [cardsPerRow, deviceSize]);
+
+  if (isLoading) {
+    return Array.from({ length: getLoadingCardsNumber() }).map((_, index) => (
+      <Skeleton key={index} className="aspect-video" />
+    ));
+  }
+
+  if (!programs?.length) {
+    return null;
+  }
 
   return (
     <>
-      {Array.from({ length: totalCards }).map((_, index) => {
+      {programs.map((program, index) => {
         const { isLeftBorder, isRightBorder } = isBorder(index);
+
         return (
-          <SeriesCard
+          <motion.div
             key={index}
-            lazy={false}
-            isLeftBorder={isLeftBorder}
-            isRightBorder={isRightBorder}
-          />
+            initial="initial"
+            animate="animate"
+            variants={{
+              initial: { opacity: 0 },
+              animate: { opacity: 1 },
+            }}
+            transition={{
+              ease: regularEase,
+              duration: 0.2,
+              delay: 0.05 * (randomDelayArray![index] as number),
+            }}
+          >
+            <ProgramCard
+              lazy={false}
+              isLeftBorder={isLeftBorder}
+              isRightBorder={isRightBorder}
+              program={program}
+            />
+          </motion.div>
         );
       })}
     </>

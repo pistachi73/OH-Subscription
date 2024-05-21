@@ -101,14 +101,17 @@ export const Chapter = () => {
                 variant="outline"
                 size="icon"
               >
-                <Play className="ml-1 fill-primary stroke-primary" size={24} />
+                <Play
+                  className="-ml-px fill-primary stroke-primary"
+                  size={24}
+                />
               </MotionButton>
 
               <div className="space-y-1">
                 <p className="text-base font-semibold tracking-tight">
                   Episode 1 - Unlocking vocabulary
                 </p>
-                <p className="xs:text-b text-xs  text-gray-600">
+                <p className="xs:text-b text-xs  text-muted-foreground">
                   February 25, 2025 <span className="ml-3">14 min</span>
                 </p>
               </div>
@@ -139,7 +142,7 @@ export const Chapter = () => {
                         className="rounded-sm"
                       />
                     </MotionLink>
-                    <motion.p className="text-sm text-gray-800">
+                    <motion.p className="text-sm text-foreground">
                       Vocabulary is the cornerstone of effective communication.
                       In this chapter, students embark on a journey to expand
                       their lexicon, exploring strategies for learning new
@@ -181,21 +184,20 @@ export const Chapter = () => {
                 variants={imageVariants}
               >
                 <Play
-                  className="ml-1 fill-primary-500 stroke-primary-500"
+                  className="-ml-px fill-primary-500 stroke-primary-500"
                   size={24}
                 />
               </MotionButton>
             </Link>
-            <DeviceOnly allowedDevices={["mobile"]}>hello</DeviceOnly>
           </div>
           <div className="max-w-[72ch] space-y-1">
             <p className="text-lg font-semibold tracking-tight">
               Episode 1 - Unlocking vocabulary
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               February 25, 2025 <span className="ml-3">14 min</span>
             </p>
-            <p className="line-clamp-5 text-base text-gray-800">
+            <p className="line-clamp-5 text-base text-foreground">
               Vocabulary is the cornerstone of effective communication. In this
               chapter, students embark on a journey to expand their lexicon,
               exploring strategies for learning new words, deciphering meanings

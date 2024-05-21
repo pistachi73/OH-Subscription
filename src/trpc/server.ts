@@ -10,7 +10,7 @@ import { observable } from "@trpc/server/observable";
 import { type TRPCErrorResponse } from "@trpc/server/rpc";
 import { cache } from "react";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 import { transformer } from "./shared";
 
@@ -22,10 +22,13 @@ import { createTRPCContext } from "@/server/api/trpc";
  * handling a tRPC call from a React Server Component.
  */
 const createContext = cache(() => {
+  console.log("createContext");
+  const h = headers();
   return createTRPCContext({
     headers: new Headers({
       cookie: cookies().toString(),
       "x-trpc-source": "rsc",
+      authorization: h.get("authorization")?.toString() || "",
     }),
   });
 });

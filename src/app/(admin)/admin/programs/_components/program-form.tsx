@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils";
 import { type ProgramSchema } from "@/schemas/index";
 import { type SelectVideo } from "@/server/db/schema";
@@ -52,13 +53,8 @@ type ProgramFormProps = {
   initialTeachers?: string;
   initialChapters?: string;
   initialCategories?: string;
+  chaptersNumbers?: Record<number, number>;
 };
-
-const LEVEL_OPTIONS: Option[] = [
-  { label: "A1 - A2 Beginner", value: "BEGINNER" },
-  { label: "B1 - B2 Intermediate", value: "INTERMEDIATE" },
-  { label: "C1 - C2 Advanced", value: "ADVANCED" },
-];
 
 export const ProgramForm = ({
   form,
@@ -66,9 +62,10 @@ export const ProgramForm = ({
   teacherOptions,
   videoOptions,
   categoryOptions,
-  initialChapters,
   initialTeachers,
   initialCategories,
+  initialChapters,
+  chaptersNumbers,
 }: ProgramFormProps) => {
   const pathname = usePathname();
 
@@ -214,7 +211,12 @@ export const ProgramForm = ({
               <CardDescription>Add chapters to the Program.</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChaptersTable videoOptions={videoOptions} videos={videos} />
+              <ChaptersTable
+                videoOptions={videoOptions}
+                videos={videos}
+                initialChapters={initialChapters}
+                chaptersNumbers={chaptersNumbers}
+              />
             </CardContent>
           </Card>
         </div>

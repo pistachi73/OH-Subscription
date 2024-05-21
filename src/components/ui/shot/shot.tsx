@@ -1,4 +1,5 @@
 "use client";
+import MuxPlayer from "@mux/mux-player-react";
 import { type Transition, cubicBezier, motion } from "framer-motion";
 import {
   Heart,
@@ -12,6 +13,8 @@ import { useState } from "react";
 
 import Image from "next/image";
 
+import { ShotPlayer } from "../video-players/shot-player";
+
 import { ShotCommunity } from "./shot-community";
 import { ShotTranscript } from "./shot-transcript";
 
@@ -20,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { ShareButton } from "@/components/ui/share-button/share-button";
 import { cn } from "@/lib/utils";
+import "media-chrome";
 
 export const Shot = () => {
   const [showComments, setShowComments] = useState(false);
@@ -75,8 +79,8 @@ export const Shot = () => {
     >
       <div
         className={cn(
-          "flex w-full items-end justify-between gap-2 p-4 pr-1",
-          "sm:flex-row sm:p-6 sm:pr-3",
+          "pointer-events-none relative z-10 flex w-full items-end justify-between gap-2 p-4 pr-1",
+          "sm:flex-row sm:p-3 sm:pb-4 sm:pr-2",
         )}
       >
         <div className="space-y-2 text-background">
@@ -128,57 +132,62 @@ export const Shot = () => {
           {shotOptionsButtons.map(({ icon: Icon, label, ...props }) => {
             const isShare = label === "Share";
 
-            return (
+            return isShare ? (
+              <ShareButton
+                title="Share"
+                description="Share this shot with your friends"
+                url={"example.com"}
+                config={{
+                  twitter: { title: "title", hashtags: "hashtag" },
+                  facebook: true,
+                  linkedin: true,
+                  email: {
+                    body: "body",
+                    email: "email",
+                    subject: "subject",
+                  },
+                  link: true,
+                }}
+              >
+                <OptionButtonContent
+                  icon={Icon}
+                  label={label}
+                  canAnimate={canAnimate}
+                />
+              </ShareButton>
+            ) : (
               <button key={label} {...props}>
-                {isShare ? (
-                  <ShareButton
-                    title="Share"
-                    description="Share this shot with your friends"
-                    url={"example.com"}
-                    config={{
-                      twitter: { title: "title", hashtags: "hashtag" },
-                      facebook: true,
-                      linkedin: true,
-                      email: {
-                        body: "body",
-                        email: "email",
-                        subject: "subject",
-                      },
-                      link: true,
-                    }}
-                  >
-                    <OptionButtonContent
-                      icon={Icon}
-                      label={label}
-                      canAnimate={canAnimate}
-                    />
-                  </ShareButton>
-                ) : (
-                  <OptionButtonContent
-                    icon={Icon}
-                    label={label}
-                    canAnimate={canAnimate}
-                  />
-                )}
+                <OptionButtonContent
+                  icon={Icon}
+                  label={label}
+                  canAnimate={canAnimate}
+                />
               </button>
             );
           })}
         </motion.div>
       </div>
 
-      <div
-        className={cn(
-          "absolute left-0 top-0 -z-20 aspect-[9/16] h-full w-full overflow-hidden",
-          "sm:rounded-md",
-        )}
-      >
-        <Image
-          src={"/images/hero-thumbnail-2.jpg"}
-          alt="video"
-          fill
-          className="aspect-[9/16] object-cover"
-        />
-      </div>
+      <Image
+        src={"/images/hero-thumbnail-2.jpg"}
+        alt="video"
+        fill
+        className="aspect-[9/16] rounded-md object-cover"
+      />
+      {/* <div className="absolute left-0 top-0 z-0 aspect-[9/16] w-full overflow-hidden rounded-md">
+        <ShotPlayer />
+      </div> */}
+      {/* <MuxPlayer
+        className=" h-full w-full w-full overflow-hidden object-cover"
+        streamType="on-demand"
+        playbackId="vUoE57Q501o01wP4r7AXNUStoWCLYgPxQdu22UD9wuu8s"
+        metadataVideoTitle="Placeholder (optional)"
+        metadataViewerUserId="Placeholder (optional)"
+        primaryColor="#FFFFFF"
+        secondaryColor="#000000"
+        theme=""
+        style={{ aspectRatio: 9 / 16 }}
+      /> */}
 
       <ShotCommunity
         showComments={showComments}
@@ -206,9 +215,9 @@ const OptionButtonContent = ({
     <div className="flex flex-col items-center justify-center gap-1">
       <div
         className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-full bg-foreground/70 p-0 text-background transition-colors",
+          "pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-foreground/70 p-0 text-background transition-colors",
           "sm:h-14 sm:w-14",
-          "xl:delay-400 xl:bg-accent/70 xl:text-foreground xl:hover:bg-accent/100",
+          "xl:bg-accent/70 xl:text-foreground xl:delay-400 xl:hover:bg-accent/100",
           canAnimate &&
             "xl:bg-foreground/70 xl:text-background xl:delay-0 xl:hover:bg-foreground/90 xl:hover:delay-0",
         )}

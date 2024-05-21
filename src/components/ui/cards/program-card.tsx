@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, type Variants, motion } from "framer-motion";
-import { Heart, Play, User } from "lucide-react";
+import { Heart, LibraryBig, Play, User } from "lucide-react";
 import React from "react";
 
 import Image from "next/image";
@@ -21,12 +21,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { levelMap } from "@/lib/formatters/formatLevel";
+import { cn, getImageUrl } from "@/lib/utils";
+import { type RouterOutputs } from "@/trpc/shared";
 
-export type SeriesCardProps = {
+export type ProgramCardProps = {
   lazy?: boolean;
   isLeftBorder?: boolean;
   isRightBorder?: boolean;
+  program: RouterOutputs["program"]["getProgramsForCards"][0];
 };
 
 const variants: Variants = {
@@ -89,27 +92,38 @@ const tagVariants: Variants = {
   },
 };
 
-export const SeriesCard = ({
+export const ProgramCard = ({
   lazy,
   isLeftBorder,
   isRightBorder,
-}: SeriesCardProps) => {
+  program,
+}: ProgramCardProps) => {
+  const {
+    level,
+    thumbnail,
+    description,
+    teachers,
+    slug,
+    title,
+    totalChapters,
+  } = program;
+
   const { hovered, setCanHover, onMouseEnter, onMouseLeave } =
     useCardAnimation();
 
   return (
     <Link
-      href="/settings"
-      className=" relative flex aspect-video h-full w-full cursor-pointer rounded-sm "
+      href="/programs/slug"
+      className=" relative flex aspect-video h-full w-full cursor-pointer rounded-sm"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <span className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-gray-800 px-1 py-0.5 text-2xs font-medium text-white">
-        B1 - B2
+      <span className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-primary-800/50 px-1 py-0.5 text-3xs font-medium text-white">
+        {levelMap[level].shortFormat}
       </span>
 
       <Image
-        src="/images/video-thumbnail.png"
+        src={thumbnail ? getImageUrl(thumbnail) : "/images/video-thumbnail.png"}
         alt="video"
         fill
         className="rounded-sm"
@@ -123,13 +137,13 @@ export const SeriesCard = ({
               animate="animate"
               exit="initial"
               variants={variants}
-              className={cn("absolute h-full w-full", {
+              className={cn("absolute h-full w-full ", {
                 "origin-left": isLeftBorder,
                 "origin-right": isRightBorder,
               })}
             >
               <motion.div
-                className={cn("relative aspect-video w-full ")}
+                className={cn("relative aspect-video w-full rounded-t-sm")}
                 variants={imageVariants}
               >
                 <Image
@@ -141,10 +155,10 @@ export const SeriesCard = ({
                 />
 
                 <motion.span
-                  className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-gray-800/70 px-1 py-0.5 text-2xs font-medium text-white"
+                  className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-primary-800/50 px-1 py-0.5 text-3xs font-medium text-white"
                   variants={tagVariants}
                 >
-                  B1 - B2
+                  {levelMap[level].shortFormat}
                 </motion.span>
                 <motion.div
                   className="absolute bottom-3 left-3 flex items-center space-x-1"
@@ -156,7 +170,7 @@ export const SeriesCard = ({
                     size="icon"
                   >
                     <Play
-                      className="ml-1 fill-primary stroke-primary"
+                      className="-ml-px fill-primary stroke-primary"
                       size={16}
                     />
                   </Button>
@@ -172,30 +186,33 @@ export const SeriesCard = ({
               </motion.div>
               <motion.div
                 variants={textVariants}
-                className="  w-full -translate-y-px rounded-b-sm  bg-slate-100 p-4  shadow-md transition-opacity"
+                className="w-full -translate-y-px  rounded-b-sm bg-background  p-4 shadow-lg transition-opacity"
               >
                 <div className="mt-px space-y-4">
                   <div className="space-y-1">
-                    <h3 className=" text-left text-sm font-bold">
-                      English around the world
-                      <span className="ml-1 inline-block w-fit -translate-y-0.5  rounded bg-gray-800 px-1 py-0.5 text-3xs font-normal text-white">
-                        B1 - B2
+                    <div className="flex flex-wrap items-center gap-1">
+                      <h3 className=" text-left text-base font-bold tracking-tight">
+                        {title}
+                      </h3>
+                      <span className="inline-block h-fit w-fit rounded bg-gray-800 px-1 py-0.5 text-3xs font-normal text-white">
+                        {levelMap[level].shortFormat}
                       </span>
-                    </h3>
-                    <p className="w-4/5 text-left text-xs  text-primary-800">
-                      Lorem ipsum dolor sit amet consectetur. Enim dolor
-                      porttitor at scelerisque pellentesque imperdiet a enim
-                      ullamcorper.
+                    </div>
+
+                    <p className="line-clamp-3 text-left  text-xs text-primary-800">
+                      {description}
                     </p>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="-gap-2 flex flex-row">
-                      {Array.from({ length: 3 }).map((_, index) => (
-                        <TooltipProvider key={index}>
+                      {teachers.map(({ id, image, name }) => (
+                        <TooltipProvider key={`teacher_${id}`}>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Avatar className="-ml-2 h-9 w-9 border border-gray-800 first:ml-0 hover:bg-gray-400">
-                                <AvatarImage src={undefined} />
+                                <AvatarImage
+                                  src={image ? getImageUrl(image) : undefined}
+                                />
                                 <AvatarFallback className="bg-slate-50">
                                   <User className="text-gray-800" size={16} />
                                 </AvatarFallback>
@@ -203,7 +220,7 @@ export const SeriesCard = ({
                             </TooltipTrigger>
                             <TooltipContent className="p-1 px-2">
                               <p className="text-2xs  font-medium text-gray-800">
-                                John Doe
+                                {name}
                               </p>
                               <p className="text-3xs  text-gray-600">
                                 Teacher at OH
@@ -214,8 +231,11 @@ export const SeriesCard = ({
                       ))}
                     </div>
                     <div className="flex flex-col items-center gap-0.5">
-                      <ChapterIcon className="h-7 w-7 fill-gray-800" />
-                      <p className="text-3xs text-gray-600">12 chapters</p>
+                      <LibraryBig size={20} strokeWidth={1} />
+
+                      <p className="text-3xs text-gray-600">
+                        {totalChapters} chapters
+                      </p>
                     </div>
                   </div>
                 </div>

@@ -5,39 +5,12 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { Shot } from "@/components/ui/shot/shot";
+import { ShotPlayer } from "@/components/ui/video-players/shot-player";
 
 const ShotsPage = () => {
   return (
-    <div className="mx-auto flex max-h-[calc(100vh-var(--header-height))] w-full items-center justify-center">
-      <Carousel
-        className=""
-        orientation="vertical"
-        slidesPerView={1}
-        totalItems={4}
-        opts={{
-          align: "center",
-          startIndex: 0,
-          slidesToScroll: 1,
-        }}
-      >
-        <CarouselContent className="max-h-[calc(100vh-var(--header-height))] ">
-          {Array.from({ length: 4 }).map((_, index) => {
-            return (
-              <CarouselItem
-                key={index}
-                className={"flex basis-full justify-center"}
-              >
-                <div
-                  key={index}
-                  className=" flex aspect-[9/16] w-[calc(90vh*9/16)] items-center justify-center bg-muted"
-                >
-                  <p className="text-3xl">{index + 1}</p>
-                </div>
-              </CarouselItem>
-            );
-          })}
-        </CarouselContent>
-      </Carousel>
+    <div className="mx-auto mt-12 flex max-h-[80vh] w-[400px] items-center justify-center">
+      <ShotPlayer />
     </div>
   );
 };

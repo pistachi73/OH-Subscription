@@ -9,6 +9,7 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
+import { toKebabCase } from "@/lib/case-converters";
 import { isNumber } from "@/lib/utils";
 import { VideoSchema } from "@/schemas";
 import { videos } from "@/server/db/schema";
@@ -43,6 +44,7 @@ export const videoRouter = createTRPCRouter({
 
       await db.insert(videos).values({
         ...values,
+        slug: toKebabCase(values.title) as string,
         thumbnail: typeof thumbnail === "string" ? thumbnail : null,
       });
 
@@ -82,6 +84,7 @@ export const videoRouter = createTRPCRouter({
         .update(videos)
         .set({
           ...values,
+          slug: toKebabCase(values.title) as string,
           thumbnail: thumbnail ? currentVideoThumbnail : null,
         })
         .where(eq(videos.id, Number(id)));
@@ -101,6 +104,19 @@ export const videoRouter = createTRPCRouter({
       const { db } = ctx;
 
       const videoList = await db.select().from(videos).where(eq(videos.id, id));
+      const video = videoList?.[0];
+      return video;
+    }),
+
+  getBySlug: publicProcedure
+    .input(z.string())
+    .query(async ({ input: slug, ctx }) => {
+      const { db } = ctx;
+
+      const videoList = await db
+        .select()
+        .from(videos)
+        .where(eq(videos.slug, slug));
       const video = videoList?.[0];
       return video;
     }),

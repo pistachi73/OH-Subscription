@@ -1,7 +1,13 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 
+import { type ProgramLevel, type Teacher } from "../../db/schema.types";
+import {
+  programsWithCategories,
+  programsWithTeachers,
+} from "../query-utils/programs.query";
+import { withLimit, withOffset } from "../query-utils/shared.query";
 import {
   adminProtectedProcedure,
   createTRPCRouter,
@@ -9,6 +15,7 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
+import { toKebabCase } from "@/lib/case-converters";
 import { isNumber } from "@/lib/utils";
 import {
   CategoriesOnProgramsSchema,
@@ -17,11 +24,48 @@ import {
   VideosOnProgramsSchema,
 } from "@/schemas";
 import {
+  categories,
   categoriesOnPrograms,
   programs,
+  teachers,
   teachersOnPrograms,
+  videos,
   videosOnPrograms,
 } from "@/server/db/schema";
+
+const programSelect = {
+  with: {
+    teachers: {
+      columns: {
+        teacherId: false,
+        programId: false,
+      },
+      with: {
+        teacher: {
+          columns: {
+            name: true,
+            id: true,
+          },
+        },
+      },
+    },
+    categories: {
+      columns: {
+        categoryId: false,
+        programId: false,
+      },
+      with: {
+        category: {
+          columns: {
+            name: true,
+            id: true,
+          },
+        },
+      },
+    },
+    chapters: true,
+  },
+} as const;
 
 export const programRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -57,6 +101,7 @@ export const programRouter = createTRPCRouter({
 
       await db.insert(programs).values({
         ...values,
+        slug: toKebabCase(values.title) as string,
         thumbnail: typeof thumbnail === "string" ? thumbnail : null,
       });
 
@@ -96,6 +141,7 @@ export const programRouter = createTRPCRouter({
         .update(programs)
         .set({
           ...values,
+          slug: toKebabCase(values.title) as string,
           thumbnail: thumbnail ? currentProgramThumbnail : null,
         })
         .where(eq(programs.id, Number(id)));
@@ -105,7 +151,16 @@ export const programRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
-    const allPrograms = await db.query.programs.findMany({
+
+    const allPrograms = await db.query.programs.findMany();
+
+    return allPrograms;
+  }),
+
+  getAllForLanding: publicProcedure.query(async ({ ctx }) => {
+    const { db } = ctx;
+
+    return await db.query.programs.findMany({
       with: {
         teachers: {
           columns: {
@@ -121,30 +176,126 @@ export const programRouter = createTRPCRouter({
             },
           },
         },
-        categories: {
-          columns: {
-            categoryId: false,
-            programId: false,
-          },
-          with: {
-            category: {
-              columns: {
-                name: true,
-                id: true,
-              },
-            },
-          },
-        },
-        chapters: true,
       },
     });
-    return allPrograms;
   }),
+
+  getProgramsForCards: publicProcedure
+    .input(
+      z
+        .object({
+          teacherIds: z.array(z.number()).optional(),
+          categoryIds: z.array(z.number()).optional(),
+          categoryNames: z.array(z.string()).optional(),
+          levelIds: z.array(z.string()).optional(),
+          limit: z.number().optional(),
+          offset: z.number().optional(),
+          searchQuery: z.string().optional(),
+          minQueryTime: z.number().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ input, ctx }) => {
+      const {
+        teacherIds,
+        categoryIds,
+        categoryNames,
+        limit,
+        offset,
+        minQueryTime,
+        levelIds,
+        searchQuery,
+      } = input ?? {};
+
+      const hasCategoryFilters =
+        categoryIds?.length || categoryNames?.length || levelIds?.length;
+
+      let programsForCardsQuery = ctx.db
+        .select({
+          id: programs.id,
+          title: programs.title,
+          description: programs.description,
+          thumbnail: programs.thumbnail,
+          level: programs.level,
+          slug: programs.slug,
+          totalChapters: programs.totalChapters,
+          teachers: sql<Omit<Teacher, "bio">[]>`json_agg(DISTINCT
+                    jsonb_build_object(
+                      'id', ${teachers.id},
+                      'image', ${teachers.image},
+                      'name', ${teachers.name})
+                    )`,
+        })
+        .from(programs)
+        .$dynamic();
+
+      programsForCardsQuery = programsWithTeachers(programsForCardsQuery);
+
+      if (hasCategoryFilters) {
+        programsForCardsQuery = programsWithCategories(programsForCardsQuery);
+      }
+
+      let whereClauses = [];
+
+      if (teacherIds?.length) {
+        whereClauses.push(inArray(teachers.id, teacherIds));
+      }
+      if (categoryIds?.length) {
+        whereClauses.push(inArray(categories.id, categoryIds));
+      }
+
+      if (categoryNames?.length) {
+        whereClauses.push(
+          inArray(
+            sql`lower(${categories.name})`,
+            categoryNames.map((name) => name.toLowerCase()),
+          ),
+        );
+      }
+
+      if (levelIds?.length) {
+        console.log({ levelIds });
+        whereClauses.push(inArray(programs.level, levelIds as ProgramLevel[]));
+      }
+
+      programsForCardsQuery.where(
+        searchQuery
+          ? and(
+              sql`${programs.document} @@ to_tsquery('english', ${`${searchQuery.split(" ").filter(Boolean).join("&")}:*`})`,
+              or(...whereClauses),
+            )
+          : or(...whereClauses),
+      );
+
+      if (limit) {
+        programsForCardsQuery = withLimit(programsForCardsQuery, limit);
+      }
+
+      if (offset) {
+        programsForCardsQuery = withOffset(programsForCardsQuery, offset);
+      }
+
+      programsForCardsQuery = programsForCardsQuery.groupBy(programs.id);
+
+      const startTime = Date.now();
+
+      const res = await programsForCardsQuery.execute();
+      const timeTaken = Date.now() - startTime;
+
+      if (minQueryTime && timeTaken < minQueryTime) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, minQueryTime - timeTaken),
+        );
+      }
+
+      return res;
+    }),
 
   getById: publicProcedure
     .input(z.number())
     .query(async ({ input: id, ctx }) => {
       const { db } = ctx;
+
       const program = await db.query.programs.findFirst({
         where: eq(programs.id, id),
         with: {
@@ -176,11 +327,29 @@ export const programRouter = createTRPCRouter({
               },
             },
           },
-          chapters: true,
+          chapters: {
+            columns: {
+              chapterNumber: true,
+              videoId: true,
+            },
+          },
         },
       });
 
       return program;
+    }),
+
+  getBySlug: publicProcedure
+    .input(z.number())
+    .query(async ({ input: id, ctx }) => {
+      const { db } = ctx;
+      // const program = await db.query.programs.findFirst({
+      //   where: eq(programs.id, id),
+      //   ...programSelect,
+      // });
+
+      return null;
+      // return program;
     }),
 
   addTeacher: adminProtectedProcedure
@@ -237,15 +406,35 @@ export const programRouter = createTRPCRouter({
 
   addChapter: adminProtectedProcedure
     .input(VideosOnProgramsSchema)
-    .mutation(async ({ input: { videoId, programId }, ctx: { db } }) => {
-      await db.insert(videosOnPrograms).values({
-        programId,
-        videoId,
-        chapterNumber: 0,
-      });
+    .mutation(
+      async ({ input: { videoId, programId, chapterNumber }, ctx: { db } }) => {
+        await db.insert(videosOnPrograms).values({
+          programId,
+          videoId,
+          chapterNumber: chapterNumber || 1,
+        });
 
-      return true;
-    }),
+        return true;
+      },
+    ),
+
+  updateChapter: adminProtectedProcedure
+    .input(VideosOnProgramsSchema)
+    .mutation(
+      async ({ input: { videoId, programId, chapterNumber }, ctx: { db } }) => {
+        await db
+          .update(videosOnPrograms)
+          .set({ chapterNumber })
+          .where(
+            and(
+              eq(videosOnPrograms.programId, programId),
+              eq(videosOnPrograms.videoId, videoId),
+            ),
+          );
+
+        return true;
+      },
+    ),
 
   removeChapter: adminProtectedProcedure
     .input(VideosOnProgramsSchema)

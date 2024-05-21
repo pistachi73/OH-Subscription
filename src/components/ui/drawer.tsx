@@ -20,7 +20,7 @@ export const useDrawer = () => {
 };
 
 const Drawer = ({
-  shouldScaleBackground = true,
+  shouldScaleBackground = false,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerContext.Provider value={{ direction: props.direction }}>

@@ -2,26 +2,33 @@
 
 import { CalendarClock, Heart, LibraryBig, Play, Share2 } from "lucide-react";
 
-import { DeviceOnly } from "../ui/device-only/device-only";
-import { HeroImage } from "../ui/hero-image";
-import { MaxWidthWrapper } from "../ui/max-width-wrapper";
+import { DeviceOnly } from "../../ui/device-only/device-only";
+import { HeroImage } from "../../ui/hero-image";
+import { MaxWidthWrapper } from "../../ui/max-width-wrapper";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ProgramHeroCardProps = {};
 
 export const ProgramHeroCard = ({}: ProgramHeroCardProps) => {
   return (
-    <div className="relative mb-8 max-h-[80vh] w-full sm:mb-0 sm:-translate-y-[var(--header-height)] lg:h-[76vw]">
+    <div className="relative mb-8 max-h-[80vh] w-full sm:mb-0 lg:h-[76vw]">
       <HeroImage
         src="/images/hero-thumbnail-2.jpg"
         alt="testing"
         containerClassname=" max-h-[80vh]"
+        shadowClassname="before:bg-transparent lg:before:bg-hero-gradient to-45% sm:to-45% lg:to-35%"
       />
 
-      <MaxWidthWrapper className="relative z-30 mx-0 flex  h-full  flex-col  gap-4  before:top-0 before:h-[46vw] before:min-h-[100px] before:content-[''] lg:justify-end lg:before:content-none">
-        <div className=" space-y-4 sm:w-3/4 lg:max-w-[56ch] 2xl:max-w-[64ch]">
-          <h1 className="text-left font-sans text-3xl font-semibold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl">
+      <MaxWidthWrapper
+        className={cn(
+          "relative z-30 mx-0 flex h-full flex-col  gap-4",
+          "before:top-0 before:h-[45vw] before:min-h-[100px] before:content-[''] lg:justify-end lg:before:content-none",
+        )}
+      >
+        <div className=" space-y-3 sm:w-3/4 lg:max-w-[56ch] 2xl:max-w-[64ch]">
+          <h1 className="text-left font-sans text-3xl font-bold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl">
             English around the world
           </h1>
           <p className="w-full text-left text-sm font-light text-gray-800 sm:text-base lg:text-lg">

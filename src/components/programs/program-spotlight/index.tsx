@@ -1,13 +1,12 @@
-import { MaxWidthWrapper } from "../ui/max-width-wrapper";
-
 import { ProgramChapterList } from "./program-chapter-list";
 import { ProgramCommunity } from "./program-community";
-import { ProgramHeroCard } from "./program-hero-card";
-import { SimilarPrograms } from "./similar-programs";
+import { ProgramHeroCard } from "./program-hero";
+import { SimilarPrograms } from "./program-similars";
 
+import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const Program = () => {
+export const ProgramSpotlight = () => {
   return (
     <>
       <ProgramHeroCard />

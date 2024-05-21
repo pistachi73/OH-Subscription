@@ -196,7 +196,7 @@ export const BookCard = ({
                       size="icon"
                     >
                       <Play
-                        className="ml-1 fill-primary stroke-primary"
+                        className="-ml-px fill-primary stroke-primary"
                         size={16}
                       />
                     </Button>
@@ -213,7 +213,7 @@ export const BookCard = ({
                 <motion.div
                   variants={textVariants}
                   className={cn(
-                    "h-full bg-slate-100 px-4 py-3",
+                    "h-full bg-background px-4 py-3",
                     { "-translate-x-1 rounded-r-sm": !isRightBorder },
                     { "translate-x-1 rounded-l-sm": isRightBorder },
                   )}

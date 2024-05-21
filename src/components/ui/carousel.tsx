@@ -103,6 +103,13 @@ const Carousel = React.forwardRef<
       api?.scrollNext();
     }, [api]);
 
+    const scrollTo = React.useCallback(
+      (index: number) => {
+        api?.scrollTo(index);
+      },
+      [api],
+    );
+
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "ArrowLeft") {
@@ -181,10 +188,11 @@ const Carousel = React.forwardRef<
           className="group/carousel relative w-full"
         >
           {orientation === "horizontal" && (
-            <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px opacity-0  transition-opacity group-hover/carousel:opacity-100 2xl:right-14">
+            <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px 2xl:right-14">
               {Array.from({ length: total }).map((_, index) => (
-                <div
+                <button
                   key={index}
+                  onClick={() => scrollTo(index)}
                   className={cn(
                     "h-0.5 w-3 rounded-sm bg-primary-800 opacity-25 transition-opacity",
                     { "opacity-100": current === index + 1 },
@@ -278,7 +286,13 @@ const CarouselPrevious = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-prev absolute flex h-full w-[calc(2%-2px)]  items-center  justify-center rounded-none rounded-r-sm bg-primary-50/50 opacity-100  transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 sm:w-[calc(4%-2px)]  lg:sm:w-[calc(2%-4px)]  lg:w-[calc(4%-4px)] xl:sm:w-[calc(2%-8px)]  xl:w-[calc(4%-8px)] 2xl:w-[48px]",
+        "group/chevron-prev absolute flex h-full w-[calc(4%-4px)]  items-center  justify-center rounded-none rounded-r-sm bg-muted-background/50 opacity-100  transition-opacity",
+        "hover:bg-muted-background/60",
+        "disabled:opacity-0",
+        "group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0",
+        "lg:w-[calc(4%-8px)]",
+        "xl:w-[calc(4%-12px)]",
+        "2xl:w-[48px]",
         orientation === "horizontal"
           ? "-left-0 top-1/2 -translate-y-1/2"
           : "-top-10 left-1/2 -translate-x-1/2 rotate-90",
@@ -289,7 +303,10 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       <ChevronLeft
-        className="group-hover text-primary-800 opacity-0 transition-transform  group-hover/chevron-prev:scale-125 group-hover/carousel:opacity-100"
+        className={cn(
+          "text-foreground/50 opacity-0 transition-transform",
+          "group-hover/chevron-prev:scale-[1.2]  group-hover/carousel:opacity-100",
+        )}
         size={32}
       />
       <span className="sr-only">Previous slide</span>
@@ -308,10 +325,17 @@ const CarouselNext = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-prev absolute flex h-full w-[calc(2%-2px)]  items-center  justify-center rounded-none rounded-r-sm bg-primary-50/50 opacity-100  transition-opacity hover:bg-primary-50/60 disabled:opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0 sm:w-[calc(4%-2px)]  lg:sm:w-[calc(2%-4px)]  lg:w-[calc(4%-4px)] xl:sm:w-[calc(2%-8px)]  xl:w-[calc(4%-8px)] 2xl:w-[48px]",
+        "group/chevron-next absolute flex h-full w-[calc(4%-4px)] items-center justify-center rounded-none rounded-l-sm bg-muted-background/50 opacity-100  transition-opacity",
+        "hover:bg-muted-background/60",
+        "disabled:opacity-0",
+        "group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0",
+        "lg:w-[calc(4%-8px)]",
+        "xl:w-[calc(4%-12px)]",
+        "2xl:w-[48px]",
         orientation === "horizontal"
           ? "-right-0 top-1/2 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+
         className,
       )}
       disabled={!canScrollNext}
@@ -319,7 +343,10 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       <ChevronRight
-        className="text-primary-800 opacity-0 transition-transform group-hover/chevron-next:scale-125  group-hover/carousel:opacity-100"
+        className={cn(
+          "text-foreground/50 opacity-0 transition-transform",
+          "group-hover/chevron-next:scale-[1.2]  group-hover/carousel:opacity-100",
+        )}
         size={32}
       />
       <span className="sr-only">Next slide</span>

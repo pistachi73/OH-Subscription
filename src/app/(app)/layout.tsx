@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      {children}
+      <main className="h-full">{children}</main>
       <Footer />
       <AuthModal />
     </>

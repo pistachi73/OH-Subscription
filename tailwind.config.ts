@@ -25,9 +25,12 @@ const config = {
       transitionDelay: {
         400: "400ms",
       },
+
       backgroundImage: {
+        "hero-gradient-olf":
+          "linear-gradient(90deg, #fff, rgba(255,255,255, .991) 6.67%, rgba(255, 255, 255, .964) 13.33%, rgba(255, 255, 255, .918) 20%, rgba(255, 255, 255, .853) 26.67%, rgba(255, 255, 255, .768) 33.33%, rgba(255, 255, 255, .668) 40%, rgba(255, 255, 255, .557) 46.67%, rgba(255, 255, 255, .443) 53.33%, rgba(255, 255, 255, .332) 60%, rgba(255, 255, 255, .232) 66.67%, rgba(255, 255, 255, .147) 73.33%, rgba(255, 255, 255, .082) 80%, rgba(255, 255, 255, 0) 86.67%);",
         "hero-gradient":
-          "linear-gradient(90deg, #fff, rgba(255, 255, 255, .991) 6.67%, rgba(255, 255, 255, .964) 13.33%, rgba(255, 255, 255, .918) 20%, rgba(255, 255, 255, .853) 26.67%, rgba(255, 255, 255, .768) 33.33%, rgba(255, 255, 255, .668) 40%, rgba(255, 255, 255, .557) 46.67%, rgba(255, 255, 255, .443) 53.33%, rgba(255, 255, 255, .332) 60%, rgba(255, 255, 255, .232) 66.67%, rgba(255, 255, 255, .147) 73.33%, rgba(255, 255, 255, .082) 80%, rgba(255, 255, 255, 0) 86.67%);",
+          "linear-gradient(90deg, #fafbff, rgba(250,251,255, .991) 6.67%, rgba(250,251,255, .964) 13.33%, rgba(250,251,255, .918) 20%, rgba(250,251,255, .853) 26.67%, rgba(250,251,255, .768) 33.33%, rgba(250,251,255, .668) 40%, rgba(250,251,255, .557) 46.67%, rgba(250,251,255, .443) 53.33%, rgba(250,251,255, .332) 60%, rgba(250,251,255, .232) 66.67%, rgba(250,251,255, .147) 73.33%, rgba(250,251,255, .082) 80%, rgba(250,251,255, 0) 86.67%);",
       },
       height: {
         header: "var(--header-height)",
@@ -35,6 +38,7 @@ const config = {
       fontFamily: {
         inter: ["var(--font-inter)"],
         mono: ["var(--font-mono)"],
+        oswald: ["var(--font-oswald)"],
       },
 
       fontSize: {
@@ -74,6 +78,7 @@ const config = {
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
+          background: "hsl(var(--muted-background))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",

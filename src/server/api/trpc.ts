@@ -111,7 +111,7 @@ export const adminProtectedProcedure = t.procedure.use(
     );
 
     if (!isAdminAuth) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      throw new TRPCError({ code: "UNAUTHORIZED", message: "Unauthorized" });
     }
 
     return next({

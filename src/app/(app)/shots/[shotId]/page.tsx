@@ -8,6 +8,7 @@ type ShotPageProps = {
 
 const ShotPage = ({ params: { shotId } }: ShotPageProps) => {
   // fetch shots
+
   return <ShotCarousel currentShot={parseInt(shotId, 10)} />;
 };
 

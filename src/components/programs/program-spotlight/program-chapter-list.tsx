@@ -1,7 +1,7 @@
 "use client";
 
-import { Chapter } from "./components/program-chapter";
-import { SimilarPrograms } from "./similar-programs";
+import { Chapter } from "./program-chapter";
+import { SimilarPrograms } from "./program-similars";
 
 export const ProgramChapterList = () => {
   return (

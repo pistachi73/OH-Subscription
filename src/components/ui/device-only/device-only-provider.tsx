@@ -7,7 +7,8 @@ export type DeviceType = "mobile" | "tablet" | "desktop";
 type CountProviderProps = { children: React.ReactNode; deviceType: DeviceType };
 
 const DeviceTypeContext = createContext<
-  { deviceSize: DeviceSize[]; deviceType: DeviceType } | undefined
+  | { deviceSize: DeviceSize[]; deviceType: DeviceType; isMobile: boolean }
+  | undefined
 >(undefined);
 
 export const SCREENS = {
@@ -82,7 +83,11 @@ export const DeviceOnlyProvider = ({
   }, []);
 
   const value = useMemo(
-    () => ({ deviceType: deviceTypeState, deviceSize: deviceSizeState }),
+    () => ({
+      deviceType: deviceTypeState,
+      deviceSize: deviceSizeState,
+      isMobile: deviceTypeState === "mobile",
+    }),
     [deviceTypeState, deviceSizeState],
   );
   return (

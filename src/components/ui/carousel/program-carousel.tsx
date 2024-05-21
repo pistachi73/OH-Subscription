@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { SeriesCard, type SeriesCardProps } from "../cards/series-card";
+import { ProgramCard, type ProgramCardProps } from "../cards/program-card";
 
 import { CarouselHeader } from "./carousel-header";
 import { useCarouselBorders, useCarouselSettings } from "./carousel.hooks";
@@ -15,6 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
+import { type RouterOutputs } from "@/trpc/shared";
 
 type Video = {
   title: string;
@@ -22,41 +23,46 @@ type Video = {
   level: string;
 };
 
-type SeriesCarouselProps = {
+type ProgramCarouselProps = {
   title: string;
-  videos?: Video[];
+  programs?: RouterOutputs["program"]["getProgramsForCards"];
   href?: string;
 };
 
-const CarouselSeriesCard = ({
+const CarouselProgramCard = ({
   lazy,
   index,
-}: SeriesCardProps & { index: number }) => {
+  program,
+}: ProgramCardProps & { index: number }) => {
   const { isLeftBorder, isRightBorder } = useCarouselBorders({ index });
 
   return (
-    <SeriesCard
+    <ProgramCard
       lazy={lazy}
       isLeftBorder={isLeftBorder}
       isRightBorder={isRightBorder}
+      program={program}
     />
   );
 };
 
-export const SeriesCarousel = ({
-  videos,
+export const ProgramCarousel = ({
+  programs,
   title,
   href,
-}: SeriesCarouselProps) => {
-  const length = videos?.length || 13;
+}: ProgramCarouselProps) => {
+  console.log("ProgramCarousel", programs);
   const { slideSizeClassname, slidesToScroll, slidesPerView } =
     useCarouselSettings();
+
+  if (!programs?.length) return null;
+
   return (
     <div className="my-4 lg:my-12">
       <CarouselHeader title={title} href={href} />
       <Carousel
         slidesPerView={slidesPerView}
-        totalItems={length}
+        totalItems={programs.length}
         opts={{
           slidesToScroll,
           align: "start",
@@ -65,12 +71,13 @@ export const SeriesCarousel = ({
         }}
       >
         <CarouselContent>
-          {Array.from({ length }).map((_, index) => {
+          {programs?.map((program, index) => {
             return (
               <CarouselItem key={index} className={cn(slideSizeClassname)}>
-                <CarouselSeriesCard
+                <CarouselProgramCard
                   index={index}
                   lazy={index < slidesPerView}
+                  program={program}
                 />
               </CarouselItem>
             );

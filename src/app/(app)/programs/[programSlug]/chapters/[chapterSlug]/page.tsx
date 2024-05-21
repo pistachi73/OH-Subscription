@@ -5,7 +5,7 @@ import "@mux/mux-player/themes/microvideo";
 import { Chapter } from "@/components/chapter/chapter";
 type ChapterPageProps = {
   params: {
-    chapterId: string;
+    chapterSlug: string;
   };
 };
 

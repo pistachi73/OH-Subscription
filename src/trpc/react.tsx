@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 import { getUrl, transformer } from "./shared";
 
+import { auth } from "@/auth";
 import { type AppRouter } from "@/server/api/root";
 
 export const api = createTRPCReact<AppRouter>();
@@ -16,6 +17,7 @@ export const api = createTRPCReact<AppRouter>();
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
   cookies: string;
+  authorization: string;
 }) {
   const [queryClient] = useState(
     () =>
@@ -47,6 +49,7 @@ export function TRPCReactProvider(props: {
             return {
               cookie: props.cookies,
               "x-trpc-source": "react",
+              authorization: props.authorization,
             };
           },
         }),

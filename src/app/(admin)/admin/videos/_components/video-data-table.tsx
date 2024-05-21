@@ -8,6 +8,7 @@ import Link from "next/link";
 
 import { isVideoDeleteModalOpenSignal, videoIdSignal } from "./video-signals";
 
+import { SlugCell } from "@/components/admin/slug-cell";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -42,10 +43,14 @@ export const columns: ColumnDef<SelectVideo>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "id",
-  //   header: "Id",
-  // },
+  {
+    accessorKey: "slug",
+    header: "Slug",
+    cell: (row) => {
+      const val = row.getValue() as string;
+      return <SlugCell value={val} />;
+    },
+  },
   {
     accessorKey: "title",
     header: "Title",

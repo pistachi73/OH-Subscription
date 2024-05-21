@@ -1,7 +1,8 @@
 import { type AdapterAccount } from "@auth/core/adapters";
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
+  index,
   integer,
   pgTable,
   primaryKey,
@@ -10,6 +11,8 @@ import {
   timestamp,
   unique,
 } from "drizzle-orm/pg-core";
+
+import { tsvector } from "./tsvector";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -109,22 +112,37 @@ export const twoFactorConirmations = pgTable("twoFactorConfirmation", {
 });
 
 // ----------------- Programs -----------------
-export const programs = pgTable("programs", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  level: text("role", {
-    enum: ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
-  }).notNull(),
-  totalChapters: integer("totalChapters").default(0).notNull(),
-  duration: integer("duration").default(0).notNull(),
-  published: boolean("published").default(false),
-  thumbnail: text("thumbnail"),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "date" })
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const programs = pgTable(
+  "programs",
+  {
+    id: serial("id").primaryKey(),
+    slug: text("slug").notNull(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    level: text("level", {
+      enum: ["BEGINNER", "INTERMEDIATE", "ADVANCED"],
+    }).notNull(),
+    totalChapters: integer("totalChapters").default(0).notNull(),
+    duration: integer("duration").default(0).notNull(),
+    published: boolean("published").default(false),
+    thumbnail: text("thumbnail"),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" })
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    document: tsvector("document", {
+      sources: ["title", "description"],
+    }),
+  },
+  (table) => {
+    return {
+      programSlugIdx: index().on(table.slug),
+      documentIdx: index()
+        .on(table.document)
+        .using(sql`gin`),
+    };
+  },
+);
 
 export const programRelations = relations(programs, ({ many }) => ({
   chapters: many(videosOnPrograms),
@@ -133,20 +151,29 @@ export const programRelations = relations(programs, ({ many }) => ({
 }));
 
 // ----------------- Videos -----------------
-export const videos = pgTable("video", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  url: text("url").notNull(),
-  duration: integer("duration").notNull(),
-  thumbnail: text("thumbnail"),
-  categories: text("categories"),
-  transcript: text("transcript"),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "date" })
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const videos = pgTable(
+  "video",
+  {
+    id: serial("id").primaryKey(),
+    slug: text("slug").notNull(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    url: text("url").notNull(),
+    duration: integer("duration").notNull(),
+    thumbnail: text("thumbnail"),
+    categories: text("categories"),
+    transcript: text("transcript"),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" })
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => {
+    return {
+      videoSlugIdx: index().on(table.slug),
+    };
+  },
+);
 
 export const videoRelations = relations(videos, ({ many }) => ({
   programs: many(videosOnPrograms),

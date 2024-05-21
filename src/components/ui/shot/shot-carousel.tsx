@@ -42,7 +42,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
     <div
       className={cn(
         "relative",
-        "sm:h-[calc(100vh-var(--header-height))] sm:pt-2",
+        "sm:h-[calc(100vh-var(--header-height))] sm:pt-4",
         "h-[calc(100dvh)]",
       )}
     >
@@ -78,7 +78,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
                 key={index}
                 className={cn(
                   "flex h-full w-full basis-full justify-center",
-                  "sm:max-h-[95%] sm:basis-[95%]",
+                  "sm:max-h-[97%] sm:basis-[97%]",
                 )}
               >
                 <Shot />

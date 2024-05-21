@@ -3,7 +3,7 @@
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-import { HeroCard } from "../ui/cards/hero-card";
+import { HeroCard, heroCardHeightProps } from "../ui/cards/hero-card";
 
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { useTabFocus } from "@/hooks/use-tab-focus";
@@ -28,7 +28,7 @@ export const HeroCarousel = () => {
     if (autoplayIntervalId.current) {
       clearInterval(autoplayIntervalId.current);
     }
-    autoplayIntervalId.current = setInterval(autoPlay, 10000);
+    autoplayIntervalId.current = setInterval(autoPlay, 2000000);
   };
 
   useEffect(() => {
@@ -47,12 +47,21 @@ export const HeroCarousel = () => {
   }, []);
 
   return (
-    <div
-      className="relative mb-14 h-[76vw] max-h-[70vh] w-full translate-y-[var(--header-height)] sm:aspect-video sm:-translate-y-[var(--header-height)]"
-      onMouseEnter={stopInterval}
-      onMouseLeave={startInterval}
-    >
-      <MaxWidthWrapper className="absolute -bottom-[22px] left-0 z-20 flex w-full items-center justify-center gap-3 sm:w-fit sm:justify-normal  sm:gap-2">
+    <>
+      <div
+        className={cn("relative z-0 mb-8 sm:mb-12", heroCardHeightProps)}
+        onMouseEnter={stopInterval}
+        onMouseLeave={startInterval}
+      >
+        <AnimatePresence initial={false}>
+          <HeroCard key={"hero-card-" + current} index={current} />
+        </AnimatePresence>
+      </div>
+      <MaxWidthWrapper
+        className={cn(
+          "relative z-20 mx-0 mb-8 flex w-full items-center justify-center gap-3 sm:mb-12  sm:w-fit sm:justify-normal  sm:gap-2",
+        )}
+      >
         {Array.from({ length }).map((_, index) => (
           <button
             key={index}
@@ -68,9 +77,6 @@ export const HeroCarousel = () => {
           />
         ))}
       </MaxWidthWrapper>
-      <AnimatePresence initial={false}>
-        <HeroCard key={"hero-card-" + current} index={current} />
-      </AnimatePresence>
-    </div>
+    </>
   );
 };

@@ -10,6 +10,7 @@ import {
   programIdSignal,
 } from "./program-signals";
 
+import { SlugCell } from "@/components/admin/slug-cell";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -47,6 +48,14 @@ export const columns: ColumnDef<
     },
   },
   {
+    accessorKey: "slug",
+    header: "Slug",
+    cell: (row) => {
+      const val = row.getValue() as string;
+      return <SlugCell value={val} />;
+    },
+  },
+  {
     accessorKey: "title",
     header: "Title",
   },
@@ -71,6 +80,7 @@ export const columns: ColumnDef<
       const val = row.getValue() as { category: { name: string } }[];
       const categories = val.map(({ category }) => category.name).join(",");
 
+      if (!categories.length) return null;
       return (
         <div className="flex flex-row flex-wrap gap-1">
           {categories.split(",").map((category) => (

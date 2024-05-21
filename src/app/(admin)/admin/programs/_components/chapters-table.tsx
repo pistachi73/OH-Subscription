@@ -1,5 +1,15 @@
+"use client";
+
 import { Save, Trash } from "lucide-react";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useState,
+  useTransition,
+} from "react";
+import { toast } from "sonner";
+
+import { useParams } from "next/navigation";
 
 import {
   AdminMultipleSelect,
@@ -15,17 +25,51 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { isNumber } from "@/lib/utils";
 import { type SelectVideo } from "@/server/db/schema";
+import { api } from "@/trpc/react";
 
 export const ChapterTableRow = ({
   chapter,
   setChapters,
+  handleChapterRemove,
+  chapterId,
+  initialChapterNumber,
 }: {
   chapter: SelectVideo;
+  chapterId: number;
   setChapters: Dispatch<SetStateAction<string>>;
+  handleChapterRemove: (id: number) => void;
+  initialChapterNumber?: number;
 }) => {
-  const [chapterNumber, setChapterNumber] = useState<number>();
+  const [chapterNumber, setChapterNumber] = useState<number>(
+    initialChapterNumber ?? 0,
+  );
+  const { programId } = useParams<{ programId: string }>();
+  const [isUpdating, startTransition] = useTransition();
+
+  const { mutateAsync: updateChapter } =
+    api.program.updateChapter.useMutation();
+
+  const handleUpdateChapter = () => {
+    if (!isNumber(programId)) {
+      toast.error("Invalid program id");
+    }
+
+    startTransition(async () => {
+      await updateChapter({
+        programId: Number(programId),
+        videoId: chapterId,
+        chapterNumber,
+      });
+    });
+  };
+
   const onChapterRemove = (id: number) => {
+    startTransition(async () => {
+      await handleChapterRemove(id);
+    });
+
     setChapters((prev) => {
       return prev
         .split(",")
@@ -33,7 +77,6 @@ export const ChapterTableRow = ({
         .join(",");
     });
   };
-  const onChapterSave = (id: number, chapterNumber: number) => {};
 
   return (
     <TableRow key={chapter.title} className="w-full">
@@ -47,15 +90,17 @@ export const ChapterTableRow = ({
           className="remove-number-arrows h-8 w-16 text-center text-sm"
           type="number"
           min={1}
+          disabled={isUpdating}
         />
       </TableCell>
 
       <TableCell className="flex items-end justify-end gap-2">
         <Button
           className="h-8 w-8 text-sm"
-          onClick={() => onChapterSave(chapter.id, 2)}
+          onClick={handleUpdateChapter}
           size={"icon"}
           variant="outline"
+          disabled={isUpdating}
         >
           <Save size={14} />
         </Button>
@@ -64,6 +109,7 @@ export const ChapterTableRow = ({
           onClick={() => onChapterRemove(chapter.id)}
           size={"icon"}
           variant="destructive"
+          disabled={isUpdating}
         >
           <Trash size={14} />
         </Button>
@@ -75,17 +121,57 @@ export const ChapterTableRow = ({
 type ChaptersTableProps = {
   videoOptions?: Option[];
   videos?: SelectVideo[];
+  initialChapters?: string;
+  chaptersNumbers?: Record<number, number>;
 };
 
-export const ChaptersTable = ({ videoOptions, videos }: ChaptersTableProps) => {
+export const ChaptersTable = ({
+  videoOptions,
+  videos,
+  initialChapters,
+  chaptersNumbers,
+}: ChaptersTableProps) => {
+  const { programId } = useParams<{ programId: string }>();
+
   const mappedChapters: Record<number, SelectVideo> | undefined =
     videos?.reduce((prev, curr) => {
       return Object.assign(prev, { [curr.id]: curr });
     }, {});
 
-  const [chapters, setChapters] = useState<string>("");
+  const [chapters, setChapters] = useState<string>(initialChapters ?? "");
 
-  const onChapterPush = (id: number) => {};
+  const { mutateAsync: addChapter } = api.program.addChapter.useMutation();
+  const { mutateAsync: removeChapter } =
+    api.program.removeChapter.useMutation();
+
+  const [isSelecting, startTransition] = useTransition();
+
+  const handleAddChapter = (videoId: number, chapterNumber: number) => {
+    if (!isNumber(programId)) {
+      toast.error("Invalid program id");
+    }
+
+    startTransition(async () => {
+      await addChapter({
+        programId: Number(programId),
+        videoId: Number(videoId),
+        chapterNumber,
+      });
+    });
+  };
+
+  const handleRemoveChapter = (videoId: number) => {
+    if (!isNumber(programId)) {
+      toast.error("Invalid program id");
+    }
+
+    startTransition(async () => {
+      await removeChapter({
+        programId: Number(programId),
+        videoId: Number(videoId),
+      });
+    });
+  };
 
   return (
     <>
@@ -95,6 +181,9 @@ export const ChaptersTable = ({ videoOptions, videos }: ChaptersTableProps) => {
           onChange={setChapters}
           options={videoOptions || []}
           disableSelected
+          disabled={isSelecting}
+          onSelect={(val) => handleAddChapter(val, 1)}
+          onDeselect={handleRemoveChapter}
           showSelected={false}
         >
           Select chapters
@@ -122,7 +211,10 @@ export const ChaptersTable = ({ videoOptions, videos }: ChaptersTableProps) => {
                 <ChapterTableRow
                   key={chapter.title}
                   chapter={chapter}
+                  chapterId={Number(chapterId)}
+                  handleChapterRemove={handleRemoveChapter}
                   setChapters={setChapters}
+                  initialChapterNumber={chaptersNumbers?.[Number(chapterId)]}
                 />
               );
             })

@@ -31,7 +31,6 @@ export const AdminFileInput = React.forwardRef<
       <Input
         type="file"
         onChange={(event) => {
-          console.log("change");
           if (event.target.files && event.target.files?.length > 0) {
             onChange?.(event.target.files[0]);
           }

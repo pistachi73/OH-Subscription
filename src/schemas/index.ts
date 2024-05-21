@@ -124,6 +124,7 @@ export const ProgramSchema = z.object({
 export const VideosOnProgramsSchema = z.object({
   programId: z.number(),
   videoId: z.number(),
+  chapterNumber: z.number().optional(),
 });
 export const TeachersOnProgramsSchema = z.object({
   programId: z.number(),

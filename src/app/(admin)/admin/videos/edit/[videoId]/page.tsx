@@ -20,11 +20,7 @@ type EditVideoPageProps = {
 };
 
 const EditVideoPage = async ({ params: { videoId } }: EditVideoPageProps) => {
-  console.log({ videoId });
-
   const video = await api.video.getById.query(Number(videoId));
-
-  console.log({ video });
 
   if (!video) {
     redirect("/admin/videos");
