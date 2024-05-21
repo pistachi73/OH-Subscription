@@ -2,7 +2,6 @@
 
 import { useSignals } from "@preact/signals-react/runtime";
 
-
 import { AuthFormContentSignals } from "./auth-form";
 import { isAuthModalOpenSignal } from "./auth-signals";
 
@@ -10,7 +9,6 @@ import {
   ResponsiveDialog,
   ResponsiveDialogContent,
 } from "@/components/ui/responsive-dialog";
-
 
 export const AuthModal = () => {
   useSignals();

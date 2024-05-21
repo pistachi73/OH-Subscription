@@ -261,7 +261,10 @@ export const programRouter = createTRPCRouter({
       programsForCardsQuery.where(
         searchQuery
           ? and(
-              sql`${programs.document} @@ to_tsquery('english', ${`${searchQuery.split(" ").filter(Boolean).join("&")}:*`})`,
+              sql`${programs.document} @@ to_tsquery('english', ${`${searchQuery
+                .split(" ")
+                .filter(Boolean)
+                .join("&")}:*`})`,
               or(...whereClauses),
             )
           : or(...whereClauses),

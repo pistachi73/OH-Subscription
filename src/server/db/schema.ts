@@ -137,9 +137,7 @@ export const programs = pgTable(
   (table) => {
     return {
       programSlugIdx: index().on(table.slug),
-      documentIdx: index()
-        .on(table.document)
-        .using(sql`gin`),
+      documentIdx: index().on(table.document).using(sql`gin`),
     };
   },
 );

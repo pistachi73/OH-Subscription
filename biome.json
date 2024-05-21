@@ -24,12 +24,15 @@
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
       "trailingComma": "all",
-      "semicolons": "asNeeded",
+      "semicolons": "always",
       "arrowParentheses": "always",
       "bracketSpacing": true,
       "bracketSameLine": false,
-      "quoteStyle": "single",
+      "quoteStyle": "double",
       "attributePosition": "auto"
     }
+  },
+  "files": {
+    "ignore": ["node_modules", ".next/*", "drizzle/*"]
   }
 }
