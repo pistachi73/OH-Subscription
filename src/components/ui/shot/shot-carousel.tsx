@@ -59,7 +59,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
         <Button
           className={cn(
             "absolute top-0 z-50 h-14 min-w-14 rounded-full p-4 text-background transition-all",
-            "sm:left-6  sm:text-foreground",
+            "sm:left-6 sm:text-foreground",
           )}
           size="inline"
           variant="ghost"

@@ -16,7 +16,10 @@
       "recommended": false,
       "correctness": { "noUnusedVariables": "warn" },
       "style": { "useConsistentArrayType": "off" },
-      "suspicious": { "useAwait": "off" }
+      "suspicious": { "useAwait": "off" },
+      "nursery": {
+        "useSortedClasses": "warn"
+      }
     }
   },
   "javascript": {
