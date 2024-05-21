@@ -1,4 +1,4 @@
-import { type Option } from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 
 export const getMappedOptions = (options: Option[]): Record<string, string> => {
   return options.reduce((acc, { value, label }) => {

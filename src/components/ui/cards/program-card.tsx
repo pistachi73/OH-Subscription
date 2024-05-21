@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn, getImageUrl } from "@/lib/utils";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 export type ProgramCardProps = {
   lazy?: boolean;

@@ -1,5 +1,5 @@
 import { eq, getTableColumns, inArray, sql } from "drizzle-orm";
-import { type PgSelect } from "drizzle-orm/pg-core";
+import type { PgSelect } from "drizzle-orm/pg-core";
 
 import {
   categories,

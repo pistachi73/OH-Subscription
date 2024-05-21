@@ -4,9 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type z } from "zod";
-
-import { programs } from "../../../../../server/db/schema";
+import type { z } from "zod";
 
 import { ProgramForm } from "./program-form";
 import {
@@ -16,13 +14,12 @@ import {
 
 import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { type Option } from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import { uploadToS3 } from "@/lib/upload-to-s3";
 import { ProgramSchema } from "@/schemas";
-import { getProgramForCard } from "@/server/api/lib/programs";
-import { type SelectVideo } from "@/server/db/schema";
+import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type EditProgramProps = {
   program: NonNullable<RouterOutputs["program"]["getById"]>;

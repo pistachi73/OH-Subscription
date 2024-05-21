@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { NewProgram } from "../_components/new-program";
 
-import { type Option } from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import {
   Breadcrumb,
   BreadcrumbItem,

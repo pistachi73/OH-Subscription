@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { DeleteCategoryDialog } from "./_components/delete-category-dialog";
 

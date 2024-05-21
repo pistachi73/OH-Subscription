@@ -4,7 +4,7 @@ import { useSignals } from "@preact/signals-react/runtime";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type z } from "zod";
+import type { z } from "zod";
 
 import { CategoryForm } from "./category-form";
 import {
@@ -15,7 +15,7 @@ import {
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { CategorySchema } from "@/schemas";
 import { api } from "@/trpc/react";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type EditCategoryProps = {
   category: NonNullable<RouterOutputs["category"]["getById"]>;

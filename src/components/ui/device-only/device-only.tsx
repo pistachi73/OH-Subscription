@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { type DeviceType, useDeviceType } from "./device-only-provider";
 

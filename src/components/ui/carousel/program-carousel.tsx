@@ -15,7 +15,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type Video = {
   title: string;

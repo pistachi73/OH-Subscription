@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 
 import { NextResponse, userAgent } from "next/server";
 
-import { type DeviceType } from "./components/ui/device-only/device-only-provider";
+import type { DeviceType } from "./components/ui/device-only/device-only-provider";
 
 import authConfig from "@/auth.config";
 import { isAdminAuthenticated } from "@/lib/is-admin-authenticated";

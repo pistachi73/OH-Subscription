@@ -1,4 +1,4 @@
-import { type CreatePresignedUrlOutput } from "../actions/create-presigned-url";
+import type { CreatePresignedUrlOutput } from "../actions/create-presigned-url";
 
 export const uploadToS3 = async ({
   file,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSignals } from "@preact/signals-react/runtime";
-import { type ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import {
   categoryIdSignal,
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 export const columns: ColumnDef<
   NonNullable<RouterOutputs["category"]["getAll"][0]>

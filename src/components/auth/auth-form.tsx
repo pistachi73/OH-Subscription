@@ -5,7 +5,7 @@ import { BadgeCheck } from "lucide-react";
 
 import { AuthProvider } from "./auth-form-context";
 import { parentFormSignal } from "./auth-signals";
-import { type AuthFormType } from "./auth.types";
+import type { AuthFormType } from "./auth.types";
 
 import { useAuthContext } from "@/components/auth/auth-form-context";
 import { LoginForm } from "@/components/auth/login-form";

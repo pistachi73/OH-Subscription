@@ -1,9 +1,9 @@
 import React from "react";
 
-import {
-  type AuthFormType,
-  type LoginFormType,
-  type RegisterFormType,
+import type {
+  AuthFormType,
+  LoginFormType,
+  RegisterFormType,
 } from "./auth.types";
 
 export const AuthContext = React.createContext<{

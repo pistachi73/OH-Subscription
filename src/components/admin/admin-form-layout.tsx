@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { ChevronLeft, Loader2 } from "lucide-react";
-import {
-  type FieldValues,
-  type SubmitHandler,
-  type UseFormReturn,
+import type {
+  FieldValues,
+  SubmitHandler,
+  UseFormReturn,
 } from "react-hook-form";
 
 import Link from "next/link";

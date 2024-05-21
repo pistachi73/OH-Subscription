@@ -1,5 +1,5 @@
-import { type UseFormReturn } from "react-hook-form";
-import { type z } from "zod";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
 import {
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { type TeacherSchema } from "@/schemas";
+import type { TeacherSchema } from "@/schemas";
 
 type TeacherFormProps = {
   form: UseFormReturn<z.infer<typeof TeacherSchema>>;

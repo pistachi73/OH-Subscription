@@ -2,14 +2,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type z } from "zod";
+import type { z } from "zod";
 
 import { useRouter } from "next/navigation";
 
 import { ProgramForm } from "./program-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { type Option } from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import { ProgramSchema } from "@/schemas";
 import { api } from "@/trpc/react";
 

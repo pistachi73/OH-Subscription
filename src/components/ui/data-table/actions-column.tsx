@@ -1,5 +1,5 @@
-import { type Signal } from "@preact/signals-react";
-import { type ColumnDef } from "@tanstack/react-table";
+import type { Signal } from "@preact/signals-react";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 
 import Link from "next/link";

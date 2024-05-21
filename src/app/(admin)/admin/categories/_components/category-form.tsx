@@ -1,5 +1,5 @@
-import { type UseFormReturn } from "react-hook-form";
-import { type z } from "zod";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import {
   Card,
@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { type CategorySchema } from "@/schemas";
+import type { CategorySchema } from "@/schemas";
 
 type CategoryFormProps = {
   form: UseFormReturn<z.infer<typeof CategorySchema>>;

@@ -1,11 +1,10 @@
 "use client";
-import { ArrowLeft } from "lucide-react";
-import { useEffect, useState } from "react";
-
-import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Shot } from "@/components/ui/shot/shot";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import {
   VerticalCarousel,
   type VerticalCarouselApi,
@@ -42,7 +41,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
     <div
       className={cn(
         "relative",
-        "sm:h-[calc(100vh-var(--header-height))] sm:pt-4",
+        "sm:h-[calc(100vh-var(--header-height))] sm:pt-4 sm:h-2",
         "h-[calc(100dvh)]",
       )}
     >

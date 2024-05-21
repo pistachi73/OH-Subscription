@@ -1,15 +1,5 @@
 "use client";
 
-import { type ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
-
-import Image from "next/image";
-
-import {
-  isProgramDeleteModalOpenSignal,
-  programIdSignal,
-} from "./program-signals";
-
 import { SlugCell } from "@/components/admin/slug-cell";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,7 +12,14 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
 import { getImageUrl } from "@/lib/utils";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
+import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import Image from "next/image";
+import {
+  isProgramDeleteModalOpenSignal,
+  programIdSignal,
+} from "./program-signals";
 
 export const columns: ColumnDef<
   NonNullable<RouterOutputs["program"]["getAll"][0]>

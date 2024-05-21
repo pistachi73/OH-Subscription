@@ -1,7 +1,7 @@
 "use client";
 
 import { useSignals } from "@preact/signals-react/runtime";
-import { type ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import Image from "next/image";
 
@@ -20,7 +20,7 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
 import { getImageUrl } from "@/lib/utils";
-import { type SelectTeacher } from "@/server/db/schema";
+import type { SelectTeacher } from "@/server/db/schema";
 
 export const columns: ColumnDef<SelectTeacher>[] = [
   {

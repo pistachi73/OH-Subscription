@@ -1,5 +1,5 @@
 import { AnimatePresence, cubicBezier, motion } from "framer-motion";
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import {

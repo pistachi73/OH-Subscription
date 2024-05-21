@@ -1,6 +1,6 @@
 import { Programs } from "@/components/programs";
 import { FilteredProgramsProvider } from "@/components/programs/program-filter/filtered-programs-context";
-import { type Option } from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
 import { api } from "@/trpc/server";
 

@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 
 import { childrenFormSignal, parentFormSignal } from "./auth-signals";
 
-import { type LoginFormType } from "@/components/auth/auth.types";
+import type { LoginFormType } from "@/components/auth/auth.types";
 import { CredentialsForm } from "@/components/auth/credentials-login-form";
 import { FormWrapper } from "@/components/auth/form-wrapper";
 import { ResetPasswordForm } from "@/components/auth/reset-password-form";

@@ -8,7 +8,7 @@ import {
   parentFormSignal,
 } from "./auth-signals";
 
-import { type RegisterFormType } from "@/components/auth/auth.types";
+import type { RegisterFormType } from "@/components/auth/auth.types";
 import { CredentialsRegisterForm } from "@/components/auth/credentials-register-form";
 import { FormWrapper } from "@/components/auth/form-wrapper";
 import { SocialButton } from "@/components/auth/social-button";

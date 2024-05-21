@@ -12,7 +12,7 @@ import { Skeleton } from "../skeleton";
 import { ProgramCard } from "./program-card";
 
 import { regularEase } from "@/lib/animation";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;

@@ -1,5 +1,5 @@
 import type * as schema from "./schema";
-import { type programs, type teachers } from "./schema";
+import type { programs, teachers } from "./schema";
 
 export type Program = typeof programs.$inferSelect;
 export type Category = typeof schema.categories.$inferSelect;

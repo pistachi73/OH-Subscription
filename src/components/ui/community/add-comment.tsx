@@ -3,7 +3,7 @@ import React from "react";
 
 import { AutosizeTextarea } from "../autosize-textarea";
 import { Button } from "../button";
-import { type TextareaProps } from "../textarea";
+import type { TextareaProps } from "../textarea";
 
 import { cn } from "@/lib/utils";
 

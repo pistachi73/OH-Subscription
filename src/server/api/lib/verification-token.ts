@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 
-import { type SharedLib } from "./lib.types";
+import type { SharedLib } from "./lib.types";
 
 import { verificationTokens } from "@/server/db/schema";
 

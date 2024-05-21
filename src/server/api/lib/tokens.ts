@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 
-import { type SharedLib } from "./lib.types";
+import type { SharedLib } from "./lib.types";
 import { getPasswordResetTokenByEmail } from "./password-reset-token";
 import { getTwoFactorTokenByEmail } from "./two-factor-token";
 import { getVerificationTokenByEmail } from "./verification-token";

@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { type ExtendedUser } from "@/next-auth";
+import type { ExtendedUser } from "@/next-auth";
 
 export const UserButton = ({ user }: { user: ExtendedUser }) => {
   return (

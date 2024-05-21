@@ -25,7 +25,7 @@ export const MobileHeader = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      let moving = window.scrollY;
+      const moving = window.scrollY;
 
       if (position < moving && moving > 48) setVisible(false);
       else setVisible(true);

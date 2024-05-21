@@ -1,7 +1,7 @@
 "use client";
 
 // import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { type Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
 import { SlidersHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCurrentRole } from "@/hooks/use-current-role";
-import { type UserRole } from "@/server/db/schema.types";
+import type { UserRole } from "@/server/db/schema.types";
 
 type RoleGateProps = {
   children: React.ReactNode;

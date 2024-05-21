@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { DeleteTeacherDialog } from "./_components/delete-teacher-dialog";
 

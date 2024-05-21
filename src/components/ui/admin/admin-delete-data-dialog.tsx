@@ -1,5 +1,5 @@
 "use client";
-import { type Signal } from "@preact/signals-react";
+import type { Signal } from "@preact/signals-react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { Loader2 } from "lucide-react";
 

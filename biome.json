@@ -13,10 +13,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": false,
-      "correctness": { "noUnusedVariables": "warn" },
-      "style": { "useConsistentArrayType": "off" },
-      "suspicious": { "useAwait": "off" },
+      "recommended": true,
       "nursery": {
         "useSortedClasses": "warn"
       }

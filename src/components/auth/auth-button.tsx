@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { isAuthModalOpenSignal, parentFormSignal } from "./auth-signals";
 
-import { type AuthFormType } from "@/components/auth/auth.types";
+import type { AuthFormType } from "@/components/auth/auth.types";
 
 type LoginButtonProps = {
   children: React.ReactNode;

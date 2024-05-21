@@ -26,7 +26,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { isNumber } from "@/lib/utils";
-import { type SelectVideo } from "@/server/db/schema";
+import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 
 export const ChapterTableRow = ({

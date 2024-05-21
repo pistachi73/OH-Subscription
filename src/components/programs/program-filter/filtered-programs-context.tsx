@@ -4,9 +4,9 @@ import React, { useEffect } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-import { type Option } from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import { api } from "@/trpc/react";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 const FilteredProgramsContext = React.createContext<{
   filteredPrograms: RouterOutputs["program"]["getProgramsForCards"];
@@ -57,7 +57,7 @@ export const FilteredProgramsProvider = ({
     );
 
   useEffect(() => {
-    setTimeout(function () {
+    setTimeout(() => {
       window.scrollTo(0, 0);
     }, 2);
   }, [params]);

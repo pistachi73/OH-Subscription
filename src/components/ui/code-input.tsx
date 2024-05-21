@@ -67,7 +67,7 @@ const CodeInput = React.forwardRef<HTMLInputElement, CodeInputProps>(
       e.preventDefault();
       const paste = e.clipboardData.getData("text").split("");
       if (paste.every((item) => !isNaN(Number(item)))) {
-        let newValue = [...values];
+        const newValue = [...values];
         for (let i = 0; i < paste.length; i++) {
           if (i >= length) break;
           newValue[i] = paste[i] as string;

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { EditProgram } from "../../_components/edit-program";
 
-import { type Option } from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import {
   Breadcrumb,
   BreadcrumbItem,

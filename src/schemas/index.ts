@@ -3,22 +3,22 @@ import * as z from "zod";
 export const passwordRegex = [
   {
     id: "lowercase",
-    regex: new RegExp("(?=.*[a-z])"),
+    regex: /(?=.*[a-z])/,
     message: "At least 1 lowercase letter",
   },
   {
     id: "uppercase",
-    regex: new RegExp("(?=.*[A-Z])"),
+    regex: /(?=.*[A-Z])/,
     message: "At least 1 uppercase letter",
   },
   {
     id: "number",
-    regex: new RegExp("(?=.*[0-9])"),
+    regex: /(?=.*[0-9])/,
     message: "At least 1 number",
   },
   {
     id: "length",
-    regex: new RegExp("(?=.{8,})"),
+    regex: /(?=.{8,})/,
     message: "At least 8 characters",
   },
 ] as const;

@@ -9,7 +9,6 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import * as React from "react";
 
 import { Tailwind } from "./components/tailwind";
 
@@ -49,7 +48,7 @@ export default function PasswordReset({
                     (This code is valid for 5 minutes)
                   </Text>
                   <Link
-                    className="mt-2 block rounded-md border-black bg-primary-foreground p-4 text-center font-medium  text-black "
+                    className="mt-2 block rounded-md border-black bg-primary-foreground p-4 text-center font-medium text-black "
                     href="https://example.com/"
                   >
                     Go to site

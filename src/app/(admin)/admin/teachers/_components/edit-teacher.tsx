@@ -4,7 +4,7 @@ import { useSignals } from "@preact/signals-react/runtime";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type z } from "zod";
+import type { z } from "zod";
 
 import { TeacherForm } from "./teacher-form";
 import {
@@ -16,7 +16,7 @@ import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { uploadToS3 } from "@/lib/upload-to-s3";
 import { TeacherSchema } from "@/schemas";
-import { type SelectTeacher } from "@/server/db/schema";
+import type { SelectTeacher } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 
 type EditTeacherProps = {

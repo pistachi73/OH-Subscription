@@ -17,7 +17,7 @@ import { HeroImage } from "@/components/ui/hero-image";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { regularEase } from "@/lib/animation";
 import { cn, getImageUrl } from "@/lib/utils";
-import { type RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type HeroCardProps = {
   className?: string;

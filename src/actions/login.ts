@@ -2,7 +2,7 @@
 import { eq } from "drizzle-orm";
 import { AuthError } from "next-auth";
 import { v4 as uuid } from "uuid";
-import { type z } from "zod";
+import type { z } from "zod";
 
 import { redirect } from "next/navigation";
 

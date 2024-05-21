@@ -1,7 +1,7 @@
 import { Badge } from "./ui/badge";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { type ExtendedUser } from "@/next-auth";
+import type { ExtendedUser } from "@/next-auth";
 
 type UserInfoProps = {
   label: string;

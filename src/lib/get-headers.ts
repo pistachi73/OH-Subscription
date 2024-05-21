@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 
-import { type DeviceType } from "@/components/ui/device-only/device-only-provider";
+import type { DeviceType } from "@/components/ui/device-only/device-only-provider";
 
 export const getHeaders = () => {
   const parsedHeaders = headers();

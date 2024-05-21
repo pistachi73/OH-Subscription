@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { getUrl, transformer } from "./shared";
 
 import { auth } from "@/auth";
-import { type AppRouter } from "@/server/api/root";
+import type { AppRouter } from "@/server/api/root";
 
 export const api = createTRPCReact<AppRouter>();
 

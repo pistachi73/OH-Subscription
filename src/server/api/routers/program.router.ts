@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, eq, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import { type ProgramLevel, type Teacher } from "../../db/schema.types";
+import type { ProgramLevel, Teacher } from "../../db/schema.types";
 import {
   programsWithCategories,
   programsWithTeachers,
@@ -235,7 +235,7 @@ export const programRouter = createTRPCRouter({
         programsForCardsQuery = programsWithCategories(programsForCardsQuery);
       }
 
-      let whereClauses = [];
+      const whereClauses = [];
 
       if (teacherIds?.length) {
         whereClauses.push(inArray(teachers.id, teacherIds));

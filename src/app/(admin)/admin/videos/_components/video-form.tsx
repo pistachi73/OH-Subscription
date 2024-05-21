@@ -1,5 +1,5 @@
-import { type UseFormReturn } from "react-hook-form";
-import { type z } from "zod";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
 import {
@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { type VideoSchema } from "@/schemas";
+import type { VideoSchema } from "@/schemas";
 
 type VideoFormProps = {
   form: UseFormReturn<z.infer<typeof VideoSchema>>;
@@ -132,7 +132,7 @@ export const VideoForm = ({ form }: VideoFormProps) => {
                       <Input
                         {...field}
                         onChange={(e) => {
-                          field.onChange(parseInt(e.target.value));
+                          field.onChange(Number.parseInt(e.target.value));
                         }}
                         autoComplete="duration"
                         className="remove-number-arrows text-sm"

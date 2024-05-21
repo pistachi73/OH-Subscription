@@ -1,9 +1,9 @@
 import { signal } from "@preact/signals-react";
 
-import {
-  type AuthFormType,
-  type LoginFormType,
-  type RegisterFormType,
+import type {
+  AuthFormType,
+  LoginFormType,
+  RegisterFormType,
 } from "./auth.types";
 
 export const parentFormSignal = signal<AuthFormType>("login");

@@ -92,7 +92,7 @@ export const AdminMultipleSelect = ({
 
   const onBadgeClick = (value: string) => {
     onDeselect?.(value);
-    let newSelectedOptionsValues = [
+    const newSelectedOptionsValues = [
       ...(selectedOptionsValues?.filter((item) => item !== value) || []),
     ];
 

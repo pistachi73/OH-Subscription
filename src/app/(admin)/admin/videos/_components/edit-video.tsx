@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { type z } from "zod";
+import type { z } from "zod";
 
 import { VideoForm } from "./video-form";
 import { isVideoDeleteModalOpenSignal, videoIdSignal } from "./video-signals";
@@ -13,7 +13,7 @@ import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { uploadToS3 } from "@/lib/upload-to-s3";
 import { VideoSchema } from "@/schemas";
-import { type SelectVideo } from "@/server/db/schema";
+import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 
 type EditVideoProps = {

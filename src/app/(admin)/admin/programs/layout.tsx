@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { DeleteProgramDialog } from "./_components/delete-program-dialog";
 
