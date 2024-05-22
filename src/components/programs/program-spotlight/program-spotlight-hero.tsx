@@ -6,6 +6,7 @@ import { DeviceOnly } from "../../ui/device-only/device-only";
 import { HeroImage } from "../../ui/hero-image";
 import { MaxWidthWrapper } from "../../ui/max-width-wrapper";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
@@ -37,36 +38,43 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           "before:top-0 before:h-[45vw] before:min-h-[100px] before:content-[''] lg:justify-end lg:before:content-none",
         )}
       >
-        <div className=" space-y-3 sm:w-3/4 lg:max-w-[56ch] 2xl:max-w-[64ch]">
+        <div
+          className={cn(
+            " space-y-2 lg:space-y-4 sm:w-3/4",
+            "sm:max-w-[45ch]",
+            "md:max-w-[56ch]",
+            "xl:max-w-[64ch]",
+            "2xl:max-w-[72ch]",
+          )}
+        >
           <h1 className="text-left font-sans text-3xl font-bold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl">
             {title}
           </h1>
-          <p className="w-full text-left text-base font-light text-gray-800 lg:text-lg">
+          <p className="w-full text-left text-base md:text-lg font-light lg:text-lg">
             {description}
           </p>
         </div>
 
-        <div className="flex flex-row flex-wrap gap-x-4 gap-y-2">
+        <div className="flex flex-row flex-wrap gap-2">
           {updatedAt && (
-            <p className="flex flex-row items-center gap-2 text-sm text-gray-800 sm:text-base lg:text-lg">
+            <p className="flex flex-row items-center gap-1 text-base md:text-lg lg:text-lg">
               <CalendarClock size={18} />
               Last update: {format(updatedAt, "MMM yyyy")}
             </p>
           )}
-          <p className="flex flex-row items-center gap-2 text-sm text-gray-800 sm:text-base lg:text-lg">
+          <p className="mx-2 flex flex-row items-center gap-1   text-base md:text-lg lg:text-lg">
             <LibraryBig size={18} />
             {totalChapters} chapters
           </p>
-          <div className="flex flex-row gap-1">
-            {categories.map((category) => (
-              <p
-                key={`category-${category.name}`}
-                className="rounded-sm  bg-gray-800  px-[6px] py-1 text-xs text-white sm:text-sm lg:text-base"
-              >
-                {category.name}
-              </p>
-            ))}
-          </div>
+          {categories.map((category) => (
+            <Badge
+              key={`category-${category.name}`}
+              variant="secondary"
+              className="text-sm"
+            >
+              {category.name}
+            </Badge>
+          ))}
         </div>
 
         <div className="flex w-full flex-col items-center gap-2 overflow-y-clip sm:flex-row">

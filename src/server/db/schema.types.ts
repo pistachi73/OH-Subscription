@@ -12,3 +12,4 @@ export type UserRole = User["role"];
 
 // TYPES FROM QUERYS
 export type ProgramSpotlight = RouterOutputs["program"]["getBySlug"];
+export type ProgramCard = RouterOutputs["program"]["getProgramsForCards"][0];

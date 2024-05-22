@@ -369,8 +369,9 @@ export const programRouter = createTRPCRouter({
                       'image', ${teachers.image},
                       'name', ${teachers.name})
                     )`,
-          categories: sql<Omit<Category, "id">[]>`json_agg(DISTINCT
+          categories: sql<Category[]>`json_agg(DISTINCT
                     jsonb_build_object(
+                      'id', ${categories.id},
                       'name', ${categories.name})
                     )`,
           chapters: sql<

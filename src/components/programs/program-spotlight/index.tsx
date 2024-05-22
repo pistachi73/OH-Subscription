@@ -1,6 +1,6 @@
 import { ProgramChapterList } from "./program-chapter-list";
 import { ProgramCommunity } from "./program-community";
-import { SimilarPrograms } from "./program-similars";
+import { RelatedPrograms } from "./program-related";
 import { ProgramSpotlightHero } from "./program-spotlight-hero";
 
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
@@ -16,21 +16,21 @@ export const ProgramSpotlight = ({ program }: ProgramSpotlightProps) => {
     <>
       <ProgramSpotlightHero program={program} />
       <MaxWidthWrapper className="max-w-[1400px]">
-        <Tabs defaultValue="chapters" className="w-full">
+        <Tabs defaultValue="chapters" className="w-full mt-8">
           <TabsList className="flex w-full items-center justify-center">
             <TabsTrigger value="chapters">Chapters</TabsTrigger>
             <TabsTrigger value="community">Community</TabsTrigger>
             <TabsTrigger value="similar">Similar</TabsTrigger>
           </TabsList>
           <TabsContent value="chapters">
-            <ProgramChapterList chapters={program.chapters} />
+            <ProgramChapterList program={program} />
           </TabsContent>
 
           <TabsContent value="similar">
-            <SimilarPrograms />
+            <RelatedPrograms program={program} />
           </TabsContent>
           <TabsContent value="community">
-            <ProgramCommunity />
+            <ProgramCommunity program={program} />
           </TabsContent>
         </Tabs>
       </MaxWidthWrapper>

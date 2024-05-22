@@ -21,12 +21,14 @@ type CardListProps = {
   cardsPerRow: PartialRecord<DeviceSize, number>;
   programs?: RouterOutputs["program"]["getProgramsForCards"];
   isLoading?: boolean;
+  initialAnimation?: boolean;
 };
 
 export const CardList = ({
   programs,
   cardsPerRow,
   isLoading = false,
+  initialAnimation = true,
 }: CardListProps) => {
   const { deviceSize } = useDeviceType();
 
@@ -80,7 +82,7 @@ export const CardList = ({
 
   if (isLoading) {
     return Array.from({ length: getLoadingCardsNumber() }).map((_, index) => (
-      <Skeleton key={index} className="aspect-video" />
+      <Skeleton key={`program-skeleton-${index}`} className="aspect-video" />
     ));
   }
 
@@ -95,8 +97,8 @@ export const CardList = ({
 
         return (
           <motion.div
-            key={index}
-            initial="initial"
+            key={`program-${program.id}`}
+            initial={initialAnimation ? "initial" : false}
             animate="animate"
             variants={{
               initial: { opacity: 0 },

@@ -14,9 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 
-import { SimilarPrograms } from "./program-similars";
+import type { ProgramSpotlight } from "@/server/db/schema.types";
+import { RelatedPrograms } from "./program-related";
 
-export const ProgramCommunity = () => {
+type ProgramCommunityProps = {
+  program: NonNullable<ProgramSpotlight>;
+};
+
+export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
   const [sort, setSort] = useState("Sort");
 
   return (
@@ -80,7 +85,7 @@ export const ProgramCommunity = () => {
         <Comment />
       </div>
 
-      <SimilarPrograms />
+      <RelatedPrograms program={program} />
     </div>
   );
 };
