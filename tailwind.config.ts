@@ -38,7 +38,6 @@ const config = {
       fontFamily: {
         inter: ["var(--font-inter)"],
         mono: ["var(--font-mono)"],
-        oswald: ["var(--font-oswald)"],
       },
 
       fontSize: {

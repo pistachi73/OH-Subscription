@@ -2,15 +2,7 @@ import "@/styles/globals.css";
 
 import { SessionProvider } from "next-auth/react";
 
-import {
-  IBM_Plex_Mono,
-  IBM_Plex_Serif,
-  Inter,
-  Oswald,
-  Playfair_Display,
-  Red_Hat_Mono,
-  Roboto_Serif,
-} from "next/font/google";
+import { Inter, Red_Hat_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 
 import { auth } from "@/auth";
@@ -30,12 +22,6 @@ const mono = Red_Hat_Mono({
   variable: "--font-mono",
 });
 
-const oswald = IBM_Plex_Serif({
-  subsets: ["latin"],
-  variable: "--font-oswald",
-  weight: ["400", "500", "600", "700"],
-});
-
 export const metadata = {
   title: "OH Subscription",
   description: "OH Subscription",
@@ -52,7 +38,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${oswald.variable} font-inter ${inter.variable} min-h-screen  ${mono.variable} bg-muted-background`}
+        className={`font-inter ${inter.variable} min-h-screen  ${mono.variable} bg-muted-background`}
       >
         <DeviceOnlyProvider deviceType={deviceType}>
           <TRPCReactProvider

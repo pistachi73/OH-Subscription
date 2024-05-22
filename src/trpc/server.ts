@@ -14,7 +14,7 @@ import { cookies, headers } from "next/headers";
 
 import { transformer } from "./shared";
 
-import { type AppRouter, appRouter } from "@/server/api/root";
+import { appRouter, type AppRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 
 /**
@@ -22,7 +22,6 @@ import { createTRPCContext } from "@/server/api/trpc";
  * handling a tRPC call from a React Server Component.
  */
 const createContext = cache(() => {
-  console.log("createContext");
   const h = headers();
   return createTRPCContext({
     headers: new Headers({
