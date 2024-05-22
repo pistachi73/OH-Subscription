@@ -1,4 +1,4 @@
-import { eq, getTableColumns, inArray, sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import type { PgSelect } from "drizzle-orm/pg-core";
 
 import {
@@ -7,6 +7,7 @@ import {
   programs,
   teachers,
   teachersOnPrograms,
+  videos,
   videosOnPrograms,
 } from "@/server/db/schema";
 
@@ -23,6 +24,12 @@ export const programsWithTeachers = <T extends PgSelect>(qb: T) => {
   return qb
     .leftJoin(teachersOnPrograms, eq(programs.id, teachersOnPrograms.programId))
     .leftJoin(teachers, eq(teachers.id, teachersOnPrograms.teacherId));
+};
+
+export const programsWithChapters = <T extends PgSelect>(qb: T) => {
+  return qb
+    .leftJoin(videosOnPrograms, eq(programs.id, videosOnPrograms.programId))
+    .leftJoin(videos, eq(videos.id, videosOnPrograms.videoId));
 };
 
 export const filterProgramsByTeacher = <T extends PgSelect>(

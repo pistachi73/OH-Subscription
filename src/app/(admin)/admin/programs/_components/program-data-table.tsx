@@ -75,9 +75,13 @@ export const columns: ColumnDef<
     header: "Categories",
     cell: (row) => {
       const val = row.getValue() as { category: { name: string } }[];
+
+      if (!val) return null;
+
       const categories = val.map(({ category }) => category.name).join(",");
 
       if (!categories.length) return null;
+
       return (
         <div className="flex flex-row flex-wrap gap-1">
           {categories.split(",").map((category) => (

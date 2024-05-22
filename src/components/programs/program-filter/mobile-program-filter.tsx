@@ -50,100 +50,102 @@ export const MobileProgramFilter = () => {
           </CardHeader>
         </Card> */}
       </SheetTrigger>
-      <SheetContent side="left" className="w-[300px] space-y-4 overflow-y-auto">
-        <SheetHeader className="p-0 text-left">
-          <SheetTitle className="text-xl font-semibold tracking-tight">
-            Filter programs
-          </SheetTitle>
-        </SheetHeader>
+      <SheetContent side="left" className="w-[300px] overflow-y-auto">
+        <div className="space-y-4">
+          <SheetHeader className="p-0 text-left">
+            <SheetTitle className="text-xl font-semibold tracking-tight">
+              Filter programs
+            </SheetTitle>
+          </SheetHeader>
 
-        <div className="relative h-10 w-full items-center rounded-sm ">
-          <Search
-            className="pointer-events-none absolute left-[10px] top-1/2 -translate-y-1/2 transform text-foreground"
-            size={16}
-          />
-          <Input
-            placeholder="Title, description..."
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearchKeypress(searchInput);
-              }
-            }}
-            className="h-10 w-full  bg-transparent px-0 py-0 pl-10 text-sm ease-out"
-            disabled={isFiltering}
-            value={searchInput}
-          />
-        </div>
-        <div className="space-y-8">
-          <div className="flex flex-col gap-4">
-            <h3 className="text-base font-semibold">Teachers:</h3>
-            {teacherOptions.map(({ label, value }) => (
-              <div
-                key={`teacher-${value}`}
-                className="flex cursor-pointer items-center space-x-2"
-              >
-                <Checkbox
-                  id={`teacher-${value}`}
-                  checked={teachers ? teachers?.includes(value) : false}
-                  onCheckedChange={(checked) =>
-                    handleFilterChange(Boolean(checked), value, "teachers")
-                  }
-                />
-                <label
-                  htmlFor={`teacher-${value}`}
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {label}
-                </label>
-              </div>
-            ))}
+          <div className="relative h-10 w-full items-center rounded-sm ">
+            <Search
+              className="pointer-events-none absolute left-[10px] top-1/2 -translate-y-1/2 transform text-foreground"
+              size={16}
+            />
+            <Input
+              placeholder="Title, description..."
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearchKeypress(searchInput);
+                }
+              }}
+              className="h-10 w-full  bg-transparent px-0 py-0 pl-10 text-sm ease-out"
+              disabled={isFiltering}
+              value={searchInput}
+            />
           </div>
-          <div className="flex flex-col gap-4">
-            <h3 className="text-base font-semibold">Categories:</h3>
-            {categoryOptions.map(({ label, value }) => (
-              <div
-                key={`category-${value}`}
-                className="flex cursor-pointer items-center space-x-2"
-              >
-                <Checkbox
-                  id={`category-${value}`}
-                  checked={categories ? categories?.includes(value) : false}
-                  onCheckedChange={(checked) => {
-                    handleFilterChange(Boolean(checked), value, "categories");
-                  }}
-                />
-                <label
-                  htmlFor={`category-${value}`}
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          <div className="space-y-8">
+            <div className="flex flex-col gap-4">
+              <h3 className="text-base font-semibold">Teachers:</h3>
+              {teacherOptions.map(({ label, value }) => (
+                <div
+                  key={`teacher-${value}`}
+                  className="flex cursor-pointer items-center space-x-2"
                 >
-                  {label}
-                </label>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col gap-4">
-            <h3 className="text-base font-semibold">Level:</h3>
-            {levelOptions.map(({ label, value }) => (
-              <div
-                key={`level-${value}`}
-                className="flex cursor-pointer items-center space-x-2"
-              >
-                <Checkbox
-                  id={`level-${value}`}
-                  checked={levels ? levels?.includes(value) : false}
-                  onCheckedChange={(checked) =>
-                    handleFilterChange(Boolean(checked), value, "levels")
-                  }
-                />
-                <label
-                  htmlFor={`level-${value}`}
-                  className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  <Checkbox
+                    id={`teacher-${value}`}
+                    checked={teachers ? teachers?.includes(value) : false}
+                    onCheckedChange={(checked) =>
+                      handleFilterChange(Boolean(checked), value, "teachers")
+                    }
+                  />
+                  <label
+                    htmlFor={`teacher-${value}`}
+                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-4">
+              <h3 className="text-base font-semibold">Categories:</h3>
+              {categoryOptions.map(({ label, value }) => (
+                <div
+                  key={`category-${value}`}
+                  className="flex cursor-pointer items-center space-x-2"
                 >
-                  {label}
-                </label>
-              </div>
-            ))}
+                  <Checkbox
+                    id={`category-${value}`}
+                    checked={categories ? categories?.includes(value) : false}
+                    onCheckedChange={(checked) => {
+                      handleFilterChange(Boolean(checked), value, "categories");
+                    }}
+                  />
+                  <label
+                    htmlFor={`category-${value}`}
+                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-4">
+              <h3 className="text-base font-semibold">Level:</h3>
+              {levelOptions.map(({ label, value }) => (
+                <div
+                  key={`level-${value}`}
+                  className="flex cursor-pointer items-center space-x-2"
+                >
+                  <Checkbox
+                    id={`level-${value}`}
+                    checked={levels ? levels?.includes(value) : false}
+                    onCheckedChange={(checked) =>
+                      handleFilterChange(Boolean(checked), value, "levels")
+                    }
+                  />
+                  <label
+                    htmlFor={`level-${value}`}
+                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

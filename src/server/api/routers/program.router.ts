@@ -2,9 +2,15 @@ import { TRPCError } from "@trpc/server";
 import { and, eq, inArray, or, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import type { ProgramLevel, Teacher } from "../../db/schema.types";
+import type {
+  Category,
+  ProgramLevel,
+  Teacher,
+  Video,
+} from "../../db/schema.types";
 import {
   programsWithCategories,
+  programsWithChapters,
   programsWithTeachers,
 } from "../query-utils/programs.query";
 import { withLimit, withOffset } from "../query-utils/shared.query";
@@ -343,16 +349,69 @@ export const programRouter = createTRPCRouter({
     }),
 
   getBySlug: publicProcedure
-    .input(z.number())
-    .query(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      // const program = await db.query.programs.findFirst({
-      //   where: eq(programs.id, id),
-      //   ...programSelect,
-      // });
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input: { slug }, ctx }) => {
+      console.log({ slug });
 
-      return null;
-      // return program;
+      let programQuery = ctx.db
+        .select({
+          id: programs.id,
+          title: programs.title,
+          description: programs.description,
+          thumbnail: programs.thumbnail,
+          level: programs.level,
+          slug: programs.slug,
+          totalChapters: programs.totalChapters,
+          teachers: sql<Omit<Teacher, "bio">[]>`json_agg(DISTINCT
+                    jsonb_build_object(
+                      'id', ${teachers.id},
+                      'image', ${teachers.image},
+                      'name', ${teachers.name})
+                    )`,
+          categories: sql<Omit<Category, "id">[]>`json_agg(DISTINCT
+                    jsonb_build_object(
+                      'name', ${categories.name})
+                    )`,
+          chapters: sql<
+            Pick<
+              Video,
+              | "updatedAt"
+              | "slug"
+              | "duration"
+              | "description"
+              | "thumbnail"
+              | "title"
+            > &
+              { chapterNumber: number }[]
+          >`json_agg(DISTINCT
+            jsonb_build_object(
+              'updatedAt', ${videos.updatedAt},
+              'slug', ${videos.slug},
+              'duration', ${videos.duration},
+              'description', ${videos.description},
+              'thumbnail', ${videos.thumbnail},
+              'title', ${videos.title},
+              'chapterNumber', ${videosOnPrograms.chapterNumber})
+            )`,
+        })
+        .from(programs)
+        .where(eq(programs.slug, slug))
+        .$dynamic();
+
+      programQuery = programsWithTeachers(programQuery);
+      programQuery = programsWithCategories(programQuery);
+      programQuery = programsWithChapters(programQuery);
+      programQuery = programQuery.groupBy(programs.id);
+
+      const res = await programQuery.execute();
+
+      const p = res[0];
+
+      if (!p) return null;
+
+      p.chapters = p.chapters.sort((a, b) => a.chapterNumber - b.chapterNumber);
+
+      return p;
     }),
 
   addTeacher: adminProtectedProcedure

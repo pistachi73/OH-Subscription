@@ -2,10 +2,10 @@
 
 import { Save, Trash } from "lucide-react";
 import {
-  type Dispatch,
-  type SetStateAction,
   useState,
   useTransition,
+  type Dispatch,
+  type SetStateAction,
 } from "react";
 import { toast } from "sonner";
 

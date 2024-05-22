@@ -1,4 +1,6 @@
 import { ProgramSpotlight } from "@/components/programs/program-spotlight";
+import { api } from "@/trpc/server";
+import { redirect } from "next/navigation";
 
 type ProgramsPageProps = {
   params: {
@@ -7,7 +9,13 @@ type ProgramsPageProps = {
 };
 
 const ProgramsPage = async ({ params }: ProgramsPageProps) => {
-  // Get the data from the API
+  const program = await api.program.getBySlug.query({
+    slug: params.programSlug,
+  });
+
+  if (!program) {
+    redirect("/");
+  }
 
   return (
     <div className="header-translate">

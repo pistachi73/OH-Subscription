@@ -32,9 +32,9 @@ export const heroCardHeightProps =
 
 const TRANSITION: Transition = {
   ease: "easeOut",
-  duration: 0.15,
+  duration: 0.1,
 };
-const IMAGE_ANIMATION_DURATION: number = 0.5;
+const IMAGE_ANIMATION_DURATION: number = 0.35;
 const DELAY_INCREMENT: number = 0.05;
 const SAFE_TO_REMOVE_MS: number =
   (IMAGE_ANIMATION_DURATION + TRANSITION.duration + DELAY_INCREMENT * 3) * 1000;
@@ -46,7 +46,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
 
     useEffect(() => {
       !isPresent && setTimeout(safeToRemove, SAFE_TO_REMOVE_MS);
-    }, [isPresent]);
+    }, [isPresent, safeToRemove]);
 
     const { title, slug, description, thumbnail } = program ?? {};
 
@@ -143,7 +143,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
       >
         <motion.div
           className={cn(
-            "absolute left-0 top-0 -z-10 flex aspect-video max-h-[100vh] w-full sm:h-[140%]",
+            "absolute left-0 top-0 -z-10 flex aspect-video max-h-[100vh] w-full sm:h-[135%]",
           )}
           variants={containerVariants}
         >
@@ -208,7 +208,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 custom={{ isMobile }}
                 asChild
               >
-                <Link href={"/programs/slug"}>
+                <Link href={`/programs/${slug}`}>
                   <Play size={22} className="mr-2 fill-current" />
                   Reproduce
                 </Link>
@@ -221,7 +221,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 custom={{ isMobile: isMobile }}
                 asChild
               >
-                <Link href={"/programs/slug"}>
+                <Link href={`/programs/${slug}`}>
                   <Info size={22} className="mr-2" />
                   More information
                 </Link>

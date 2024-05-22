@@ -1,7 +1,7 @@
 import { ProgramChapterList } from "./program-chapter-list";
 import { ProgramCommunity } from "./program-community";
-import { ProgramHeroCard } from "./program-hero";
 import { SimilarPrograms } from "./program-similars";
+import { ProgramSpotlightHero } from "./program-spotlight-hero";
 
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export const ProgramSpotlight = () => {
   return (
     <>
-      <ProgramHeroCard />
+      <ProgramSpotlightHero />
       <MaxWidthWrapper className="max-w-[1400px]">
         <Tabs defaultValue="chapters" className="w-full">
           <TabsList className="flex w-full items-center justify-center">

@@ -9,13 +9,13 @@ import { MaxWidthWrapper } from "../../ui/max-width-wrapper";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export const ProgramHeroCard = () => {
+export const ProgramSpotlightHero = () => {
   return (
-    <div className="relative mb-8 max-h-[80vh] w-full sm:mb-0 lg:h-[76vw]">
+    <div className="relative mb-8 max-h-[55vh] w-full sm:mb-0 lg:h-[76vw]">
       <HeroImage
         src="/images/hero-thumbnail-2.jpg"
         alt="testing"
-        containerClassname=" max-h-[80vh]"
+        containerClassname=" max-h-[55vh]"
         shadowClassname="before:bg-transparent lg:before:bg-hero-gradient to-45% sm:to-45% lg:to-35%"
       />
 
