@@ -62,7 +62,7 @@ export const LoginForm = () => {
         </Button>
       </span>
     ),
-    "two-factor": `Enter the 2FA code we emailed you to continue.`,
+    "two-factor": "Enter the 2FA code we emailed you to continue.",
     credential: null,
     "reset-password":
       "Enter your email address and we'll send you a link to reset your password.",

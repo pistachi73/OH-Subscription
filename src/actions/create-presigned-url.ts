@@ -1,5 +1,5 @@
 "use server";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";

@@ -52,7 +52,7 @@ export const LinkedinButton = ({ url }: ShareItemSharedProps) => {
         );
       }}
     >
-      <>{ShareItemIcons.linkedin}</>
+      {ShareItemIcons.linkedin}
     </ShareItem>
   );
 };
@@ -111,7 +111,7 @@ export const EmailButton = ({
   if (subject) params += `subject=${encodeURIComponent(subject)}`;
   if (body)
     params += `${subject ? "&" : ""}body=${encodeURIComponent(
-      url + "\n\n" + body,
+      `${url}\n\n${body}`,
     )}`;
 
   return (

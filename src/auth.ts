@@ -21,7 +21,7 @@ export const {
     error: "/auth/error",
   },
   events: {
-    async linkAccount({}) {
+    async linkAccount() {
       // await db
       //   .update(users)
       //   .set({

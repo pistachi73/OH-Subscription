@@ -3,7 +3,7 @@
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import { type Variants, motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 
@@ -192,6 +192,7 @@ const Carousel = React.forwardRef<
               {Array.from({ length: total }).map((_, index) => (
                 <button
                   key={index}
+                  type="button"
                   onClick={() => scrollTo(index)}
                   className={cn(
                     "h-0.5 w-3 rounded-sm bg-primary-800 opacity-25 transition-opacity",
@@ -356,10 +357,10 @@ const CarouselNext = React.forwardRef<
 CarouselNext.displayName = "CarouselNext";
 
 export {
-  type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
   CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
 };

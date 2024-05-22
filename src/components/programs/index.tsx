@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 
 import { useFilteredPrograms } from "@/components/programs/program-filter/filtered-programs-context";
 import { ProgramFilter } from "@/components/programs/program-filter/program-filter";
@@ -18,10 +18,10 @@ export const Programs = () => {
     <>
       <div className={cn("relative z-0 mb-12 sm:mb-28", heroCardHeightProps)}>
         <AnimatePresence mode="popLayout" initial={false}>
-          {Boolean(firstProgram) ? (
+          {firstProgram ? (
             <HeroCard
               key={`hero-card-${firstProgram?.id}`}
-              program={firstProgram!}
+              program={firstProgram}
             />
           ) : (
             <HeroCard

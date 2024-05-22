@@ -54,7 +54,7 @@ export const HeroCarousel = () => {
         onMouseLeave={startInterval}
       >
         <AnimatePresence initial={false}>
-          <HeroCard key={"hero-card-" + current} index={current} />
+          <HeroCard key={`hero-card-${current}`} />
         </AnimatePresence>
       </div>
       <MaxWidthWrapper

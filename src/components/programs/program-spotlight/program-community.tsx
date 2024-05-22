@@ -76,7 +76,7 @@ export const ProgramCommunity = () => {
           />
         </div>
         <Comment />
-        <Comment isReply></Comment>
+        <Comment isReply />
         <Comment />
       </div>
 

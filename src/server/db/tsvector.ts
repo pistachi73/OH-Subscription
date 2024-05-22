@@ -8,8 +8,8 @@ export const tsvector = customType<{
     if (config) {
       const sources = config.sources.join(" || ' ' || ");
       return `tsvector generated always as (to_tsvector('english', ${sources})) stored`;
-    } else {
-      return `tsvector`;
     }
+
+    return "tsvector";
   },
 });

@@ -1,4 +1,4 @@
-import { Program } from "@/components/programs/program-spotlight";
+import { ProgramSpotlight } from "@/components/programs/program-spotlight";
 
 type ProgramsPageProps = {
   params: {
@@ -11,7 +11,7 @@ const ProgramsPage = async ({ params }: ProgramsPageProps) => {
 
   return (
     <div className="header-translate">
-      <Program />
+      <ProgramSpotlight />
     </div>
   );
 };

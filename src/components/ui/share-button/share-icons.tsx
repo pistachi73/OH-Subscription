@@ -1,6 +1,8 @@
 export const ShareItemIcons = {
   linkedin: (
     <svg
+      role="img"
+      aria-label="LinkedIn Icon"
       xmlns="http://www.w3.org/2000/svg"
       className="h-5 w-5 fill-white"
       viewBox="0 0 24 24"
@@ -10,6 +12,8 @@ export const ShareItemIcons = {
   ),
   facebook: (
     <svg
+      role="img"
+      aria-label="Facebook Icon"
       xmlns="http://www.w3.org/2000/svg"
       className="h-5 w-5 fill-white"
       viewBox="0 0 24 24"
@@ -19,6 +23,8 @@ export const ShareItemIcons = {
   ),
   twitter: (
     <svg
+      role="img"
+      aria-label="Twitter Icon"
       xmlns="http://www.w3.org/2000/svg"
       className="h-5 w-5 fill-white"
       viewBox="0 0 24 24"

@@ -32,7 +32,7 @@ export const FileSchema = z
       return file.size <= 3000000;
     }
     return true;
-  }, `Max image size is 3MB.`);
+  }, "Max image size is 3MB.");
 
 export const PasswordSchema = z
   .string()

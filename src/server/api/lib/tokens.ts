@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 import { eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";

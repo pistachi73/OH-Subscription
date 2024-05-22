@@ -9,9 +9,7 @@ import { MaxWidthWrapper } from "../../ui/max-width-wrapper";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type ProgramHeroCardProps = {};
-
-export const ProgramHeroCard = ({}: ProgramHeroCardProps) => {
+export const ProgramHeroCard = () => {
   return (
     <div className="relative mb-8 max-h-[80vh] w-full sm:mb-0 lg:h-[76vw]">
       <HeroImage
@@ -32,9 +30,10 @@ export const ProgramHeroCard = ({}: ProgramHeroCardProps) => {
             English around the world
           </h1>
           <p className="w-full text-left text-sm font-light text-gray-800 sm:text-base lg:text-lg">
-            {1 % 2 === 0
-              ? "Ideal for beginners to intermediate learners, this course provides comprehensive coverage of grammar essentials through interactive lessons and quizzes, boosting both written and spoken communication skills."
-              : "Tailored for advanced learners, this course focuses on real-life scenarios, idiomatic expressions, and nuanced vocabulary to enhance conversational fluency through role-plays and discussions, empowering confident communication in English-speaking environments."}
+            Ideal for beginners to intermediate learners, this course provides
+            comprehensive coverage of grammar essentials through interactive
+            lessons and quizzes, boosting both written and spoken communication
+            skills.
           </p>
         </div>
 

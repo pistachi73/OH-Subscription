@@ -14,8 +14,15 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "nursery": {
-        "useSortedClasses": "warn"
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noArrayIndexKey": "warn"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "warn"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "warn"
       }
     }
   },

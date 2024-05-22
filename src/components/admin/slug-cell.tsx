@@ -24,6 +24,7 @@ export const SlugCell = ({ value }: { value: string }) => {
           : "bg-accent text-accent-foreground",
       )}
       onClick={onCopy}
+      type="button"
     >
       <p>{value}</p>
       {copied ? (

@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { useCallback, useMemo } from "react";
 
 import {
-  type DeviceSize,
   useDeviceType,
+  type DeviceSize,
 } from "../device-only/device-only-provider";
 import { Skeleton } from "../skeleton";
 
@@ -49,14 +49,15 @@ export const CardList = ({
   const isBorder = useCallback(
     (index: number): { isLeftBorder: boolean; isRightBorder: boolean } => {
       const reversedDeviceSize = deviceSize.slice().reverse();
-      let isLeftBorder = false,
-        isRightBorder = false;
+      let isLeftBorder = false;
+      let isRightBorder = false;
       for (const size of reversedDeviceSize) {
+        const cardsInRow = cardsPerRow[size] as number;
         if (cardsPerRow[size]) {
-          if (index % cardsPerRow[size]! === 0) {
+          if (index % cardsInRow === 0) {
             isLeftBorder = true;
           }
-          if (index % cardsPerRow[size]! === cardsPerRow[size]! - 1) {
+          if (index % cardsInRow === cardsInRow - 1) {
             isRightBorder = true;
           }
           break;
@@ -104,7 +105,7 @@ export const CardList = ({
             transition={{
               ease: regularEase,
               duration: 0.2,
-              delay: 0.05 * (randomDelayArray![index] as number),
+              delay: 0.05 * (randomDelayArray?.[index] as number),
             }}
           >
             <ProgramCard

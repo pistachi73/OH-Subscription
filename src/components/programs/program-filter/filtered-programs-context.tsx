@@ -58,7 +58,10 @@ export const FilteredProgramsProvider = ({
 
   useEffect(() => {
     setTimeout(() => {
-      window.scrollTo(0, 0);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     }, 2);
   }, [params]);
 

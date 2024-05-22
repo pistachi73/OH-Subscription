@@ -1,28 +1,25 @@
 "use client";
 import {
-  type Transition,
-  type Variants,
   motion,
   usePresence,
+  type Transition,
+  type Variants,
 } from "framer-motion";
 import { Info, Play } from "lucide-react";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { DeviceOnly } from "@/components/ui/device-only/device-only";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { HeroImage } from "@/components/ui/hero-image";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
-import { regularEase } from "@/lib/animation";
 import { cn, getImageUrl } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
 
 type HeroCardProps = {
   className?: string;
-  index?: number;
-  program: Pick<
+  program?: Pick<
     RouterOutputs["program"]["getProgramsForCards"][0],
     "title" | "slug" | "description" | "thumbnail"
   >;
@@ -43,7 +40,7 @@ const SAFE_TO_REMOVE_MS: number =
   (IMAGE_ANIMATION_DURATION + TRANSITION.duration + DELAY_INCREMENT * 3) * 1000;
 
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
-  ({ className, index, program, notFound = false }, ref) => {
+  ({ className, program, notFound = false }, ref) => {
     const { isMobile } = useDeviceType();
     const [isPresent, safeToRemove] = usePresence();
 
