@@ -19,7 +19,7 @@ const ProgramsPage = async ({ params }: ProgramsPageProps) => {
 
   return (
     <div className="header-translate">
-      <ProgramSpotlight />
+      <ProgramSpotlight program={program} />
     </div>
   );
 };

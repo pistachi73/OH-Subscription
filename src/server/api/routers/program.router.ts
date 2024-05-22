@@ -362,6 +362,7 @@ export const programRouter = createTRPCRouter({
           level: programs.level,
           slug: programs.slug,
           totalChapters: programs.totalChapters,
+          updatedAt: programs.updatedAt,
           teachers: sql<Omit<Teacher, "bio">[]>`json_agg(DISTINCT
                     jsonb_build_object(
                       'id', ${teachers.id},
@@ -373,7 +374,7 @@ export const programRouter = createTRPCRouter({
                       'name', ${categories.name})
                     )`,
           chapters: sql<
-            Pick<
+            (Pick<
               Video,
               | "updatedAt"
               | "slug"
@@ -381,8 +382,7 @@ export const programRouter = createTRPCRouter({
               | "description"
               | "thumbnail"
               | "title"
-            > &
-              { chapterNumber: number }[]
+            > & { chapterNumber: number })[]
           >`json_agg(DISTINCT
             jsonb_build_object(
               'updatedAt', ${videos.updatedAt},

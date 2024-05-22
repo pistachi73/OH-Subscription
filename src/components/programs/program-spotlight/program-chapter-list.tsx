@@ -1,14 +1,19 @@
-"use client";
-
+import type { ProgramSpotlight } from "@/server/db/schema.types";
 import { Chapter } from "./program-chapter";
 import { SimilarPrograms } from "./program-similars";
 
-export const ProgramChapterList = () => {
+type ProgramChapterListProps = {
+  chapters: NonNullable<ProgramSpotlight>["chapters"];
+};
+
+export const ProgramChapterList = ({ chapters }: ProgramChapterListProps) => {
+  if (!chapters?.length) return null;
+
   return (
     <div className="my-8 w-full sm:my-12 ">
       <div className="space-y-4 sm:space-y-8">
-        {Array.from({ length: 4 }, (_, i) => (
-          <Chapter key={i} />
+        {chapters.map((chapter) => (
+          <Chapter key={chapter.slug} chapter={chapter} />
         ))}
       </div>
       <SimilarPrograms />

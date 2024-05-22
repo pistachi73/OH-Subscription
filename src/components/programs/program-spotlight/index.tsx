@@ -5,11 +5,16 @@ import { ProgramSpotlightHero } from "./program-spotlight-hero";
 
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { ProgramSpotlight as ProgramSpotlightType } from "@/server/db/schema.types";
 
-export const ProgramSpotlight = () => {
+type ProgramSpotlightProps = {
+  program: NonNullable<ProgramSpotlightType>;
+};
+
+export const ProgramSpotlight = ({ program }: ProgramSpotlightProps) => {
   return (
     <>
-      <ProgramSpotlightHero />
+      <ProgramSpotlightHero program={program} />
       <MaxWidthWrapper className="max-w-[1400px]">
         <Tabs defaultValue="chapters" className="w-full">
           <TabsList className="flex w-full items-center justify-center">
@@ -18,7 +23,7 @@ export const ProgramSpotlight = () => {
             <TabsTrigger value="similar">Similar</TabsTrigger>
           </TabsList>
           <TabsContent value="chapters">
-            <ProgramChapterList />
+            <ProgramChapterList chapters={program.chapters} />
           </TabsContent>
 
           <TabsContent value="similar">

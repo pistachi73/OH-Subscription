@@ -1,11 +1,7 @@
 "use client";
 
-import {
-  AnimatePresence,
-  type Variants,
-  cubicBezier,
-  motion,
-} from "framer-motion";
+import type { Variants } from "framer-motion";
+import { AnimatePresence, cubicBezier, motion } from "framer-motion";
 import { Play } from "lucide-react";
 import { useState } from "react";
 
@@ -14,11 +10,20 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { DeviceOnly } from "@/components/ui/device-only/device-only";
+import type { ProgramSpotlight } from "@/server/db/schema.types";
+import { format } from "date-fns";
 
 const MotionButton = motion(Button);
 const MotionLink = motion(Link);
 
-export const Chapter = () => {
+type ChapterProps = {
+  chapter: NonNullable<ProgramSpotlight>["chapters"][0];
+};
+
+export const Chapter = ({ chapter }: ChapterProps) => {
+  const { title, description, updatedAt, duration, chapterNumber, slug } =
+    chapter;
+
   const [isMobileChapterOpen, setIsMobileChapterOpen] = useState(false);
 
   const containerVariants: Variants = {
@@ -86,7 +91,7 @@ export const Chapter = () => {
     <>
       <DeviceOnly allowedDevices={["mobile"]}>
         <motion.div
-          className="cursor-pointer rounded-lg bg-slate-100"
+          className="cursor-pointer rounded-lg bg-muted"
           whileHover="hover"
           layout="position"
           initial={false}
@@ -96,23 +101,25 @@ export const Chapter = () => {
         >
           <div className="p-4">
             <div className="flex flex-row items-center gap-3">
-              <MotionButton
+              <Button
+                type="button"
                 className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
                 variant="outline"
                 size="icon"
+                asChild
               >
-                <Play
-                  className="-ml-px fill-primary stroke-primary"
-                  size={24}
-                />
-              </MotionButton>
+                <Link href={`chapters/${slug}`}>
+                  <Play
+                    className="-ml-px fill-primary stroke-primary"
+                    size={24}
+                  />
+                </Link>
+              </Button>
 
-              <div className="space-y-1">
-                <p className="text-base font-semibold tracking-tight">
-                  Episode 1 - Unlocking vocabulary
-                </p>
-                <p className="xs:text-b text-xs  text-muted-foreground">
-                  February 25, 2025 <span className="ml-3">14 min</span>
+              <div className="flex flex-col">
+                <p className="text-base font-medium">Episode {chapterNumber}</p>
+                <p className="text-base font-medium text-muted-foreground">
+                  {title}
                 </p>
               </div>
             </div>
@@ -127,30 +134,29 @@ export const Chapter = () => {
                   exit="exit"
                 >
                   <motion.div
-                    className="mt-4 space-y-4"
+                    className="mt-4 flex flex-col xs:flex-row gap-4"
                     variants={mobileContentVariants}
                   >
-                    <MotionLink
-                      href="chapter/slug/id"
-                      className="relative block aspect-video w-full max-w-[400px]"
+                    <div
+                      className="relative block aspect-video w-full basis-36 shrink-0"
                       onMouseDown={(e) => e.stopPropagation()}
                     >
                       <Image
                         src="/images/video-thumbnail.png"
                         alt="video"
                         fill
-                        className="rounded-sm"
+                        className="rounded-sm object-cover"
                       />
-                    </MotionLink>
-                    <motion.p className="text-sm text-foreground">
-                      Vocabulary is the cornerstone of effective communication.
-                      In this chapter, students embark on a journey to expand
-                      their lexicon, exploring strategies for learning new
-                      words, deciphering meanings from context, and mastering
-                      techniques for retention and application in both spoken
-                      and written language. Vocabulary is the cornerstone of
-                      effective communication.
-                    </motion.p>
+                    </div>
+                    <div className="overflow-hidden space-y-1">
+                      <p className="xs:text-b text-sm  text-muted-foreground">
+                        {updatedAt && format(updatedAt, "MMM dd, yyyy")}{" "}
+                        <span className="ml-3">{duration} min</span>
+                      </p>
+                      <motion.p className="text-base text-foreground line-clamp-2">
+                        {description}
+                      </motion.p>
+                    </div>
                   </motion.div>
                 </motion.div>
               )}
@@ -168,7 +174,7 @@ export const Chapter = () => {
         >
           <div className="h-full w-full">
             <Link
-              href="chapter/slug/id"
+              href={`chapters/${slug}`}
               className="relative block aspect-video"
             >
               <Image
@@ -192,18 +198,14 @@ export const Chapter = () => {
           </div>
           <div className="max-w-[72ch] space-y-1">
             <p className="text-lg font-semibold tracking-tight">
-              Episode 1 - Unlocking vocabulary
+              Episode {chapterNumber} - {title}
             </p>
             <p className="text-sm text-muted-foreground">
-              February 25, 2025 <span className="ml-3">14 min</span>
+              {updatedAt && format(updatedAt, "MMM dd, yyyy")}{" "}
+              <span className="ml-3">{duration} min</span>
             </p>
             <p className="line-clamp-5 text-base text-foreground">
-              Vocabulary is the cornerstone of effective communication. In this
-              chapter, students embark on a journey to expand their lexicon,
-              exploring strategies for learning new words, deciphering meanings
-              from context, and mastering techniques for retention and
-              application in both spoken and written language. Vocabulary is the
-              cornerstone of effective communication.
+              {description}
             </p>
           </div>
         </motion.div>
