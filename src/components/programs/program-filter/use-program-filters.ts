@@ -14,11 +14,6 @@ export const useProgramFilters = () => {
     value: string,
     type: "teachers" | "categories" | "levels" | "search",
   ) => {
-    console.log({
-      adding,
-      value,
-      type,
-    });
     const params = new URLSearchParams(searchParams);
     const values = params.get(type)?.split(",") ?? [];
 

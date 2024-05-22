@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 export const MobileHeader = () => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [position, setPosition] = useState(window?.scrollY ?? 0);
+  const [position, setPosition] = useState(0);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -109,7 +109,7 @@ export const MobileHeader = () => {
           const isActive = pathname === href;
           return (
             <li
-              key={href}
+              key={title}
               className={cn(
                 "relative flex basis-1/5 items-center justify-center pt-2 transition-colors",
                 isActive ? "text-foreground" : "text-muted-foreground",

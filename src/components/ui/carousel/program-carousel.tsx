@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { ProgramCard, type ProgramCardProps } from "../cards/program-card";
 
 import { CarouselHeader } from "./carousel-header";
@@ -51,7 +49,6 @@ export const ProgramCarousel = ({
   title,
   href,
 }: ProgramCarouselProps) => {
-  console.log("ProgramCarousel", programs);
   const { slideSizeClassname, slidesToScroll, slidesPerView } =
     useCarouselSettings();
 

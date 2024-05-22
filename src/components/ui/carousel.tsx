@@ -31,10 +31,10 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
-  current?: number;
+  current: number;
   total?: number;
   totalItems: number;
-  slidesPerView?: number;
+  slidesPerView: number;
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);

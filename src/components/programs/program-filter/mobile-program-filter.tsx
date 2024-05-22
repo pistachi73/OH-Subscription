@@ -1,27 +1,12 @@
 "use client";
-import { Filter, FilterX, RotateCcw, Search } from "lucide-react";
+import { Filter, FilterX, Search } from "lucide-react";
 import { useState } from "react";
 
 import { useFilteredPrograms } from "./filtered-programs-context";
 import { useProgramFilters } from "./use-program-filters";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import {
   Sheet,
@@ -125,7 +110,6 @@ export const MobileProgramFilter = () => {
                   id={`category-${value}`}
                   checked={categories ? categories?.includes(value) : false}
                   onCheckedChange={(checked) => {
-                    console.log({ checked, value, label });
                     handleFilterChange(Boolean(checked), value, "categories");
                   }}
                 />
