@@ -24,7 +24,7 @@ type HeroCardProps = {
     "title" | "slug" | "description" | "thumbnail"
   >;
   notFound?: boolean;
-  index: number;
+  index?: number;
 };
 
 const MotionButton = motion(Button);
@@ -154,7 +154,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 ? "/images/program-not-found.jpg"
                 : thumbnail
                   ? getImageUrl(thumbnail)
-                  : index % 2 === 0
+                  : index ?? 0 % 2 === 0
                     ? "/images/hero-thumbnail-2.jpg"
                     : "/images/hero-background.png"
             }
