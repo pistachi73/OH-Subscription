@@ -17,10 +17,16 @@ export const ProgramSpotlight = ({ program }: ProgramSpotlightProps) => {
       <ProgramSpotlightHero program={program} />
       <MaxWidthWrapper className="max-w-[1400px]">
         <Tabs defaultValue="chapters" className="w-full mt-8">
-          <TabsList className="flex w-full items-center justify-center">
-            <TabsTrigger value="chapters">Chapters</TabsTrigger>
-            <TabsTrigger value="community">Community</TabsTrigger>
-            <TabsTrigger value="similar">Similar</TabsTrigger>
+          <TabsList className="flex w-full items-center justify-center text-base">
+            <TabsTrigger value="chapters" className="text-base">
+              Chapters
+            </TabsTrigger>
+            <TabsTrigger value="community" className="text-base">
+              Community
+            </TabsTrigger>
+            <TabsTrigger value="similar" className="text-base">
+              Similar
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="chapters">
             <ProgramChapterList program={program} />
