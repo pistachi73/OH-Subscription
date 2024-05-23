@@ -91,7 +91,7 @@ export const Chapter = ({ chapter }: ChapterProps) => {
     <>
       <DeviceOnly allowedDevices={["mobile"]}>
         <motion.div
-          className="cursor-pointer rounded-lg bg-muted"
+          className="cursor-pointer rounded-lg bg-muted/50"
           whileHover="hover"
           layout="position"
           initial={false}
@@ -103,10 +103,11 @@ export const Chapter = ({ chapter }: ChapterProps) => {
             <div className="flex flex-row items-center gap-3">
               <Button
                 type="button"
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-primary bg-muted/50 hover:bg-muted/80"
                 variant="outline"
                 size="icon"
                 asChild
+                onClick={(e) => e.stopPropagation()}
               >
                 <Link href={`chapters/${slug}`}>
                   <Play
@@ -138,7 +139,7 @@ export const Chapter = ({ chapter }: ChapterProps) => {
                     variants={mobileContentVariants}
                   >
                     <div
-                      className="relative block aspect-video w-full basis-36 shrink-0"
+                      className="relative block aspect-video w-full basis-full xs:basis-36 shrink-0"
                       onMouseDown={(e) => e.stopPropagation()}
                     >
                       <Image

@@ -25,23 +25,31 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
   const firstChapterSlug = chapters?.[0]?.slug;
 
   return (
-    <div className="relative mb-8 max-h-[55vh] w-full sm:mb-0 lg:h-[76vw]">
+    <MaxWidthWrapper
+      className={cn(
+        "relative overflow-hidden",
+        "portrait:min-h-[auto]",
+        "landscape:flex landscape:flex-end landscape:min-h-[55vh]",
+      )}
+    >
+      <div className="absolute -bottom-px left-0 -z-10 h-[calc(100%+1px)] w-full bg-gradient-to-t from-muted-background to-25%" />
       <HeroImage
         src="/images/hero-thumbnail-2.jpg"
         alt="testing"
-        containerClassname=" max-h-[55vh]"
-        shadowClassname="before:bg-transparent lg:before:bg-hero-gradient to-45% sm:to-45% lg:to-35%"
+        containerClassname="-z-20 max-h-[100%]"
+        shadowClassname="before:bg-transparent sm:before:bg-hero-gradient to-45% sm:to-45% sm:to-35% bg-transparent"
       />
-
-      <MaxWidthWrapper
+      <div
         className={cn(
-          "relative z-30 mx-0 flex h-full flex-col  gap-4",
-          "before:top-0 before:h-[45vw] before:min-h-[100px] before:content-[''] lg:justify-end lg:before:content-none",
+          "flex flex-col grow relative justify-end gap-4",
+          "mt-[calc(var(--header-height)+2vw)] sm:mt-[calc(var(--header-height)+48px)]",
+          "portrait:before:top-0 portrait:before:h-[35vw] portrait:before:min-h-[100px] portrait:before:content-['']",
+          "landscape:mt-[calc(100vw*9/16-48px)] landscape:sm:mt-[calc(var(--header-height)+48px)]",
         )}
       >
         <div
           className={cn(
-            " space-y-2 lg:space-y-4 sm:w-3/4",
+            "space-y-2 lg:space-y-4 sm:w-3/4",
             "sm:max-w-[45ch]",
             "md:max-w-[56ch]",
             "xl:max-w-[64ch]",
@@ -51,19 +59,19 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           <h1 className="text-left font-sans text-3xl font-bold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl text-balance">
             {title}
           </h1>
-          <p className="w-full text-left text-base md:text-lg font-light lg:text-lg text-balance">
+          <p className="w-full text-left text-base md:text-lg font-light lg:text-lg text-balance line-clamp-4">
             {description}
           </p>
         </div>
 
-        <div className="flex flex-row flex-wrap gap-2 text-muted-foreground   text-base">
+        <div className="flex flex-row gap-2 text-muted-foreground text-base md:text-lg touch-pan-x shrink-0 overflow-x-scroll no-scrollbar">
           {updatedAt && (
-            <p className="flex flex-row items-center gap-1">
+            <p className="flex flex-row items-center gap-1 shrink-0">
               <CalendarClock size={18} />
               Last update: {format(updatedAt, "MMM yyyy")}
             </p>
           )}
-          <p className="mx-2 flex flex-row items-center gap-1">
+          <p className="mx-2 flex flex-row items-center gap-1 shrink-0">
             <LibraryBig size={18} />
             {totalChapters} chapters
           </p>
@@ -78,7 +86,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           ))}
         </div>
 
-        <div className="flex w-full flex-col items-center gap-2 overflow-y-clip sm:flex-row">
+        <div className="flex w-full flex-col items-center gap-2 overflow-y-clip sm:flex-row mt-2 overflow-visible">
           {firstChapterSlug && (
             <Button
               variant="default"
@@ -122,7 +130,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
             </Button>
           </div>
         </div>
-      </MaxWidthWrapper>
-    </div>
+      </div>
+    </MaxWidthWrapper>
   );
 };
