@@ -103,10 +103,14 @@ export const TwitterButton = ({
 
 export const EmailButton = ({
   url,
-  email,
   subject,
   body,
-}: { email: string; subject: string; body: string } & ShareItemSharedProps) => {
+  email = "example@gmail.com",
+}: {
+  subject: string;
+  body: string;
+  email?: string;
+} & ShareItemSharedProps) => {
   let params = subject || body ? "?" : "";
   if (subject) params += `subject=${encodeURIComponent(subject)}`;
   if (body)
