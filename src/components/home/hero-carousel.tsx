@@ -57,7 +57,11 @@ export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
         onMouseLeave={startInterval}
       >
         <AnimatePresence initial={false}>
-          <HeroCard key={`hero-card-${current}`} program={programs[current]} />
+          <HeroCard
+            key={`hero-card-${current}`}
+            program={programs[current]}
+            index={current}
+          />
         </AnimatePresence>
       </div>
       <MaxWidthWrapper

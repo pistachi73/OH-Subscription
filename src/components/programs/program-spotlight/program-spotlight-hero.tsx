@@ -37,12 +37,12 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
         src="/images/hero-thumbnail-2.jpg"
         alt="testing"
         containerClassname="-z-20 max-h-[100%]"
-        shadowClassname="before:bg-transparent sm:before:bg-hero-gradient to-45% sm:to-45% sm:to-35% bg-transparent"
+        shadowClassname="to-45% sm:to-35%"
       />
       <div
         className={cn(
           "flex flex-col grow relative justify-end gap-4",
-          "mt-[calc(var(--header-height)+2vw)] sm:mt-[calc(var(--header-height)+48px)]",
+          "mt-8 sm:mt-[calc(var(--header-height)+48px)]",
           "portrait:before:top-0 portrait:before:h-[35vw] portrait:before:min-h-[100px] portrait:before:content-['']",
           "landscape:mt-[calc(100vw*9/16-48px)] landscape:sm:mt-[calc(var(--header-height)+48px)]",
         )}
@@ -51,7 +51,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           className={cn(
             "space-y-2 lg:space-y-4 sm:w-3/4",
             "sm:max-w-[45ch]",
-            "md:max-w-[56ch]",
+            "lg:max-w-[56ch]",
             "xl:max-w-[64ch]",
             "2xl:max-w-[72ch]",
           )}
@@ -59,7 +59,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           <h1 className="text-left font-sans text-3xl font-bold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl text-balance">
             {title}
           </h1>
-          <p className="w-full text-left text-base md:text-lg font-light lg:text-lg text-balance line-clamp-4">
+          <p className="w-full text-left text-base md:text-lg font-light text-balance line-clamp-4">
             {description}
           </p>
         </div>

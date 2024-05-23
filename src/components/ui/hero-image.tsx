@@ -33,7 +33,7 @@ export const HeroImage = ({
       <div
         className={cn(
           "absolute -bottom-px left-0 z-0 h-[calc(100%+1px)] w-full bg-gradient-to-t from-muted-background to-50%",
-          " before:absolute before:left-0 before:top-0 before:h-full before:w-full before:bg-hero-gradient before:content-none sm:to-35% sm:before:content-['']",
+          " before:absolute before:left-0 before:top-0 before:h-full before:w-full before:bg-hero-gradient sm:to-35% before:content-['']",
           shadowClassname,
         )}
       />

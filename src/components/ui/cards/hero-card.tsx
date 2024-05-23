@@ -24,11 +24,12 @@ type HeroCardProps = {
     "title" | "slug" | "description" | "thumbnail"
   >;
   notFound?: boolean;
+  index: number;
 };
 
 const MotionButton = motion(Button);
 export const heroCardHeightProps =
-  "h-[83vw] max-h-[55vh] xs:h-[72vw] sm:h-[70vw]";
+  "h-[83vw] landscape:max-h-[55vh] sm:min-h-[450px] xs:h-[72vw] sm:h-[70vw]";
 
 const TRANSITION: Transition = {
   ease: "easeOut",
@@ -40,7 +41,7 @@ const SAFE_TO_REMOVE_MS: number =
   (IMAGE_ANIMATION_DURATION + TRANSITION.duration + DELAY_INCREMENT * 3) * 1000;
 
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
-  ({ className, program, notFound = false }, ref) => {
+  ({ className, index, program, notFound = false }, ref) => {
     const { isMobile } = useDeviceType();
     const [isPresent, safeToRemove] = usePresence();
 
@@ -143,7 +144,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
       >
         <motion.div
           className={cn(
-            "absolute left-0 top-0 -z-10 flex aspect-video max-h-[100vh] w-full sm:h-[135%]",
+            "absolute left-0 top-0 -z-10 flex aspect-video w-full sm:h-[135%]",
           )}
           variants={containerVariants}
         >
@@ -153,11 +154,13 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 ? "/images/program-not-found.jpg"
                 : thumbnail
                   ? getImageUrl(thumbnail)
-                  : "/images/hero-thumbnail-2.jpg"
+                  : index % 2 === 0
+                    ? "/images/hero-thumbnail-2.jpg"
+                    : "/images/hero-background.png"
             }
             alt="Hero background image"
-            containerClassname="h-full"
-            shadowClassname="sm:to-10%"
+            containerClassname="h-full min-h-[100%]"
+            shadowClassname="to-60% sm:to-35%"
           />
         </motion.div>
 
@@ -182,14 +185,13 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 isMobile: isMobile,
               }}
             >
-              {title}
+              {title ? title : "Advanced English Conversation"}
             </motion.h1>
             <motion.p
               className={cn(
-                "mb-2 line-clamp-3 w-full text-balance text-left text-sm text-foreground text-gray-800",
-                "sm:line-clamp-5 sm:text-base",
-                "lg:text-lg",
-                "2xl:text-lg",
+                "mb-2 line-clamp-3 w-full text-balance text-left text-base text-foreground text-gray-800",
+                "sm:line-clamp-4",
+                "md:text-lg",
               )}
               variants={subtitleVariants}
             >
