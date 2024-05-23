@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -15,6 +15,8 @@ const config = {
       padding: "2rem",
       screens: {
         "2xl": "1400px",
+        portrait: { raw: "(orientation:  portrait)" },
+        landscape: { raw: "(orientation: landscape)" },
       },
     },
 
