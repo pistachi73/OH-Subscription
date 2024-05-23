@@ -135,28 +135,30 @@ export const Chapter = ({ chapter }: ChapterProps) => {
                   exit="exit"
                 >
                   <motion.div
-                    className="mt-4 flex flex-col xs:flex-row gap-4"
+                    className="mt-4 flex flex-row gap-4"
                     variants={mobileContentVariants}
                   >
-                    <div
-                      className="relative block aspect-video w-full basis-full xs:basis-36 shrink-0"
-                      onMouseDown={(e) => e.stopPropagation()}
-                    >
-                      <Image
-                        src="/images/video-thumbnail.png"
-                        alt="video"
-                        fill
-                        className="rounded-sm object-cover"
-                      />
+                    <div className="w-full h-full basis-24 xs:basis-36 shrink-0">
+                      <div
+                        className="relative block aspect-video shrink-0 w-full"
+                        onMouseDown={(e) => e.stopPropagation()}
+                      >
+                        <Image
+                          src="/images/video-thumbnail.png"
+                          alt="video"
+                          fill
+                          className="rounded-sm object-cover"
+                        />
+                      </div>
                     </div>
                     <div className="overflow-hidden space-y-1">
                       <p className="xs:text-b text-sm  text-muted-foreground">
                         {updatedAt && format(updatedAt, "MMM dd, yyyy")}{" "}
-                        <span className="ml-3">{duration} min</span>
+                        <span className="ml-3 ">{duration} min</span>
                       </p>
-                      <motion.p className="text-base text-foreground line-clamp-2">
+                      <p className="text-base text-foreground line-clamp-3">
                         {description}
-                      </motion.p>
+                      </p>
                     </div>
                   </motion.div>
                 </motion.div>
