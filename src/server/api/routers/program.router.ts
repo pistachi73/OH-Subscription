@@ -351,8 +351,6 @@ export const programRouter = createTRPCRouter({
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input: { slug }, ctx }) => {
-      console.log({ slug });
-
       let programQuery = ctx.db
         .select({
           id: programs.id,

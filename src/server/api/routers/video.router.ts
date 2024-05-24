@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { and, eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -12,7 +12,7 @@ import { deleteFile } from "@/actions/delete-file";
 import { toKebabCase } from "@/lib/case-converters";
 import { isNumber } from "@/lib/utils";
 import { VideoSchema } from "@/schemas";
-import { videos } from "@/server/db/schema";
+import { videos, videosOnPrograms } from "@/server/db/schema";
 
 export const videoRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -109,15 +109,39 @@ export const videoRouter = createTRPCRouter({
     }),
 
   getBySlug: publicProcedure
-    .input(z.string())
-    .query(async ({ input: slug, ctx }) => {
+    .input(
+      z.object({ videoSlug: z.string(), programId: z.number().optional() }),
+    )
+    .query(async ({ input: { videoSlug, programId }, ctx }) => {
       const { db } = ctx;
 
-      const videoList = await db
-        .select()
+      console.log({
+        videoSlug,
+        programId,
+      });
+
+      let videoQuery = db
+        .select({
+          ...getTableColumns(videos),
+          chapterNumber: videosOnPrograms.chapterNumber,
+        })
         .from(videos)
-        .where(eq(videos.slug, slug));
-      const video = videoList?.[0];
+        .leftJoin(
+          videosOnPrograms,
+          and(eq(videos.id, videosOnPrograms.videoId)),
+        )
+        .$dynamic();
+
+      const whereCaluses = [eq(videos.slug, videoSlug)];
+      if (programId) {
+        whereCaluses.push(eq(videosOnPrograms.programId, programId));
+      }
+
+      videoQuery = videoQuery.where(and(...whereCaluses));
+
+      const res = await videoQuery.execute();
+      const video = res?.[0];
+
       return video;
     }),
 });

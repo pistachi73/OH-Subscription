@@ -29,7 +29,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
       className={cn(
         "relative overflow-hidden",
         "portrait:min-h-[auto]",
-        "landscape:flex landscape:flex-end landscape:min-h-[55vh]",
+        "landscape:flex landscape:flex-end landscape:min-h-[70vh]",
       )}
     >
       <div className="absolute -bottom-px left-0 -z-10 h-[calc(100%+1px)] w-full bg-gradient-to-t from-muted-background to-25%" />
@@ -90,6 +90,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           {firstChapterSlug && (
             <Button
               variant="default"
+              size="lg"
               className="w-full sm:w-fit text-sm sm:text-base h-10 sm:h-12"
               asChild
             >

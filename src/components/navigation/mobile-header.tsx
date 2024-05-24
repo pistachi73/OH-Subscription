@@ -1,6 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, X } from "lucide-react";
+import { LogIn, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
@@ -58,12 +58,13 @@ export const MobileHeader = () => {
           />
         </Link>
         <div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center">
             <Button
               size="icon"
               variant="ghost"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               name="search"
+              className="text-sm h-8 w-8"
             >
               {isSearchOpen ? <X size={16} /> : <Search size={16} />}
             </Button>
@@ -73,9 +74,9 @@ export const MobileHeader = () => {
                 variant="ghost"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 name="join"
-                className="text-sm"
+                className="text-sm h-8 w-8"
               >
-                Join
+                <LogIn size={16} />
               </Button>
             </AuthButton>
           </div>
