@@ -8,57 +8,51 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
-  Home,
   Share,
   User,
 } from "lucide-react";
 import { useState } from "react";
 
-import Link from "next/link";
-import { useParams } from "next/navigation";
-
 import { ChapterPlayList } from "./chapter-playlist";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { CardList } from "@/components/ui/cards/card-list";
 import { Community } from "@/components/ui/community/community";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { ShareButton } from "@/components/ui/share-button/share-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toSentenceCase } from "@/lib/case-converters";
+import { getBaseUrl } from "@/lib/get-url";
 import { cn } from "@/lib/utils";
+import type {
+  ProgramChapter,
+  ProgramSpotlight,
+} from "@/server/db/schema.types";
+import { Badge } from "../ui/badge";
+import { ChapterRelated } from "./chapter-related";
 
-export const Chapter = () => {
-  const params = useParams<{
-    programSlug: string;
-    programId: string;
-    chapterSlug: string;
-    chapterId: string;
-  }>();
+type ChapterProps = {
+  program: NonNullable<ProgramSpotlight>;
+  chapter: NonNullable<ProgramChapter>;
+};
 
+export const Chapter = ({ chapter, program }: ChapterProps) => {
   const [showPlaylist, setShowPlaylist] = useState(true);
-
   const { deviceType, deviceSize } = useDeviceType();
 
   return (
-    <MaxWidthWrapper className={cn("mt-4 max-w-[1400px]", "lg:mt-6")}>
+    <MaxWidthWrapper className={cn("mt-4 max-w-[1400px]", "lg:mt-8")}>
       <div
         className={cn(
           "mb-4 flex w-full flex-col justify-between gap-3",
           "sm:flex-row sm:items-center",
         )}
       >
-        <Breadcrumb className="flex">
+        <h1 className="text-2xl font-semibold tracking-tighter lg:text-3xl text-balance">
+          {program.title}
+        </h1>
+        <Button variant="ghost">Back to program</Button>
+        {/* <Breadcrumb className="flex">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
@@ -71,10 +65,8 @@ export const Chapter = () => {
 
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link
-                  href={`/program/${params.programSlug}/${params.programId}`}
-                >
-                  {toSentenceCase(params.programSlug)}
+                <Link href={`/programs/${program.slug}`}>
+                  {toSentenceCase(program.slug)}
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -82,11 +74,11 @@ export const Chapter = () => {
 
             <BreadcrumbItem>
               <BreadcrumbPage>
-                Episode 1: {toSentenceCase(params.chapterSlug)}
+                Episode {chapter.chapterNumber}: {toSentenceCase(chapter.slug)}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
-        </Breadcrumb>
+        </Breadcrumb> */}
       </div>
       <div
         className={clsx(
@@ -145,7 +137,10 @@ export const Chapter = () => {
               exit={{ opacity: 0, x: 10 }}
             >
               <div className="absolute right-0 top-0 z-0 h-full w-full  min-w-[310px]">
-                <ChapterPlayList />
+                <ChapterPlayList
+                  program={program}
+                  currentChapter={chapter.chapterNumber ?? 0}
+                />
               </div>
             </motion.div>
           )}
@@ -158,7 +153,7 @@ export const Chapter = () => {
         )}
       >
         <h2 className="text-lg font-medium tracking-tight lg:text-xl">
-          Episode 1 - Unlocking Vocabulary
+          Episode {chapter.chapterNumber} - {chapter.title}
         </h2>
         <div className="flex flex-row flex-wrap gap-2">
           <Button
@@ -177,26 +172,32 @@ export const Chapter = () => {
             Add to favorites
           </Button>
           <ShareButton
-            url="https://www.smarteditor.app"
+            url={`${getBaseUrl()}/programs/${program.slug}/chapters/${
+              chapter.slug
+            }`}
             title="Share this chapter"
             description={
               <span>
-                Check out this chapter from the program English around the world
+                Check out this chapter from the program{" "}
+                <b>English around the world</b>
               </span>
             }
-            videoTitle="Unlocking vocabulary learning Unlocking vocabulary learningg"
-            videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
+            videoTitle={chapter.title}
+            videoThumbnailUrl={
+              chapter.thumbnail ?? "/images/hero-thumbnail-2.jpg"
+            }
             config={{
               linkedin: true,
               facebook: true,
               link: true,
               twitter: {
-                title: "Unlocking vocabulary learning",
-                hashtags: "vocabulary, learning",
+                title: chapter.title,
+                hashtags: program.categories
+                  ?.map((category) => category.name)
+                  .join(","),
               },
               email: {
-                email: "gelo",
-                subject: "Check out this chapter",
+                subject: `Check out this chapter from ${program.title}`,
                 body: "I thought you might be interested in this chapter I found.",
               },
             }}
@@ -220,37 +221,39 @@ export const Chapter = () => {
       >
         <div className="w-full space-y-8 lg:space-y-12">
           <div className="space-y-3">
+            {}
             <div className="flex flex-row gap-4">
-              {Array.from({ length: 2 }).map((_, index) => (
-                <div key={index} className="flex flex-row items-center gap-2">
+              {program.teachers?.map((teacher, index) => (
+                <div
+                  key={teacher.name}
+                  className="flex flex-row items-center gap-2"
+                >
                   <Avatar className="h-6 w-6">
-                    <AvatarImage src={undefined} />
+                    <AvatarImage src={teacher.image ?? undefined} />
                     <AvatarFallback className="bg-muted">
                       <User className="text-muted-foreground" size={12} />
                     </AvatarFallback>
                   </Avatar>
-                  <p className="text-xs sm:text-sm">Jhon Doe</p>
+                  <p className="text-xs sm:text-sm">{teacher.name}</p>
                 </div>
               ))}
             </div>
             <p className="text-sm text-foreground sm:text-base">
-              Vocabulary is the cornerstone of effective communication. In this
-              chapter, students embark on a journey to expand their lexicon,
-              exploring strategies for learning new words, deciphering meanings
-              from context, and mastering techniques for retention and
-              application in both spoken and written language.
+              {chapter.description}
             </p>
-            <div className=" flex flex-row gap-1">
-              <p className="rounded-sm  bg-gray-800 px-[6px] py-1 text-xs text-white md:text-sm">
-                Grammar
-              </p>
-              <p className="rounded-sm  bg-gray-800 px-[6px] py-1 text-xs text-white md:text-sm">
-                Vocabulary
-              </p>
-              <p className="rounded-sm  bg-gray-800 px-[6px] py-1 text-xs text-white md:text-sm">
-                Quizz
-              </p>
-            </div>
+            {program.categories && (
+              <div className=" flex flex-row gap-1">
+                {program.categories.map((category) => (
+                  <Badge
+                    key={`category-${category.name}`}
+                    variant="secondary"
+                    className="text-xs sm:text-sm"
+                  >
+                    {category.name}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
           <Tabs defaultValue="community" className="w-full">
             <TabsList className="flex w-full items-center justify-center lg:mb-7 ">
@@ -261,7 +264,7 @@ export const Chapter = () => {
             </TabsList>
             <TabsContent value="transcript">
               <div className="rounded-md bg-accent/50 p-4">
-                <p className="text-sm sm:text-base">transcript</p>
+                <p className="text-sm sm:text-base">{chapter.transcript}</p>
               </div>
             </TabsContent>
 
@@ -270,19 +273,8 @@ export const Chapter = () => {
             </TabsContent>
           </Tabs>
         </div>
-        <div className="mt-16 space-y-4">
-          <h2 className="text-xl font-medium tracking-tight">
-            Related programs
-          </h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-1">
-            <CardList
-              cardsPerRow={{
-                xs: 1,
-                md: 2,
-                lg: 1,
-              }}
-            />
-          </div>
+        <div className="lg:mt-16 space-y-4">
+          <ChapterRelated program={program} />
         </div>
       </div>
     </MaxWidthWrapper>

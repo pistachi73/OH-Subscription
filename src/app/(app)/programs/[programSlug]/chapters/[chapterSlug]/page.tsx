@@ -1,4 +1,4 @@
-import { Chapter } from "@/components/chapter/chapter";
+import { Chapter } from "@/components/chapters/chapter";
 import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
 
@@ -29,7 +29,7 @@ const ChapterPage = async ({ params }: ChapterPageProps) => {
     redirect("/");
   }
 
-  return <Chapter />;
+  return <Chapter chapter={chapter} program={program} />;
 };
 
 export default ChapterPage;

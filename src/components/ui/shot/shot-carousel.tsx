@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 
 import {
   VerticalCarousel,
-  type VerticalCarouselApi,
   VerticalCarouselContent,
   VerticalCarouselItem,
   VerticalCarouselNext,
   VerticalCarouselPrevious,
+  type VerticalCarouselApi,
 } from "@/components/ui/vertical-carousel";
 import { cn } from "@/lib/utils";
 
@@ -41,7 +41,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
     <div
       className={cn(
         "relative",
-        "sm:h-[calc(100vh-var(--header-height))] sm:pt-4 sm:h-2",
+        "sm:h-[calc(100vh-var(--header-height))] sm:pt-4",
         "h-[calc(100dvh)]",
       )}
     >
