@@ -117,9 +117,9 @@ export const Chapter = ({ chapter }: ChapterProps) => {
                 </Link>
               </Button>
 
-              <div className="flex flex-col">
-                <p className="text-base font-medium">Episode {chapterNumber}</p>
-                <p className="text-base font-medium text-muted-foreground">
+              <div className="flex flex-col gap-px">
+                <p className="text-sm font-medium">Episode {chapterNumber}</p>
+                <p className="text-sm font-medium text-muted-foreground">
                   {title}
                 </p>
               </div>
@@ -152,11 +152,11 @@ export const Chapter = ({ chapter }: ChapterProps) => {
                       </div>
                     </div>
                     <div className="overflow-hidden space-y-1">
-                      <p className="xs:text-b text-sm  text-muted-foreground">
+                      <p className="xs:text-b text-xs  text-muted-foreground">
                         {updatedAt && format(updatedAt, "MMM dd, yyyy")}{" "}
-                        <span className="ml-3 ">{duration} min</span>
+                        <span className="ml-2 ">{duration} min</span>
                       </p>
-                      <p className="text-base text-foreground line-clamp-3">
+                      <p className="text-sm text-foreground line-clamp-3">
                         {description}
                       </p>
                     </div>

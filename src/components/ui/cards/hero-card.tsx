@@ -189,8 +189,8 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             </motion.h1>
             <motion.p
               className={cn(
-                "mb-2 line-clamp-3 w-full text-balance text-left text-base text-foreground text-gray-800",
-                "sm:line-clamp-4",
+                "mb-2 line-clamp-3 w-full text-balance text-left text-sm text-foreground text-gray-800",
+                "sm:line-clamp-4 sm:text-base",
                 "md:text-lg",
               )}
               variants={subtitleVariants}

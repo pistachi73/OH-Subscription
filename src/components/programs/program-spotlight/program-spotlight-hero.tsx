@@ -56,15 +56,15 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
             "2xl:max-w-[72ch]",
           )}
         >
-          <h1 className="text-left font-sans text-3xl font-bold leading-tight  tracking-tighter xs:text-3xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl text-balance">
+          <h1 className="text-left font-sans text-3xl font-bold leading-tight  tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl text-balance">
             {title}
           </h1>
-          <p className="w-full text-left text-base md:text-lg font-light text-balance line-clamp-4">
+          <p className="w-full text-left text-sm sm:text-base md:text-lg font-light text-balance line-clamp-4">
             {description}
           </p>
         </div>
 
-        <div className="flex flex-row gap-2 text-muted-foreground text-base md:text-lg touch-pan-x shrink-0 overflow-x-scroll no-scrollbar">
+        <div className="flex flex-row gap-2 text-muted-foreground text-sm sm:text-base md:text-lg touch-pan-x shrink-0 overflow-x-scroll no-scrollbar">
           {updatedAt && (
             <p className="flex flex-row items-center gap-1 shrink-0">
               <CalendarClock size={18} />
@@ -79,7 +79,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
             <Badge
               key={`category-${category.name}`}
               variant="secondary"
-              className="text-sm"
+              className="text-xs sm:text-sm"
             >
               {category.name}
             </Badge>
@@ -90,8 +90,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           {firstChapterSlug && (
             <Button
               variant="default"
-              size="lg"
-              className="w-full sm:w-fit text-sm sm:text-base"
+              className="w-full sm:w-fit text-sm sm:text-base h-10 sm:h-12"
               asChild
             >
               <Link href={`chapters/${firstChapterSlug}`}>
@@ -119,12 +118,20 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
                 },
               }}
             >
-              <Button variant="outline" size="lg" className="w-full sm:w-fit">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-fit text-sm sm:text-base h-10 sm:h-12"
+              >
                 <Share2 size={22} className="mr-2" />
                 Share
               </Button>
             </ShareButton>
-            <Button variant="outline" size="lg" className="w-full sm:w-fit">
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full sm:w-fit  text-sm sm:text-base h-10 sm:h-12"
+            >
               <Heart size={22} className="mr-2" />
               Add to favorites
             </Button>
