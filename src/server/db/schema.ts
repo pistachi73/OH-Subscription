@@ -1,5 +1,5 @@
 import type { AdapterAccount } from "@auth/core/adapters";
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -11,7 +11,6 @@ import {
   timestamp,
   unique,
 } from "drizzle-orm/pg-core";
-
 import { tsvector } from "./tsvector";
 
 /**
@@ -137,7 +136,6 @@ export const programs = pgTable(
   (table) => {
     return {
       programSlugIdx: index().on(table.slug),
-      documentIdx: index().on(table.document).using(sql`gin`),
     };
   },
 );
@@ -308,6 +306,43 @@ export const categoriesOnProgramsRelations = relations(
     }),
   }),
 );
+
+// ----------------- Comments -----------------
+
+export const comments = pgTable("comments", {
+  id: serial("id").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  programId: integer("programId").references(() => programs.id, {
+    onDelete: "cascade",
+  }),
+  videoId: integer("videoId").references(() => videos.id, {
+    onDelete: "cascade",
+  }),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" })
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
+export const replies = pgTable("replies", {
+  id: serial("id").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  commentId: integer("commentId")
+    .notNull()
+    .references(() => comments.id, {
+      onDelete: "cascade",
+    }),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" })
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
 
 // export type InsertUser = typeof users.$inferInsert;
 export type SelectTeacher = typeof teachers.$inferSelect;

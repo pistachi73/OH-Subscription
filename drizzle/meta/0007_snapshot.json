@@ -1,5 +1,5 @@
 {
-  "id": "9b4553d1-dc0c-4fc9-8507-9611f39dee7c",
+  "id": "0da8275e-47a5-4fa7-bdde-e95ed2cd9215",
   "prevId": "5daeff3a-2c00-40fd-8521-416a991ee433",
   "version": "6",
   "dialect": "postgresql",
@@ -295,7 +295,7 @@
         },
         "document": {
           "name": "document",
-          "type": "tsvector",
+          "type": "tsvector generated always as (to_tsvector('english', title || ' ' || description)) stored",
           "primaryKey": false,
           "notNull": false
         }
@@ -305,13 +305,6 @@
           "name": "programs_slug_index",
           "columns": [
             "slug"
-          ],
-          "isUnique": false
-        },
-        "programs_document_index": {
-          "name": "programs_document_index",
-          "columns": [
-            "document"
           ],
           "isUnique": false
         }
@@ -409,42 +402,6 @@
           ]
         }
       },
-      "uniqueConstraints": {}
-    },
-    "public.test": {
-      "name": "test",
-      "schema": "",
-      "columns": {
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "document": {
-          "name": "document",
-          "type": "tsvector generated always as (to_tsvector('english', title || ' ' || description)) stored",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "test_document_index": {
-          "name": "test_document_index",
-          "columns": [
-            "document"
-          ],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "public.twoFactorConfirmation": {
