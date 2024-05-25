@@ -158,3 +158,11 @@ export const CategorySchema = z.object({
   id: z.number().optional(),
   name: z.string().min(1, { message: "Name is required" }),
 });
+
+export const CommentSchema = z.object({
+  id: z.number().optional(),
+  content: z.string().min(1, { message: "Content is required" }),
+  videoId: z.number().optional(),
+  programId: z.number().optional(),
+  userId: z.string(),
+});
