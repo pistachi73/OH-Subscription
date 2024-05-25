@@ -144,7 +144,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
       >
         <motion.div
           className={cn(
-            "absolute left-0 top-0 -z-10 flex aspect-video w-full sm:h-[135%]",
+            "absolute left-0 top-0 -z-10 flex aspect-video w-full sm:h-[137%]",
           )}
           variants={containerVariants}
         >
@@ -160,7 +160,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             }
             alt="Hero background image"
             containerClassname="h-full min-h-[100%]"
-            shadowClassname="to-60% sm:to-35%"
+            shadowClassname="to-60% sm:to-10%"
           />
         </motion.div>
 

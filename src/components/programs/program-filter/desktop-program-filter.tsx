@@ -10,7 +10,7 @@ import {
   Search,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FilterBadgesList } from "./filter-badge";
 import { useFilteredPrograms } from "./filtered-programs-context";
@@ -18,13 +18,7 @@ import { useProgramFilters } from "./use-program-filters";
 import { getMappedOptions } from "./utils";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -50,6 +44,10 @@ export const DesktopProgramFilter = () => {
     clearFilters,
     handleSearchKeypress,
   } = useProgramFilters();
+
+  useEffect(() => {
+    setSearchInput(search ?? "");
+  }, [search]);
 
   const [searchInput, setSearchInput] = useState(search ?? "");
 
@@ -80,7 +78,7 @@ export const DesktopProgramFilter = () => {
               }
             }}
             className="h-10 w-full  bg-transparent px-0 py-0 pl-10 text-sm ease-out"
-            disabled={isFiltering}
+            // disabled={isFiltering}
             value={searchInput}
           />
         </div>
@@ -100,7 +98,7 @@ export const DesktopProgramFilter = () => {
                   variant="outline"
                   size="sm"
                   className="flex h-10  grow justify-between gap-2"
-                  disabled={isFiltering}
+                  // disabled={isFiltering}
                 >
                   <div className="flex shrink items-center overflow-hidden text-ellipsis">
                     <BookUser className="mr-2 h-4 w-4 shrink-0" />
@@ -141,7 +139,7 @@ export const DesktopProgramFilter = () => {
                   variant="outline"
                   size="sm"
                   className="flex h-10  grow justify-between"
-                  disabled={isFiltering}
+                  // disabled={isFiltering}
                 >
                   <div className="flex items-center space-x-2">
                     <TrendingUp className="mr-2 h-4 w-4" />
@@ -180,7 +178,7 @@ export const DesktopProgramFilter = () => {
                   variant="outline"
                   size="sm"
                   className="flex h-10  grow justify-between"
-                  disabled={isFiltering}
+                  // disabled={isFiltering}
                 >
                   <div className="flex items-center space-x-2">
                     <Layers3 className="mr-2 h-4 w-4" />

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { DesktopHeader } from "./desktop-header";
 import { useCanRenderHeader } from "./helpers";
 import { MobileHeader } from "./mobile-header";

@@ -1,8 +1,5 @@
 "use client";
 
-import clsx from "clsx";
-import { AnimatePresence, motion } from "framer-motion";
-import { LogIn, Search, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
@@ -10,59 +7,52 @@ import Link from "next/link";
 
 import { AuthButton } from "../auth/auth-button";
 import { UserButton } from "../auth/user-button";
-import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 import { headerNavItems } from "./helpers";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { DeviceOnly } from "@/components/ui/device-only/device-only";
 import { SearchInput } from "@/components/ui/search-input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 export const DesktopHeader = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
   const user = useCurrentUser();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { deviceType } = useDeviceType();
-  const [isScrolled, setIsScrolled] = useState(true);
+  const segment = useSelectedLayoutSegment();
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const offset = window.scrollY;
-  //     if (offset > 10) {
-  //       setIsScrolled(true);
-  //     } else {
-  //       setIsScrolled(false);
-  //     }
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <header className={cn("sticky top-0 z-50 h-header")}>
+    <header
+      className={cn(
+        "sticky top-0 z-50 h-12 lg:h-14 border-b",
+        isScrolled
+          ? "bg-muted-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
+          : "border-transparent [transition:background-color_500ms,border-color_300ms]",
+      )}
+    >
       <MaxWidthWrapper
-        className={clsx(
-          "relative flex h-full items-center justify-center gap-4 transition-colors duration-200",
-          {
-            "bg-gradient-to-b from-background/70 to-transparent": !isScrolled,
-            "bg-transparent": isScrolled,
-          },
+        as="nav"
+        className={cn(
+          "w-full relative flex h-full items-center justify-between  gap-4 transition-colors duration-200",
         )}
       >
-        <nav
-          className={cn(
-            "relative flex h-full flex-row items-center gap-14 rounded-sm px-4 py-1 transition-all duration-300 ease-out",
-            {
-              "bg-background": isScrolled,
-              "rounded-b-none": isSearchOpen,
-              "shadow-md sm:translate-y-2": isScrolled,
-            },
-          )}
-        >
+        <div className="flex flex-row gap-4 items-center">
           <Link href="/">
             <Image
               src={"/images/oh-logo.png"}
@@ -72,65 +62,32 @@ export const DesktopHeader = () => {
             />
           </Link>
 
-          <ul className="flex h-full items-center gap-1">
+          <ul className="flex h-full items-center">
             {headerNavItems.map((item) => (
               <li key={item.title}>
-                <NavButton>
+                <NavButton
+                  isActive={
+                    segment ? item.href.includes(segment) : item.href === "/"
+                  }
+                >
                   <Link href={item.href}>{item.title}</Link>
                 </NavButton>
               </li>
             ))}
           </ul>
-          <AnimatePresence mode="wait">
-            {isSearchOpen && (
-              <motion.div
-                className="absolute left-0 top-full w-full overflow-hidden rounded-b-sm bg-accent shadow-sm"
-                initial={{ opacity: 1, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 1, height: 0 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              >
-                <div className="p-3">
-                  <SearchInput
-                    autoFocus
-                    onBlur={() => {
-                      setIsSearchOpen(false);
-                    }}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <div className="flex h-full flex-row items-center gap-1">
-            <NavButton
-              onClick={() => {
-                isSearchOpen && setIsSearchOpen(false);
-                setIsSearchOpen(!isSearchOpen);
-              }}
-              justIcon
-              name="search"
-            >
-              {isSearchOpen ? <X size={20} /> : <Search size={20} />}
-            </NavButton>
+        </div>
 
-            {user ? (
-              <UserButton user={user} />
-            ) : (
-              <>
-                <AuthButton asChild mode="modal" formType="login">
-                  <NavButton justIcon={deviceType === "tablet"}>
-                    {deviceType === "tablet" ? <LogIn /> : "Join"}
-                  </NavButton>
-                </AuthButton>
-                <DeviceOnly allowedDevices={"desktop"}>
-                  <AuthButton asChild mode="modal" formType="register">
-                    <NavButton>Sign in</NavButton>
-                  </AuthButton>
-                </DeviceOnly>
-              </>
-            )}
-          </div>
-        </nav>
+        <div className="flex h-full flex-row items-center ">
+          <SearchInput placeholder="Title, description" />
+
+          {user ? (
+            <UserButton user={user} />
+          ) : (
+            <AuthButton asChild mode="modal" formType="login">
+              <NavButton className="pr-0">Get started</NavButton>
+            </AuthButton>
+          )}
+        </div>
       </MaxWidthWrapper>
     </header>
   );
@@ -138,17 +95,20 @@ export const DesktopHeader = () => {
 
 const NavButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { justIcon?: boolean }
->(({ children, className, justIcon, ...rest }, ref) => {
+  ButtonProps & { justIcon?: boolean; isActive?: boolean }
+>(({ children, className, justIcon, isActive = false, ...rest }, ref) => {
   return (
     <Button
       ref={ref}
       className={cn(
-        "font-medium text-foreground hover:bg-primary hover:text-primary-foreground",
-        { "h-9 w-9 px-2": justIcon, "px-3": !justIcon },
+        "text-xs lg:text-sm text-shadow-lg font-normal hover:no-underline",
+        isActive
+          ? "text-foreground font-medium"
+          : "text-foreground/80 hover:text-foreground/60",
+        justIcon ? "h-9 w-9 px-2" : "px-3",
         className,
       )}
-      variant="ghost"
+      variant="link"
       size="sm"
       {...rest}
     >

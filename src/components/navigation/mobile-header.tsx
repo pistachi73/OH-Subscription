@@ -1,13 +1,11 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
-import { LogIn, Search, X } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { regularEase } from "../../lib/animation";
 import { AuthButton } from "../auth/auth-button";
 import { Button } from "../ui/button";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
@@ -39,14 +37,12 @@ export const MobileHeader = () => {
 
   return (
     <nav className="relative">
+      <div className="h-12 block w-full" />
       <MaxWidthWrapper
         as="section"
         className={cn(
-          "fixed top-0 z-50 flex h-header w-full items-center justify-between border-b transition-transform duration-300",
+          "fixed top-0 z-50 flex h-12 w-full items-center bg-muted-background border-b border-accent justify-between gap-4 transition-all duration-300",
           visible ? "translate-y-0" : "-translate-y-full",
-          // "bg-gradient-to-b from-background to-transparent",
-          // "bg-gradient-to-b from-background to-transparent",
-          "bg-background",
         )}
       >
         <Link href="/">
@@ -57,49 +53,19 @@ export const MobileHeader = () => {
             height={40}
           />
         </Link>
-        <div>
-          <div className="flex items-center">
+        <div className="flex items-center grow justify-end">
+          <SearchInput openWidth="w-full" className="h-9 text-2xs" />
+          <AuthButton asChild mode="modal" formType="login">
             <Button
               size="icon"
               variant="ghost"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              name="search"
+              name="join"
               className="text-sm h-8 w-8"
             >
-              {isSearchOpen ? <X size={16} /> : <Search size={16} />}
+              <LogIn size={16} />
             </Button>
-            <AuthButton asChild mode="modal" formType="login">
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                name="join"
-                className="text-sm h-8 w-8"
-              >
-                <LogIn size={16} />
-              </Button>
-            </AuthButton>
-          </div>
-          <AnimatePresence mode="wait">
-            {isSearchOpen && (
-              <motion.div
-                className="absolute left-0 top-full w-full overflow-y-clip overflow-x-visible rounded-b-sm bg-accent shadow-sm"
-                initial={{ opacity: 1, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 1, height: 0 }}
-                transition={{ duration: 0.2, ease: regularEase }}
-              >
-                <div className="p-3">
-                  <SearchInput
-                    autoFocus
-                    onBlur={() => {
-                      setIsSearchOpen(false);
-                    }}
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </AuthButton>
         </div>
       </MaxWidthWrapper>
       <MaxWidthWrapper

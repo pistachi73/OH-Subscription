@@ -6,24 +6,16 @@ import { useDeviceType } from "@/components/ui/device-only/device-only-provider"
 
 export const headerNavItems = [
   {
+    title: "Home",
+    href: "/",
+  },
+  {
     title: "Programs",
     href: "/programs",
   },
   {
     title: "Shots",
     href: "/shots",
-  },
-  {
-    title: "Coaching",
-    href: "/",
-  },
-  {
-    title: "Our clubs",
-    href: "/",
-  },
-  {
-    title: "Podcast",
-    href: "/",
   },
 ];
 

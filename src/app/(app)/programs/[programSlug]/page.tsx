@@ -8,6 +8,11 @@ type ProgramsPageProps = {
   };
 };
 
+export const metadata = {
+  title: "Programs",
+  description: "Programs",
+};
+
 const ProgramsPage = async ({ params }: ProgramsPageProps) => {
   const program = await api.program.getBySlug.query({
     slug: params.programSlug,

@@ -10,7 +10,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/server/db/migrate.ts",
     "db:studio": "drizzle-kit studio",
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "start": "next start",
     "prod": "next build && next start",
     "email": "email dev --dir src/emails --port 4000"

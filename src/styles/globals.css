@@ -26,7 +26,7 @@
       --ring: 232 34% 35%;
       --radius: 0.5rem;
 
-      --header-height: 48px;
+      --header-height: 68px;
       --muted-background: 228 100% 99%;
     }
 
@@ -161,11 +161,7 @@
   }
 
   .header-translate {
-    transform: translateY(var(--header-height));
-
-    @media (min-width: 640px) {
-      transform: translateY(calc(var(--header-height) * -1));
-    }
+    @apply sm:-translate-y-12 lg:-translate-y-14;
   }
 
   .no-scrollbar::-webkit-scrollbar {

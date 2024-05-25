@@ -17,13 +17,8 @@ export const Programs = () => {
   return (
     <>
       <div className={cn("relative z-0 mb-12 sm:mb-28", heroCardHeightProps)}>
-        <AnimatePresence mode="popLayout" initial={false}>
-          {firstProgram ? (
-            <HeroCard
-              key={`hero-card-${firstProgram?.id}`}
-              program={firstProgram}
-            />
-          ) : (
+        <AnimatePresence mode="wait">
+          {!firstProgram && (
             <HeroCard
               key="hero-card-not-found"
               program={{
@@ -34,6 +29,14 @@ export const Programs = () => {
                 thumbnail: null,
               }}
               notFound={true}
+            />
+          )}
+        </AnimatePresence>
+        <AnimatePresence initial={false}>
+          {firstProgram && (
+            <HeroCard
+              key={`hero-card-${firstProgram?.id}`}
+              program={firstProgram}
             />
           )}
         </AnimatePresence>
