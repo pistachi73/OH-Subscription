@@ -81,7 +81,9 @@ export const DesktopHeader = () => {
           <SearchInput placeholder="Title, description" />
 
           {user ? (
-            <UserButton user={user} />
+            <div className="ml-2 flex gap-1 items-center h-9">
+              <UserButton user={user} />
+            </div>
           ) : (
             <AuthButton asChild mode="modal" formType="login">
               <NavButton className="pr-0">Get started</NavButton>

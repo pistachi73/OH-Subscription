@@ -37,12 +37,12 @@ export const mobileNavItems = [
   },
   {
     title: "Coaching",
-    href: "/",
+    href: "/coaching/",
     icon: Speech,
   },
   {
     title: "Podcast",
-    href: "/",
+    href: "/podcast/",
     icon: Mic,
   },
 ] as const;

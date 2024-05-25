@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 import { AuthButton } from "../auth/auth-button";
 import { Button } from "../ui/button";
@@ -13,10 +13,15 @@ import { SearchInput } from "../ui/search-input";
 
 import { mobileNavItems } from "./helpers";
 
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { UserButton } from "../auth/user-button";
 
 export const MobileHeader = () => {
-  const pathname = usePathname();
+  const user = useCurrentUser();
+  const segment = useSelectedLayoutSegment();
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [position, setPosition] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -55,46 +60,56 @@ export const MobileHeader = () => {
         </Link>
         <div className="flex items-center grow justify-end">
           <SearchInput openWidth="w-full" className="h-9 text-2xs" />
-          <AuthButton asChild mode="modal" formType="login">
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              name="join"
-              className="text-sm h-8 w-8"
-            >
-              <LogIn size={16} />
-            </Button>
-          </AuthButton>
+
+          {user ? (
+            <div className="ml-2">
+              <UserButton user={user} />
+            </div>
+          ) : (
+            <AuthButton asChild mode="modal" formType="login">
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                name="join"
+                className="text-sm h-8 w-8"
+              >
+                <LogIn size={16} />
+              </Button>
+            </AuthButton>
+          )}
         </div>
       </MaxWidthWrapper>
-      <MaxWidthWrapper
-        as="ol"
-        className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1"
-      >
+      <ol className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1">
         {mobileNavItems.map(({ href, title, icon: Icon }) => {
-          const isActive = pathname === href;
+          const isActive = segment ? href.includes(segment) : href === "/";
           return (
             <li
               key={title}
               className={cn(
                 "relative flex basis-1/5 items-center justify-center pt-2 transition-colors",
-                isActive ? "text-foreground" : "text-muted-foreground",
+                isActive ? "text-foreground" : "text-muted-foreground ",
               )}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="mobile-nav-active-underline"
+                  className="absolute top-0 w-full bg-foreground h-px z-10"
+                />
+              )}
               <Link
                 href={href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-px",
                 )}
               >
-                <Icon size={24} strokeWidth={1} />
+                <Icon size={24} strokeWidth={isActive ? 1.5 : 1} />
                 <span className="text-2xs">{title}</span>
               </Link>
             </li>
           );
         })}
-      </MaxWidthWrapper>
+      </ol>
     </nav>
   );
 };

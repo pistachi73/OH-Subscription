@@ -13,15 +13,15 @@ import type { ExtendedUser } from "@/next-auth";
 export const UserButton = ({ user }: { user: ExtendedUser }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar>
-          <AvatarImage src={user?.image || undefined} />
-          <AvatarFallback className="bg-sky-500">
-            <User className="text-white" />
+      <DropdownMenuTrigger className="flex flex-row gap-1 items-center h-9">
+        <Avatar className="h-9 w-9">
+          <AvatarImage src={user?.image || "/images/avatar-placeholder.png"} />
+          <AvatarFallback className="bg-accent">
+            <User className="text-muted-foreground" size={18} />
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="">
+      <DropdownMenuContent align="end" sideOffset={4} className="">
         <LogoutButton>
           <DropdownMenuItem>
             <LogOut className="mr-2 h-4 w-4" />
