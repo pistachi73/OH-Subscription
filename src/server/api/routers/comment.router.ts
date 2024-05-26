@@ -102,7 +102,6 @@ export const commentRouter = createTRPCRouter({
         })
         .from(comments)
         .leftJoin(users, eq(users.id, comments.userId))
-        .where(eq(comments.programId, programId))
         .$dynamic();
 
       const whereClauses = [eq(comments.programId, programId)];
