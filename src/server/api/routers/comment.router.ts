@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -14,22 +14,22 @@ import { comments, users } from "@/server/db/schema";
 import { withLimit } from "../query-utils/shared.query";
 
 export const commentRouter = createTRPCRouter({
-  delete: adminProtectedProcedure
-    .input(z.number())
-    .mutation(async ({ input: id, ctx }) => {
+  delete: publicProcedure
+    .input(z.object({ commentId: z.number() }))
+    .mutation(async ({ input: { commentId }, ctx }) => {
       const { db } = ctx;
-      if (!id || !isNumber(id)) {
+      if (!isNumber(commentId)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "comment ID is required",
+          message: "Comment ID is required",
         });
       }
 
-      await db.delete(comments).where(eq(comments.id, id));
+      await db.delete(comments).where(eq(comments.id, commentId));
 
       return { success: true };
     }),
-  create: adminProtectedProcedure
+  create: publicProcedure
     .input(CommentSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
@@ -81,8 +81,14 @@ export const commentRouter = createTRPCRouter({
   }),
 
   getByProgramId: publicProcedure
-    .input(z.object({ programId: z.number(), limit: z.number().optional() }))
-    .query(async ({ input: { programId, limit }, ctx }) => {
+    .input(
+      z.object({
+        programId: z.number(),
+        cursor: z.number().optional(),
+        pageSize: z.number().optional(),
+      }),
+    )
+    .query(async ({ input: { programId, cursor, pageSize }, ctx }) => {
       let commentsQuery = ctx.db
         .select({
           id: comments.id,
@@ -99,11 +105,23 @@ export const commentRouter = createTRPCRouter({
         .where(eq(comments.programId, programId))
         .$dynamic();
 
-      if (limit) {
-        commentsQuery = withLimit(commentsQuery, limit);
+      const whereClauses = [eq(comments.programId, programId)];
+      if (cursor) {
+        whereClauses.push(gt(comments.id, cursor));
       }
 
-      return await commentsQuery.execute();
+      commentsQuery = commentsQuery.where(and(...whereClauses));
+
+      if (pageSize) {
+        commentsQuery = withLimit(commentsQuery, pageSize);
+      }
+
+      const res = await commentsQuery.execute();
+
+      return {
+        comments: res,
+        nextCursor: res[res.length - 1]?.id ?? null,
+      };
     }),
 
   getByVideoId: publicProcedure
