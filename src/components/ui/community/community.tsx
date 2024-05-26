@@ -72,7 +72,7 @@ export const Community = () => {
           />
         </div>
         <Comment />
-        <Comment isReply></Comment>
+        <Comment isReply />
         <Comment />
         <div className="flex w-full items-center">
           <Button variant="ghost" size="sm" className=" w-fit">

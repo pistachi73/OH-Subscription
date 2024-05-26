@@ -1,20 +1,18 @@
 "use client";
 
-import { ChevronDown, User } from "lucide-react";
-import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useMemo } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 import { Button } from "../../ui/button";
-import { AddComment } from "../../ui/community/add-comment";
-import { Comment } from "../../ui/community/comment";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../ui/dropdown-menu";
+import { AddComment } from "../../ui/comments/add-comment";
+import { Comment } from "../../ui/comments/comment";
 
+import { FirstToComment } from "@/components/ui/comments/first-to-comment";
+import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
+import { UserAvatar } from "@/components/ui/user-avatar";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
+import { api } from "@/trpc/react";
 import { RelatedPrograms } from "./program-related";
 
 type ProgramCommunityProps = {
@@ -22,14 +20,45 @@ type ProgramCommunityProps = {
 };
 
 export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
-  const [sort, setSort] = useState("Sort");
+  const user = useCurrentUser();
+  const apiUtils = api.useUtils();
+
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    api.comment.getByProgramId.useInfiniteQuery(
+      {
+        programId: program.id,
+        pageSize: 1,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      },
+    );
+
+  const { mutateAsync: addComment } = api.comment.create.useMutation({
+    onSuccess: () => {
+      apiUtils.comment.getByProgramId.invalidate();
+    },
+  });
+
+  const onComment = async (content: string) => {
+    if (!user.id) return;
+
+    await addComment({
+      userId: user.id,
+      programId: program.id,
+      content,
+    });
+  };
+
+  const comments = useMemo(() => {
+    return data?.pages.flatMap((page) => page.comments);
+  }, [data]);
 
   return (
     <div className="my-8 w-full sm:mt-12">
       <div className="mb-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-medium sm:text-xl">Discussion (20)</h2>
-
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
@@ -63,26 +92,45 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
               Most liked
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
       <div className="w-full max-w-[750px] space-y-4">
         <div className="flex flex-row gap-3">
-          <Avatar className="h-11 w-11 border border-gray-800 first:ml-0 hover:bg-gray-400 sm:h-12 sm:w-12">
-            <AvatarImage src={undefined} />
-            <AvatarFallback className="bg-white">
-              <User className="text-gray-800" size={22} />
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar userImage={user.image} userName={user.name} />
           <AddComment
             placeholder="Add your comment..."
             containerClassName="w-full"
-            className="min-h-[200px]"
             commentLabel="Comment"
+            onComment={onComment}
           />
         </div>
-        <Comment />
-        <Comment isReply />
-        <Comment />
+
+        {isLoading ? (
+          <SkeletonComment />
+        ) : !comments?.length ? (
+          <FirstToComment />
+        ) : (
+          comments?.map((comment) => (
+            <Comment key={comment.id} comment={comment} />
+          ))
+        )}
+
+        {!isLoading && comments?.length !== 0 && (
+          <div className="flex justify-center w-full mt-4">
+            <Button
+              type="button"
+              variant={"ghost"}
+              size="sm"
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}
+            >
+              {isFetchingNextPage && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Load more
+            </Button>
+          </div>
+        )}
       </div>
 
       <RelatedPrograms program={program} />

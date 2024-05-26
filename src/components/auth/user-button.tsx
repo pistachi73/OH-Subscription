@@ -7,8 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import type { ExtendedUser } from "@/next-auth";
-import { UserAvatar } from "../ui/user-avatar";
 
 export const UserButton = ({ user }: { user: ExtendedUser }) => {
   return (
