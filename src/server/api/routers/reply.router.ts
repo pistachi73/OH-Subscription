@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, lt } from "drizzle-orm";
+import { and, count, desc, eq, lt } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -91,7 +91,7 @@ export const replyRouter = createTRPCRouter({
       const { commentId, pageSize, cursor } = input;
 
       let replyQuery = ctx.db
-        .select({
+        .selectDistinctOn([replies.updatedAt], {
           id: replies.id,
           content: replies.content,
           updatedAt: replies.updatedAt,
@@ -118,10 +118,30 @@ export const replyRouter = createTRPCRouter({
       }
 
       const res = await replyQuery.execute();
+      let nextCursor = res.length ? res?.[res.length - 1]?.updatedAt : null;
+
+      if (nextCursor) {
+        const nextCursorCount = await ctx.db
+          .select({ count: count(replies.id) })
+          .from(replies)
+          .where(
+            and(
+              eq(replies.commentId, commentId),
+              lt(replies.updatedAt, nextCursor),
+            ),
+          )
+          .orderBy(desc(replies.updatedAt))
+          .groupBy(replies.updatedAt)
+          .execute();
+
+        if (!nextCursorCount[0]?.count) {
+          nextCursor = null;
+        }
+      }
 
       return {
         replies: res,
-        nextCursor: res.length ? res?.[res.length - 1]?.updatedAt : null,
+        nextCursor,
       };
     }),
   getById: publicProcedure

@@ -1,13 +1,13 @@
 "use client";
 
 import "@github/relative-time-element";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Edit,
   EllipsisVertical,
   Heart,
   Loader2,
-  Reply,
+  ReplyIcon,
   Trash,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -26,54 +26,26 @@ import { cn } from "@/lib/utils";
 import type { Comment as CommentData } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
 import { UserAvatar } from "../user-avatar";
+import { Reply } from "./reply";
 import { SkeletonComment } from "./skeleton-comment";
 
+export const COMMENTS_PAGE_SIZE = 2;
+
 type CommentProps = {
-  userId?: string;
-  parentCommentId?: string;
-  commendId?: string;
-  isReply?: boolean;
   comment?: CommentData;
+  programId?: number;
+  videoId?: number;
 };
 
-export const Comment = ({ isReply, comment }: CommentProps) => {
+export const Comment = ({ comment, programId, videoId }: CommentProps) => {
   const user = useCurrentUser();
   const apiUtils = api.useUtils();
   const [showAddReply, setShowAddReply] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
-  const [addedReplies, setAddedReplies] = useState<CommentData[]>([]);
-
-  const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
-    api.comment.delete.useMutation({
-      onSuccess: () => {
-        apiUtils.comment.getByProgramId.invalidate();
-      },
-    });
-
-  const { mutateAsync: addReply } = api.reply.create.useMutation({
-    onSuccess: ({ reply }) => {
-      setShowAddReply(false);
-      if (reply) {
-        setAddedReplies((current) => [
-          {
-            ...reply,
-            user: {
-              id: user.id as string,
-              name: user.name as string,
-              image: user.image ?? null,
-            },
-          },
-          ...current,
-        ]);
-      }
-      setShowReplies(true);
-    },
-  });
 
   const {
-    data,
-    isFetching: isFetchingReplies,
-    isLoading: isLoadingReplies,
+    data: repliesData,
+    isInitialLoading: isInitialLoadingReplies,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
@@ -81,16 +53,67 @@ export const Comment = ({ isReply, comment }: CommentProps) => {
     {
       //NEEDS TO BE FIXED
       commentId: comment?.id ?? 0,
-      pageSize: 2,
+      pageSize: COMMENTS_PAGE_SIZE,
     },
     {
       enabled: false,
-      getNextPageParam: (lastPage) => {
-        console.log({ lastPage });
-        return lastPage.nextCursor;
-      },
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
   );
+
+  const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
+    api.comment.delete.useMutation({
+      onSuccess: () => {
+        programId &&
+          apiUtils.comment.getByProgramIdOrVideoId.invalidate({
+            ...(programId && { programId }),
+            ...(videoId && { videoId }),
+            pageSize: COMMENTS_PAGE_SIZE,
+          });
+      },
+    });
+  const { mutateAsync: addReply } = api.reply.create.useMutation({
+    onSuccess: ({ reply }) => {
+      setShowAddReply(false);
+      setShowReplies(true);
+
+      const newReply = reply
+        ? {
+            ...reply,
+            user: {
+              id: user.id as string,
+              name: user.name as string,
+              image: user.image ?? null,
+            },
+          }
+        : null;
+
+      apiUtils.reply.getByCommentId.setInfiniteData(
+        { commentId: comment?.id ?? 0, pageSize: COMMENTS_PAGE_SIZE },
+        (data) => {
+          if (!newReply) return data;
+          return {
+            pages: [
+              {
+                replies: [newReply],
+                nextCursor: Number(comment?.totalReplies)
+                  ? newReply.updatedAt
+                  : null,
+              },
+              ...(data?.pages ?? []),
+            ],
+            pageParams: data?.pageParams ?? [],
+          };
+        },
+      );
+
+      apiUtils.comment.getByProgramIdOrVideoId.invalidate({
+        pageSize: COMMENTS_PAGE_SIZE,
+        ...(programId && { programId }),
+        ...(videoId && { videoId }),
+      });
+    },
+  });
 
   const onCommentDelete = async () => {
     if (!comment?.id) return;
@@ -110,21 +133,21 @@ export const Comment = ({ isReply, comment }: CommentProps) => {
     });
   };
 
-  const isUserComment = user.id === comment?.user?.id;
+  const isUserComment = useMemo(
+    () => user.id === comment?.user?.id,
+    [comment, user],
+  );
 
-  const replies = useMemo(() => {
-    return [
-      ...addedReplies,
-      ...(data?.pages.flatMap((page) => page.replies) ?? []),
-    ];
-  }, [data, addedReplies]);
+  const replies = useMemo(
+    () => repliesData?.pages.flatMap((page) => page.replies),
+    [repliesData],
+  );
 
   return (
     <>
       <div
         className={cn(
           "transition-opacity",
-          isReply && "flex-end flex w-full flex-col items-end ",
           isDeletingComment && "opacity-50 pointer-events-none",
         )}
       >
@@ -132,10 +155,6 @@ export const Comment = ({ isReply, comment }: CommentProps) => {
           className={cn(
             "relative flex w-full flex-col gap-2  rounded-md border border-input bg-background p-4",
             "sm:gap-3",
-            {
-              "w-11/12 justify-end sm:w-4/5": isReply,
-              "w-full": !isReply,
-            },
           )}
         >
           {isUserComment && (
@@ -196,103 +215,87 @@ export const Comment = ({ isReply, comment }: CommentProps) => {
               className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
             >
               <Heart size={16} className="sm:mr-2" />
-
               <span className="hidden sm:inline">11 Likes</span>
             </Button>
-            {!isReply && (
-              <>
-                <Button
-                  variant="ghost"
-                  className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
-                  onClick={() => {
-                    setShowAddReply(!showAddReply);
-                  }}
-                >
-                  <Reply size={16} className="sm:mr-2 " />
-                  <span className="hidden sm:inline">Reply</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
-                  onClick={() => {
-                    if (!showReplies && !data?.pages) {
-                      fetchNextPage();
-                    }
-                    setShowReplies(!showReplies);
-                  }}
-                >
-                  {showReplies ? "Hide replies" : "Show replies (2)"}
-                </Button>
-              </>
-            )}
+            <Button
+              variant="ghost"
+              className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
+              onClick={() => {
+                setShowAddReply(!showAddReply);
+              }}
+            >
+              <ReplyIcon size={16} className="sm:mr-2 " />
+              <span className="hidden sm:inline">Reply</span>
+            </Button>
+            {Number(comment?.totalReplies) ? (
+              <Button
+                variant="ghost"
+                className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
+                onClick={() => {
+                  if (!showReplies && !repliesData?.pages) {
+                    fetchNextPage();
+                  }
+                  setShowReplies(!showReplies);
+                }}
+              >
+                {showReplies
+                  ? "Hide replies"
+                  : `Show replies (${comment?.totalReplies})`}
+              </Button>
+            ) : null}
           </div>
         </div>
-        <AnimatePresence initial={false}>
-          {showAddReply && (
-            <motion.div
-              variants={{
-                animate: {
-                  opacity: 1,
-                  y: 0,
-                  height: "auto",
-                  transition: {
-                    ease: regularEase,
-                    duration: 0.3,
-                    opacity: { delay: 0.25, duration: 0.1 },
-                    y: { delay: 0.25 },
-                  },
-                },
-                exit: {
-                  opacity: 0,
-                  height: 0,
-                  y: -8,
-                  transition: {
-                    duration: 0.3,
-                    ease: regularEase,
-                    height: { delay: 0.25 },
-                    opacity: { duration: 0.1 },
-                  },
-                },
+        {showAddReply && (
+          <motion.div
+            animate={{
+              opacity: 1,
+              y: 0,
+              height: "auto",
+              transition: {
+                ease: regularEase,
+                duration: 0.3,
+                opacity: { delay: 0.25, duration: 0.1 },
+                y: { delay: 0.25 },
+              },
+            }}
+            initial={{ opacity: 0, y: -8, height: 0 }}
+            className="w-full"
+          >
+            <AddComment
+              containerClassName="pt-4"
+              autoFocus
+              onCancel={() => {
+                setShowAddReply(false);
               }}
-              initial="exit"
-              animate="animate"
-              exit="exit"
-              className={cn({
-                "w-11/12 justify-end sm:w-4/5": isReply,
-                "w-full": !isReply,
-              })}
-            >
-              <AddComment
-                containerClassName="pt-4"
-                autoFocus
-                onCancel={() => {
-                  setShowAddReply(false);
-                }}
-                commentLabel="Reply"
-                cancelLabel="Cancel"
-                placeholder="Add your reply..."
-                onComment={onReply}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+              commentLabel="Reply"
+              cancelLabel="Cancel"
+              placeholder="Add your reply..."
+              onComment={onReply}
+            />
+          </motion.div>
+        )}
       </div>
       {showReplies && (
         <>
-          {isFetchingReplies && isLoadingReplies && <SkeletonComment isReply />}
-          {replies.map((reply) => (
-            <Comment key={`reply-${reply.id}`} isReply comment={reply} />
+          {isInitialLoadingReplies && <SkeletonComment isReply />}
+          {replies?.map((reply) => (
+            <Reply
+              key={`reply-${reply.id}`}
+              reply={reply}
+              parentCommentId={comment?.id ?? 0}
+              programId={programId}
+            />
           ))}
-          {!isReply && hasNextPage && (
+          {hasNextPage && (
             <div className="flex-end flex w-full flex-col items-end">
-              <div className="w-11/12 sm:w-4/5 flex justify-center">
+              <div className="w-11/12 flex justify-center">
                 <Button
                   type="button"
                   variant={"ghost"}
                   size="sm"
                   onClick={() => fetchNextPage()}
                   disabled={!hasNextPage || isFetchingNextPage}
-                  className="text-muted-foreground -mt-2"
+                  className="-mt-2"
                 >
                   {isFetchingNextPage && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

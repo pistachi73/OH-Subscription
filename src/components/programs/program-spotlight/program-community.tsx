@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 import { Button } from "../../ui/button";
 import { AddComment } from "../../ui/comments/add-comment";
-import { Comment } from "../../ui/comments/comment";
+import { COMMENTS_PAGE_SIZE, Comment } from "../../ui/comments/comment";
 
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
@@ -24,10 +24,10 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
   const apiUtils = api.useUtils();
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    api.comment.getByProgramId.useInfiniteQuery(
+    api.comment.getByProgramIdOrVideoId.useInfiniteQuery(
       {
         programId: program.id,
-        pageSize: 1,
+        pageSize: COMMENTS_PAGE_SIZE,
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -36,7 +36,10 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
 
   const { mutateAsync: addComment } = api.comment.create.useMutation({
     onSuccess: () => {
-      apiUtils.comment.getByProgramId.invalidate();
+      apiUtils.comment.getByProgramIdOrVideoId.invalidate({
+        programId: program.id,
+        pageSize: COMMENTS_PAGE_SIZE,
+      });
     },
   });
 
@@ -111,11 +114,15 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
           <FirstToComment />
         ) : (
           comments?.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
+            <Comment
+              key={comment.id}
+              comment={comment}
+              programId={program.id}
+            />
           ))
         )}
 
-        {!isLoading && comments?.length !== 0 && (
+        {hasNextPage && (
           <div className="flex justify-center w-full mt-4">
             <Button
               type="button"

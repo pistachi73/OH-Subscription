@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, gt } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
+import { and, count, desc, eq, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -10,7 +11,7 @@ import {
 
 import { isNumber } from "@/lib/utils";
 import { CommentSchema } from "@/schemas";
-import { comments, users } from "@/server/db/schema";
+import { comments, replies, users } from "@/server/db/schema";
 import { withLimit } from "../query-utils/shared.query";
 
 export const commentRouter = createTRPCRouter({
@@ -80,17 +81,25 @@ export const commentRouter = createTRPCRouter({
     return allComments;
   }),
 
-  getByProgramId: publicProcedure
+  getByProgramIdOrVideoId: publicProcedure
     .input(
       z.object({
-        programId: z.number(),
-        cursor: z.number().optional(),
+        programId: z.number().optional(),
+        videoId: z.number().optional(),
+        cursor: z.date().nullish(),
         pageSize: z.number().optional(),
       }),
     )
-    .query(async ({ input: { programId, cursor, pageSize }, ctx }) => {
+    .query(async ({ input: { videoId, programId, cursor, pageSize }, ctx }) => {
+      if (!videoId && !programId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Program ID or Video ID is required",
+        });
+      }
+
       let commentsQuery = ctx.db
-        .select({
+        .selectDistinctOn([comments.updatedAt], {
           id: comments.id,
           content: comments.content,
           updatedAt: comments.updatedAt,
@@ -99,54 +108,57 @@ export const commentRouter = createTRPCRouter({
             name: users.name,
             image: users.image,
           },
+          totalReplies: sql<number>`(select count(${replies.content}) from ${replies} where (${replies.commentId} = ${comments.id}))`,
         })
         .from(comments)
         .leftJoin(users, eq(users.id, comments.userId))
+        .leftJoin(replies, eq(replies.commentId, comments.id))
         .$dynamic();
 
-      const whereClauses = [eq(comments.programId, programId)];
+      const filterByProgramOrVideoIdClauses = [
+        programId ? eq(comments.programId, programId) : null,
+        videoId ? eq(comments.videoId, videoId) : null,
+      ].filter(Boolean) as SQL<unknown>[];
+
+      const whereClauses = [...filterByProgramOrVideoIdClauses];
+
       if (cursor) {
-        whereClauses.push(gt(comments.id, cursor));
+        whereClauses.push(lt(comments.updatedAt, cursor));
       }
 
       commentsQuery = commentsQuery.where(and(...whereClauses));
+      commentsQuery = commentsQuery.orderBy(desc(comments.updatedAt));
 
       if (pageSize) {
         commentsQuery = withLimit(commentsQuery, pageSize);
       }
 
       const res = await commentsQuery.execute();
+      let nextCursor = res.length ? res?.[res.length - 1]?.updatedAt : null;
+
+      if (nextCursor) {
+        const nextCursorCount = await ctx.db
+          .select({ count: count(comments.id) })
+          .from(comments)
+          .where(
+            and(
+              ...filterByProgramOrVideoIdClauses,
+              lt(comments.updatedAt, nextCursor),
+            ),
+          )
+          .orderBy(desc(comments.updatedAt))
+          .groupBy(comments.updatedAt)
+          .execute();
+
+        if (!nextCursorCount[0]?.count) {
+          nextCursor = null;
+        }
+      }
 
       return {
         comments: res,
-        nextCursor: res[res.length - 1]?.id ?? null,
+        nextCursor,
       };
-    }),
-
-  getByVideoId: publicProcedure
-    .input(z.object({ videoId: z.number(), limit: z.number().optional() }))
-    .query(async ({ input: { videoId, limit }, ctx }) => {
-      let commentsQuery = ctx.db
-        .select({
-          id: comments.id,
-          content: comments.content,
-          updatedAt: comments.updatedAt,
-          user: {
-            id: users.id,
-            name: users.name,
-            image: users.image,
-          },
-        })
-        .from(comments)
-        .leftJoin(users, eq(users.id, comments.userId))
-        .where(eq(comments.videoId, videoId))
-        .$dynamic();
-
-      if (limit) {
-        commentsQuery = withLimit(commentsQuery, limit);
-      }
-
-      return await commentsQuery.execute();
     }),
 
   getById: publicProcedure

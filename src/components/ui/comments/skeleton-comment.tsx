@@ -13,7 +13,7 @@ export const SkeletonComment = ({ isReply }: SkeletonCommentProps) => {
           "relative flex w-full flex-col gap-2  rounded-md border border-input bg-background p-4",
           "sm:gap-3",
           {
-            "w-11/12 justify-end sm:w-4/5": isReply,
+            "w-11/12 justify-end": isReply,
             "w-full": !isReply,
           },
         )}
