@@ -184,19 +184,17 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
             </DropdownMenu>
           )}
 
-          <div className="flex flex-row items-center  gap-2 sm:gap-3">
+          <div className="flex flex-row items-center  gap-2 sm:gap-3 text-xs sm:text-sm">
             <div className="flex items-center gap-2">
               <UserAvatar
                 userImage={comment?.user?.image}
                 userName={comment?.user?.name}
                 className="h-7 w-7 text-xs"
               />
-              <p className="text-xs font-medium sm:text-sm">
-                {comment?.user?.name ?? "John Doe"}
-              </p>
+              <p className="font-medium">{comment?.user?.name ?? "John Doe"}</p>
             </div>
 
-            <span className="text-xs text-gray-400 sm:text-sm font-light">
+            <span className="text-muted-foreground font-light">
               <relative-time datetime={comment?.updatedAt?.toString()}>
                 April 1, 2014
               </relative-time>
@@ -212,14 +210,14 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
           <div className="flex flex-row gap-3">
             <Button
               variant="ghost"
-              className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
+              className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
             >
               <Heart size={16} className="sm:mr-2" />
               <span className="hidden sm:inline">11 Likes</span>
             </Button>
             <Button
               variant="ghost"
-              className="h-6 px-0 py-0 text-xs font-normal text-gray-600 hover:bg-transparent"
+              className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
               onClick={() => {
                 setShowAddReply(!showAddReply);
               }}

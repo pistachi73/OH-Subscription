@@ -34,7 +34,7 @@ export const AddComment = ({
         onChange={(e) => setContent(e.target.value)}
         minHeight={hasLabels ? 94 : 38}
         className={cn(
-          "h-10 overflow-y-hidden p-3 text-sm resize-none",
+          "h-10 overflow-y-hidden p-3 text-xs sm:text-sm resize-none font-light",
           hasLabels ? "h-[96px] pb-[60px]" : "",
           className,
         )}

@@ -6,10 +6,10 @@ export const FirstToComment = () => {
     <div
       className={cn(
         "relative w-full flex h-full flex-row gap-1 items-center  rounded-md border border-input bg-background p-4",
-        "sm:gap-2",
+        "sm:gap-3",
       )}
     >
-      <div className="relative h-10 w-9">
+      <div className="relative h-10 sm:h-12 w-9 sm:w-10">
         <Image
           alt="First to comment"
           src="/images/first-to-comment-illustration.svg"
@@ -18,10 +18,10 @@ export const FirstToComment = () => {
         />
       </div>
       <div>
-        <h3 className="text-xs sm:text-sm font-semibold">
+        <h3 className="text-sm sm:text-base font-semibold">
           Be the first to comment
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground">
+        <p className="text-sm sm:text-base text-muted-foreground">
           Share your thoughts and help others learn from your experience.
         </p>
       </div>
