@@ -61,15 +61,20 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
     },
   );
 
+  console.log({
+    videoId,
+    commentid: comment?.id,
+  });
   const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
     api.comment.delete.useMutation({
       onSuccess: () => {
-        programId &&
-          apiUtils.comment.getByProgramIdOrVideoId.invalidate({
-            ...(programId && { programId }),
-            ...(videoId && { videoId }),
-            pageSize: COMMENTS_PAGE_SIZE,
-          });
+        if (!programId && !videoId) return;
+
+        apiUtils.comment.getByProgramIdOrVideoId.invalidate({
+          ...(programId && { programId }),
+          ...(videoId && { videoId }),
+          pageSize: COMMENTS_PAGE_SIZE,
+        });
       },
     });
   const { mutateAsync: addReply } = api.reply.create.useMutation({
@@ -201,9 +206,6 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
             </span>
           </div>
           <p className="max-w-[70ch] text-xs text-gray-800 sm:text-sm">
-            {comment?.id}
-            {" - "}
-            {comment?.updatedAt?.toISOString()} {" - "}
             {comment?.content ??
               "Just finished watching this video and I loved it! The production quality was top-notch, and the content was super informative. Can&apos;t wait for more videos like this! 😄👍"}
           </p>
@@ -281,7 +283,9 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
               key={`reply-${reply.id}`}
               reply={reply}
               parentCommentId={comment?.id ?? 0}
+              isDeletingParentComment={isDeletingComment}
               programId={programId}
+              videoId={videoId}
             />
           ))}
           {hasNextPage && (

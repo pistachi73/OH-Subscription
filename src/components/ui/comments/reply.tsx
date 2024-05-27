@@ -17,6 +17,7 @@ import { COMMENTS_PAGE_SIZE } from "./comment";
 type ReplyProps = {
   reply: ReplyData;
   parentCommentId: number;
+  isDeletingParentComment: boolean;
   programId?: number;
   videoId?: number;
 };
@@ -24,6 +25,7 @@ type ReplyProps = {
 export const Reply = ({
   reply,
   parentCommentId,
+  isDeletingParentComment,
   programId,
   videoId,
 }: ReplyProps) => {
@@ -70,7 +72,8 @@ export const Reply = ({
     <div
       className={cn(
         "transition-opacity flex-end flex w-full flex-col items-end ",
-        isDeletingReply && "opacity-50 pointer-events-none",
+        (isDeletingReply || isDeletingParentComment) &&
+          "opacity-50 pointer-events-none",
       )}
     >
       <div
@@ -125,9 +128,6 @@ export const Reply = ({
           </span>
         </div>
         <p className="max-w-[70ch] text-xs text-gray-800 sm:text-sm">
-          {reply?.id}
-          {" - "}
-          {reply?.updatedAt?.toISOString()} {" - "}
           {reply?.content ??
             "Just finished watching this video and I loved it! The production quality was top-notch, and the content was super informative. Can&apos;t wait for more videos like this! 😄👍"}
         </p>

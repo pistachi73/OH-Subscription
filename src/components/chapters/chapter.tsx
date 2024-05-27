@@ -17,7 +17,6 @@ import { ChapterPlayList } from "./chapter-playlist";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Community } from "@/components/ui/community/community";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { ShareButton } from "@/components/ui/share-button/share-button";
@@ -29,6 +28,7 @@ import type {
   ProgramSpotlight,
 } from "@/server/db/schema.types";
 import { Badge } from "../ui/badge";
+import { ChapterCommunity } from "./chapter-community";
 import { ChapterRelated } from "./chapter-related";
 
 type ChapterProps = {
@@ -221,7 +221,6 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
       >
         <div className="w-full space-y-8 lg:space-y-12">
           <div className="space-y-3">
-            {}
             <div className="flex flex-row gap-4">
               {program.teachers?.map((teacher, index) => (
                 <div
@@ -260,16 +259,20 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
               <TabsTrigger value="community" className="text-sm!">
                 Community
               </TabsTrigger>
-              <TabsTrigger value="transcript">Transcript</TabsTrigger>
+              {chapter.transcript && (
+                <TabsTrigger value="transcript">Transcript</TabsTrigger>
+              )}
             </TabsList>
-            <TabsContent value="transcript">
-              <div className="rounded-md bg-accent/50 p-4">
-                <p className="text-sm sm:text-base">{chapter.transcript}</p>
-              </div>
-            </TabsContent>
+            {chapter.transcript && (
+              <TabsContent value="transcript">
+                <div className="rounded-md bg-accent/50 p-4">
+                  <p className="text-sm sm:text-base">{chapter.transcript}</p>
+                </div>
+              </TabsContent>
+            )}
 
             <TabsContent value="community">
-              <Community />
+              <ChapterCommunity chapter={chapter} />
             </TabsContent>
           </Tabs>
         </div>
