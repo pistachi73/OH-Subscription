@@ -9,7 +9,6 @@ import { toast } from "sonner";
 
 import { getUrl, transformer } from "./shared";
 
-import { auth } from "@/auth";
 import type { AppRouter } from "@/server/api/root";
 
 export const api = createTRPCReact<AppRouter>();
@@ -23,6 +22,9 @@ export function TRPCReactProvider(props: {
     () =>
       new QueryClient({
         defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
           mutations: {
             onError: (error) => {
               if (error instanceof Error || error instanceof TRPCError) {

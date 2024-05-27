@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, gt } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -41,12 +41,19 @@ export const replyRouter = createTRPCRouter({
         });
       }
 
-      await db.insert(replies).values({
-        ...values,
-        commentId,
-      });
+      const createdReplies = await db
+        .insert(replies)
+        .values({
+          ...values,
+          commentId,
+        })
+        .returning({
+          id: replies.id,
+          content: replies.content,
+          updatedAt: replies.updatedAt,
+        });
 
-      return { success: true };
+      return { reply: createdReplies[0] };
     }),
 
   update: adminProtectedProcedure
@@ -100,10 +107,11 @@ export const replyRouter = createTRPCRouter({
 
       const whereClauses = [eq(replies.commentId, commentId)];
       if (cursor) {
-        whereClauses.push(gt(replies.updatedAt, cursor));
+        whereClauses.push(lt(replies.updatedAt, cursor));
       }
 
       replyQuery = replyQuery.where(and(...whereClauses));
+      replyQuery = replyQuery.orderBy(desc(replies.updatedAt));
 
       if (pageSize) {
         replyQuery = replyQuery.limit(pageSize);
