@@ -170,6 +170,6 @@ export const CommentSchema = z.object({
 export const ReplySchema = z.object({
   id: z.number().optional(),
   content: z.string().min(1, { message: "Content is required" }),
-  commentId: z.number(),
+  commentId: z.number().optional(),
   userId: z.string(),
 });

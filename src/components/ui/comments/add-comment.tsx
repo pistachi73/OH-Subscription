@@ -41,12 +41,12 @@ export const AddComment = ({
         {...props}
       />
 
-      <div className="absolute bottom-3 right-3 space-x-2 sm:block">
+      <div className="absolute bottom-3 right-3 space-x-1 sm:block">
         {cancelLabel && (
           <Button
             variant="secondary"
             size="sm"
-            className="w-9 px-0 text-sm sm:w-fit sm:px-4"
+            className="w-9 sm:h-8 px-0 text-sm sm:w-fit sm:px-3"
             type="button"
             onClick={onCancel}
           >
@@ -59,7 +59,7 @@ export const AddComment = ({
             type="button"
             variant="default"
             size="sm"
-            className="w-9 px-0 text-sm sm:w-fit sm:px-4"
+            className="w-9 px-0 sm:h-8 text-sm sm:w-fit sm:px-3"
             onClick={async () => {
               await onComment?.(content);
               setContent("");

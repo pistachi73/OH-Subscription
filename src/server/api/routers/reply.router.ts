@@ -2,11 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { and, count, desc, eq, lt } from "drizzle-orm";
 import { z } from "zod";
 
-import {
-  adminProtectedProcedure,
-  createTRPCRouter,
-  publicProcedure,
-} from "../trpc";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 import { isNumber } from "@/lib/utils";
 import { ReplySchema } from "@/schemas";
@@ -34,7 +30,7 @@ export const replyRouter = createTRPCRouter({
       const { db } = ctx;
       const { commentId, ...values } = input;
 
-      if (!isNumber(commentId)) {
+      if (!commentId || !isNumber(commentId)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Comment ID  is required",
@@ -56,7 +52,7 @@ export const replyRouter = createTRPCRouter({
       return { reply: createdReplies[0] };
     }),
 
-  update: adminProtectedProcedure
+  update: publicProcedure
     .input(ReplySchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;

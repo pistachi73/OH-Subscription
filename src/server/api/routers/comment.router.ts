@@ -3,11 +3,7 @@ import type { SQL } from "drizzle-orm";
 import { and, count, desc, eq, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import {
-  adminProtectedProcedure,
-  createTRPCRouter,
-  publicProcedure,
-} from "../trpc";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 import { isNumber } from "@/lib/utils";
 import { CommentSchema } from "@/schemas";
@@ -52,7 +48,7 @@ export const commentRouter = createTRPCRouter({
       return { success: true };
     }),
 
-  update: adminProtectedProcedure
+  update: publicProcedure
     .input(CommentSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
