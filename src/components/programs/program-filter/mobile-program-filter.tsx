@@ -36,19 +36,10 @@ export const MobileProgramFilter = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className="h-12 w-full shadow-md">
-          <Filter size={24} className="mr-2" />
-          Filter Programs
+        <Button variant="outline" className="h-10 w-full shadow-sm text-sm">
+          <Filter size={18} className="mr-2" />
+          Filter programs
         </Button>
-
-        {/* <Card className="shadow-md">
-          <CardHeader>
-            <CardTitle className="text-xl">Filter Programs</CardTitle>
-            <CardDescription>
-              Filter programs by teachers, categories, and levels
-            </CardDescription>
-          </CardHeader>
-        </Card> */}
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] overflow-y-auto">
         <div className="space-y-4">
@@ -64,6 +55,7 @@ export const MobileProgramFilter = () => {
               size={16}
             />
             <Input
+              autoFocus={false}
               placeholder="Title, description..."
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => {
