@@ -5,8 +5,6 @@ import { ShotSideWrapper } from "./shot-side-wrapper";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { AddComment } from "@/components/ui/community/add-comment";
-import { Comment } from "@/components/ui/community/comment";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { AddComment } from "../comments/add-comment";
+import { Comment } from "../comments/comment";
 
 type ShotCommunityProps = {
   showComments: boolean;
@@ -97,10 +97,6 @@ export const ShotCommunity = ({
           <div className="flex  max-h-full min-h-0 flex-col items-start gap-4  overflow-y-auto p-4">
             <Comment />
             <Comment />
-            <Comment isReply />
-            <Comment />
-            <Comment />
-            <Comment isReply />
           </div>
           <div className="border-t p-4">
             <div className="flex flex-row gap-3">
