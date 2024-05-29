@@ -1,11 +1,7 @@
-import { ShotPlayer } from "@/components/ui/video-players/shot-player";
+import { ShotCarousel } from "@/components/ui/shot/shot-carousel";
 
 const ShotsPage = () => {
-  return (
-    <div className="mx-auto mt-12 flex max-h-[80vh] w-[400px] items-center justify-center">
-      <ShotPlayer />
-    </div>
-  );
+  return <ShotCarousel currentShot={0} />;
 };
 
 export default ShotsPage;

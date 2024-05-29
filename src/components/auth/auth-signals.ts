@@ -12,3 +12,4 @@ export const childrenFormSignal = signal<RegisterFormType | LoginFormType>(
 );
 export const emailSignal = signal<string | null>(null);
 export const isAuthModalOpenSignal = signal(false);
+export const needsAuthModalRedirectSignal = signal(false);

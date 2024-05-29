@@ -98,7 +98,7 @@ export const ChapterCommunity = ({ chapter }: ChapterCommunityProps) => {
       </div>
       <div className="w-full max-w-[750px] space-y-2 sm:space-y-4">
         <div className="flex flex-row gap-3">
-          <UserAvatar userImage={user.image} userName={user.name} />
+          <UserAvatar userImage={user?.image} userName={user?.name} />
           <AddComment
             placeholder="Add your comment..."
             containerClassName="w-full"

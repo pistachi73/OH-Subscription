@@ -41,7 +41,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
     <div
       className={cn(
         "relative",
-        "sm:h-[calc(100vh-var(--header-height))] sm:pt-4",
+        "sm:h-[calc(100vh-3rem)] lg:h-[calc(100vh-3.5rem)] sm:pt-2",
         "h-[calc(100dvh)]",
       )}
     >
@@ -58,7 +58,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
         <Button
           className={cn(
             "absolute top-0 z-50 h-14 min-w-14 rounded-full p-4 text-background transition-all",
-            "sm:left-6 sm:text-foreground",
+            "left-[2%] sm:left-[4%] 2xl:left-14 sm:text-foreground",
           )}
           size="inline"
           variant="ghost"

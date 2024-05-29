@@ -204,7 +204,8 @@ const VerticalCarouselPrevious = React.forwardRef<
       variant={"secondary"}
       className={cn(
         "absolute h-14 w-14 rounded-full transition-all",
-        "right-8 top-0",
+        "top-0",
+        "right-[2%] sm:right-[4%] 2xl:right-14",
         className,
       )}
       disabled={!canScrollPrev}
@@ -230,7 +231,8 @@ const VerticalCarouselNext = React.forwardRef<
       variant={"secondary"}
       className={cn(
         "absolute h-14 w-14 rounded-full transition-all",
-        "bottom-8 right-8",
+        "bottom-8",
+        "right-[2%] sm:right-[4%] 2xl:right-14",
         className,
       )}
       disabled={!canScrollNext}
@@ -245,10 +247,10 @@ const VerticalCarouselNext = React.forwardRef<
 VerticalCarouselNext.displayName = "VerticalCarouselNext";
 
 export {
-  type VerticalCarouselApi,
   VerticalCarousel,
   VerticalCarouselContent,
   VerticalCarouselItem,
-  VerticalCarouselPrevious,
   VerticalCarouselNext,
+  VerticalCarouselPrevious,
+  type VerticalCarouselApi,
 };

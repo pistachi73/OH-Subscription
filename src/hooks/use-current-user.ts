@@ -1,8 +1,8 @@
-import { useSession } from "next-auth/react";
-
+import { useCustomSession } from "@/components/auth/auth-wrapepr";
 import type { ExtendedUser } from "@/next-auth";
 
 export const useCurrentUser = () => {
-  const session = useSession();
-  return session.data?.user as ExtendedUser;
+  const session = useCustomSession();
+
+  return session?.user as ExtendedUser;
 };

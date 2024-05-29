@@ -1,11 +1,10 @@
 import "@/styles/globals.css";
 
-import { SessionProvider } from "next-auth/react";
-
 import { Inter, Red_Hat_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 
 import { auth } from "@/auth";
+import { CustomSessionProvider } from "@/components/auth/auth-wrapepr";
 import { DeviceOnlyProvider } from "@/components/ui/device-only/device-only-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -40,19 +39,19 @@ export default async function RootLayout({
       <body
         className={`font-inter ${inter.variable} min-h-screen  ${mono.variable} bg-muted-background`}
       >
-        <DeviceOnlyProvider deviceType={deviceType}>
-          <TRPCReactProvider
-            cookies={cookies().toString()}
-            authorization={authorization?.toString() ?? ""}
-          >
-            <SessionProvider session={session}>
+        <CustomSessionProvider session={session}>
+          <DeviceOnlyProvider deviceType={deviceType}>
+            <TRPCReactProvider
+              cookies={cookies().toString()}
+              authorization={authorization?.toString() ?? ""}
+            >
               <TooltipProvider>
                 <Toaster />
                 {children}
               </TooltipProvider>
-            </SessionProvider>
-          </TRPCReactProvider>
-        </DeviceOnlyProvider>
+            </TRPCReactProvider>
+          </DeviceOnlyProvider>
+        </CustomSessionProvider>
       </body>
     </html>
   );

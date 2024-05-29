@@ -9,6 +9,7 @@ import { getUserById } from "./server/api/lib/user";
 import authConfig from "@/auth.config";
 import { db } from "@/server/db";
 import { twoFactorConirmations } from "@/server/db/schema";
+import type { UserRole } from "./server/db/schema.types";
 
 export const {
   handlers: { GET, POST },
@@ -83,17 +84,14 @@ export const {
       }
 
       if (token.role && session.user) {
-        session.user.role = token.role;
+        session.user.role = (token.role as UserRole) ?? "USER";
       }
 
       if (session.user) {
-        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
-      }
-
-      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
         session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.isOAuth = token.isOAuth;
+        session.user.email = token.email as string;
+        session.user.isOAuth = token.isOAuth as boolean;
       }
 
       return session;

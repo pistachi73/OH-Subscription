@@ -4,11 +4,8 @@ import { AuthError } from "next-auth";
 import { v4 as uuid } from "uuid";
 import type { z } from "zod";
 
-import { redirect } from "next/navigation";
-
 import { signIn } from "@/auth";
 import { sendTwoFactorTokenEmail } from "@/lib/mail";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema } from "@/schemas";
 import { generateTwoFactorToken } from "@/server/api/lib/tokens";
 import { getTwoFactorConirmationByUserId } from "@/server/api/lib/two-factor-confirmation";
@@ -19,7 +16,6 @@ import { twoFactorConirmations, twoFactorTokens } from "@/server/db/schema";
 
 export const login = async (
   credentials: z.infer<typeof LoginSchema>,
-  callbackUrl?: string | null,
 ): Promise<{
   error?: string;
   success?: string;
@@ -110,5 +106,7 @@ export const login = async (
     return { error: "Something went wrong!" };
   }
 
-  redirect(callbackUrl || DEFAULT_LOGIN_REDIRECT);
+  return { success: "Login successful" };
+
+  // redirect(callbackUrl || DEFAULT_LOGIN_REDIRECT);
 };

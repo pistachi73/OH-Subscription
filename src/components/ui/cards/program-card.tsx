@@ -1,8 +1,7 @@
 "use client";
 
-import { AnimatePresence, type Variants, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { Heart, LibraryBig, Play, User } from "lucide-react";
-import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -14,7 +13,6 @@ import { animationConfig } from "./utils";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ChapterIcon } from "@/components/ui/icons/chapter-icon";
 import {
   Tooltip,
   TooltipContent,
@@ -112,9 +110,8 @@ export const ProgramCard = ({
     useCardAnimation();
 
   return (
-    <Link
-      href="/programs/slug"
-      className=" relative flex aspect-video h-full w-full cursor-pointer rounded-sm"
+    <div
+      className=" relative flex aspect-video h-full w-full rounded-sm"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -122,13 +119,17 @@ export const ProgramCard = ({
         {levelMap[level].shortFormat}
       </span>
 
-      <Image
-        src={thumbnail ? getImageUrl(thumbnail) : "/images/video-thumbnail.png"}
-        alt="video"
-        fill
-        className="rounded-sm"
-        loading={lazy ? "lazy" : "eager"}
-      />
+      <Link href={`/programs/${slug}`}>
+        <Image
+          src={
+            thumbnail ? getImageUrl(thumbnail) : "/images/video-thumbnail.png"
+          }
+          alt="video"
+          fill
+          className="rounded-sm"
+          loading={lazy ? "lazy" : "eager"}
+        />
+      </Link>
       <DeviceOnly allowedDevices="desktop">
         <AnimatePresence onExitComplete={() => setCanHover(true)}>
           {hovered && (
@@ -137,7 +138,7 @@ export const ProgramCard = ({
               animate="animate"
               exit="initial"
               variants={variants}
-              className={cn("absolute h-full w-full ", {
+              className={cn("absolute h-full w-full", {
                 "origin-left": isLeftBorder,
                 "origin-right": isRightBorder,
               })}
@@ -168,11 +169,14 @@ export const ProgramCard = ({
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
                     variant="outline"
                     size="icon"
+                    asChild
                   >
-                    <Play
-                      className="-ml-px fill-primary stroke-primary"
-                      size={16}
-                    />
+                    <Link href={`/programs/${slug}`}>
+                      <Play
+                        className="-ml-px fill-primary stroke-primary"
+                        size={16}
+                      />
+                    </Link>
                   </Button>
 
                   <Button
@@ -244,6 +248,6 @@ export const ProgramCard = ({
           )}
         </AnimatePresence>
       </DeviceOnly>
-    </Link>
+    </div>
   );
 };

@@ -4,7 +4,11 @@ import { useSignals } from "@preact/signals-react/runtime";
 
 import { useRouter } from "next/navigation";
 
-import { isAuthModalOpenSignal, parentFormSignal } from "./auth-signals";
+import {
+  isAuthModalOpenSignal,
+  needsAuthModalRedirectSignal,
+  parentFormSignal,
+} from "./auth-signals";
 
 import type { AuthFormType } from "@/components/auth/auth.types";
 
@@ -12,19 +16,32 @@ type LoginButtonProps = {
   children: React.ReactNode;
   formType: AuthFormType;
   mode?: "modal" | "redirect";
+  callbackUrl?: string;
   asChild?: boolean;
+  redirect?: boolean;
 };
 
-export const AuthButton = ({ formType, children, mode }: LoginButtonProps) => {
+export const AuthButton = ({
+  formType,
+  children,
+  callbackUrl,
+  mode,
+  redirect = true,
+}: LoginButtonProps) => {
   useSignals();
   const router = useRouter();
 
   const onClick = () => {
     if (mode === "redirect") {
-      router.push(`/auth/${formType || "login"}`);
+      router.push(
+        `/auth/${formType || "login"}/${
+          callbackUrl ? `?callbackUrl=${callbackUrl}` : ""
+        }`,
+      );
     } else {
       isAuthModalOpenSignal.value = true;
       parentFormSignal.value = formType;
+      needsAuthModalRedirectSignal.value = redirect;
     }
   };
 

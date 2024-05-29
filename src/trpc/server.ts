@@ -32,13 +32,16 @@ const createContext = cache(() => {
   });
 });
 
+const enableLogs = true;
 export const api = createTRPCProxyClient<AppRouter>({
   transformer,
   links: [
     loggerLink({
       enabled: (op) =>
-        process.env.NODE_ENV === "development" ||
-        (op.direction === "down" && op.result instanceof Error),
+        enableLogs
+          ? process.env.NODE_ENV === "development" ||
+            (op.direction === "down" && op.result instanceof Error)
+          : false,
     }),
     /**
      * Custom RSC link that lets us invoke procedures without using http requests. Since Server

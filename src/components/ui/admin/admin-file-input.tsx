@@ -22,7 +22,6 @@ export const AdminFileInput = React.forwardRef<
     <div>
       {/* <button
         onClick={() => {
-          console.log({ value });
         }}
         type="button"
       >

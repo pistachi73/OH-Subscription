@@ -164,7 +164,7 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
   };
 
   const isUserComment = useMemo(
-    () => user.id === comment?.user?.id,
+    () => user?.id === comment?.user?.id,
     [comment, user],
   );
 

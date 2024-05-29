@@ -260,7 +260,6 @@ export const programRouter = createTRPCRouter({
       }
 
       if (levelIds?.length) {
-        console.log({ levelIds });
         whereClauses.push(inArray(programs.level, levelIds as ProgramLevel[]));
       }
 

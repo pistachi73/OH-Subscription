@@ -3,18 +3,21 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignals } from "@preact/signals-react/runtime";
 import { Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type * as z from "zod";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { CodeInput } from "../ui/code-input";
 import { PasswordInput } from "../ui/password-input";
 
-import { childrenFormSignal } from "./auth-signals";
+import {
+  childrenFormSignal,
+  isAuthModalOpenSignal,
+  needsAuthModalRedirectSignal,
+} from "./auth-signals";
 
 import { login } from "@/actions/login";
 import { Button } from "@/components/ui/button";
@@ -27,14 +30,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema } from "@/schemas";
 
 export const CredentialsForm = () => {
   useSignals();
-  const { update } = useSession();
   // const { setChildrenForm, childrenFormSignal } = useAuthContext();
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const callbackUrl = searchParams.get("callbackUrl");
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -48,7 +52,7 @@ export const CredentialsForm = () => {
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     startTransition(async () => {
-      const { error, success, twoFactor } = await login(values, callbackUrl);
+      const { error, success, twoFactor } = (await login(values)) ?? {};
 
       if (error) {
         toast.error(error);
@@ -56,7 +60,11 @@ export const CredentialsForm = () => {
 
       if (success) {
         form.reset();
-        update();
+        isAuthModalOpenSignal.value = false;
+        if (needsAuthModalRedirectSignal.value) {
+          router.push(callbackUrl ?? DEFAULT_LOGIN_REDIRECT);
+        }
+        router.refresh();
       }
 
       if (twoFactor) {

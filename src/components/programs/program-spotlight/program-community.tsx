@@ -8,6 +8,7 @@ import { AddComment } from "../../ui/comments/add-comment";
 import { COMMENTS_PAGE_SIZE, Comment } from "../../ui/comments/comment";
 
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
+import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -98,45 +99,50 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
         </DropdownMenu> */}
       </div>
       <div className="w-full max-w-[750px] space-y-4">
-        <div className="flex flex-row gap-3">
-          <UserAvatar userImage={user.image} userName={user.name} />
-          <AddComment
-            placeholder="Add your comment..."
-            containerClassName="w-full"
-            commentLabel="Comment"
-            onComment={onComment}
-          />
-        </div>
+        {user ? (
+          <>
+            <div className="flex flex-row gap-3">
+              <UserAvatar userImage={user?.image} userName={user?.name} />
+              <AddComment
+                placeholder="Add your comment..."
+                containerClassName="w-full"
+                commentLabel="Comment"
+                onComment={onComment}
+              />
+            </div>
+            {isLoading ? (
+              <SkeletonComment />
+            ) : !comments?.length ? (
+              <FirstToComment />
+            ) : (
+              comments?.map((comment) => (
+                <Comment
+                  key={comment.id}
+                  comment={comment}
+                  programId={program.id}
+                />
+              ))
+            )}
 
-        {isLoading ? (
-          <SkeletonComment />
-        ) : !comments?.length ? (
-          <FirstToComment />
+            {hasNextPage && (
+              <div className="flex justify-center w-full mt-4">
+                <Button
+                  type="button"
+                  variant={"ghost"}
+                  size="sm"
+                  onClick={() => fetchNextPage()}
+                  disabled={!hasNextPage || isFetchingNextPage}
+                >
+                  {isFetchingNextPage && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Load more
+                </Button>
+              </div>
+            )}
+          </>
         ) : (
-          comments?.map((comment) => (
-            <Comment
-              key={comment.id}
-              comment={comment}
-              programId={program.id}
-            />
-          ))
-        )}
-
-        {hasNextPage && (
-          <div className="flex justify-center w-full mt-4">
-            <Button
-              type="button"
-              variant={"ghost"}
-              size="sm"
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-            >
-              {isFetchingNextPage && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Load more
-            </Button>
-          </div>
+          <MustBeLoggedIn />
         )}
       </div>
 
