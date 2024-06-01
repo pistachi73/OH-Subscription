@@ -26,32 +26,34 @@
       --ring: 232 34% 35%;
       --radius: 0.5rem;
 
-      --header-height: 68px;
+
       --muted-background: 228 100% 99%;
+      --hero-gradient: linear-gradient(90deg, #fafbff, rgba(250,251,255, .991) 6.67%, rgba(250,251,255, .964) 13.33%, rgba(250,251,255, .918) 20%, rgba(250,251,255, .853) 26.67%, rgba(250,251,255, .768) 33.33%, rgba(250,251,255, .668) 40%, rgba(250,251,255, .557) 46.67%, rgba(250,251,255, .443) 53.33%, rgba(250,251,255, .332) 60%, rgba(250,251,255, .232) 66.67%, rgba(250,251,255, .147) 73.33%, rgba(250,251,255, .082) 80%, rgba(250,251,255, 0) 86.67%);
     }
 
     .dark {
-      --background: 232 52% 4%;
+      --background: 235 50% 7%;
       --foreground: 232 21% 100%;
       --muted: 232 37% 12%;
       --muted-foreground: 232 13% 61%;
-      --popover: 232 52% 4%;
+      --popover: 235 50% 7%;
       --popover-foreground: 232 21% 100%;
-      --card: 232 52% 4%;
+      --card: 235 50% 7%;
       --card-foreground: 232 21% 100%;
       --border: 232 9% 14%;
       --input: 232 9% 14%;
       --primary: 232 34% 35%;
       --primary-foreground: 232 34% 95%;
-      --secondary: 232 10% 13%;
-      --secondary-foreground: 232 10% 73%;
-      --accent: 232 10% 13%;
-      --accent-foreground: 232 10% 73%;
+      --secondary: 26.49 95.85% 47.25%;
+      --secondary-foreground: 233.33 36% 95.1%;
+      --accent: 234.55 22.58% 20.08%;
+      --accent-foreground: 210 40% 98%;
       --destructive: 5 100% 48%;
       --destructive-foreground: 0 0% 100%;
-      --ring: 232 34% 35%;
+   
+      --muted-background: 232 52% 4%;
+      --hero-gradient: linear-gradient(90deg, #04060F, rgba(4,6,15, .991) 6.67%, rgba(4,6,15, .964) 13.33%, rgba(4,6,15, .918) 20%, rgba(4,6,15, .853) 26.67%, rgba(4,6,15, .768) 33.33%, rgba(4,6,15, .668) 40%, rgba(4,6,15, .557) 46.67%, rgba(4,6,15, .443) 53.33%, rgba(4,6,15, .332) 60%, rgba(4,6,15, .232) 66.67%, rgba(4,6,15, .147) 73.33%, rgba(4,6,15, .082) 80%, rgba(4,6,15, 0) 86.67%);
 
-      --muted-background: 232 37% 12%;
     }
     /* :root {
       --background: 232 0% 100%;

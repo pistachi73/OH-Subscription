@@ -3,17 +3,31 @@ import MuxVideo from "@mux/mux-video-react";
 import {
   MediaControlBar,
   MediaController,
-  MediaFullscreenButton,
   MediaMuteButton,
-  MediaPipButton,
   MediaPlayButton,
-  MediaTimeDisplay,
   MediaVolumeRange,
 } from "media-chrome/react";
 
-import { MediaTimeRange } from "./media-time-range";
-
 import { cn } from "@/lib/utils";
+
+import { MediaTimeRange as MediaTimeRangeChrome } from "media-chrome/react";
+
+export const MediaTimeRange = () => {
+  return (
+    <MediaTimeRangeChrome
+      class={cn(
+        "[--media-range-padding:0px]",
+        "[--media-range-track-border-radius:0]",
+        "[--media-control-height:4px]",
+        "[--media-control-background:transparent]",
+        "[--media-control-hover-background:transparent]",
+        "[--media-preview-thumbnail-background:transparent]",
+        "[--media-range-thumb-background:transparent]",
+        "[--media-primary-color:#ec6b05]",
+      )}
+    />
+  );
+};
 
 export const ShotPlayer = () => {
   return (
@@ -32,7 +46,7 @@ export const ShotPlayer = () => {
             "shrink-0 rounded-full bg-foreground/70 text-background delay-0",
             "hover:bg-foreground/90",
           )}
-        ></MediaPlayButton>
+        />
         <div
           className={cn(
             "group flex w-fit flex-row overflow-hidden rounded-full",
@@ -44,13 +58,13 @@ export const ShotPlayer = () => {
               "shrink-0 rounded-full bg-foreground/70",
               "hover:bg-foreground/90",
             )}
-          ></MediaMuteButton>
+          />
           <MediaVolumeRange
             class={cn(
               "hidden w-full rounded-r-full  bg-foreground/70 px-4 text-background",
               "hover:bg-foreground/90 group-hover:inline-block",
             )}
-          ></MediaVolumeRange>
+          />
         </div>
       </MediaControlBar>
       <MediaControlBar class="overflow-hidden">

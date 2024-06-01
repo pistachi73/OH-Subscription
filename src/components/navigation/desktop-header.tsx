@@ -16,6 +16,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { useSelectedLayoutSegment } from "next/navigation";
+import ThemeSwitch from "../theme-switch";
 
 export const DesktopHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -76,9 +77,9 @@ export const DesktopHeader = () => {
             ))}
           </ul>
         </div>
-
         <div className="flex h-full flex-row items-center ">
           <SearchInput placeholder="Title, description" />
+          <ThemeSwitch />
 
           {user ? (
             <div className="ml-2 flex gap-1 items-center h-9">

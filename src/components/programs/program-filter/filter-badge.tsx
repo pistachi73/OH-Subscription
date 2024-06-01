@@ -11,7 +11,7 @@ export const FilterBadge = ({
 }) => {
   return (
     <Badge
-      variant={"secondary"}
+      variant="accent"
       className="h-8 cursor-pointer rounded-md text-sm  hover:bg-destructive hover:text-destructive-foreground"
       onClick={onRemove}
     >

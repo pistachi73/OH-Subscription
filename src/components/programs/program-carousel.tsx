@@ -1,10 +1,5 @@
 "use client";
 
-import { ProgramCard, type ProgramCardProps } from "../cards/program-card";
-
-import { CarouselHeader } from "./carousel-header";
-import { useCarouselBorders, useCarouselSettings } from "./carousel.hooks";
-
 import {
   Carousel,
   CarouselContent,
@@ -12,14 +7,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { CarouselHeader } from "@/components/ui/carousel/carousel-header";
+import {
+  useCarouselBorders,
+  useCarouselSettings,
+} from "@/components/ui/carousel/carousel.hooks";
 import { cn } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
-
-type Video = {
-  title: string;
-  duration: string;
-  level: string;
-};
+import type { ProgramCardProps } from "./program-card";
+import { ProgramCard } from "./program-card";
 
 type ProgramCarouselProps = {
   title: string;
@@ -52,14 +48,17 @@ export const ProgramCarousel = ({
   const { slideSizeClassname, slidesToScroll, slidesPerView } =
     useCarouselSettings();
 
-  if (!programs?.length) return null;
+  if (!programs?.length) {
+    return null;
+  }
+  console.log({ title, href });
 
   return (
     <div className="my-4 lg:my-12">
       <CarouselHeader title={title} href={href} />
       <Carousel
         slidesPerView={slidesPerView}
-        totalItems={programs.length}
+        totalItems={programs?.length ?? slidesPerView}
         opts={{
           slidesToScroll,
           align: "start",
@@ -70,7 +69,10 @@ export const ProgramCarousel = ({
         <CarouselContent>
           {programs?.map((program, index) => {
             return (
-              <CarouselItem key={index} className={cn(slideSizeClassname)}>
+              <CarouselItem
+                key={`${title}-${program.slug}`}
+                className={cn(slideSizeClassname)}
+              >
                 <CarouselProgramCard
                   index={index}
                   lazy={index < slidesPerView}

@@ -201,7 +201,7 @@ const VerticalCarouselPrevious = React.forwardRef<
   return (
     <Button
       ref={ref}
-      variant={"secondary"}
+      variant="accent"
       className={cn(
         "absolute h-14 w-14 rounded-full transition-all",
         "top-0",
@@ -228,7 +228,7 @@ const VerticalCarouselNext = React.forwardRef<
   return (
     <Button
       ref={ref}
-      variant={"secondary"}
+      variant="accent"
       className={cn(
         "absolute h-14 w-14 rounded-full transition-all",
         "bottom-8",

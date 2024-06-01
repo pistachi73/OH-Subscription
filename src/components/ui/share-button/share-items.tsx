@@ -23,7 +23,7 @@ const ShareItem = ({
   return (
     <div className="flex flex-col items-center gap-2">
       <Button
-        variant="secondary"
+        variant="accent"
         size="icon"
         className={cn(
           "h-12 w-12 rounded-full border border-accent bg-accent/30",

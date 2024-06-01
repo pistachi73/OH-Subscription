@@ -252,7 +252,7 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
             }
           />
         ) : (
-          <p className="max-w-[70ch] text-xs text-gray-800 sm:text-sm">
+          <p className="max-w-[70ch] text-xs text-foreground sm:text-sm">
             {comment?.content ??
               "Just finished watching this video and I loved it! The production quality was top-notch, and the content was sFuer informative. Can&apos;t wait for more videos like this! 😄👍"}
           </p>
@@ -296,7 +296,7 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
         {isEditing && (
           <div className="absolute bottom-3 right-3 space-x-1 sm:block">
             <Button
-              variant="secondary"
+              variant="accent"
               size="sm"
               className="w-9 h-8 px-0 text-sm sm:w-fit sm:px-3"
               type="button"

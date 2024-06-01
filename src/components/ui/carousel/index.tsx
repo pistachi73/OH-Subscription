@@ -31,6 +31,7 @@ type CarouselContextProps = {
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
+
   current: number;
   total?: number;
   totalItems: number;

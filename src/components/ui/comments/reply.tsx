@@ -215,7 +215,7 @@ export const Reply = ({
         {isEditing && (
           <div className="absolute bottom-3 right-3 space-x-1 sm:block">
             <Button
-              variant="secondary"
+              variant="accent"
               size="sm"
               className="w-9 h-8 px-0 text-sm sm:w-fit sm:px-3"
               type="button"

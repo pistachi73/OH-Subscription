@@ -1,25 +1,21 @@
 "use client";
-import MuxPlayer from "@mux/mux-player-react";
-import { type Transition, cubicBezier, motion } from "framer-motion";
+import { cubicBezier, motion, type Transition } from "framer-motion";
 import {
   Heart,
-  type LucideIcon,
   MessageSquareText,
   NotebookText,
   Share,
+  User,
+  type LucideIcon,
 } from "lucide-react";
-import { User } from "lucide-react";
 import { useState } from "react";
 
 import Image from "next/image";
-
-import { ShotPlayer } from "../video-players/shot-player";
 
 import { ShotCommunity } from "./shot-community";
 import { ShotTranscript } from "./shot-transcript";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { ShareButton } from "@/components/ui/share-button/share-button";
 import { cn } from "@/lib/utils";
@@ -91,9 +87,9 @@ export const Shot = () => {
                 <User className="text-muted-foreground" size={16} />
               </AvatarFallback>
             </Avatar>
-            <p className="text-sm sm:text-base">Jhon Doe</p>
+            <p className="text-sm sm:text-base text-foreground">Jhon Doe</p>
           </div>
-          <span className="line-clamp-3 text-sm">
+          <span className="line-clamp-3 text-sm text-foreground">
             Vocabulary is the cornerstone of effective communication.
           </span>
         </div>
@@ -134,6 +130,7 @@ export const Shot = () => {
 
             return isShare ? (
               <ShareButton
+                key={label}
                 title="Share"
                 description="Share this shot with your friends"
                 url={"example.com"}
@@ -177,17 +174,6 @@ export const Shot = () => {
       {/* <div className="absolute left-0 top-0 z-0 aspect-[9/16] w-full overflow-hidden rounded-md">
         <ShotPlayer />
       </div> */}
-      {/* <MuxPlayer
-        className=" h-full w-full w-full overflow-hidden object-cover"
-        streamType="on-demand"
-        playbackId="vUoE57Q501o01wP4r7AXNUStoWCLYgPxQdu22UD9wuu8s"
-        metadataVideoTitle="Placeholder (optional)"
-        metadataViewerUserId="Placeholder (optional)"
-        primaryColor="#FFFFFF"
-        secondaryColor="#000000"
-        theme=""
-        style={{ aspectRatio: 9 / 16 }}
-      /> */}
 
       <ShotCommunity
         showComments={showComments}

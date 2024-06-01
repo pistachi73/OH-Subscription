@@ -111,7 +111,7 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
               "md:flex",
               "hover:bg-opacity-100 group-hover:opacity-100",
             )}
-            variant="secondary"
+            variant="accent"
             size="icon"
             onClick={() => setShowPlaylist(!showPlaylist)}
           >
@@ -245,7 +245,7 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
                 {program.categories.map((category) => (
                   <Badge
                     key={`category-${category.name}`}
-                    variant="secondary"
+                    variant="accent"
                     className="text-xs sm:text-sm"
                   >
                     {category.name}
@@ -254,7 +254,11 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
               </div>
             )}
           </div>
-          <Tabs defaultValue="community" className="w-full">
+          <Tabs
+            defaultValue="community"
+            className="w-full"
+            layoutId="chapter-tabs"
+          >
             <TabsList className="flex w-full items-center justify-center lg:mb-7 ">
               <TabsTrigger value="community" className="text-sm!">
                 Community

@@ -2,8 +2,8 @@
 
 import { AnimatePresence } from "framer-motion";
 
+import { ProgramFilter } from "@/components/programs/program-filter";
 import { useFilteredPrograms } from "@/components/programs/program-filter/filtered-programs-context";
-import { ProgramFilter } from "@/components/programs/program-filter/program-filter";
 import { CardList } from "@/components/ui/cards/card-list";
 import { HeroCard, heroCardHeightProps } from "@/components/ui/cards/hero-card";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";

@@ -1,6 +1,6 @@
 "use client";
+import { Shot } from "@/components/shots/shot";
 import { Button } from "@/components/ui/button";
-import { Shot } from "@/components/ui/shot/shot";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -58,7 +58,7 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
         <Button
           className={cn(
             "absolute top-0 z-50 h-14 min-w-14 rounded-full p-4 text-background transition-all",
-            "left-[2%] sm:left-[4%] 2xl:left-14 sm:text-foreground",
+            "left-[2%] sm:left-[4%] 2xl:left-14 sm:text-foreground -ml-4",
           )}
           size="inline"
           variant="ghost"

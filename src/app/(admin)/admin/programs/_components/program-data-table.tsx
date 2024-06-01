@@ -85,7 +85,7 @@ export const columns: ColumnDef<
       return (
         <div className="flex flex-row flex-wrap gap-1">
           {categories.split(",").map((category) => (
-            <Badge key={category} className="uppercase" variant="secondary">
+            <Badge key={category} className="uppercase" variant="accent">
               {category}
             </Badge>
           ))}

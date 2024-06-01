@@ -25,6 +25,10 @@ const config = {
         protocol: "https",
         hostname: "d2uddyg0p930fa.cloudfront.net",
       },
+      {
+        protocol: "https",
+        hostname: "image.mux.com",
+      },
     ],
   },
 };

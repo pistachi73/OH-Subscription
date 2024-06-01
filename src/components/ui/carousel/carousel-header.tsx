@@ -10,6 +10,8 @@ type CarouselHeaderProps = {
 export const CarouselHeader = ({ title, href }: CarouselHeaderProps) => {
   const HeaderTag = href ? Link : "h2";
 
+  console.log(href);
+
   return (
     <HeaderTag
       href={href as string}

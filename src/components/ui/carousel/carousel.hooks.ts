@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useCarousel } from "../carousel";
+import { useCarousel } from ".";
 import { useDeviceType } from "../device-only/device-only-provider";
 
 export const useCarouselSettings = () => {

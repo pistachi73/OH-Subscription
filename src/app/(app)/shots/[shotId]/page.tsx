@@ -1,4 +1,4 @@
-import { ShotCarousel } from "@/components/ui/shot/shot-carousel";
+import { ShotCarousel } from "@/components/shots/shot-carousel";
 
 type ShotPageProps = {
   params: {

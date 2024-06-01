@@ -1,5 +1,6 @@
 import { HeroCarousel } from "@/components/home/hero-carousel";
-import { ProgramCarousel } from "@/components/ui/carousel/program-carousel";
+import { ProgramCarousel } from "@/components/programs/program-carousel";
+import { ShotList } from "@/components/shots/shot-list";
 import { api } from "@/trpc/server";
 
 export default async function Home() {
@@ -11,10 +12,26 @@ export default async function Home() {
     categoryNames: ["Voacabulary"],
   });
 
+  const grammarPrograms = await api.program.getProgramsForCards.query({
+    categoryNames: ["Grammar"],
+  });
+
+  console.log(grammarPrograms);
+
   return (
     <div className="header-translate">
       <HeroCarousel programs={heroPrograms} />
-      <ProgramCarousel title="Grammar" href="/" programs={vocabularyPrograms} />
+      <ProgramCarousel
+        title="Grammar"
+        href="/programs/?categories=4"
+        programs={grammarPrograms}
+      />
+      <ShotList />
+      <ProgramCarousel
+        title="Vocabulary"
+        href="/programs/?categories=3"
+        programs={vocabularyPrograms}
+      />
       {/* <SeriesCarousel title="News" href="/" />
       <BookCarousel title="Books to read" href="/" />
       <SeriesCarousel title="Learning capsules" href="/" /> */}

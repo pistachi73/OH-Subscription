@@ -16,7 +16,11 @@ export const ProgramSpotlight = ({ program }: ProgramSpotlightProps) => {
     <>
       <ProgramSpotlightHero program={program} />
       <MaxWidthWrapper className="max-w-[1400px]">
-        <Tabs defaultValue="chapters" className="w-full mt-8">
+        <Tabs
+          defaultValue="chapters"
+          className="w-full mt-8"
+          layoutId="program-spotligh-tabs"
+        >
           <TabsList className="flex w-full items-center justify-center text-base">
             <TabsTrigger value="chapters" className="text-sm sm:text-base">
               Chapters

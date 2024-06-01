@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 
 import { auth } from "@/auth";
 import { CustomSessionProvider } from "@/components/auth/auth-wrapepr";
+import { Providers } from "@/components/providers";
 import { DeviceOnlyProvider } from "@/components/ui/device-only/device-only-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -35,23 +36,25 @@ export default async function RootLayout({
   const session = await auth();
   const { deviceType, authorization } = getHeaders();
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`font-inter ${inter.variable} min-h-screen  ${mono.variable} bg-muted-background`}
       >
-        <CustomSessionProvider session={session}>
-          <DeviceOnlyProvider deviceType={deviceType}>
-            <TRPCReactProvider
-              cookies={cookies().toString()}
-              authorization={authorization?.toString() ?? ""}
-            >
-              <TooltipProvider>
-                <Toaster />
-                {children}
-              </TooltipProvider>
-            </TRPCReactProvider>
-          </DeviceOnlyProvider>
-        </CustomSessionProvider>
+        <Providers>
+          <CustomSessionProvider session={session}>
+            <DeviceOnlyProvider deviceType={deviceType}>
+              <TRPCReactProvider
+                cookies={cookies().toString()}
+                authorization={authorization?.toString() ?? ""}
+              >
+                <TooltipProvider>
+                  <Toaster />
+                  {children}
+                </TooltipProvider>
+              </TRPCReactProvider>
+            </DeviceOnlyProvider>
+          </CustomSessionProvider>
+        </Providers>
       </body>
     </html>
   );

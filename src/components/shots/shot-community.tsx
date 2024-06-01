@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { AddComment } from "../comments/add-comment";
-import { Comment } from "../comments/comment";
+import { AddComment } from "../ui/comments/add-comment";
+import { Comment } from "../ui/comments/comment";
 
 type ShotCommunityProps = {
   showComments: boolean;
@@ -35,7 +35,7 @@ export const ShotCommunity = ({
       <div
         className={cn(
           "flex h-full w-full flex-col justify-between overflow-hidden",
-          "xl:border xl:bg-accent/40",
+          "xl:border xl:bg-background",
           "sm:rounded-md",
         )}
       >

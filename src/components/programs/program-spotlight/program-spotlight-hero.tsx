@@ -78,7 +78,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           {categories.map((category) => (
             <Badge
               key={`category-${category.name}`}
-              variant="secondary"
+              variant="accent"
               className="text-xs sm:text-sm"
             >
               {category.name}

@@ -176,7 +176,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
           <div className="space-y-3">
             <motion.h1
               className={cn(
-                "text-balance text-left font-sans text-3xl font-bold tracking-tighter",
+                "text-balance text-left font-sans text-3xl font-bold tracking-tighter text-foreground",
                 "sm:text-4xl",
                 "lg:text-5xl",
               )}
@@ -189,7 +189,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             </motion.h1>
             <motion.p
               className={cn(
-                "mb-2 line-clamp-3 w-full text-balance text-left text-sm text-foreground text-gray-800",
+                "mb-2 line-clamp-3 w-full text-balance text-left text-sm text-foreground",
                 "sm:line-clamp-4 sm:text-base",
                 "md:text-lg",
               )}

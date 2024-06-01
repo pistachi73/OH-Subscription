@@ -17,6 +17,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { UserButton } from "../auth/user-button";
+import ThemeSwitch from "../theme-switch";
 
 export const MobileHeader = () => {
   const user = useCurrentUser();
@@ -61,6 +62,7 @@ export const MobileHeader = () => {
         <div className="flex items-center grow justify-end">
           <SearchInput openWidth="w-full" className="h-9 text-2xs" />
 
+          <ThemeSwitch />
           {user ? (
             <div className="ml-2">
               <UserButton user={user} />
@@ -80,7 +82,11 @@ export const MobileHeader = () => {
           )}
         </div>
       </MaxWidthWrapper>
-      <ol className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1">
+      <motion.ol
+        layout
+        layoutRoot
+        className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1"
+      >
         {mobileNavItems.map(({ href, title, icon: Icon }) => {
           const isActive = segment ? href.includes(segment) : href === "/";
           return (
@@ -109,7 +115,7 @@ export const MobileHeader = () => {
             </li>
           );
         })}
-      </ol>
+      </motion.ol>
     </nav>
   );
 };
