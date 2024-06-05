@@ -51,7 +51,6 @@ export const ProgramCarousel = ({
   if (!programs?.length) {
     return null;
   }
-  console.log({ title, href });
 
   return (
     <div className="my-4 lg:my-12">

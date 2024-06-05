@@ -5,12 +5,11 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { GithubIcon } from "@/components/ui/icons/github-icon";
-import { GoogleIcon } from "@/components/ui/icons/google-icon";
+import { AppleIcon, FacebookIcon, GoogleIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
-type Provider = "google" | "github";
+type Provider = "google" | "facebook" | "apple";
 
 const socialButtonMapping: Record<
   Provider,
@@ -25,10 +24,15 @@ const socialButtonMapping: Record<
     provider: "google",
     icon: GoogleIcon,
   },
-  github: {
-    label: "Continue with Github",
-    provider: "github",
-    icon: GithubIcon,
+  facebook: {
+    label: "Continue with Facebook",
+    provider: "facebook",
+    icon: FacebookIcon,
+  },
+  apple: {
+    label: "Continue with Apple",
+    provider: "apple",
+    icon: AppleIcon,
   },
 };
 
@@ -51,15 +55,21 @@ export const SocialButton = ({ provider, className }: SocialButtonProps) => {
 
   return (
     <Button
-      size="default"
+      size="lg"
       variant="outline"
       className={cn(
-        "flex w-full justify-between border text-sm  sm:text-base",
+        "flex w-full justify-between border text-sm sm:text-base",
         className,
       )}
+      type="button"
       onClick={onClick}
     >
-      <Icon className="h-[18px] w-[18px]" />
+      <Icon
+        className={cn(
+          "h-[18px] w-[18px]",
+          provider === "apple" && "fill-foreground",
+        )}
+      />
       <span className="block w-full text-center">{label}</span>
     </Button>
   );

@@ -12,12 +12,7 @@ export const privateRoutes = ["/settings"];
  * These routes will redirect logged in users to /settings
  * @type {string[]}
  */
-export const authRoutes = [
-  "/auth/login",
-  "/auth/register",
-  "/auth/error",
-  "/auth/reset-password",
-];
+export const authRoutes = ["/login", "/reset-password", "/error"];
 
 export const adminRoute = "/admin";
 /**

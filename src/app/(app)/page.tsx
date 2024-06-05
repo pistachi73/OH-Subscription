@@ -1,6 +1,5 @@
 import { HeroCarousel } from "@/components/home/hero-carousel";
 import { ProgramCarousel } from "@/components/programs/program-carousel";
-import { ShotList } from "@/components/shots/shot-list";
 import { api } from "@/trpc/server";
 
 export default async function Home() {
@@ -16,8 +15,6 @@ export default async function Home() {
     categoryNames: ["Grammar"],
   });
 
-  console.log(grammarPrograms);
-
   return (
     <div className="header-translate">
       <HeroCarousel programs={heroPrograms} />
@@ -26,7 +23,7 @@ export default async function Home() {
         href="/programs/?categories=4"
         programs={grammarPrograms}
       />
-      <ShotList />
+      {/* <ShotList /> */}
       <ProgramCarousel
         title="Vocabulary"
         href="/programs/?categories=3"

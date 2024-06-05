@@ -68,7 +68,7 @@ export const MobileHeader = () => {
               <UserButton user={user} />
             </div>
           ) : (
-            <AuthButton asChild mode="modal" formType="login">
+            <AuthButton asChild mode="modal">
               <Button
                 size="icon"
                 variant="ghost"

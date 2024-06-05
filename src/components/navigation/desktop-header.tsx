@@ -42,7 +42,7 @@ export const DesktopHeader = () => {
     <header
       className={cn(
         "sticky top-0 z-50 h-12 lg:h-14 border-b",
-        isScrolled
+        isScrolled || segment === "(auth)"
           ? "bg-muted-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
           : "border-transparent [transition:background-color_500ms,border-color_300ms]",
       )}
@@ -70,6 +70,7 @@ export const DesktopHeader = () => {
                   isActive={
                     segment ? item.href.includes(segment) : item.href === "/"
                   }
+                  asChild
                 >
                   <Link href={item.href}>{item.title}</Link>
                 </NavButton>
@@ -86,7 +87,7 @@ export const DesktopHeader = () => {
               <UserButton user={user} />
             </div>
           ) : (
-            <AuthButton asChild mode="modal" formType="login">
+            <AuthButton asChild mode="modal">
               <NavButton className="pr-0">Get started</NavButton>
             </AuthButton>
           )}

@@ -1,15 +1,4 @@
 import { signal } from "@preact/signals-react";
 
-import type {
-  AuthFormType,
-  LoginFormType,
-  RegisterFormType,
-} from "./auth.types";
-
-export const parentFormSignal = signal<AuthFormType>("login");
-export const childrenFormSignal = signal<RegisterFormType | LoginFormType>(
-  "default",
-);
-export const emailSignal = signal<string | null>(null);
 export const isAuthModalOpenSignal = signal(false);
-export const needsAuthModalRedirectSignal = signal(false);
+export const needsAuthModalRedirectSignal = signal(true);

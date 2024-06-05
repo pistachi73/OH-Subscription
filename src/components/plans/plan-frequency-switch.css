@@ -1,0 +1,17 @@
+@property --myColor1 {
+  syntax: '<color>';
+  initial-value: magenta;
+  inherits: false;
+}
+
+@property --myColor2 {
+  syntax: '<color>';
+  initial-value: #00ff00;
+  inherits: false;
+}
+
+.bg{
+ background: linear-gradient(to left,var(--myColor1), var(--myColor2));
+transition: transform 0.3s ease-out, --myColor1 0.3s ease-out, --myColor2 0.3s ease-out;
+}
+

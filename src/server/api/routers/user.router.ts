@@ -4,11 +4,12 @@ import { eq } from "drizzle-orm";
 
 import { generateVerificationToken } from "../lib/tokens";
 import { getUserByEmail, getUserById } from "../lib/user";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 import { sendVerificationEmail } from "@/lib/mail";
 import { SettingsSchema } from "@/schemas";
-import { users } from "@/server/db/schema";
+import { accounts, users } from "@/server/db/schema";
+import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
   updateSettings: protectedProcedure.input(SettingsSchema).mutation(
@@ -92,4 +93,21 @@ export const userRouter = createTRPCRouter({
       return { success: "User settings updated!" };
     },
   ),
+  getUserByEmail: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ input, ctx: { db } }) => {
+      const user = await getUserByEmail({ db, email: input.email });
+      if (user) {
+        const userAccount = await db
+          .select()
+          .from(accounts)
+          .where(eq(accounts.userId, user.id));
+        return {
+          user,
+          account: userAccount[0],
+        };
+      }
+
+      return { user };
+    }),
 });

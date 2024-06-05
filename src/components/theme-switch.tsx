@@ -22,6 +22,7 @@ export default function ThemeSwitch() {
       )}
       variant="link"
       size="sm"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
       {!mounted ? (
         <Image
@@ -34,9 +35,9 @@ export default function ThemeSwitch() {
           title="Loading Light/Dark Toggle"
         />
       ) : resolvedTheme === "dark" ? (
-        <SunMedium onClick={() => setTheme("light")} />
+        <SunMedium />
       ) : (
-        <Moon onClick={() => setTheme("dark")} />
+        <Moon />
       )}
     </Button>
   );

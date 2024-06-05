@@ -14,12 +14,17 @@ export const sendVerificationEmail = async ({
   email: string;
   token: string;
 }) => {
-  await resend.emails.send({
-    from: emailFrom,
-    to: email,
-    subject: "Confirm your email",
-    react: <VerifyEmail token={token} />,
-  });
+  try {
+    await resend.emails.send({
+      from: emailFrom,
+      to: email,
+      subject: "Confirm your email",
+      react: <VerifyEmail token={token} />,
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 export const sendPasswordResetEmail = async ({
@@ -29,13 +34,19 @@ export const sendPasswordResetEmail = async ({
   email: string;
   token: string;
 }) => {
-  const resetLink = `${getBaseUrl()}/auth/reset-password?token=${token}`;
-  await resend.emails.send({
-    from: emailFrom,
-    to: email,
-    subject: "Reset your password",
-    react: <PasswordReset resetLink={resetLink} />,
-  });
+  const resetLink = `${getBaseUrl()}/reset-password?token=${token}`;
+  console.log({ resetLink });
+  try {
+    await resend.emails.send({
+      from: emailFrom,
+      to: email,
+      subject: "Reset your password",
+      react: <PasswordReset resetLink={resetLink} />,
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 export const sendTwoFactorTokenEmail = async ({

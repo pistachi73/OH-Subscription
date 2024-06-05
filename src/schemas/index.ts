@@ -173,3 +173,26 @@ export const ReplySchema = z.object({
   commentId: z.number().optional(),
   userId: z.string(),
 });
+
+export const AuthSchema = z
+  .object({
+    email: z.string().email({
+      message: "Email is required",
+    }),
+    loginPassword: z.string().min(1, { message: "Password is required" }),
+    registerPassword: PasswordSchema.optional(),
+    registerPasswordConfirm: z.string(),
+    code: z.string().optional(),
+  })
+  .refine((data) => data.registerPassword === data.registerPasswordConfirm, {
+    path: ["registerPasswordConfirm"],
+    message: "Passwords does not match",
+  });
+
+export const AuthRegisterSchema = z.object({
+  email: z.string().email({
+    message: "Email is required",
+  }),
+  password: PasswordSchema,
+  code: z.string().optional(),
+});

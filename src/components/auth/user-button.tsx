@@ -7,10 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserAvatar } from "@/components/ui/user-avatar";
 import type { ExtendedUser } from "@/next-auth";
+import { UserAvatar } from "../ui/user-avatar";
 
 export const UserButton = ({ user }: { user: ExtendedUser }) => {
+  console.log(user);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -20,7 +21,7 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
           className="h-9 w-9"
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={4} className="">
+      <DropdownMenuContent align="end" sideOffset={4}>
         <LogoutButton>
           <DropdownMenuItem>
             <LogOut className="mr-2 h-4 w-4" />

@@ -1,4 +1,4 @@
-import { useCustomSession } from "@/components/auth/auth-wrapepr";
+import { useCustomSession } from "@/components/auth/auth-session-provider";
 import type { ExtendedUser } from "@/next-auth";
 
 export const useCurrentUser = () => {

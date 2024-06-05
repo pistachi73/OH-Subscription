@@ -4,7 +4,7 @@ import { Inter, Red_Hat_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 
 import { auth } from "@/auth";
-import { CustomSessionProvider } from "@/components/auth/auth-wrapepr";
+import { CustomSessionProvider } from "@/components/auth/auth-session-provider";
 import { Providers } from "@/components/providers";
 import { DeviceOnlyProvider } from "@/components/ui/device-only/device-only-provider";
 import { Toaster } from "@/components/ui/sonner";

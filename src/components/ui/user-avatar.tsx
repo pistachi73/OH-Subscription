@@ -32,7 +32,11 @@ export const UserAvatar = ({
     <Avatar className={cn(className)}>
       <AvatarImage src={userImage ?? undefined} />
       <AvatarFallback
-        className={cn(userName ? "text-background font-normal" : "bg-accent")}
+        className={cn(
+          userName
+            ? "text-background dark:text-foreground font-normal"
+            : "bg-accent",
+        )}
         style={{ backgroundColor: hslColor }}
       >
         {initials ?? <User className="text-muted-foreground" size={18} />}

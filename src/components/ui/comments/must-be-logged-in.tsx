@@ -8,12 +8,7 @@ export const MustBeLoggedIn = () => {
   const pathname = usePathname();
   const encodedCallbackUrl = encodeURIComponent(pathname);
   return (
-    <AuthButton
-      mode="modal"
-      formType="login"
-      callbackUrl={encodedCallbackUrl}
-      redirect={false}
-    >
+    <AuthButton mode="modal" callbackUrl={encodedCallbackUrl} redirect={false}>
       <div
         className={cn(
           "transition-colors hover:bg-accent relative w-full flex h-full flex-col gap-3 rounded-md border border-input bg-background p-4",

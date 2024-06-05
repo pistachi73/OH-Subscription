@@ -13,16 +13,15 @@ import { getUserByEmail } from "../lib/user";
 import { getVerificationTokenByToken } from "../lib/verification-token";
 
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
-import { NewPasswordSchema, RegisterSchema, ResetSchema } from "@/schemas";
+import { AuthRegisterSchema, NewPasswordSchema, ResetSchema } from "@/schemas";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { passwordResetTokens, users } from "@/server/db/schema";
 
 export const authRouter = createTRPCRouter({
   register: publicProcedure
-
-    .input(RegisterSchema)
+    .input(AuthRegisterSchema)
     .mutation(async ({ input, ctx }) => {
-      const { email, name, password, code } = input;
+      const { email, password, code } = input;
       const { db } = ctx;
 
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,15 +41,15 @@ export const authRouter = createTRPCRouter({
           email,
         });
 
-        try {
-          await sendVerificationEmail({
-            email: verificationToken.email,
-            token: verificationToken.token,
-          });
-        } catch (e) {
+        const success = await sendVerificationEmail({
+          email: verificationToken.email,
+          token: verificationToken.token,
+        });
+
+        if (!success) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wront, please try again later.",
+            message: "Something went wrong, please try again later.",
           });
         }
 
@@ -94,7 +93,7 @@ export const authRouter = createTRPCRouter({
 
       await db.insert(users).values({
         id: userId,
-        name,
+        name: existingToken.email.split("@")[0],
         email,
         password: hashedPassword,
       });
@@ -119,10 +118,19 @@ export const authRouter = createTRPCRouter({
         email,
       });
 
-      await sendPasswordResetEmail({
+      console.log({ passwordResetToken });
+
+      const success = await sendPasswordResetEmail({
         token: passwordResetToken.token,
         email: passwordResetToken.email,
       });
+
+      if (!success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong, please try again later.",
+        });
+      }
 
       return { success: "Reset email sent!" };
     }),

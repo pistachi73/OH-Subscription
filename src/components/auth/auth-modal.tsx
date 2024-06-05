@@ -1,14 +1,13 @@
 "use client";
 
 import { useSignals } from "@preact/signals-react/runtime";
-
-import { AuthFormContentSignals } from "./auth-form";
 import { isAuthModalOpenSignal } from "./auth-signals";
 
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
 } from "@/components/ui/responsive-dialog";
+import { Auth } from "./auth";
 
 export const AuthModal = () => {
   useSignals();
@@ -21,7 +20,7 @@ export const AuthModal = () => {
       }}
     >
       <ResponsiveDialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
-        <AuthFormContentSignals />
+        <Auth className="border-none" />
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );
