@@ -4,7 +4,7 @@ import { api } from "@/trpc/react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { CodeInput } from "../ui/code-input";
@@ -24,7 +24,6 @@ export const AuthEmailVerification = ({
   const register = api.auth.register.useMutation();
   const router = useRouter();
   const [counter, setCounter] = useState(60);
-  const [isPending, startTransition] = useTransition();
 
   const sendVerificationCode = async () => {
     const [email, password] = authForm.getValues(["email", "registerPassword"]);
@@ -55,23 +54,22 @@ export const AuthEmailVerification = ({
 
     if (!typecheckSuccess || !email || !password || !code) return;
 
-    startTransition(async () => {
-      const { success } = await register.mutateAsync({
-        email,
-        password,
-        code,
-      });
-
-      if (!success) return;
-
-      await login({
-        email,
-        password,
-      });
-
-      isAuthModalOpenSignal.value = false;
-      router.push("/plans");
+    const { success } = await register.mutateAsync({
+      email,
+      password,
+      code,
     });
+
+    if (!success) return;
+
+    await login({
+      email,
+      password,
+    });
+
+    isAuthModalOpenSignal.value = false;
+    router.push("/plans");
+    router.refresh();
   };
 
   const onBack = () => {
@@ -112,7 +110,7 @@ export const AuthEmailVerification = ({
                   {...field}
                   length={6}
                   autoFocus
-                  disabled={isPending}
+                  disabled={register.isLoading}
                 />
               </FormControl>
               <Button
@@ -132,8 +130,14 @@ export const AuthEmailVerification = ({
             </FormItem>
           )}
         />
-        <Button className="w-full mt-4" type="submit" disabled={isPending}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button
+          className="w-full mt-4"
+          type="submit"
+          disabled={register.isLoading}
+        >
+          {register.isLoading && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Verify email
         </Button>
       </form>

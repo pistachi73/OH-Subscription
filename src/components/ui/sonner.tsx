@@ -14,7 +14,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       richColors
       closeButton
-      position="top-center"
+      position="bottom-right"
+      offset={12}
       style={{
         fontFamily: "var(--font-sans)",
       }}

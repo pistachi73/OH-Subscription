@@ -19,7 +19,7 @@ const CodeInput = React.forwardRef<HTMLInputElement, CodeInputProps>(
         const value = event.currentTarget.value;
         const next = inputRefs.current[idx + 1];
 
-        if (value.length > 1 || isNaN(Number(value))) {
+        if (value.length > 1 || Number.isNaN(Number(value))) {
           return;
         }
 
@@ -66,7 +66,7 @@ const CodeInput = React.forwardRef<HTMLInputElement, CodeInputProps>(
     const onPaste = (e: React.ClipboardEvent) => {
       e.preventDefault();
       const paste = e.clipboardData.getData("text").split("");
-      if (paste.every((item) => !isNaN(Number(item)))) {
+      if (paste.every((item) => !Number.isNaN(Number(item)))) {
         const newValue = [...values];
         for (let i = 0; i < paste.length; i++) {
           if (i >= length) break;
@@ -87,7 +87,9 @@ const CodeInput = React.forwardRef<HTMLInputElement, CodeInputProps>(
       <div className="flex w-full flex-row items-center justify-around gap-2">
         {Array.from({ length }).map((_, index) => (
           <input
-            ref={(el) => (inputRefs.current[index] = el as HTMLInputElement)}
+            ref={(el) => {
+              inputRefs.current[index] = el as HTMLInputElement;
+            }}
             key={index}
             className={cn(
               "remove-arrow flex h-14 w-14 rounded-md border border-input bg-background px-3 py-2 text-center text-xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",

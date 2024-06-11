@@ -1,11 +1,13 @@
+"use server";
 import { Resend } from "resend";
 
 import PasswordReset from "@/emails/password-reset";
 import TwoFactorVerification from "@/emails/two-factor-verification";
 import VerifyEmail from "@/emails/verify-email";
+import { env } from "@/env";
 import { getBaseUrl } from "@/trpc/shared";
-const resend = new Resend(process.env.RESEND_API_KEY);
-const emailFrom = process.env.EMAIL_FROM || "onboarding@resend.dev";
+const resend = new Resend(env.RESEND_API_KEY);
+const emailFrom = env.EMAIL_FROM || "onboarding@resend.dev";
 
 export const sendVerificationEmail = async ({
   email,
@@ -14,17 +16,12 @@ export const sendVerificationEmail = async ({
   email: string;
   token: string;
 }) => {
-  try {
-    await resend.emails.send({
-      from: emailFrom,
-      to: email,
-      subject: "Confirm your email",
-      react: <VerifyEmail token={token} />,
-    });
-    return true;
-  } catch (error) {
-    return false;
-  }
+  await resend.emails.send({
+    from: emailFrom,
+    to: email,
+    subject: "Confirm your email",
+    react: <VerifyEmail token={token} />,
+  });
 };
 
 export const sendPasswordResetEmail = async ({
@@ -35,18 +32,12 @@ export const sendPasswordResetEmail = async ({
   token: string;
 }) => {
   const resetLink = `${getBaseUrl()}/reset-password?token=${token}`;
-  console.log({ resetLink });
-  try {
-    await resend.emails.send({
-      from: emailFrom,
-      to: email,
-      subject: "Reset your password",
-      react: <PasswordReset resetLink={resetLink} />,
-    });
-    return true;
-  } catch (error) {
-    return false;
-  }
+  await resend.emails.send({
+    from: emailFrom,
+    to: email,
+    subject: "Reset your password",
+    react: <PasswordReset resetLink={resetLink} />,
+  });
 };
 
 export const sendTwoFactorTokenEmail = async ({

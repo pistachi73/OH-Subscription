@@ -73,36 +73,28 @@ export const SettingsSchema = z
     name: z.string().optional(),
     isTwoFactorEnabled: z.boolean().optional(),
     email: z.string().email().optional(),
-    role: z.enum(["ADMIN", "USER"]),
-    password: z.string().min(6).optional(),
-    newPassword: z.string().min(6).optional(),
+    verifycationToken: z.string().optional(),
+    role: z.enum(["ADMIN", "USER"]).optional(),
+    currentPassword: z.string().optional(),
+    password: PasswordSchema.optional(),
+    confirmPassword: z.string().optional(),
   })
   .refine(
     (data) => {
-      if (!data.password && data.newPassword) {
+      if (data.password && data.confirmPassword && !data.currentPassword) {
         return false;
       }
-
       return true;
     },
     {
-      message: "Password is required!",
-      path: ["password"],
+      path: ["currentPassword"],
+      message: "Current password is required!",
     },
   )
-  .refine(
-    (data) => {
-      if (data.password && !data.newPassword) {
-        return false;
-      }
-
-      return true;
-    },
-    {
-      message: "New password is required!",
-      path: ["newPassword"],
-    },
-  );
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords does not match",
+  });
 
 export const ProgramSchema = z.object({
   id: z.number().optional(),

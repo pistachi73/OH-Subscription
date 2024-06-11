@@ -1,6 +1,5 @@
 import { api } from "@/trpc/react";
 import { useSignals } from "@preact/signals-react/runtime";
-import { TRPCClientError } from "@trpc/client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -28,7 +27,6 @@ export const AuthResetPassword = ({ authForm }: AuthResetPasswordProps) => {
     authForm.reset();
     setFormType("LANDING");
   };
-
   const onReset = async () => {
     const typeCheckSuccess = await authForm.trigger(["email"], {
       shouldFocus: true,
@@ -40,20 +38,11 @@ export const AuthResetPassword = ({ authForm }: AuthResetPasswordProps) => {
       return;
     }
 
-    reset
-      .mutateAsync({ email })
-      .then(({ success }) => {
-        authForm.reset();
-        isAuthModalOpenSignal.value = false;
-        toast.success(success);
-      })
-      .catch((error) => {
-        if (error instanceof TRPCClientError) {
-          toast.error(error.message);
-        } else {
-          toast.error("Something went wrong, please try again later.");
-        }
-      });
+    const { success } = await reset.mutateAsync({ email });
+
+    authForm.reset();
+    isAuthModalOpenSignal.value = false;
+    toast.success(success);
   };
 
   return (

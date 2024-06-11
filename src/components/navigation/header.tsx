@@ -7,7 +7,7 @@ import { MobileHeader } from "./mobile-header";
 import { DeviceOnly } from "@/components/ui/device-only/device-only";
 
 export const Header = () => {
-  const canRender = useCanRenderHeader();
+  const { canRenderHeader: canRender } = useCanRenderHeader();
 
   if (!canRender) {
     return null;

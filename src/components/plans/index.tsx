@@ -1,9 +1,14 @@
 "use client";
 
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { Check, X } from "lucide-react";
+import { api } from "@/trpc/react";
+import { Check, Loader2, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { AuthButton } from "../auth/auth-button";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
@@ -14,22 +19,54 @@ import {
   CardTitle,
 } from "../ui/card";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
+import {
+  ANNUAL_PRODUCT_ID,
+  MONTHLY_PRODUCT_ID,
+  guestChecks,
+  memberChecks,
+} from "./constants";
 import { PlanFrequencySwitch } from "./plan-frequency-switch";
 
-const guestChecks = [
-  { key: "guest-full-content", label: "Access to full content" },
-  { key: "guest-interact-community", label: "Interact with the community" },
-  { key: "guest-save-content", label: "Save your favorite content" },
-];
-
-const memberChecks = [
-  { key: "member-full-content", label: "Access to full content" },
-  { key: "member-interact-community", label: "Interact with the community" },
-  { key: "member-save-content", label: "Save your favorite content" },
-];
-
 export const Plans = () => {
+  const redirectRef = useRef<NodeJS.Timeout>();
+  const user = useCurrentUser();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [paymentFrequency, setPaymentFrequency] = useState<"M" | "A">("M");
+
+  const sessionId = searchParams.get("session_id");
+
+  const createCheckoutSession = api.payment.createCheckoutSession.useMutation();
+
+  useEffect(() => {
+    if (sessionId) {
+      redirectRef.current = setTimeout(() => {
+        router.push("/");
+      }, 5000);
+    }
+    return () => {
+      if (redirectRef.current) {
+        clearTimeout(redirectRef.current);
+      }
+    };
+  }, [sessionId, router]);
+
+  const onCreateCheckoutSession = async () => {
+    const { checkoutSession } = await createCheckoutSession.mutateAsync({
+      productId:
+        paymentFrequency === "M" ? MONTHLY_PRODUCT_ID : ANNUAL_PRODUCT_ID,
+    });
+
+    if (!checkoutSession.url) {
+      toast.error("Something went wrong");
+      return;
+    }
+
+    router.push(checkoutSession.url);
+  };
+
+  const ButtonWrapper = user ? Fragment : AuthButton;
+
   return (
     <MaxWidthWrapper className="items-center h-ful flex justify-center pt-12 sm:p-32 sm:pt-12 flex-col">
       <div className="w-full sm:max-w-[600px] mx-auto text-center space-y-2 mb-6">
@@ -44,10 +81,9 @@ export const Plans = () => {
         paymentFrequency={paymentFrequency}
         setPaymentFrequency={setPaymentFrequency}
       />
-
-      <div className="flex flex-row mt-24">
-        <Card className="w-[450px]">
-          <CardHeader className="p-9 pb-0 pr-[calc(36px+32px+22px)]">
+      <div className="flex flex-col-reverse lg:flex-row gap-6 lg:gap-0 mt-12 lg:mt-24">
+        <Card className="w-full max-w-[450px] origin-center lg:origin-right hover:scale-[1.02] transition-transform">
+          <CardHeader className="p-9 pb-0 lg:pr-[calc(36px+32px+22px)]">
             <CardTitle>Guest</CardTitle>
             <CardDescription className="text-muted-foreground leading-relaxed">
               Explore our platform with limited access. Enjoy viewing trailers
@@ -55,7 +91,7 @@ export const Plans = () => {
               participate in community discussions.
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-9 pt-0 pr-[calc(36px+32px+22px)] space-y-9">
+          <CardContent className="p-9 pt-0 lg:pr-[calc(36px+32px+22px)] space-y-9">
             <div className="w-full h-px bg-accent my-9" />
             <div>
               <p className="text-4xl font-bold tracking-tighter text-foreground">
@@ -63,9 +99,29 @@ export const Plans = () => {
               </p>
               <p className="text-sm text-muted-foreground">Free trial</p>
             </div>
-            <Button asChild variant="outline" className="h-16 text-sm w-full">
-              <Link href="/">Continue as a guest</Link>
-            </Button>
+
+            <ButtonWrapper
+              {...(!user
+                ? {
+                    asChild: true,
+                    mode: "modal",
+                    redirect: false,
+                  }
+                : {})}
+            >
+              <Button
+                asChild
+                variant="outline"
+                className="h-16 text-sm w-full mt-9"
+                disabled={createCheckoutSession.isLoading}
+              >
+                {user ? (
+                  <Link href="/">Continue as a guest</Link>
+                ) : (
+                  <span>Continue as a guest</span>
+                )}
+              </Button>
+            </ButtonWrapper>
 
             <div className="space-y-4">
               <p className="font-semibold text-foreground ">For guest</p>
@@ -77,7 +133,7 @@ export const Plans = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className="w-[450px] overflow-hidden bg-muted border-muted-foreground shadow-lg  -ml-8 scale-110 flex flex-col justify-center">
+        <Card className="w-full max-w-[450px]  overflow-hidden bg-muted border-muted-foreground shadow-lg  lg:-ml-8 lg:scale-110 lg:hover:scale-[1.13] hover:scale-105 transition-transform flex flex-col justify-center">
           <CardHeader className="p-9 pb-0">
             <CardTitle>OH Member</CardTitle>
             <CardDescription className="text-muted-foreground leading-relaxed">
@@ -105,9 +161,27 @@ export const Plans = () => {
                 Billed {paymentFrequency === "M" ? "monthly" : "annually"}
               </p>
             </div>
-            <Button variant="default" className="h-16 text-sm w-full">
-              Become a member
-            </Button>
+            <ButtonWrapper
+              {...(!user
+                ? {
+                    asChild: true,
+                    mode: "modal",
+                    redirect: false,
+                  }
+                : {})}
+            >
+              <Button
+                variant="default"
+                className="h-16 text-sm w-full mt-9"
+                {...(user && { onClick: onCreateCheckoutSession })}
+                disabled={createCheckoutSession.isLoading}
+              >
+                {createCheckoutSession.isLoading && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Become a member
+              </Button>
+            </ButtonWrapper>
 
             <div className="space-y-4">
               <p className="font-semibold text-foreground ">For members</p>

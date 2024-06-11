@@ -1,17 +1,20 @@
-import { LogOut } from "lucide-react";
+"use client";
+import { CreditCard, Home, LogOut } from "lucide-react";
 
 import { LogoutButton } from "@/components/auth/logout-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ExtendedUser } from "@/next-auth";
+import Link from "next/link";
 import { UserAvatar } from "../ui/user-avatar";
 
 export const UserButton = ({ user }: { user: ExtendedUser }) => {
-  console.log(user);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -21,10 +24,48 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
           className="h-9 w-9"
         />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" sideOffset={4}>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={4}
+        className="w-[300px] p-2 px-0"
+      >
+        <DropdownMenuLabel className="mx-2 flex flex-row gap-3 items-center">
+          <UserAvatar
+            userImage={user.image}
+            userName={user.name}
+            className="h-12 w-12 shrink-0 text-lg"
+          />
+          <div className="overflow-hidden">
+            <p className="text-base font-medium">{user.name}</p>
+            <p className="text-muted-foreground text-sm  truncate">
+              {user.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator className="my-2 bg-border" />
+        <DropdownMenuItem
+          className="mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-muted-foreground"
+          asChild
+        >
+          <Link href="/account">
+            <Home className="h-5 w-5" />
+            Account
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-muted-foreground"
+          asChild
+        >
+          <Link href="/account/subscription/">
+            <CreditCard className="h-5 w-5" />
+            Manage subscription
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator className="my-2 bg-border" />
+
         <LogoutButton>
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
+          <DropdownMenuItem className="mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-muted-foreground">
+            <LogOut className="h-5 w-5" />
             Logout
           </DropdownMenuItem>
         </LogoutButton>

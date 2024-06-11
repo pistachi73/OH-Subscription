@@ -8,7 +8,9 @@ import { getUserById } from "./server/api/lib/user";
 
 import authConfig from "@/auth.config";
 import { db } from "@/server/db";
-import { twoFactorConirmations } from "@/server/db/schema";
+import { twoFactorConirmations, users } from "@/server/db/schema";
+import { Stripe } from "stripe";
+import { env } from "./env";
 import type { UserRole } from "./server/db/schema.types";
 
 export const {
@@ -16,6 +18,7 @@ export const {
   auth,
   signIn,
   signOut,
+  unstable_update: update,
 } = NextAuth({
   pages: {
     signIn: "/login",
@@ -29,6 +32,23 @@ export const {
       //     emailVerified: new Date(),
       //   })
       //   .where(eq(users.id, user.id ?? ""));
+    },
+    async createUser({ user }) {
+      const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+        apiVersion: "2024-04-10",
+      });
+
+      await stripe.customers
+        .create({
+          email: user.email as string,
+          name: user.name as string,
+        })
+        .then(async (customer) => {
+          await db
+            .update(users)
+            .set({ stripeCustomerId: customer.id })
+            .where(eq(users.id, user.id as string));
+        });
     },
   },
   callbacks: {
@@ -74,6 +94,9 @@ export const {
       token.email = user.email;
       token.role = user.role;
       token.isTwoFactorEnabled = user.isTwoFactorEnabled;
+      token.stripeCustomerId = user.stripeCustomerId;
+      token.stripeSubscriptionId = user.stripeSubscriptionId;
+      token.stripeSubscriptionEndsOn = user.stripeSubscriptionEndsOn;
 
       return token;
     },
@@ -92,6 +115,15 @@ export const {
         session.user.name = token.name;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
+        session.user.stripeCustomerId = token.stripeCustomerId as string;
+        session.user.stripeSubscriptionId =
+          token.stripeSubscriptionId as string;
+        session.user.stripeSubscriptionEndsOn =
+          token.stripeSubscriptionEndsOn as Date;
+
+        session.user.isSubscribed = token.stripeSubscriptionEndsOn
+          ? (token.stripeSubscriptionEndsOn as Date) > new Date()
+          : false;
       }
 
       return session;

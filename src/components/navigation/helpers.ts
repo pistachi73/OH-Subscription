@@ -47,6 +47,11 @@ export const mobileNavItems = [
   },
 ] as const;
 
+const renderDesktopHeaderAsScrolledPathnames = [
+  "/account/",
+  "/account/subscription/",
+];
+
 export const useCanRenderHeader = () => {
   const pathname = usePathname();
   const { deviceType } = useDeviceType();
@@ -56,8 +61,10 @@ export const useCanRenderHeader = () => {
     pathname.split("/").filter(Boolean).length === 2;
 
   const isShotsMobile = isShotPage && deviceType === "mobile";
+  const canRenderAsScrolled =
+    renderDesktopHeaderAsScrolledPathnames.includes(pathname);
 
-  return !isShotsMobile;
+  return { canRenderHeader: !isShotsMobile, canRenderAsScrolled };
 };
 
 export const useCanRenderFooter = () => {

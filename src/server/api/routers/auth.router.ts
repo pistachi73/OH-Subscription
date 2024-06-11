@@ -12,10 +12,16 @@ import {
 import { getUserByEmail } from "../lib/user";
 import { getVerificationTokenByToken } from "../lib/verification-token";
 
+import { env } from "@/env";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
 import { AuthRegisterSchema, NewPasswordSchema, ResetSchema } from "@/schemas";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { passwordResetTokens, users } from "@/server/db/schema";
+import { Stripe } from "stripe";
+
+const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
+  apiVersion: "2024-04-10",
+});
 
 export const authRouter = createTRPCRouter({
   register: publicProcedure
@@ -41,15 +47,16 @@ export const authRouter = createTRPCRouter({
           email,
         });
 
-        const success = await sendVerificationEmail({
-          email: verificationToken.email,
-          token: verificationToken.token,
-        });
-
-        if (!success) {
+        try {
+          await sendVerificationEmail({
+            email: verificationToken.email,
+            token: verificationToken.token,
+          });
+        } catch (e) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Something went wrong, please try again later.",
+            cause: e,
           });
         }
 
@@ -90,12 +97,19 @@ export const authRouter = createTRPCRouter({
       }
 
       const userId = uuid();
+      const name = existingToken.email.split("@")[0];
+
+      const customer = await stripe.customers.create({
+        email,
+        name,
+      });
 
       await db.insert(users).values({
         id: userId,
-        name: existingToken.email.split("@")[0],
+        name,
         email,
         password: hashedPassword,
+        stripeCustomerId: customer.id,
       });
 
       return { success: "User created!" };
@@ -118,17 +132,16 @@ export const authRouter = createTRPCRouter({
         email,
       });
 
-      console.log({ passwordResetToken });
-
-      const success = await sendPasswordResetEmail({
-        token: passwordResetToken.token,
-        email: passwordResetToken.email,
-      });
-
-      if (!success) {
+      try {
+        await sendPasswordResetEmail({
+          token: passwordResetToken.token,
+          email: passwordResetToken.email,
+        });
+      } catch (e) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Something went wrong, please try again later.",
+          cause: e,
         });
       }
 

@@ -10,9 +10,10 @@ import { sendVerificationEmail } from "@/lib/mail";
 import { SettingsSchema } from "@/schemas";
 import { accounts, users } from "@/server/db/schema";
 import { z } from "zod";
+import { getVerificationTokenByToken } from "../lib/verification-token";
 
 export const userRouter = createTRPCRouter({
-  updateSettings: protectedProcedure.input(SettingsSchema).mutation(
+  update: protectedProcedure.input(SettingsSchema).mutation(
     async ({
       input,
       ctx: {
@@ -31,12 +32,17 @@ export const userRouter = createTRPCRouter({
 
       if (user.isOAuth) {
         input.email = undefined;
+        input.currentPassword = undefined;
         input.password = undefined;
-        input.newPassword = undefined;
+        input.confirmPassword = undefined;
         input.isTwoFactorEnabled = undefined;
       }
 
-      if (input.email && input.email !== user.email) {
+      if (
+        input.email &&
+        input.email !== user.email &&
+        !input.verifycationToken
+      ) {
         const existingUserWithEmail = await getUserByEmail({
           db,
           email: input.email,
@@ -59,17 +65,55 @@ export const userRouter = createTRPCRouter({
             email: verificationToken.email,
             token: verificationToken.token,
           });
-        } catch {
+        } catch (e) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Something went wrong!",
+            cause: e,
           });
         }
 
-        return { success: "Verification email sent!" };
+        return {
+          verifyEmail: true,
+          email: verificationToken.email,
+          token: verificationToken.token,
+        };
       }
 
-      if (input.password && input.newPassword && dbUser.password) {
+      if (
+        input.email &&
+        input.verifycationToken &&
+        input.email !== user.email
+      ) {
+        console.log("verifycationToken inside", input.verifycationToken);
+        const existingToken = await getVerificationTokenByToken({
+          token: input.verifycationToken,
+          db,
+        });
+
+        if (!existingToken) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid token!",
+          });
+        }
+
+        const hasExpired = new Date(existingToken.expires) < new Date();
+
+        if (hasExpired) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Token has expired!",
+          });
+        }
+      }
+
+      if (
+        input.currentPassword &&
+        input.password &&
+        input.confirmPassword &&
+        dbUser.password
+      ) {
         const passwordMatch = await bcrypt.compare(
           input.password,
           dbUser.password,
@@ -82,10 +126,11 @@ export const userRouter = createTRPCRouter({
           });
         }
 
-        const hashedPassword = await bcrypt.hash(input.newPassword, 10);
+        const hashedPassword = await bcrypt.hash(input.password, 10);
 
         input.password = hashedPassword;
-        input.newPassword = undefined;
+        input.currentPassword = undefined;
+        input.confirmPassword = undefined;
       }
 
       await db.update(users).set(input).where(eq(users.id, dbUser.id));
@@ -93,6 +138,19 @@ export const userRouter = createTRPCRouter({
       return { success: "User settings updated!" };
     },
   ),
+  delete: protectedProcedure.mutation(async ({ ctx }) => {
+    if (!ctx.session.user.id) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "You are not logged in",
+      });
+    }
+
+    await ctx.db.delete(users).where(eq(users.id, ctx.session.user.id));
+
+    return { success: "User deleted successfully" };
+  }),
+
   getUserByEmail: publicProcedure
     .input(z.object({ email: z.string() }))
     .mutation(async ({ input, ctx: { db } }) => {

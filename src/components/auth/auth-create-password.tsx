@@ -1,6 +1,5 @@
 import { api } from "@/trpc/react";
 import { Loader2 } from "lucide-react";
-import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
@@ -20,7 +19,6 @@ type AuthCreatePasswordProps = AuthFormSharedProps;
 export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
   const { setFormType } = useAuthContext();
   const register = api.auth.register.useMutation();
-  const [isPending, startTransition] = useTransition();
 
   const onBack = () => {
     authForm.resetField("registerPassword");
@@ -44,17 +42,15 @@ export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
 
     if (!typeCheckSuccess) return;
 
-    startTransition(async () => {
-      const { emailVerification } = await register.mutateAsync({
-        email,
-        password: registerPassword,
-      });
-      if (emailVerification) {
-        setFormType("VERIFY_EMAIL");
-      } else {
-        toast.error("Something went wrong, please try again later.");
-      }
+    const { emailVerification } = await register.mutateAsync({
+      email,
+      password: registerPassword,
     });
+    if (emailVerification) {
+      setFormType("VERIFY_EMAIL");
+    } else {
+      toast.error("Something went wrong, please try again later.");
+    }
   };
 
   return (
@@ -82,7 +78,7 @@ export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
                   {...field}
                   autoFocus
                   placeholder="******"
-                  disabled={isPending}
+                  disabled={register.isLoading}
                   autoComplete="new-password"
                   withValidation={
                     authForm.formState.dirtyFields.registerPassword ||
@@ -105,7 +101,7 @@ export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
                 <PasswordInput
                   {...field}
                   placeholder="******"
-                  disabled={isPending}
+                  disabled={register.isLoading}
                   autoComplete="confirm-password"
                 />
               </FormControl>
@@ -113,8 +109,14 @@ export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
             </FormItem>
           )}
         />
-        <Button className="w-full mt-4" type="submit" disabled={isPending}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button
+          className="w-full mt-4"
+          type="submit"
+          disabled={register.isLoading}
+        >
+          {register.isLoading && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
           Register
         </Button>
       </form>

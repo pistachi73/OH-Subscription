@@ -23,15 +23,26 @@ import { tsvector } from "./tsvector";
 //   (name) => `${env.DATABASE_PREFIX}_${name}`,
 // );
 
-export const users = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
-  name: text("name"),
-  email: text("email").notNull(),
-  image: text("image"),
-  password: text("password"),
-  role: text("role", { enum: ["ADMIN", "USER"] }).default("USER"),
-  isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
-});
+export const users = pgTable(
+  "user",
+  {
+    id: text("id").notNull().primaryKey(),
+    name: text("name"),
+    email: text("email").notNull(),
+    image: text("image"),
+    password: text("password"),
+    role: text("role", { enum: ["ADMIN", "USER"] }).default("USER"),
+    isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
+    stripeCustomerId: text("stripeCustomerId").unique(),
+    stripeSubscriptionId: text("stripeSubscriptionId").unique(),
+    stripeSubscriptionEndsOn: timestamp("stripeSubscriptionEndsOn", {
+      mode: "date",
+    }).unique(),
+  },
+  (table) => ({
+    stripeSubscriptionIdIndex: index().on(table.stripeSubscriptionId),
+  }),
+);
 
 export const accounts = pgTable(
   "account",

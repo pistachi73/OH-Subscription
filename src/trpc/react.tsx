@@ -1,7 +1,11 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import {
+  TRPCClientError,
+  loggerLink,
+  unstable_httpBatchStreamLink,
+} from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import { TRPCError } from "@trpc/server";
 import { useState } from "react";
@@ -27,7 +31,11 @@ export function TRPCReactProvider(props: {
           },
           mutations: {
             onError: (error) => {
-              if (error instanceof Error || error instanceof TRPCError) {
+              if (
+                error instanceof Error ||
+                error instanceof TRPCError ||
+                error instanceof TRPCClientError
+              ) {
                 toast.error(error.message);
               }
             },

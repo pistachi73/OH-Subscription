@@ -9,7 +9,7 @@ import { AuthButton } from "../auth/auth-button";
 import { UserButton } from "../auth/user-button";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
-import { headerNavItems } from "./helpers";
+import { headerNavItems, useCanRenderHeader } from "./helpers";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -22,6 +22,7 @@ export const DesktopHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const user = useCurrentUser();
   const segment = useSelectedLayoutSegment();
+  const { canRenderAsScrolled } = useCanRenderHeader();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,8 +43,8 @@ export const DesktopHeader = () => {
     <header
       className={cn(
         "sticky top-0 z-50 h-12 lg:h-14 border-b",
-        isScrolled || segment === "(auth)"
-          ? "bg-muted-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
+        isScrolled || segment === "(auth)" || canRenderAsScrolled
+          ? "bg-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
           : "border-transparent [transition:background-color_500ms,border-color_300ms]",
       )}
     >
@@ -54,7 +55,7 @@ export const DesktopHeader = () => {
         )}
       >
         <div className="flex flex-row gap-4 items-center">
-          <Link href="/">
+          <Link href="/" className="shrink-0">
             <Image
               src={"/images/oh-logo.png"}
               alt="logo"
@@ -78,8 +79,12 @@ export const DesktopHeader = () => {
             ))}
           </ul>
         </div>
-        <div className="flex h-full flex-row items-center ">
-          <SearchInput placeholder="Title, description" />
+        <div className="flex h-full flex-row items-center grow justify-end">
+          <SearchInput
+            placeholder="Title, description"
+            openWidth="w-full"
+            className="max-w-[320px]"
+          />
           <ThemeSwitch />
 
           {user ? (
@@ -105,7 +110,7 @@ const NavButton = React.forwardRef<
     <Button
       ref={ref}
       className={cn(
-        "text-xs lg:text-sm text-shadow-lg font-normal hover:no-underline",
+        "text-sm text-shadow-lg font-normal hover:no-underline",
         isActive
           ? "text-foreground font-medium"
           : "text-foreground/80 hover:text-foreground/60",
