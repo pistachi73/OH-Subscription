@@ -1,6 +1,6 @@
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
-import { CardList } from "../ui/cards/card-list";
+import { ProgramList } from "../programs/program-list";
 
 type ChapterRelatedProps = {
   program: NonNullable<ProgramSpotlight>;
@@ -25,7 +25,7 @@ export const ChapterRelated = ({ program }: ChapterRelatedProps) => {
     <>
       <h2 className="text-xl font-medium tracking-tight">Related programs</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:grid-cols-1">
-        <CardList
+        <ProgramList
           programs={relatedPrograms}
           isLoading={isLoading}
           initialAnimation={false}

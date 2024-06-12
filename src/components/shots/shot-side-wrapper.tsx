@@ -18,7 +18,7 @@ export const ShotSideWrapper = ({
   isDialogOpen,
   onDialogOpenChange,
 }: ShotSideWrapperProps) => {
-  const { deviceSize } = useDeviceType();
+  const { deviceSize, deviceType } = useDeviceType();
 
   return deviceSize.includes("xl") ? (
     <AnimatePresence mode="wait">
@@ -34,7 +34,7 @@ export const ShotSideWrapper = ({
             },
           }}
           exit={{ opacity: 0, x: 10 }}
-          className="absolute left-[calc(100%+16px)] aspect-[9/16] h-full w-full max-w-[500px]"
+          className="absolute left-[calc(100%+16px)] aspect-[9/16] h-full w-full max-w-[500px] z-20"
         >
           {children}
         </motion.div>
@@ -45,7 +45,9 @@ export const ShotSideWrapper = ({
       <ResponsiveDialogContent
         className={cn(
           "max-h-[95%] w-full p-0 pt-2",
-          "sm:h-[80%] sm:w-[500px] sm:rounded-md sm:pt-0",
+          deviceType === "mobile"
+            ? "w-full"
+            : "w-[500px] pt-0 h-[80%] rounded-md",
         )}
         hideClose
       >

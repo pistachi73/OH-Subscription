@@ -13,6 +13,7 @@ import {
   authRoutes,
   privateRoutes,
 } from "@/routes";
+import { VERCEL_HEADERS } from "./lib/get-headers";
 
 const { auth } = NextAuth(authConfig);
 
@@ -25,8 +26,18 @@ export default auth(async (req) => {
     type === "mobile" ? "mobile" : type === "tablet" ? "tablet" : "desktop";
 
   const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("x-geo-country-code", country);
-  requestHeaders.set("x-device-type", deviceType);
+  requestHeaders.set(VERCEL_HEADERS.COUNTRY, country);
+  requestHeaders.set(VERCEL_HEADERS.DEVICE_TYPE, deviceType);
+
+  /* Save URL host visible to the user in Header */
+  const nextUrlHost = req?.nextUrl?.host;
+  requestHeaders.set(VERCEL_HEADERS.HOST, nextUrlHost);
+
+  /* Save PathName in Header */
+  const pathName = req?.nextUrl?.pathname;
+  const url = req?.url;
+  requestHeaders.set(VERCEL_HEADERS.PATHNAME, pathName);
+  requestHeaders.set(VERCEL_HEADERS.URL, url);
 
   const isLoggedIn = !!req.auth;
   const { nextUrl } = req;

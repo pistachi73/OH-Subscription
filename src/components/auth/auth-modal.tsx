@@ -19,7 +19,7 @@ export const AuthModal = () => {
         isAuthModalOpenSignal.value = isOpen;
       }}
     >
-      <ResponsiveDialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
+      <ResponsiveDialogContent className="max-w-max sm:border-none sm:h-auto sm:w-auto bg-background">
         <Auth className="border-none" />
       </ResponsiveDialogContent>
     </ResponsiveDialog>

@@ -76,9 +76,17 @@ export const ProgramList = ({
   }, [cardsPerRow, deviceSize]);
 
   if (isLoading) {
-    return Array.from({ length: getLoadingCardsNumber() }).map((_, index) => (
-      <Skeleton key={`program-skeleton-${index}`} className="aspect-video" />
-    ));
+    return Array.from({ length: getLoadingCardsNumber() * 2 }).map(
+      (_, index) => (
+        <Skeleton
+          key={`program-skeleton-${index}`}
+          className="aspect-video animate-pulse-carousel"
+          style={{
+            animationDelay: `${100 * index}ms`,
+          }}
+        />
+      ),
+    );
   }
 
   if (!programs?.length) {

@@ -1,6 +1,6 @@
 "use client";
 import { LogIn } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -8,47 +8,48 @@ import { useSelectedLayoutSegment } from "next/navigation";
 
 import { AuthButton } from "../auth/auth-button";
 import { Button } from "../ui/button";
-import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 import { SearchInput } from "../ui/search-input";
 
-import { mobileNavItems } from "./helpers";
+import { mobileNavItems, useCanRenderHeader } from "./helpers";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { UserButton } from "../auth/user-button";
 import ThemeSwitch from "../theme-switch";
+import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 export const MobileHeader = () => {
+  const { scrollY } = useScroll();
+  const [hiddenTopBar, setHiddenTopBar] = useState(false);
+  const { visible } = useCanRenderHeader();
+
   const user = useCurrentUser();
   const segment = useSelectedLayoutSegment();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [position, setPosition] = useState(0);
-  const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const moving = window.scrollY;
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const prev = scrollY.getPrevious() ?? 0;
 
-      if (position < moving && moving > 48) setVisible(false);
-      else setVisible(true);
-      setPosition(moving);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    if (latest === 0 && prev > 68) {
+      //Opening of drawer or modal
+      return;
+    }
+
+    if (latest > prev && latest > 68) setHiddenTopBar(true);
+    else setHiddenTopBar(false);
   });
+
+  if (!visible) return null;
 
   return (
     <nav className="relative">
       <div className="h-12 block w-full" />
       <MaxWidthWrapper
-        as="section"
         className={cn(
-          "fixed top-0 z-50 flex h-12 w-full items-center bg-muted-background border-b border-accent justify-between gap-4 transition-all duration-300",
-          visible ? "translate-y-0" : "-translate-y-full",
+          "fixed top-0 z-50 flex h-12 w-full items-center bg-muted-background border-b border-accent justify-between gap-4 transition-transform duration-300",
+          hiddenTopBar ? "-translate-y-full" : "translate-y-0",
         )}
       >
         <Link href="/">
@@ -75,6 +76,7 @@ export const MobileHeader = () => {
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 name="join"
                 className="text-sm h-8 w-8"
+                aria-label="Login"
               >
                 <LogIn size={16} />
               </Button>
@@ -82,6 +84,7 @@ export const MobileHeader = () => {
           )}
         </div>
       </MaxWidthWrapper>
+
       <motion.ol
         layout
         layoutRoot

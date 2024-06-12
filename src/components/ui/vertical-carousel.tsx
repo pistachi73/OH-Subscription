@@ -202,12 +202,7 @@ const VerticalCarouselPrevious = React.forwardRef<
     <Button
       ref={ref}
       variant="accent"
-      className={cn(
-        "absolute h-14 w-14 rounded-full transition-all",
-        "top-0",
-        "right-[2%] sm:right-[4%] 2xl:right-14",
-        className,
-      )}
+      className={cn("h-14 w-14 rounded-full transition-all", className)}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
@@ -229,12 +224,7 @@ const VerticalCarouselNext = React.forwardRef<
     <Button
       ref={ref}
       variant="accent"
-      className={cn(
-        "absolute h-14 w-14 rounded-full transition-all",
-        "bottom-8",
-        "right-[2%] sm:right-[4%] 2xl:right-14",
-        className,
-      )}
+      className={cn("h-14 w-14 rounded-full transition-all", className)}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}

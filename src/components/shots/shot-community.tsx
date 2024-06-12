@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { AddComment } from "../ui/comments/add-comment";
 import { Comment } from "../ui/comments/comment";
+import { DeviceOnly } from "../ui/device-only/device-only";
 
 type ShotCommunityProps = {
   showComments: boolean;
@@ -34,7 +35,7 @@ export const ShotCommunity = ({
     >
       <div
         className={cn(
-          "flex h-full w-full flex-col justify-between overflow-hidden",
+          "flex h-full w-full flex-col",
           "xl:border xl:bg-background",
           "sm:rounded-md",
         )}
@@ -83,17 +84,19 @@ export const ShotCommunity = ({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button
-              variant="ghost"
-              size="inline"
-              className="p-1"
-              onClick={() => setShowComments(false)}
-            >
-              <X size={20} />
-            </Button>
+            <DeviceOnly allowedDevices={["tablet", "desktop"]}>
+              <Button
+                variant="ghost"
+                size="inline"
+                className="p-1"
+                onClick={() => setShowComments(false)}
+              >
+                <X size={20} />
+              </Button>
+            </DeviceOnly>
           </div>
         </div>
-        <div className="flex flex-col overflow-hidden">
+        <div className="flex flex-col justify-end h-full basis-auto overflow-y-auto">
           <div className="flex  max-h-full min-h-0 flex-col items-start gap-4  overflow-y-auto p-4">
             <Comment />
             <Comment />

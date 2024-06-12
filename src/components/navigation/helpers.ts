@@ -15,7 +15,7 @@ export const headerNavItems = [
   },
   {
     title: "Shots",
-    href: "/shots",
+    href: "/shots/1/",
   },
 ];
 
@@ -32,7 +32,7 @@ export const mobileNavItems = [
   },
   {
     title: "Shots",
-    href: "/shots/",
+    href: "/shots/1/",
     icon: PlaySquare,
   },
   {
@@ -56,23 +56,18 @@ export const useCanRenderHeader = () => {
   const pathname = usePathname();
   const { deviceType } = useDeviceType();
 
-  const isShotPage =
-    pathname.includes("/shots") &&
-    pathname.split("/").filter(Boolean).length === 2;
+  const isShotsMobile = pathname.includes("/shots") && deviceType === "mobile";
 
-  const isShotsMobile = isShotPage && deviceType === "mobile";
-  const canRenderAsScrolled =
+  const renderAsScrolled =
     renderDesktopHeaderAsScrolledPathnames.includes(pathname);
 
-  return { canRenderHeader: !isShotsMobile, canRenderAsScrolled };
+  return { visible: !isShotsMobile, renderAsScrolled };
 };
 
 export const useCanRenderFooter = () => {
   const pathname = usePathname();
 
-  const isShotPage =
-    pathname.includes("/shots") &&
-    pathname.split("/").filter(Boolean).length === 2;
+  const isShotPage = pathname.includes("/shots");
 
   return !isShotPage;
 };

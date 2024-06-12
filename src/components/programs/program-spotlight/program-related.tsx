@@ -1,7 +1,7 @@
 "use client";
-import { CardList } from "@/components/ui/cards/card-list";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
+import { ProgramList } from "../program-list";
 
 type RelatedProgramsProps = {
   program: NonNullable<ProgramSpotlight>;
@@ -21,7 +21,7 @@ export const RelatedPrograms = ({ program }: RelatedProgramsProps) => {
       <h2 className="text-lg font-semibold sm:text-xl">You might also like</h2>
 
       <div className="grid grid-cols-2  gap-x-2 gap-y-4 py-4 sm:grid-cols-3 lg:grid-cols-4">
-        <CardList
+        <ProgramList
           programs={relatedPrograms}
           isLoading={isLoading}
           initialAnimation={false}

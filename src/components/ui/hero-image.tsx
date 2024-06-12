@@ -28,7 +28,8 @@ export const HeroImage = ({
         alt={alt}
         className="w-full object-cover"
         fill
-        priority
+        priority={true}
+        sizes="(min-width: 1300px) 50vw, 100vw"
       />
       <div
         className={cn(

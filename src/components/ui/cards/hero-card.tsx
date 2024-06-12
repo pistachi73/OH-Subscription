@@ -1,12 +1,7 @@
 "use client";
-import {
-  motion,
-  usePresence,
-  type Transition,
-  type Variants,
-} from "framer-motion";
+import { motion, type Transition, type Variants } from "framer-motion";
 import { Info, Play } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 
 import Link from "next/link";
 
@@ -43,11 +38,6 @@ const SAFE_TO_REMOVE_MS: number =
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
   ({ className, index, program, notFound = false }, ref) => {
     const { isMobile } = useDeviceType();
-    const [isPresent, safeToRemove] = usePresence();
-
-    useEffect(() => {
-      !isPresent && setTimeout(safeToRemove, SAFE_TO_REMOVE_MS);
-    }, [isPresent, safeToRemove]);
 
     const { title, slug, description, thumbnail } = program ?? {};
 
@@ -225,7 +215,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
               >
                 <Link href={`/programs/${slug}`}>
                   <Info size={22} className="mr-2" />
-                  More information
+                  Program details
                 </Link>
               </MotionButton>
             </div>

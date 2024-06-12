@@ -1,8 +1,5 @@
 "use client";
 import { Shot } from "@/components/shots/shot";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import {
@@ -14,6 +11,10 @@ import {
   type VerticalCarouselApi,
 } from "@/components/ui/vertical-carousel";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
+import { DeviceOnly } from "../ui/device-only/device-only";
+import { useDeviceType } from "../ui/device-only/device-only-provider";
 
 type ShotCarouselProps = {
   currentShot?: number;
@@ -24,6 +25,7 @@ type ShotCarouselProps = {
 export const ShotCarousel = ({ className }: ShotCarouselProps) => {
   const [api, setApi] = useState<VerticalCarouselApi>();
   const [current, setCurrent] = useState(0);
+  const { serverDeviceType } = useDeviceType();
 
   useEffect(() => {
     if (!api) {
@@ -37,12 +39,15 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
     });
   }, [api]);
 
+  console.log({ serverDeviceType });
+
   return (
     <div
       className={cn(
         "relative",
-        "sm:h-[calc(100vh-3rem)] lg:h-[calc(100vh-3.5rem)] sm:pt-2",
-        "h-[calc(100dvh)]",
+        serverDeviceType === "mobile"
+          ? "h-[calc(100dvh)] sm:min-h-[550px]"
+          : "h-[calc(100dvh)] sm:min-h-[550px] sm:h-[calc(100vh-3rem)] lg:h-[calc(100vh-3.5rem)] sm:pt-2",
       )}
     >
       <VerticalCarousel
@@ -55,20 +60,20 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
         }}
         setApi={setApi}
       >
-        <Button
+        <Link
+          href="/"
           className={cn(
-            "absolute top-0 z-50 h-14 min-w-14 rounded-full p-4 text-background transition-all",
+            "absolute sm:hidden top-0 z-50 rounded-full px-4 py-2",
             "left-[2%] sm:left-[4%] 2xl:left-14 sm:text-foreground -ml-4",
           )}
-          size="inline"
-          variant="ghost"
-          asChild
         >
-          <Link href="/">
-            <ArrowLeft size={24} className="sm:mr-2" />
-            <span className="hidden text-sm sm:inline">Go back</span>
-          </Link>
-        </Button>
+          <Image
+            src={"/images/oh-logo.png"}
+            alt="logo"
+            width={50}
+            height={50}
+          />
+        </Link>
 
         <VerticalCarouselContent className="h-full">
           {Array.from({ length: 4 }).map((_, index) => {
@@ -85,8 +90,12 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
             );
           })}
         </VerticalCarouselContent>
-        <VerticalCarouselNext className="hidden sm:block" />
-        <VerticalCarouselPrevious className="hidden sm:block" />
+        <DeviceOnly allowedDevices={["tablet", "desktop"]}>
+          <div className="z-0 absolute right-[2%] sm:right-[4%] 2xl:right-14 top-0 h-full flex items-end justify-center flex-col gap-3">
+            <VerticalCarouselPrevious className="hidden sm:block" />
+            <VerticalCarouselNext className="hidden sm:block" />
+          </div>
+        </DeviceOnly>
       </VerticalCarousel>
     </div>
   );

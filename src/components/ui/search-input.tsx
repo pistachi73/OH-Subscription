@@ -51,6 +51,7 @@ export const SearchInput = ({
           "absolute top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center",
           open && "pointer-events-none",
         )}
+        aria-label="Search"
         onClick={() => {
           setOpen(true);
           inputRef.current?.focus();

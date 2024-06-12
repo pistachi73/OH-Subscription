@@ -99,6 +99,17 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        "pulse-carousel": {
+          "0%": {
+            opacity: "1",
+          },
+          "50%": {
+            opacity: "0.2",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -109,7 +120,7 @@ const config: Config = {
         },
         "form-message-div-down": {
           "0%": {
-            opacity: "0",
+            opacity: "1",
             transform: "translateY(-5px)",
             "max-height": "0px",
           },
@@ -157,6 +168,8 @@ const config: Config = {
         },
       },
       animation: {
+        "pulse-carousel":
+          "pulse-carousel 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "form-message-div-down":

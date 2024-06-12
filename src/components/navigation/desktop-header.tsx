@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,35 +15,35 @@ import { Button, type ButtonProps } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/search-input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
+import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useSelectedLayoutSegment } from "next/navigation";
 import ThemeSwitch from "../theme-switch";
 
-export const DesktopHeader = () => {
+type DesktopHeaderProps = {
+  renderAsScrolled?: boolean;
+};
+
+export const DesktopHeader = ({
+  renderAsScrolled = false,
+}: DesktopHeaderProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const user = useCurrentUser();
   const segment = useSelectedLayoutSegment();
-  const { canRenderAsScrolled } = useCanRenderHeader();
+  const { visible } = useCanRenderHeader();
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest > 10) setIsScrolled(true);
+    else setIsScrolled(false);
+  });
+
+  if (!visible) return null;
 
   return (
     <header
       className={cn(
         "sticky top-0 z-50 h-12 lg:h-14 border-b",
-        isScrolled || segment === "(auth)" || canRenderAsScrolled
+        isScrolled || segment === "(auth)" || renderAsScrolled
           ? "bg-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
           : "border-transparent [transition:background-color_500ms,border-color_300ms]",
       )}

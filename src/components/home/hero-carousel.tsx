@@ -1,12 +1,11 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { HeroCard, heroCardHeightProps } from "../ui/cards/hero-card";
 
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
-import { useTabFocus } from "@/hooks/use-tab-focus";
 import { cn } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
 
@@ -16,47 +15,11 @@ type HeroCarouselProps = {
 
 export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
   const [current, setCurrent] = useState<number>(0);
-  const autoplayIntervalId = useRef<NodeJS.Timeout>();
-  const isTabFocused = useTabFocus();
-
-  // const autoPlay = () => setCurrent((prev) => (prev + 1) % programs.length);
-
-  // const stopInterval = () => {
-  //   if (autoplayIntervalId.current) {
-  //     clearInterval(autoplayIntervalId.current);
-  //     autoplayIntervalId.current = undefined;
-  //   }
-  // };
-
-  // const startInterval = () => {
-  //   if (autoplayIntervalId.current) {
-  //     clearInterval(autoplayIntervalId.current);
-  //   }
-  //   autoplayIntervalId.current = setInterval(autoPlay, 5000);
-  // };
-
-  // useEffect(() => {
-  //   if (!isTabFocused) {
-  //     stopInterval();
-  //   } else {
-  //     startInterval();
-  //   }
-  // }, [isTabFocused, startInterval, stopInterval]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     stopInterval();
-  //   };
-  // }, [stopInterval]);
 
   return (
     <>
-      <div
-        className={cn("relative z-0 mb-8 sm:mb-12", heroCardHeightProps)}
-        // onMouseEnter={stopInterval}
-        // onMouseLeave={startInterval}
-      >
-        <AnimatePresence initial={false}>
+      <div className={cn("relative z-0 mb-8 sm:mb-12", heroCardHeightProps)}>
+        <AnimatePresence initial={false} mode="wait">
           <HeroCard
             key={`hero-card-${current}`}
             program={programs[current]}
@@ -78,6 +41,7 @@ export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
             }}
             type="button"
             name="hero-carousel-navigation"
+            aria-label="Navigate to next program"
           >
             <div
               className={cn(

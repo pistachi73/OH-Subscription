@@ -23,6 +23,7 @@ export default function ThemeSwitch() {
       variant="link"
       size="sm"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+      aria-label="Toggle dark mode"
     >
       {!mounted ? (
         <Image

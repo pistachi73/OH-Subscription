@@ -7,7 +7,12 @@ export type DeviceType = "mobile" | "tablet" | "desktop";
 type CountProviderProps = { children: React.ReactNode; deviceType: DeviceType };
 
 const DeviceTypeContext = createContext<
-  | { deviceSize: DeviceSize[]; deviceType: DeviceType; isMobile: boolean }
+  | {
+      deviceSize: DeviceSize[];
+      deviceType: DeviceType;
+      isMobile: boolean;
+      serverDeviceType: DeviceType;
+    }
   | undefined
 >(undefined);
 
@@ -20,6 +25,7 @@ export const SCREENS = {
 } as const;
 
 const getIsMobileUsingViewport = (
+  serverDeviceType: DeviceType,
   viewportWidth: number,
 ): { deviceType: DeviceType; deviceSize: DeviceSize[] } => {
   const deviceType =
@@ -28,6 +34,15 @@ const getIsMobileUsingViewport = (
       : viewportWidth < SCREENS.LG
         ? "tablet"
         : "desktop";
+
+  const isLandscape = window.matchMedia("(orientation: landscape").matches;
+
+  if (serverDeviceType === "mobile" && isLandscape) {
+    return {
+      deviceType: "mobile",
+      deviceSize: ["xs", "sm"],
+    };
+  }
 
   switch (true) {
     case viewportWidth < SCREENS.SM:
@@ -41,19 +56,23 @@ const getIsMobileUsingViewport = (
     case viewportWidth < SCREENS["2XL"]:
       return { deviceType, deviceSize: ["xs", "sm", "md", "lg", "xl"] };
     default:
-      return { deviceType, deviceSize: ["xs", "sm", "md", "lg", "xl", "2xl"] };
+      return {
+        deviceType,
+        deviceSize: ["xs", "sm", "md", "lg", "xl", "2xl"],
+      };
   }
 };
 
 export const DeviceOnlyProvider = ({
   children,
-  deviceType,
+  deviceType: serverDeviceType,
 }: CountProviderProps) => {
-  const [deviceTypeState, setDeviceType] = useState<DeviceType>(deviceType);
+  const [deviceTypeState, setDeviceType] =
+    useState<DeviceType>(serverDeviceType);
   const [deviceSizeState, setDeviceSize] = useState<DeviceSize[]>(
-    deviceType === "mobile"
+    serverDeviceType === "mobile"
       ? ["xs"]
-      : deviceType === "tablet"
+      : serverDeviceType === "tablet"
         ? ["xs", "sm", "md"]
         : ["xs", "sm", "md", "lg", "xl", "2xl"],
   );
@@ -62,6 +81,7 @@ export const DeviceOnlyProvider = ({
     const handleResize = () => {
       if (window.innerWidth) {
         const { deviceType, deviceSize } = getIsMobileUsingViewport(
+          serverDeviceType,
           window.innerWidth,
         );
 
@@ -71,6 +91,7 @@ export const DeviceOnlyProvider = ({
     };
 
     const { deviceType, deviceSize } = getIsMobileUsingViewport(
+      serverDeviceType,
       window.innerWidth,
     );
 
@@ -87,8 +108,9 @@ export const DeviceOnlyProvider = ({
       deviceType: deviceTypeState,
       deviceSize: deviceSizeState,
       isMobile: deviceTypeState === "mobile",
+      serverDeviceType,
     }),
-    [deviceTypeState, deviceSizeState],
+    [deviceTypeState, deviceSizeState, serverDeviceType],
   );
   return (
     <DeviceTypeContext.Provider value={value}>

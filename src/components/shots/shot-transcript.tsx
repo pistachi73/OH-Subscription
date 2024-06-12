@@ -4,6 +4,7 @@ import { ShotSideWrapper } from "./shot-side-wrapper";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { DeviceOnly } from "../ui/device-only/device-only";
 
 type ShotTranscriptProps = {
   showTranscript: boolean;
@@ -37,14 +38,16 @@ export const ShotTranscript = ({
             Transcript
           </h2>
 
-          <Button
-            variant="ghost"
-            size="inline"
-            className="hidden p-1 sm:block"
-            onClick={() => setShowTranscript(false)}
-          >
-            <X size={20} />
-          </Button>
+          <DeviceOnly allowedDevices={["tablet", "desktop"]}>
+            <Button
+              variant="ghost"
+              size="inline"
+              className="hidden p-1 sm:block"
+              onClick={() => setShowTranscript(false)}
+            >
+              <X size={20} />
+            </Button>
+          </DeviceOnly>
         </div>
         <div className="p-3 pt-0">
           <p className="text-sm sm:text-base ">

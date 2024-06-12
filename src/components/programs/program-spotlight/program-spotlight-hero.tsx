@@ -42,9 +42,9 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
       <div
         className={cn(
           "flex flex-col grow relative justify-end gap-4",
-          "mt-8 sm:mt-[calc(var(--header-height)+48px)]",
+          "mt-8 sm:mt-[calc(120px)]",
           "portrait:before:top-0 portrait:before:h-[35vw] portrait:before:min-h-[100px] portrait:before:content-['']",
-          "landscape:mt-[calc(100vw*9/16-48px)] landscape:sm:mt-[calc(var(--header-height)+48px)]",
+          "landscape:mt-[calc(100vw*9/16-48px)] landscape:sm:mt-[calc(120px)]",
         )}
       >
         <div

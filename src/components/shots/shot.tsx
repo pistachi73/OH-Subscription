@@ -1,16 +1,14 @@
 "use client";
 import { cubicBezier, motion, type Transition } from "framer-motion";
 import {
+  FileVolume,
   Heart,
-  MessageSquareText,
-  NotebookText,
-  Share,
+  MessageCircle,
+  Share2Icon,
   User,
   type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
-
-import Image from "next/image";
 
 import { ShotCommunity } from "./shot-community";
 import { ShotTranscript } from "./shot-transcript";
@@ -20,6 +18,7 @@ import { useDeviceType } from "@/components/ui/device-only/device-only-provider"
 import { ShareButton } from "@/components/ui/share-button/share-button";
 import { cn } from "@/lib/utils";
 import "media-chrome";
+import { ShotPlayer } from "./shot-player";
 
 export const Shot = () => {
   const [showComments, setShowComments] = useState(false);
@@ -29,7 +28,7 @@ export const Shot = () => {
 
   const shotOptionsButtons = [
     {
-      icon: NotebookText,
+      icon: FileVolume,
       label: "Transcript",
       onClick: () => {
         setShowComments(false);
@@ -39,7 +38,7 @@ export const Shot = () => {
     { icon: Heart, label: "Like" },
 
     {
-      icon: MessageSquareText,
+      icon: MessageCircle,
       label: "Comment",
       onClick: () => {
         setShowTranscript(false);
@@ -47,7 +46,7 @@ export const Shot = () => {
       },
     },
     {
-      icon: Share,
+      icon: Share2Icon,
       label: "Share",
     },
   ] as const;
@@ -68,8 +67,7 @@ export const Shot = () => {
       }}
       transition={transition}
       className={cn(
-        "relative flex h-full translate-x-0 items-end sm:aspect-[9/16]",
-        "before:absolute  before:bottom-0 before:-z-10 before:h-[150px] before:w-full before:bg-gradient-to-t before:from-foreground before:content-[''] sm:before:rounded-b-md",
+        "relative flex w-full sm:w-auto h-full translate-x-0 items-end sm:aspect-[9/16] bg-background",
         "sm:rounded-md",
       )}
     >
@@ -87,9 +85,11 @@ export const Shot = () => {
                 <User className="text-muted-foreground" size={16} />
               </AvatarFallback>
             </Avatar>
-            <p className="text-sm sm:text-base text-foreground">Jhon Doe</p>
+            <p className="text-sm sm:text-base text-background dark:text-foreground">
+              Jhon Doe
+            </p>
           </div>
-          <span className="line-clamp-3 text-sm text-foreground">
+          <span className="line-clamp-3 text-sm text-background dark:text-foreground">
             Vocabulary is the cornerstone of effective communication.
           </span>
         </div>
@@ -101,29 +101,20 @@ export const Shot = () => {
                 initial: {
                   x: "calc(100% + 28px)",
                   y: 24,
-                  color: "var(--text-color-foreground)",
                 },
                 animate: {
                   x: canAnimate ? 0 : "calc(100% + 28px)",
                   y: canAnimate ? 0 : 24,
-                  color: canAnimate
-                    ? "var(--text-color-background)"
-                    : "var(--text-color-foreground)",
                 },
               }
             : {
                 initial: {
                   x: 0,
                   y: 0,
-                  color: "var(--text-color-background)",
                 },
               })}
           transition={transition}
-          className={cn(
-            "flex flex-col gap-3 text-background",
-            "[--text-color-background:#fff] [--text-color-foreground:#050610]",
-            "dark:[--text-color-background:#050610] dark:[--text-color-foreground:#fff]",
-          )}
+          className={cn("flex flex-col gap-4")}
         >
           {shotOptionsButtons.map(({ icon: Icon, label, ...props }) => {
             const isShare = label === "Share";
@@ -145,6 +136,7 @@ export const Shot = () => {
                   },
                   link: true,
                 }}
+                asChild
               >
                 <OptionButtonContent
                   icon={Icon}
@@ -153,27 +145,21 @@ export const Shot = () => {
                 />
               </ShareButton>
             ) : (
-              <button key={label} {...props}>
-                <OptionButtonContent
-                  icon={Icon}
-                  label={label}
-                  canAnimate={canAnimate}
-                />
-              </button>
+              <OptionButtonContent
+                key={label}
+                icon={Icon}
+                label={label}
+                canAnimate={canAnimate}
+                {...props}
+              />
             );
           })}
         </motion.div>
       </div>
 
-      <Image
-        src={"/images/hero-thumbnail-2.jpg"}
-        alt="video"
-        fill
-        className="aspect-[9/16] rounded-md object-cover"
-      />
-      {/* <div className="absolute left-0 top-0 z-0 aspect-[9/16] w-full overflow-hidden rounded-md">
-        <ShotPlayer />
-      </div> */}
+      <div className="absolute left-0 top-0 z-0 aspect-[9/16] w-full overflow-hidden sm:rounded-md h-full">
+        <ShotPlayer playbackId="pDetWhEkgm9vA01US5fPhPlGec3JbDaCi029MuOZLj64w" />
+      </div>
 
       <ShotCommunity
         showComments={showComments}
@@ -192,25 +178,40 @@ const OptionButtonContent = ({
   icon: Icon,
   label,
   canAnimate,
+  onClick,
 }: {
   icon: LucideIcon;
   label: string;
   canAnimate: boolean;
+  onClick?: () => void;
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-1">
-      <div
+    <div className="flex flex-col items-center justify-center gap-px">
+      <button
+        type="button"
         className={cn(
-          "pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-foreground/70 p-0 text-background transition-colors",
-          "sm:h-14 sm:w-14",
-          "xl:bg-accent/70 xl:text-foreground xl:delay-400 xl:hover:bg-accent/100",
+          "h-12 w-12 pointer-events-auto flex items-center justify-center rounded-full  p-0  transition-colors",
+          "bg-foreground/70 dark:bg-background/70  text-white",
+          "xl:bg-accent/70 xl:text-accent-foreground dark:bg-accent/70 dark:xl:text-accent-foreground  xl:hover:bg-accent/80",
+          "xl:delay-400",
           canAnimate &&
-            "xl:bg-foreground/70 xl:text-background xl:delay-0 xl:hover:bg-foreground/90 xl:hover:delay-0",
+            "xl:delay-0  xl:hover:delay-0 xl:bg-foreground/70 xl:dark:bg-background/70 xl:text-white xl:hover:bg-foreground/80 xl:dark:hover:bg-background/80",
+        )}
+        onClick={onClick}
+      >
+        <Icon className="w-5 h-5" />
+      </button>
+      <p
+        className={cn(
+          "text-sm font-medium  text-[hsl(210,40%,98%)] xl:text-accent-foreground",
+          "xl:delay-400",
+          canAnimate
+            ? "font-medium xl:text-[hsl(210,40%,98%)] xl:delay-0"
+            : "font-normal",
         )}
       >
-        <Icon size={18} />
-      </div>
-      <p className="text-xs sm:text-sm">{label}</p>
+        {label}
+      </p>
     </div>
   );
 };
