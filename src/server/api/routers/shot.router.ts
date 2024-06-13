@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { and, eq, getTableColumns, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -8,9 +8,12 @@ import {
   publicProcedure,
 } from "../trpc";
 
+import { toKebabCase } from "@/lib/case-converters";
 import { isNumber } from "@/lib/utils";
-import { ShotSchema } from "@/schemas";
-import { shots } from "@/server/db/schema";
+import { CategoriesOnShotsSchema, ShotSchema } from "@/schemas";
+import { categories, categoriesOnShots, shots } from "@/server/db/schema";
+import type { Category } from "@/server/db/schema.types";
+import { shotsWithCategories } from "../query-utils/shots.query";
 
 export const shotRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -35,6 +38,7 @@ export const shotRouter = createTRPCRouter({
 
       await db.insert(shots).values({
         ...values,
+        slug: toKebabCase(values.title) as string,
       });
 
       return { success: true };
@@ -53,15 +57,11 @@ export const shotRouter = createTRPCRouter({
         });
       }
 
-      const shot = await db
-        .select()
-        .from(shots)
-        .where(eq(shots.id, Number(id)));
-
       await db
         .update(shots)
         .set({
           ...values,
+          slug: toKebabCase(values.title) as string,
         })
         .where(eq(shots.id, Number(id)));
 
@@ -77,8 +77,94 @@ export const shotRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.number())
     .query(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      const shot = await db.select().from(shots).where(eq(shots.id, id));
+      let shotQuery = ctx.db
+        .select({
+          ...getTableColumns(shots),
+          categories: sql<Category[]>`json_agg(DISTINCT
+            jsonb_build_object(
+              'id', ${categories.id},
+              'name', ${categories.name})
+           )`,
+        })
+        .from(shots)
+        .$dynamic();
+
+      shotQuery = shotsWithCategories(shotQuery);
+      shotQuery = shotQuery.where(eq(shots.id, id));
+
+      const shot = await shotQuery.execute();
+
       return shot[0];
+    }),
+
+  getByIdAdmin: adminProtectedProcedure
+    .input(z.number())
+    .query(async ({ input: id, ctx }) => {
+      const { slug, createdAt, updatedAt, ...rest } = getTableColumns(shots);
+
+      let shotQuery = ctx.db
+        .select({
+          ...rest,
+          categories: sql<Category[]>`json_agg(DISTINCT
+              jsonb_build_object(
+                'id', ${categories.id},
+                'name', ${categories.name})
+             )`,
+        })
+        .from(shots)
+        .where(eq(shots.id, id))
+        .$dynamic();
+
+      shotQuery = shotsWithCategories(shotQuery);
+      shotQuery = shotQuery.groupBy(shots.id);
+
+      const shot = await shotQuery.execute();
+
+      return shot[0];
+    }),
+
+  getAllAdmin: adminProtectedProcedure.query(async ({ ctx }) => {
+    let shotQuery = ctx.db
+      .select({
+        ...getTableColumns(shots),
+        categories: sql<Category[]>`json_agg(DISTINCT
+        jsonb_build_object(
+          'id', ${categories.id},
+          'name', ${categories.name})
+       )`,
+      })
+      .from(shots)
+      .$dynamic();
+
+    shotQuery = shotsWithCategories(shotQuery);
+
+    const shotList = await shotQuery.execute();
+    return shotList;
+  }),
+
+  addCategory: adminProtectedProcedure
+    .input(CategoriesOnShotsSchema)
+    .mutation(async ({ input: { shotId, categoryId }, ctx: { db } }) => {
+      await db.insert(categoriesOnShots).values({
+        shotId,
+        categoryId,
+      });
+
+      return true;
+    }),
+
+  removeCategory: adminProtectedProcedure
+    .input(CategoriesOnShotsSchema)
+    .mutation(async ({ input: { shotId, categoryId }, ctx: { db } }) => {
+      await db
+        .delete(categoriesOnShots)
+        .where(
+          and(
+            eq(categoriesOnShots.shotId, shotId),
+            eq(categoriesOnShots.categoryId, categoryId),
+          ),
+        );
+
+      return true;
     }),
 });

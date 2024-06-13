@@ -4,6 +4,7 @@ import { commentRouter } from "./routers/comment.router";
 import { paymentRouter } from "./routers/payment.router";
 import { programRouter } from "./routers/program.router";
 import { replyRouter } from "./routers/reply.router";
+import { shotRouter } from "./routers/shot.router";
 import { teacherRouter } from "./routers/teacher.router";
 import { userRouter } from "./routers/user.router";
 import { videoRouter } from "./routers/video.router";
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   user: userRouter,
   teacher: teacherRouter,
   video: videoRouter,
+  shot: shotRouter,
   program: programRouter,
   category: categoryRouter,
   comment: commentRouter,

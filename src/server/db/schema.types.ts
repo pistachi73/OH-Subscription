@@ -1,11 +1,19 @@
 import type { RouterOutputs } from "@/trpc/shared";
-import type { categories, programs, teachers, users, videos } from "./schema";
+import type {
+  categories,
+  programs,
+  shots,
+  teachers,
+  users,
+  videos,
+} from "./schema";
 
 export type Program = typeof programs.$inferSelect;
 export type Video = typeof videos.$inferSelect;
 export type Category = typeof categories.$inferSelect;
 export type Teacher = typeof teachers.$inferSelect;
 export type User = typeof users.$inferSelect;
+export type Shot = typeof shots.$inferSelect;
 
 export type ProgramLevel = Program["level"];
 export type UserRole = User["role"];
@@ -17,3 +25,6 @@ export type ProgramChapter = RouterOutputs["video"]["getBySlug"];
 export type Comment =
   RouterOutputs["comment"]["getByProgramIdOrVideoId"]["comments"][0];
 export type Reply = RouterOutputs["reply"]["getByCommentId"]["replies"][0];
+
+// TYPES FROM ADMIN QUERYS
+export type AdminShot = RouterOutputs["shot"]["getByIdAdmin"];

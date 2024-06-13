@@ -28,9 +28,9 @@ export const SlugCell = ({ value }: { value: string }) => {
     >
       <p>{value}</p>
       {copied ? (
-        <CheckCheckIcon size={14} strokeWidth={1} />
+        <CheckCheckIcon size={14} strokeWidth={1} className="shrink-0" />
       ) : (
-        <Copy size={14} strokeWidth={1} />
+        <Copy size={14} strokeWidth={1} className="shrink-0" />
       )}
     </button>
   );

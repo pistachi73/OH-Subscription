@@ -137,11 +137,15 @@ export const TeacherSchema = z.object({
 
 export const ShotSchema = z.object({
   id: z.number().optional(),
-  slug: z.string().min(1, { message: "Slug is required" }),
   playbackId: z.string().min(1, { message: "Playback ID is required" }),
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   transcript: z.string().optional(),
+});
+
+export const CategoriesOnShotsSchema = z.object({
+  shotId: z.number(),
+  categoryId: z.number(),
 });
 
 export const VideoSchema = z.object({

@@ -2,8 +2,9 @@ import {
   BookOpen,
   GraduationCap,
   Layers3,
-  type LucideIcon,
   MonitorPlay,
+  PlaySquare,
+  type LucideIcon,
 } from "lucide-react";
 
 export const navigationItems: {
@@ -21,7 +22,7 @@ export const navigationItems: {
     href: "/admin/videos",
     icon: MonitorPlay,
   },
-
+  { label: "Shots", href: "/admin/shots", icon: PlaySquare },
   {
     label: "Teachers",
     href: "/admin/teachers",

@@ -52,9 +52,6 @@ export const EditProgram = ({
 
   const [isSaving, startTransition] = useTransition();
 
-  const { refetch } = api.program.getProgramsForCards.useQuery({});
-
-  refetch({});
   const { mutateAsync: saveVideo } = api.program.update.useMutation({
     onSuccess: ({ id }) => {
       trpcUtils.program.getById.invalidate(id);
