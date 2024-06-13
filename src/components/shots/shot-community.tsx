@@ -98,8 +98,8 @@ export const ShotCommunity = ({
         </div>
         <div className="flex flex-col justify-end h-full basis-auto overflow-y-auto">
           <div className="flex  max-h-full min-h-0 flex-col items-start gap-4  overflow-y-auto p-4">
-            <Comment />
-            <Comment />
+            <Comment className="p-0 border-transparent" />
+            <Comment className="p-0 border-transparent" />
           </div>
           <div className="border-t p-4">
             <div className="flex flex-row gap-3">

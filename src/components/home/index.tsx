@@ -1,5 +1,6 @@
 import { api } from "@/trpc/server";
 import { ProgramCarousel } from "../programs/program-carousel";
+import { ShotList } from "../shots/shot-list";
 import { HeroCarousel } from "./hero-carousel";
 
 export const Home = async () => {
@@ -15,6 +16,8 @@ export const Home = async () => {
     categoryNames: ["Grammar"],
   });
 
+  const shots = await api.shot.getShotForCards.query();
+
   return (
     <div className="header-translate">
       <HeroCarousel programs={heroPrograms} />
@@ -23,7 +26,7 @@ export const Home = async () => {
         href="/programs/?categories=4"
         programs={grammarPrograms}
       />
-      {/* <ShotList /> */}
+      <ShotList shots={shots} />
       <ProgramCarousel
         title="Vocabulary"
         href="/programs/?categories=3"

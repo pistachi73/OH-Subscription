@@ -25,7 +25,7 @@ export const ShotTranscript = ({
       <div
         className={cn(
           "flex h-full w-full flex-col overflow-hidden rounded-md",
-          "xl:border xl:bg-accent/40",
+          "xl:border xl:bg-background",
         )}
       >
         <div

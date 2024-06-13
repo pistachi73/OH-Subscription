@@ -39,9 +39,15 @@ type CommentProps = {
   comment?: CommentData;
   programId?: number;
   videoId?: number;
+  className?: string;
 };
 
-export const Comment = ({ comment, programId, videoId }: CommentProps) => {
+export const Comment = ({
+  comment,
+  programId,
+  videoId,
+  className,
+}: CommentProps) => {
   const user = useCurrentUser();
   const apiUtils = api.useUtils();
   const [showAddReply, setShowAddReply] = useState(false);
@@ -181,6 +187,7 @@ export const Comment = ({ comment, programId, videoId }: CommentProps) => {
           "sm:gap-3",
           isDeletingComment && "opacity-50 pointer-events-none",
           isEditing && "border-primary shadow-md",
+          className,
         )}
       >
         {isUserComment && (

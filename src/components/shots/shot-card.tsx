@@ -1,15 +1,18 @@
 "use client";
 import { cn } from "@/lib/utils";
+import type { ShotCard as ShotCardProps } from "@/server/db/schema.types";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
-export const ShotCard = () => {
+export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
   const [showPreview, setShowPreview] = useState(false);
   const previewTimeoutRef = useRef<NodeJS.Timeout>();
 
+  const thumbnailUrl = `https://image.mux.com/${shot.playbackId}/thumbnail.webp?width=900&height=1600&time=4`;
+  const shotPreviewUrl = `https://image.mux.com/${shot.playbackId}/animated.webp?width=320`;
   return (
     <div
-      className="w-full h-full bg-muted rounded-md relative overflow-hidden aspect-[9/16]"
+      className="w-full h-full bg-muted rounded-md relative overflow-hidden aspect-[9/16] flex items-end px-3 py-2"
       onMouseEnter={() => {
         previewTimeoutRef.current = setTimeout(() => setShowPreview(true), 400);
       }}
@@ -20,22 +23,25 @@ export const ShotCard = () => {
         }
       }}
     >
+      <p className="relative z-30 font-medium line-clamp-2 text-lg text-white">
+        {shot.title}
+      </p>
       <Image
-        src="https://image.mux.com/IlfobVwONwzhT6601yU9pth26n8gl02oBvHxGmzuMsBz4/thumbnail.webp?width=900&height=1600&time=2"
-        alt="Shot card"
+        src={thumbnailUrl}
+        alt="Shot card thumbnail"
         fill
         priority
         className={cn(
-          "relative z-20 object-cover transition-all aspect-[9/16]",
+          "relative z-10 object-cover transition-all aspect-[9/16]",
           showPreview ? "opacity-0" : "opacity-100",
         )}
       />
       <Image
-        src="https://image.mux.com/IlfobVwONwzhT6601yU9pth26n8gl02oBvHxGmzuMsBz4/animated.webp?width=320"
-        alt="Shot card"
+        src={shotPreviewUrl}
+        alt="Shot card preview"
         fill
         loading="lazy"
-        className="object-cover relative z-10 aspect-[9/16]"
+        className="object-cover relative z-0 aspect-[9/16]"
       />
     </div>
   );

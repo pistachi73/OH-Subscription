@@ -13,6 +13,7 @@ import { isNumber } from "@/lib/utils";
 import { CategoriesOnShotsSchema, ShotSchema } from "@/schemas";
 import { categories, categoriesOnShots, shots } from "@/server/db/schema";
 import type { Category } from "@/server/db/schema.types";
+import { withLimit } from "../query-utils/shared.query";
 import { shotsWithCategories } from "../query-utils/shots.query";
 
 export const shotRouter = createTRPCRouter({
@@ -140,6 +141,30 @@ export const shotRouter = createTRPCRouter({
 
     const shotList = await shotQuery.execute();
     return shotList;
+  }),
+
+  getShotForCards: publicProcedure.query(async ({ ctx }) => {
+    let shotQuery = ctx.db
+      .select({
+        playbackId: shots.playbackId,
+        slug: shots.slug,
+        title: shots.title,
+        categories: sql<Category[]>`json_agg(DISTINCT
+        jsonb_build_object(
+          'id', ${categories.id},
+          'name', ${categories.name})
+       )`,
+      })
+      .from(shots)
+      .$dynamic();
+
+    shotQuery = shotsWithCategories(shotQuery);
+    shotQuery = shotQuery.groupBy(shots.id);
+    shotQuery = withLimit(shotQuery, 6);
+
+    const allShots = await shotQuery.execute();
+
+    return allShots;
   }),
 
   addCategory: adminProtectedProcedure
