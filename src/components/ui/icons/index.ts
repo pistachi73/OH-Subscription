@@ -2,3 +2,8 @@ export * from "./apple-icon";
 export * from "./facebook-icon";
 export * from "./github-icon";
 export * from "./google-icon";
+export * from "./heart-icon";
+export * from "./icons.type";
+export * from "./share-arrow-icon";
+export * from "./speach-bubble-icon";
+export * from "./transcript-icon";

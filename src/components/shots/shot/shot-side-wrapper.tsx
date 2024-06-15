@@ -1,4 +1,4 @@
-import { AnimatePresence, cubicBezier, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import type { PropsWithChildren } from "react";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
@@ -24,17 +24,17 @@ export const ShotSideWrapper = ({
     <AnimatePresence mode="wait">
       {isDialogOpen && (
         <motion.div
-          initial={{ opacity: 0, x: 10 }}
+          initial={{ opacity: 0, x: "-90%" }}
           animate={{
             opacity: 1,
             x: 0,
             transition: {
-              delay: 0.4,
-              ease: cubicBezier(0.4, 0, 0.2, 1),
+              duration: 0.3,
+              ease: "easeInOut",
             },
           }}
-          exit={{ opacity: 0, x: 10 }}
-          className="absolute left-[calc(100%+16px)] aspect-[9/16] h-full w-full max-w-[500px] z-20"
+          exit={{ opacity: 0, x: "-90%" }}
+          className="absolute left-full aspect-[9/16] h-full w-full max-w-[500px] -z-10"
         >
           {children}
         </motion.div>

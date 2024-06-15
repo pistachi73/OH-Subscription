@@ -1,5 +1,4 @@
 "use client";
-import { Shot } from "@/components/shots/shot";
 import { useEffect, useState } from "react";
 
 import {
@@ -11,21 +10,24 @@ import {
   type VerticalCarouselApi,
 } from "@/components/ui/vertical-carousel";
 import { cn } from "@/lib/utils";
+import type { ShotCarouselData } from "@/server/db/schema.types";
 import Image from "next/image";
 import Link from "next/link";
 import { DeviceOnly } from "../ui/device-only/device-only";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
+import { Shot } from "./shot/index";
 
 type ShotCarouselProps = {
-  currentShot?: number;
-  initialShots?: string[];
+  initialShots: ShotCarouselData[];
   className?: string;
 };
 
-export const ShotCarousel = ({ className }: ShotCarouselProps) => {
+export const ShotCarousel = ({
+  initialShots,
+  className,
+}: ShotCarouselProps) => {
   const [api, setApi] = useState<VerticalCarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const { serverDeviceType } = useDeviceType();
+  const { deviceType } = useDeviceType();
 
   useEffect(() => {
     if (!api) {
@@ -34,24 +36,22 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
 
     api.on("select", () => {
       const selected = api.selectedScrollSnap();
-      setCurrent(selected);
-      window.history.pushState(null, "", `/shots/${selected}/`);
+      if (!initialShots?.[selected]) return;
+      window.history.pushState(null, "", `/shots/${initialShots?.[selected]}/`);
     });
   }, [api]);
-
-  console.log({ serverDeviceType });
 
   return (
     <div
       className={cn(
         "relative",
-        serverDeviceType === "mobile"
-          ? "h-[calc(100dvh)] sm:min-h-[550px]"
-          : "h-[calc(100dvh)] sm:min-h-[550px] sm:h-[calc(100vh-3rem)] lg:h-[calc(100vh-3.5rem)] sm:pt-2",
+        deviceType === "mobile"
+          ? "h-[calc(100dvh)]"
+          : "h-[calc(100dvh)] sm:h-[calc(100vh-3rem)] lg:h-[calc(100vh-3.5rem)] sm:pt-2",
       )}
     >
       <VerticalCarousel
-        className={cn("h-full", className)}
+        className={cn("h-full relative", className)}
         orientation="vertical"
         opts={{
           align: "start",
@@ -75,17 +75,22 @@ export const ShotCarousel = ({ className }: ShotCarouselProps) => {
           />
         </Link>
 
-        <VerticalCarouselContent className="h-full">
-          {Array.from({ length: 4 }).map((_, index) => {
+        <VerticalCarouselContent
+          className={cn("h-full", deviceType === "mobile" && "sm:mt-0")}
+        >
+          {initialShots?.map((shot, index) => {
+            if (!shot) return null;
             return (
               <VerticalCarouselItem
                 key={index}
                 className={cn(
                   "flex h-full w-full basis-full justify-center",
-                  "sm:max-h-[97%] sm:basis-[97%]",
+                  deviceType === "mobile"
+                    ? "pt-0 sm:pt-0 mt-0 sm:mt-0"
+                    : "sm:max-h-[97%] sm:basis-[97%]",
                 )}
               >
-                <Shot />
+                <Shot shot={shot} />
               </VerticalCarouselItem>
             );
           })}

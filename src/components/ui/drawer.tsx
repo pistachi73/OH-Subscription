@@ -83,7 +83,7 @@ const DrawerContent = React.forwardRef<
         {...props}
       >
         {(!direction || direction === "bottom") && !hideClose && (
-          <div className="mx-auto mb-2 h-1 w-1/5 rounded-full bg-accent" />
+          <div className="mx-auto mb-2 h-1 w-1/5 rounded-full bg-accent shrink-0" />
         )}
         {children}
       </DrawerPrimitive.Content>
@@ -143,13 +143,13 @@ DrawerDescription.displayName = DrawerPrimitive.Description.displayName;
 
 export {
   Drawer,
-  DrawerPortal,
-  DrawerOverlay,
-  DrawerTrigger,
   DrawerClose,
   DrawerContent,
-  DrawerHeader,
-  DrawerFooter,
-  DrawerTitle,
   DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerPortal,
+  DrawerTitle,
+  DrawerTrigger,
 };

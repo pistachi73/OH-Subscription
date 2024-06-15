@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import type { ShotCard as ShotCardProps } from "@/server/db/schema.types";
 import Image from "next/image";
+import Link from "next/link";
 import { useRef, useState } from "react";
 
 export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
@@ -11,7 +12,8 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
   const thumbnailUrl = `https://image.mux.com/${shot.playbackId}/thumbnail.webp?width=900&height=1600&time=4`;
   const shotPreviewUrl = `https://image.mux.com/${shot.playbackId}/animated.webp?width=320`;
   return (
-    <div
+    <Link
+      href={`/shots/${shot.slug}`}
       className="w-full h-full bg-muted rounded-md relative overflow-hidden aspect-[9/16] flex items-end px-3 py-2"
       onMouseEnter={() => {
         previewTimeoutRef.current = setTimeout(() => setShowPreview(true), 400);
@@ -43,6 +45,6 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
         loading="lazy"
         className="object-cover relative z-0 aspect-[9/16]"
       />
-    </div>
+    </Link>
   );
 };

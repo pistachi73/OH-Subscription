@@ -11,7 +11,6 @@ const DeviceTypeContext = createContext<
       deviceSize: DeviceSize[];
       deviceType: DeviceType;
       isMobile: boolean;
-      serverDeviceType: DeviceType;
     }
   | undefined
 >(undefined);
@@ -108,9 +107,8 @@ export const DeviceOnlyProvider = ({
       deviceType: deviceTypeState,
       deviceSize: deviceSizeState,
       isMobile: deviceTypeState === "mobile",
-      serverDeviceType,
     }),
-    [deviceTypeState, deviceSizeState, serverDeviceType],
+    [deviceTypeState, deviceSizeState],
   );
   return (
     <DeviceTypeContext.Provider value={value}>

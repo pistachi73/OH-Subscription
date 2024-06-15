@@ -4,17 +4,17 @@ import { ShotSideWrapper } from "./shot-side-wrapper";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { DeviceOnly } from "../ui/device-only/device-only";
+import { DeviceOnly } from "../../ui/device-only/device-only";
+import { useDeviceType } from "../../ui/device-only/device-only-provider";
+import { useShotContext } from "./shot-context";
 
 type ShotTranscriptProps = {
-  showTranscript: boolean;
-  setShowTranscript: (show: boolean) => void;
+  transcript?: string | null;
 };
 
-export const ShotTranscript = ({
-  showTranscript,
-  setShowTranscript,
-}: ShotTranscriptProps) => {
+export const ShotTranscript = ({ transcript }: ShotTranscriptProps) => {
+  const { showTranscript, setShowTranscript } = useShotContext();
+  const { isMobile } = useDeviceType();
   return (
     <ShotSideWrapper
       isDialogOpen={showTranscript}
@@ -24,17 +24,17 @@ export const ShotTranscript = ({
     >
       <div
         className={cn(
-          "flex h-full w-full flex-col overflow-hidden rounded-md",
-          "xl:border xl:bg-background",
+          "flex h-full w-full flex-col overflow-hidden rounded-r-xl",
+          "xl:border xl:bg-background xl:border-l-0",
         )}
       >
         <div
           className={cn(
-            "flex flex-row items-center justify-between p-3 pt-0",
-            "sm:p-4",
+            "flex flex-row items-center justify-between px-4 py-3",
+            isMobile && "pt-0",
           )}
         >
-          <h2 className={cn("text-base font-medium sm:text-lg", "lg:text-xl")}>
+          <h2 className={cn("text-base md:text-lg font-medium ")}>
             Transcript
           </h2>
 
@@ -49,13 +49,11 @@ export const ShotTranscript = ({
             </Button>
           </DeviceOnly>
         </div>
-        <div className="p-3 pt-0">
-          <p className="text-sm sm:text-base ">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed
-          </p>
-        </div>
+        {transcript && (
+          <div className="px-4 py-3 pt-0">
+            <p className="text-sm sm:text-base ">{transcript}</p>
+          </div>
+        )}
       </div>
     </ShotSideWrapper>
   );

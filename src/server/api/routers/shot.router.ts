@@ -14,7 +14,10 @@ import { CategoriesOnShotsSchema, ShotSchema } from "@/schemas";
 import { categories, categoriesOnShots, shots } from "@/server/db/schema";
 import type { Category } from "@/server/db/schema.types";
 import { withLimit } from "../query-utils/shared.query";
-import { shotsWithCategories } from "../query-utils/shots.query";
+import {
+  shotCategoriesSelect,
+  shotsWithCategories,
+} from "../query-utils/shots.query";
 
 export const shotRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -106,11 +109,11 @@ export const shotRouter = createTRPCRouter({
       let shotQuery = ctx.db
         .select({
           ...rest,
-          categories: sql<Category[]>`json_agg(DISTINCT
-              jsonb_build_object(
+          categories: sql<Category[] | null>`nullif(json_agg(DISTINCT
+              nullif(jsonb_strip_nulls(jsonb_build_object(
                 'id', ${categories.id},
-                'name', ${categories.name})
-             )`,
+                'name', ${categories.name}))::jsonb, '{}'::jsonb)
+        )::jsonb, '[null]'::jsonb)`,
         })
         .from(shots)
         .where(eq(shots.id, id))
@@ -119,9 +122,10 @@ export const shotRouter = createTRPCRouter({
       shotQuery = shotsWithCategories(shotQuery);
       shotQuery = shotQuery.groupBy(shots.id);
 
-      const shot = await shotQuery.execute();
+      const shotList = await shotQuery.execute();
+      const shot = shotList?.[0];
 
-      return shot[0];
+      return shotList[0];
     }),
 
   getAllAdmin: adminProtectedProcedure.query(async ({ ctx }) => {
@@ -166,6 +170,34 @@ export const shotRouter = createTRPCRouter({
 
     return allShots;
   }),
+
+  getCarouselShots: publicProcedure
+    .input(
+      z.object({
+        initialShotSlug: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      let initialShotQuery = ctx.db
+        .select({
+          id: shots.id,
+          playbackId: shots.playbackId,
+          slug: shots.slug,
+          title: shots.title,
+          transcript: shots.transcript,
+          description: shots.description,
+          ...shotCategoriesSelect,
+        })
+        .from(shots)
+        .where(eq(shots.slug, input.initialShotSlug))
+        .$dynamic();
+
+      initialShotQuery = shotsWithCategories(initialShotQuery);
+      initialShotQuery = initialShotQuery.groupBy(shots.id);
+      const initialShot = (await initialShotQuery.execute())[0];
+
+      return [initialShot];
+    }),
 
   addCategory: adminProtectedProcedure
     .input(CategoriesOnShotsSchema)

@@ -32,8 +32,10 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
     },
   });
 
+  console.log(shot.categories);
+
   const initialCategories =
-    shot?.categories.map(({ id }) => id.toString()).join(",") ?? "";
+    shot?.categories?.map(({ id }) => id.toString()).join(",") ?? "";
 
   const saveShot = api.shot.update.useMutation({
     onError: (error) => {
@@ -62,7 +64,7 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
       <ShotForm
         form={form}
         categoryOptions={categoryOptions}
-        initialCategories={initialCategories ?? ""}
+        initialCategories={initialCategories}
       />
     </AdminFormLayout>
   );

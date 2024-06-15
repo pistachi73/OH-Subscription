@@ -1,9 +1,8 @@
-import { Filter, SendHorizonal, User, X } from "lucide-react";
+import { Filter, SendHorizonal, X } from "lucide-react";
 import { useState } from "react";
 
 import { ShotSideWrapper } from "./shot-side-wrapper";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,21 +10,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserAvatar } from "@/components/ui/user-avatar";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
-import { AddComment } from "../ui/comments/add-comment";
-import { Comment } from "../ui/comments/comment";
-import { DeviceOnly } from "../ui/device-only/device-only";
+import { AddComment } from "../../ui/comments/add-comment";
+import { Comment } from "../../ui/comments/comment";
+import { DeviceOnly } from "../../ui/device-only/device-only";
+import { useDeviceType } from "../../ui/device-only/device-only-provider";
+import { useShotContext } from "./shot-context";
 
-type ShotCommunityProps = {
-  showComments: boolean;
-  setShowComments: (value: boolean) => void;
-};
+export const ShotCommunity = () => {
+  const user = useCurrentUser();
+  const { showComments, setShowComments } = useShotContext();
+  const { isMobile } = useDeviceType();
 
-export const ShotCommunity = ({
-  showComments,
-  setShowComments,
-}: ShotCommunityProps) => {
   const [sort, setSort] = useState("Sort");
+
   return (
     <ShotSideWrapper
       isDialogOpen={showComments}
@@ -36,17 +36,18 @@ export const ShotCommunity = ({
       <div
         className={cn(
           "flex h-full w-full flex-col",
-          "xl:border xl:bg-background",
-          "sm:rounded-md",
+          "xl:border xl:bg-background xl:border-l-0",
+          "sm:rounded-r-xl",
+          "overflow-hidden",
         )}
       >
         <div
           className={cn(
-            "flex flex-row items-center justify-between border-b p-3 pt-0",
-            "sm:p-4",
+            "flex flex-row items-center justify-between px-4 py-3",
+            isMobile && "pt-0",
           )}
         >
-          <h2 className={cn("text-base font-medium sm:text-lg", "lg:text-xl")}>
+          <h2 className={cn("text-base font-medium md:text-lg")}>
             Discussion (20)
           </h2>
           <div className="flex gap-2">
@@ -96,19 +97,29 @@ export const ShotCommunity = ({
             </DeviceOnly>
           </div>
         </div>
-        <div className="flex flex-col justify-end h-full basis-auto overflow-y-auto">
-          <div className="flex  max-h-full min-h-0 flex-col items-start gap-4  overflow-y-auto p-4">
+        <div className="flex flex-col justify-end h-full overflow-hidden overflow-y-auto">
+          <div className="flex flex-col items-start gap-4 overflow-y-auto p-4">
+            <Comment className="p-0 border-transparent" />
+            <Comment className="p-0 border-transparent" />
+            <Comment className="p-0 border-transparent" />
+
+            <Comment className="p-0 border-transparent" />
+
+            <Comment className="p-0 border-transparent" />
+
+            <Comment className="p-0 border-transparent" />
+            <Comment className="p-0 border-transparent" />
+            <Comment className="p-0 border-transparent" />
             <Comment className="p-0 border-transparent" />
             <Comment className="p-0 border-transparent" />
           </div>
           <div className="border-t p-4">
             <div className="flex flex-row gap-3">
-              <Avatar className="h-8 w-8 border  first:ml-0 hover:bg-gray-400">
-                <AvatarImage src={undefined} />
-                <AvatarFallback className="bg-white">
-                  <User className="text-gray-800" size={16} />
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar
+                className="h-8 w-8"
+                userImage={user?.image}
+                userName={user?.name}
+              />
               <AddComment containerClassName="w-full" className="p-2" />
               <div className="mb-1 flex items-end justify-end">
                 <SendHorizonal size={16} />

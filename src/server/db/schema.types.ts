@@ -26,6 +26,7 @@ export type Comment =
   RouterOutputs["comment"]["getByProgramIdOrVideoId"]["comments"][0];
 export type Reply = RouterOutputs["reply"]["getByCommentId"]["replies"][0];
 export type ShotCard = RouterOutputs["shot"]["getShotForCards"][0];
+export type ShotCarouselData = RouterOutputs["shot"]["getCarouselShots"][0];
 
 // TYPES FROM ADMIN QUERYS
 export type AdminShot = RouterOutputs["shot"]["getByIdAdmin"];
