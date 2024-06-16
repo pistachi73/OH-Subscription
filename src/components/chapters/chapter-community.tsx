@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { AddComment } from "@/components/ui/comments/add-comment";
-import { COMMENTS_PAGE_SIZE, Comment } from "@/components/ui/comments/comment";
+import { COMMENTS_PAGE_SIZE } from "@/components/ui/comments/comment";
 
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
@@ -13,6 +13,7 @@ import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import type { ProgramChapter } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
+import { Comment } from "../ui/comments/comment";
 
 type ChapterCommunityProps = {
   chapter: NonNullable<ProgramChapter>;
@@ -23,7 +24,7 @@ export const ChapterCommunity = ({ chapter }: ChapterCommunityProps) => {
   const apiUtils = api.useUtils();
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    api.comment.getByProgramIdOrVideoId.useInfiniteQuery(
+    api.comment.getBySourceId.useInfiniteQuery(
       {
         videoId: chapter.id,
         pageSize: COMMENTS_PAGE_SIZE,
@@ -34,11 +35,40 @@ export const ChapterCommunity = ({ chapter }: ChapterCommunityProps) => {
     );
 
   const { mutateAsync: addComment } = api.comment.create.useMutation({
-    onSuccess: () => {
-      apiUtils.comment.getByProgramIdOrVideoId.invalidate({
-        videoId: chapter.id,
-        pageSize: COMMENTS_PAGE_SIZE,
-      });
+    onSuccess: ({ comment: newComment }) => {
+      const reply = newComment
+        ? {
+            ...newComment,
+            videoId: chapter.id,
+            parentCommentId: null,
+            totalReplies: 0,
+            user: {
+              id: user.id as string,
+              name: user.name as string,
+              image: user.image ?? null,
+            },
+          }
+        : null;
+
+      apiUtils.comment.getBySourceId.setInfiniteData(
+        {
+          videoId: chapter.id,
+          pageSize: COMMENTS_PAGE_SIZE,
+        },
+        (data) => {
+          if (!reply) return data;
+          return {
+            pages: [
+              {
+                comments: [reply],
+                nextCursor: reply.updatedAt,
+              },
+              ...(data?.pages ?? []),
+            ],
+            pageParams: data?.pageParams ?? [],
+          };
+        },
+      );
     },
   });
 
@@ -60,41 +90,6 @@ export const ChapterCommunity = ({ chapter }: ChapterCommunityProps) => {
     <div className="my-8 w-full sm:mt-12">
       <div className="mb-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-medium sm:text-xl">Discussion (20)</h2>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2 px-4"
-            >
-              {sort}
-              <ChevronDown size={16} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent sideOffset={5} align="end" className="w-44">
-            <DropdownMenuItem
-              onSelect={() => {
-                setSort("Newest");
-              }}
-            >
-              Newest
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onSelect={() => {
-                setSort("Oldest");
-              }}
-            >
-              Oldest
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onSelect={() => {
-                setSort("Most liked");
-              }}
-            >
-              Most liked
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
       <div className="w-full max-w-[750px] space-y-2 sm:space-y-4">
         <div className="flex flex-row gap-3">

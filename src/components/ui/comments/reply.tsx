@@ -97,7 +97,7 @@ export const Reply = ({
           },
         );
 
-        apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+        apiUtils.comment.getBySourceId.setInfiniteData(
           {
             pageSize: COMMENTS_PAGE_SIZE,
             ...(programId && { programId }),

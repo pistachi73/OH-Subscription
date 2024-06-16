@@ -65,7 +65,7 @@ export const ShotCommunityComments = ({ shot }: ShotProps) => {
   const apiUtils = api.useUtils();
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    api.comment.getByProgramIdOrVideoId.useInfiniteQuery(
+    api.comment.getBySourceId.useInfiniteQuery(
       {
         shotId: shot.id,
         pageSize: COMMENTS_PAGE_SIZE,
@@ -82,6 +82,7 @@ export const ShotCommunityComments = ({ shot }: ShotProps) => {
         ? {
             ...comment,
             totalReplies: 0,
+            parentCommentId: null,
             user: {
               id: user.id as string,
               name: user.name as string,
@@ -90,7 +91,7 @@ export const ShotCommunityComments = ({ shot }: ShotProps) => {
           }
         : null;
 
-      apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+      apiUtils.comment.getBySourceId.setInfiniteData(
         {
           shotId: shot.id,
           pageSize: COMMENTS_PAGE_SIZE,
@@ -132,7 +133,7 @@ export const ShotCommunityComments = ({ shot }: ShotProps) => {
 
   return (
     <div className="flex flex-col justify-end h-full overflow-hidden overflow-y-auto">
-      <div className="flex flex-col items-start gap-5 overflow-y-auto p-4">
+      <div className="flex flex-col gap-5 overflow-y-auto p-4 items-end">
         {isLoading ? (
           <SkeletonComment className="p-0 border-transparent" />
         ) : !comments?.length ? (

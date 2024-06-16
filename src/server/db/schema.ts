@@ -371,6 +371,7 @@ export const comments = pgTable(
     shotId: integer("shotId").references(() => shots.id, {
       onDelete: "cascade",
     }),
+    parentCommentId: integer("parentCommentId"),
     content: text("content").notNull(),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
     updatedAt: timestamp("updatedAt", { mode: "date" })
@@ -381,6 +382,7 @@ export const comments = pgTable(
     videoIdIndex: index().on(t.videoId),
     programIdIndex: index().on(t.programId),
     shotIdIndex: index().on(t.shotId),
+    parentCommentIdIndex: index().on(t.parentCommentId),
   }),
 );
 

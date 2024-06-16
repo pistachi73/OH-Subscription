@@ -22,8 +22,7 @@ export type UserRole = User["role"];
 export type ProgramSpotlight = RouterOutputs["program"]["getBySlug"];
 export type ProgramCard = RouterOutputs["program"]["getProgramsForCards"][0];
 export type ProgramChapter = RouterOutputs["video"]["getBySlug"];
-export type Comment =
-  RouterOutputs["comment"]["getByProgramIdOrVideoId"]["comments"][0];
+export type Comment = RouterOutputs["comment"]["getBySourceId"]["comments"][0];
 export type Reply = RouterOutputs["reply"]["getByCommentId"]["replies"][0];
 export type ShotCard = RouterOutputs["shot"]["getShotForCards"][0];
 export type ShotCarouselData = RouterOutputs["shot"]["getCarouselShots"][0];

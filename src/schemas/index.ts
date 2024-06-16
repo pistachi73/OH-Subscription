@@ -170,6 +170,7 @@ export const CommentSchema = z.object({
   videoId: z.number().optional(),
   programId: z.number().optional(),
   shotId: z.number().optional(),
+  parentCommentId: z.number().optional(),
   userId: z.string(),
 });
 

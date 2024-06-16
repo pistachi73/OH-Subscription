@@ -30,7 +30,6 @@ import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 import type { Comment as CommentData } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
-import { Reply } from "./reply";
 import { SkeletonComment } from "./skeleton-comment";
 
 export const COMMENTS_PAGE_SIZE = 5;
@@ -40,7 +39,9 @@ type CommentProps = {
   programId?: number;
   videoId?: number;
   shotId?: number;
+  parentCommentId?: number;
   className?: string;
+  level?: number;
 };
 
 export const Comment = ({
@@ -48,7 +49,9 @@ export const Comment = ({
   programId,
   videoId,
   shotId,
+  parentCommentId,
   className,
+  level = 0,
 }: CommentProps) => {
   const user = useCurrentUser();
   const apiUtils = api.useUtils();
@@ -57,16 +60,30 @@ export const Comment = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editInputValue, setEditInputValue] = useState(comment?.content ?? "");
   const inputRef = useRef<AutosizeTextAreaRef>(null);
+
+  console.log({
+    comment: comment.id,
+    totalReplies: comment?.totalReplies,
+  });
+
+  const queryParams = useMemo(() => {
+    return {
+      ...(programId && { programId }),
+      ...(videoId && { videoId }),
+      ...(shotId && { shotId }),
+      ...(parentCommentId && { parentCommentId }),
+    };
+  }, [programId, videoId, shotId, parentCommentId]);
+
   const {
     data: repliesData,
     isInitialLoading: isInitialLoadingReplies,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = api.reply.getByCommentId.useInfiniteQuery(
+  } = api.comment.getBySourceId.useInfiniteQuery(
     {
-      //NEEDS TO BE FIXED
-      commentId: comment.id,
+      parentCommentId: comment.id,
       pageSize: COMMENTS_PAGE_SIZE,
     },
     {
@@ -79,14 +96,12 @@ export const Comment = ({
   const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
     api.comment.delete.useMutation({
       onSuccess: () => {
-        if (!programId && !videoId && !shotId) return;
+        if (!programId && !videoId && !shotId && !parentCommentId) return;
 
-        apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+        apiUtils.comment.getBySourceId.setInfiniteData(
           {
             pageSize: COMMENTS_PAGE_SIZE,
-            ...(programId && { programId }),
-            ...(videoId && { videoId }),
-            ...(shotId && { shotId }),
+            ...queryParams,
           },
           (data) => {
             if (!data) return data;
@@ -107,12 +122,10 @@ export const Comment = ({
   const { mutateAsync: editComment, isLoading: isEditingComment } =
     api.comment.update.useMutation({
       onSuccess: async () => {
-        apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+        apiUtils.comment.getBySourceId.setInfiniteData(
           {
             pageSize: COMMENTS_PAGE_SIZE,
-            ...(programId && { programId }),
-            ...(videoId && { videoId }),
-            ...(shotId && { shotId }),
+            ...queryParams,
           },
           (data) => {
             if (!data) return data;
@@ -138,14 +151,16 @@ export const Comment = ({
       },
     });
 
-  const { mutateAsync: addReply } = api.reply.create.useMutation({
-    onSuccess: ({ reply }) => {
+  const { mutateAsync: addReply } = api.comment.create.useMutation({
+    onSuccess: ({ comment: newComment }) => {
       setShowAddReply(false);
       setShowReplies(true);
 
-      const newReply = reply
+      const reply = newComment
         ? {
-            ...reply,
+            ...newComment,
+            parentCommentId: comment.id,
+            totalReplies: 0,
             user: {
               id: user.id as string,
               name: user.name as string,
@@ -154,16 +169,16 @@ export const Comment = ({
           }
         : null;
 
-      apiUtils.reply.getByCommentId.setInfiniteData(
-        { commentId: comment?.id ?? 0, pageSize: COMMENTS_PAGE_SIZE },
+      apiUtils.comment.getBySourceId.setInfiniteData(
+        { parentCommentId: comment.id, pageSize: COMMENTS_PAGE_SIZE },
         (data) => {
-          if (!newReply) return data;
+          if (!reply) return data;
           return {
             pages: [
               {
-                replies: [newReply],
+                comments: [reply],
                 nextCursor: Number(comment?.totalReplies)
-                  ? newReply.updatedAt
+                  ? reply.updatedAt
                   : null,
               },
               ...(data?.pages ?? []),
@@ -173,12 +188,10 @@ export const Comment = ({
         },
       );
 
-      apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+      apiUtils.comment.getBySourceId.setInfiniteData(
         {
           pageSize: COMMENTS_PAGE_SIZE,
-          ...(programId && { programId }),
-          ...(videoId && { videoId }),
-          ...(shotId && { shotId }),
+          ...queryParams,
         },
         (data) => {
           if (!data) return data;
@@ -187,7 +200,6 @@ export const Comment = ({
             pages: data.pages.map((page) => ({
               ...page,
               comments: page.comments.map((c) => {
-                console.log({ c: c.totalReplies });
                 if (comment.id === c.id) {
                   return {
                     ...c,
@@ -227,7 +239,7 @@ export const Comment = ({
 
     await addReply({
       userId: user.id,
-      commentId: comment.id,
+      parentCommentId: comment.id,
       content,
     });
   };
@@ -238,9 +250,11 @@ export const Comment = ({
   );
 
   const replies = useMemo(
-    () => repliesData?.pages.flatMap((page) => page.replies),
+    () => repliesData?.pages.flatMap((page) => page.comments),
     [repliesData],
   );
+
+  console.log({ replies });
 
   return (
     <>
@@ -251,6 +265,9 @@ export const Comment = ({
           className,
           isEditing && "p-4 border-primary shadow-md",
         )}
+        style={{
+          width: `calc(100% - ${level * 20}px)`,
+        }}
       >
         {isUserComment && (
           <DropdownMenu>
@@ -350,6 +367,7 @@ export const Comment = ({
               className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
               onClick={() => {
                 if (!showReplies && !repliesData?.pages) {
+                  console.log("fetching first apge");
                   fetchNextPage();
                 }
                 setShowReplies(!showReplies);
@@ -406,7 +424,9 @@ export const Comment = ({
             },
           }}
           initial={{ opacity: 0, y: -8, height: 0 }}
-          className="w-full"
+          style={{
+            width: `calc(100% - ${level * 20}px)`,
+          }}
         >
           <AddComment
             autoFocus
@@ -426,15 +446,13 @@ export const Comment = ({
             <SkeletonComment isReply className={className} />
           )}
           {replies?.map((reply) => (
-            <Reply
+            <Comment
               key={`reply-${reply.id}`}
-              reply={reply}
+              comment={reply}
               parentCommentId={comment.id}
-              isDeletingParentComment={isDeletingComment}
-              programId={programId}
-              videoId={videoId}
-              shotId={shotId}
+              // isDeletingParentComment={isDeletingComment}
               className={className}
+              level={level + 1}
             />
           ))}
           {hasNextPage && (

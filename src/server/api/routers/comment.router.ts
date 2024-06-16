@@ -7,7 +7,8 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 
 import { isNumber } from "@/lib/utils";
 import { CommentSchema } from "@/schemas";
-import { comments, replies, users } from "@/server/db/schema";
+import { comments, users } from "@/server/db/schema";
+import { alias } from "drizzle-orm/pg-core";
 import { withLimit } from "../query-utils/shared.query";
 
 export const commentRouter = createTRPCRouter({
@@ -30,12 +31,18 @@ export const commentRouter = createTRPCRouter({
     .input(CommentSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
-      const { programId, videoId, shotId, ...values } = input;
+      const { programId, videoId, shotId, parentCommentId, ...values } = input;
 
-      if (!isNumber(programId) || !isNumber(videoId) || !isNumber(shotId)) {
+      if (
+        !isNumber(programId) ||
+        !isNumber(videoId) ||
+        !isNumber(shotId) ||
+        !isNumber(parentCommentId)
+      ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Program ID or Video ID or Shot ID is required",
+          message:
+            "Program ID or Video ID or Shot ID or Parent Comment ID is required",
         });
       }
 
@@ -46,6 +53,7 @@ export const commentRouter = createTRPCRouter({
           ...(programId ? { programId } : {}),
           ...(videoId ? { videoId } : {}),
           ...(shotId ? { shotId } : {}),
+          ...(parentCommentId ? { parentCommentId } : {}),
         })
         .returning({
           id: comments.id,
@@ -84,52 +92,66 @@ export const commentRouter = createTRPCRouter({
     return allComments;
   }),
 
-  getByProgramIdOrVideoId: publicProcedure
+  getBySourceId: publicProcedure
     .input(
       z.object({
         programId: z.number().optional(),
         videoId: z.number().optional(),
         shotId: z.number().optional(),
+        parentCommentId: z.nullable(z.number()).optional(),
         cursor: z.date().nullish(),
         pageSize: z.number().optional(),
       }),
     )
     .query(
       async ({
-        input: { videoId, programId, shotId, cursor, pageSize },
+        input: {
+          videoId,
+          programId,
+          shotId,
+          parentCommentId,
+          cursor,
+          pageSize,
+        },
         ctx,
       }) => {
-        if (!videoId && !programId && !shotId) {
+        if (!videoId && !programId && !shotId && !parentCommentId) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Program ID or Video ID or Shot ID is required",
           });
         }
 
+        const replies = alias(comments, "replies");
         let commentsQuery = ctx.db
           .selectDistinctOn([comments.updatedAt], {
             id: comments.id,
             content: comments.content,
             updatedAt: comments.updatedAt,
+            parentCommentId: comments.parentCommentId,
             user: {
               id: users.id,
               name: users.name,
               image: users.image,
             },
-            totalReplies: sql<number>`(select count(${replies.content}) from ${replies} where (${replies.commentId} = ${comments.id}))`,
+            totalReplies: sql<number>`count(${replies.id})`,
           })
           .from(comments)
+          .leftJoin(replies, eq(replies.parentCommentId, comments.id))
           .leftJoin(users, eq(users.id, comments.userId))
-          .leftJoin(replies, eq(replies.commentId, comments.id))
+          .groupBy(comments.id, users.id)
           .$dynamic();
 
-        const filterByProgramOrVideoIdClauses = [
+        const filterBySourceClauses = [
           programId ? eq(comments.programId, programId) : null,
           videoId ? eq(comments.videoId, videoId) : null,
           shotId ? eq(comments.shotId, shotId) : null,
+          parentCommentId
+            ? eq(comments.parentCommentId, parentCommentId)
+            : null,
         ].filter(Boolean) as SQL<unknown>[];
 
-        const whereClauses = [...filterByProgramOrVideoIdClauses];
+        const whereClauses = [...filterBySourceClauses];
 
         if (cursor) {
           whereClauses.push(lt(comments.updatedAt, cursor));
@@ -150,10 +172,7 @@ export const commentRouter = createTRPCRouter({
             .select({ count: count(comments.id) })
             .from(comments)
             .where(
-              and(
-                ...filterByProgramOrVideoIdClauses,
-                lt(comments.updatedAt, nextCursor),
-              ),
+              and(...filterBySourceClauses, lt(comments.updatedAt, nextCursor)),
             )
             .orderBy(desc(comments.updatedAt))
             .groupBy(comments.updatedAt)

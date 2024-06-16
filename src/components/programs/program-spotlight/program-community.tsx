@@ -3,9 +3,9 @@
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
-import { Button } from "../../ui/button";
-import { AddComment } from "../../ui/comments/add-comment";
-import { COMMENTS_PAGE_SIZE, Comment } from "../../ui/comments/comment";
+import { Button } from "@/components/ui/button";
+import { AddComment } from "@/components/ui/comments/add-comment";
+import { COMMENTS_PAGE_SIZE, Comment } from "@/components/ui/comments/comment";
 
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
 import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
@@ -25,7 +25,7 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
   const apiUtils = api.useUtils();
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    api.comment.getByProgramIdOrVideoId.useInfiniteQuery(
+    api.comment.getBySourceId.useInfiniteQuery(
       {
         programId: program.id,
         pageSize: COMMENTS_PAGE_SIZE,
@@ -36,11 +36,40 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
     );
 
   const { mutateAsync: addComment } = api.comment.create.useMutation({
-    onSuccess: () => {
-      apiUtils.comment.getByProgramIdOrVideoId.invalidate({
-        programId: program.id,
-        pageSize: COMMENTS_PAGE_SIZE,
-      });
+    onSuccess: ({ comment: newComment }) => {
+      const reply = newComment
+        ? {
+            ...newComment,
+            programId: program.id,
+            parentCommentId: null,
+            totalReplies: 0,
+            user: {
+              id: user.id as string,
+              name: user.name as string,
+              image: user.image ?? null,
+            },
+          }
+        : null;
+
+      apiUtils.comment.getBySourceId.setInfiniteData(
+        {
+          programId: program.id,
+          pageSize: COMMENTS_PAGE_SIZE,
+        },
+        (data) => {
+          if (!reply) return data;
+          return {
+            pages: [
+              {
+                comments: [reply],
+                nextCursor: reply.updatedAt,
+              },
+              ...(data?.pages ?? []),
+            ],
+            pageParams: data?.pageParams ?? [],
+          };
+        },
+      );
     },
   });
 
@@ -98,10 +127,10 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
           </DropdownMenuContent>
         </DropdownMenu> */}
       </div>
-      <div className="w-full max-w-[750px] space-y-4">
+      <div className="flex flex-col gap-4  w-full max-w-[750px] items-end">
         {user ? (
           <>
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-row gap-3 w-full">
               <UserAvatar userImage={user?.image} userName={user?.name} />
               <AddComment
                 placeholder="Add your comment..."
