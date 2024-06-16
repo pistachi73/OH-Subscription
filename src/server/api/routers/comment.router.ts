@@ -30,22 +30,29 @@ export const commentRouter = createTRPCRouter({
     .input(CommentSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
-      const { programId, videoId, ...values } = input;
+      const { programId, videoId, shotId, ...values } = input;
 
-      if (!isNumber(programId) || !isNumber(videoId)) {
+      if (!isNumber(programId) || !isNumber(videoId) || !isNumber(shotId)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Program ID or Video ID is required",
+          message: "Program ID or Video ID or Shot ID is required",
         });
       }
 
-      await db.insert(comments).values({
-        ...values,
-        ...(programId ? { programId } : {}),
-        ...(videoId ? { videoId } : {}),
-      });
-
-      return { success: true };
+      const createdComments = await db
+        .insert(comments)
+        .values({
+          ...values,
+          ...(programId ? { programId } : {}),
+          ...(videoId ? { videoId } : {}),
+          ...(shotId ? { shotId } : {}),
+        })
+        .returning({
+          id: comments.id,
+          content: comments.content,
+          updatedAt: comments.updatedAt,
+        });
+      return { comment: createdComments[0] };
     }),
 
   update: publicProcedure
@@ -82,80 +89,87 @@ export const commentRouter = createTRPCRouter({
       z.object({
         programId: z.number().optional(),
         videoId: z.number().optional(),
+        shotId: z.number().optional(),
         cursor: z.date().nullish(),
         pageSize: z.number().optional(),
       }),
     )
-    .query(async ({ input: { videoId, programId, cursor, pageSize }, ctx }) => {
-      if (!videoId && !programId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Program ID or Video ID is required",
-        });
-      }
-
-      let commentsQuery = ctx.db
-        .selectDistinctOn([comments.updatedAt], {
-          id: comments.id,
-          content: comments.content,
-          updatedAt: comments.updatedAt,
-          user: {
-            id: users.id,
-            name: users.name,
-            image: users.image,
-          },
-          totalReplies: sql<number>`(select count(${replies.content}) from ${replies} where (${replies.commentId} = ${comments.id}))`,
-        })
-        .from(comments)
-        .leftJoin(users, eq(users.id, comments.userId))
-        .leftJoin(replies, eq(replies.commentId, comments.id))
-        .$dynamic();
-
-      const filterByProgramOrVideoIdClauses = [
-        programId ? eq(comments.programId, programId) : null,
-        videoId ? eq(comments.videoId, videoId) : null,
-      ].filter(Boolean) as SQL<unknown>[];
-
-      const whereClauses = [...filterByProgramOrVideoIdClauses];
-
-      if (cursor) {
-        whereClauses.push(lt(comments.updatedAt, cursor));
-      }
-
-      commentsQuery = commentsQuery.where(and(...whereClauses));
-      commentsQuery = commentsQuery.orderBy(desc(comments.updatedAt));
-
-      if (pageSize) {
-        commentsQuery = withLimit(commentsQuery, pageSize);
-      }
-
-      const res = await commentsQuery.execute();
-      let nextCursor = res.length ? res?.[res.length - 1]?.updatedAt : null;
-
-      if (nextCursor) {
-        const nextCursorCount = await ctx.db
-          .select({ count: count(comments.id) })
-          .from(comments)
-          .where(
-            and(
-              ...filterByProgramOrVideoIdClauses,
-              lt(comments.updatedAt, nextCursor),
-            ),
-          )
-          .orderBy(desc(comments.updatedAt))
-          .groupBy(comments.updatedAt)
-          .execute();
-
-        if (!nextCursorCount[0]?.count) {
-          nextCursor = null;
+    .query(
+      async ({
+        input: { videoId, programId, shotId, cursor, pageSize },
+        ctx,
+      }) => {
+        if (!videoId && !programId && !shotId) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Program ID or Video ID or Shot ID is required",
+          });
         }
-      }
 
-      return {
-        comments: res,
-        nextCursor,
-      };
-    }),
+        let commentsQuery = ctx.db
+          .selectDistinctOn([comments.updatedAt], {
+            id: comments.id,
+            content: comments.content,
+            updatedAt: comments.updatedAt,
+            user: {
+              id: users.id,
+              name: users.name,
+              image: users.image,
+            },
+            totalReplies: sql<number>`(select count(${replies.content}) from ${replies} where (${replies.commentId} = ${comments.id}))`,
+          })
+          .from(comments)
+          .leftJoin(users, eq(users.id, comments.userId))
+          .leftJoin(replies, eq(replies.commentId, comments.id))
+          .$dynamic();
+
+        const filterByProgramOrVideoIdClauses = [
+          programId ? eq(comments.programId, programId) : null,
+          videoId ? eq(comments.videoId, videoId) : null,
+          shotId ? eq(comments.shotId, shotId) : null,
+        ].filter(Boolean) as SQL<unknown>[];
+
+        const whereClauses = [...filterByProgramOrVideoIdClauses];
+
+        if (cursor) {
+          whereClauses.push(lt(comments.updatedAt, cursor));
+        }
+
+        commentsQuery = commentsQuery.where(and(...whereClauses));
+        commentsQuery = commentsQuery.orderBy(desc(comments.updatedAt));
+
+        if (pageSize) {
+          commentsQuery = withLimit(commentsQuery, pageSize);
+        }
+
+        const res = await commentsQuery.execute();
+        let nextCursor = res.length ? res?.[res.length - 1]?.updatedAt : null;
+
+        if (nextCursor) {
+          const nextCursorCount = await ctx.db
+            .select({ count: count(comments.id) })
+            .from(comments)
+            .where(
+              and(
+                ...filterByProgramOrVideoIdClauses,
+                lt(comments.updatedAt, nextCursor),
+              ),
+            )
+            .orderBy(desc(comments.updatedAt))
+            .groupBy(comments.updatedAt)
+            .execute();
+
+          if (!nextCursorCount[0]?.count) {
+            nextCursor = null;
+          }
+        }
+
+        return {
+          comments: res,
+          nextCursor,
+        };
+      },
+    ),
 
   getById: publicProcedure
     .input(z.number())

@@ -33,12 +33,13 @@ import { api } from "@/trpc/react";
 import { Reply } from "./reply";
 import { SkeletonComment } from "./skeleton-comment";
 
-export const COMMENTS_PAGE_SIZE = 2;
+export const COMMENTS_PAGE_SIZE = 5;
 
 type CommentProps = {
-  comment?: CommentData;
+  comment: CommentData;
   programId?: number;
   videoId?: number;
+  shotId?: number;
   className?: string;
 };
 
@@ -46,6 +47,7 @@ export const Comment = ({
   comment,
   programId,
   videoId,
+  shotId,
   className,
 }: CommentProps) => {
   const user = useCurrentUser();
@@ -64,36 +66,74 @@ export const Comment = ({
   } = api.reply.getByCommentId.useInfiniteQuery(
     {
       //NEEDS TO BE FIXED
-      commentId: comment?.id ?? 0,
+      commentId: comment.id,
       pageSize: COMMENTS_PAGE_SIZE,
     },
     {
       enabled: false,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
+      refetchOnMount: false,
     },
   );
 
   const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
     api.comment.delete.useMutation({
       onSuccess: () => {
-        if (!programId && !videoId) return;
+        if (!programId && !videoId && !shotId) return;
 
-        apiUtils.comment.getByProgramIdOrVideoId.invalidate({
-          ...(programId && { programId }),
-          ...(videoId && { videoId }),
-          pageSize: COMMENTS_PAGE_SIZE,
-        });
+        apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+          {
+            pageSize: COMMENTS_PAGE_SIZE,
+            ...(programId && { programId }),
+            ...(videoId && { videoId }),
+            ...(shotId && { shotId }),
+          },
+          (data) => {
+            if (!data) return data;
+            return {
+              ...data,
+              pages: data.pages.map((page) => ({
+                ...page,
+                comments: page.comments.filter(
+                  (filteredComment) => filteredComment.id !== comment?.id,
+                ),
+              })),
+            };
+          },
+        );
       },
     });
 
   const { mutateAsync: editComment, isLoading: isEditingComment } =
     api.comment.update.useMutation({
       onSuccess: async () => {
-        await apiUtils.comment.getByProgramIdOrVideoId.invalidate({
-          ...(programId && { programId }),
-          ...(videoId && { videoId }),
-          pageSize: COMMENTS_PAGE_SIZE,
-        });
+        apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+          {
+            pageSize: COMMENTS_PAGE_SIZE,
+            ...(programId && { programId }),
+            ...(videoId && { videoId }),
+            ...(shotId && { shotId }),
+          },
+          (data) => {
+            if (!data) return data;
+            return {
+              ...data,
+              pages: data.pages.map((page) => ({
+                ...page,
+                comments: page.comments.map((filteredComment) => {
+                  if (filteredComment.id === comment?.id) {
+                    return {
+                      ...filteredComment,
+                      content: editInputValue,
+                    };
+                  }
+                  return filteredComment;
+                }),
+              })),
+            };
+          },
+        );
+
         setIsEditing(false);
       },
     });
@@ -133,11 +173,34 @@ export const Comment = ({
         },
       );
 
-      apiUtils.comment.getByProgramIdOrVideoId.invalidate({
-        pageSize: COMMENTS_PAGE_SIZE,
-        ...(programId && { programId }),
-        ...(videoId && { videoId }),
-      });
+      apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+        {
+          pageSize: COMMENTS_PAGE_SIZE,
+          ...(programId && { programId }),
+          ...(videoId && { videoId }),
+          ...(shotId && { shotId }),
+        },
+        (data) => {
+          if (!data) return data;
+
+          return {
+            pages: data.pages.map((page) => ({
+              ...page,
+              comments: page.comments.map((c) => {
+                console.log({ c: c.totalReplies });
+                if (comment.id === c.id) {
+                  return {
+                    ...c,
+                    totalReplies: (Number(c.totalReplies) ?? 0) + 1,
+                  };
+                }
+                return c;
+              }),
+            })),
+            pageParams: data?.pageParams ?? [],
+          };
+        },
+      );
     },
   });
 
@@ -160,7 +223,7 @@ export const Comment = ({
   };
 
   const onReply = async (content: string) => {
-    if (!user.id || !comment?.id) return;
+    if (!user.id || !comment?.id || !content) return;
 
     await addReply({
       userId: user.id,
@@ -183,11 +246,10 @@ export const Comment = ({
     <>
       <div
         className={cn(
-          "relative flex w-full transition-all flex-col gap-2  rounded-md border border-input bg-background p-4",
-          "sm:gap-3",
+          "relative flex w-full flex-col gap-2 rounded-md border border-input bg-background p-4",
           isDeletingComment && "opacity-50 pointer-events-none",
-          isEditing && "border-primary shadow-md",
           className,
+          isEditing && "p-4 border-primary shadow-md",
         )}
       >
         {isUserComment && (
@@ -222,7 +284,7 @@ export const Comment = ({
           </DropdownMenu>
         )}
 
-        <div className="flex flex-row items-center  gap-2 sm:gap-3 text-xs sm:text-sm">
+        <div className="flex flex-row items-center  gap-2 text-xs sm:text-sm">
           <div className="flex items-center gap-2">
             <UserAvatar
               userImage={comment?.user?.image}
@@ -246,8 +308,8 @@ export const Comment = ({
             ref={inputRef}
             minHeight={33}
             className={cn(
-              "border-none resize-none font-light bg-accent/30 transition-opacity  focus-visible:border-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-transparent focus-visible:ring-transparent",
-              isEditingComment && "cursor-wait opacity-50",
+              "mb-2 border-none resize-none font-light bg-accent/30 transition-opacity  focus-visible:border-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-offset-transparent focus-visible:ring-transparent",
+              isEditingComment && "cursor-wait opacity-50 ",
             )}
             value={editInputValue}
             onChange={(e) => setEditInputValue(e.target.value)}
@@ -360,15 +422,19 @@ export const Comment = ({
       )}
       {showReplies && (
         <>
-          {isInitialLoadingReplies && <SkeletonComment isReply />}
+          {isInitialLoadingReplies && (
+            <SkeletonComment isReply className={className} />
+          )}
           {replies?.map((reply) => (
             <Reply
               key={`reply-${reply.id}`}
               reply={reply}
-              parentCommentId={comment?.id ?? 0}
+              parentCommentId={comment.id}
               isDeletingParentComment={isDeletingComment}
               programId={programId}
               videoId={videoId}
+              shotId={shotId}
+              className={className}
             />
           ))}
           {hasNextPage && (

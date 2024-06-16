@@ -4,6 +4,7 @@ import { useSignals } from "@preact/signals-react/runtime";
 
 import { useRouter } from "next/navigation";
 
+import { cn } from "@/lib/utils";
 import {
   isAuthModalOpenSignal,
   needsAuthModalRedirectSignal,
@@ -15,6 +16,7 @@ type LoginButtonProps = {
   callbackUrl?: string;
   asChild?: boolean;
   redirect?: boolean;
+  className?: string;
 };
 
 export const AuthButton = ({
@@ -22,6 +24,7 @@ export const AuthButton = ({
   callbackUrl,
   mode,
   redirect = true,
+  className,
 }: LoginButtonProps) => {
   useSignals();
   const router = useRouter();
@@ -39,7 +42,7 @@ export const AuthButton = ({
   return (
     <span
       onClick={onClick}
-      className="cursor-pointer"
+      className={cn("cursor-pointer", className)}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           onClick();

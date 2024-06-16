@@ -29,6 +29,8 @@ type ReplyProps = {
   isDeletingParentComment: boolean;
   programId?: number;
   videoId?: number;
+  shotId?: number;
+  className?: string;
 };
 
 export const Reply = ({
@@ -37,6 +39,8 @@ export const Reply = ({
   isDeletingParentComment,
   programId,
   videoId,
+  shotId,
+  className,
 }: ReplyProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editInputValue, setEditInputValue] = useState(reply?.content ?? "");
@@ -93,11 +97,33 @@ export const Reply = ({
           },
         );
 
-        apiUtils.comment.getByProgramIdOrVideoId.invalidate({
-          pageSize: COMMENTS_PAGE_SIZE,
-          ...(programId && { programId }),
-          ...(videoId && { videoId }),
-        });
+        apiUtils.comment.getByProgramIdOrVideoId.setInfiniteData(
+          {
+            pageSize: COMMENTS_PAGE_SIZE,
+            ...(programId && { programId }),
+            ...(videoId && { videoId }),
+            ...(shotId && { shotId }),
+          },
+          (data) => {
+            if (!data) return data;
+
+            return {
+              ...data,
+              pages: data.pages.map((page) => ({
+                ...page,
+                comments: page.comments.map((c) => {
+                  if (c.id === parentCommentId) {
+                    return {
+                      ...c,
+                      totalReplies: (Number(c.totalReplies) ?? 1) - 1,
+                    };
+                  }
+                  return c;
+                }),
+              })),
+            };
+          },
+        );
       },
     });
 
@@ -126,8 +152,9 @@ export const Reply = ({
     >
       <div
         className={cn(
-          "relative flex flex-col gap-2  rounded-md border border-input bg-background p-4 w-11/12 justify-end ",
-          "sm:gap-3",
+          "relative flex flex-col gap-2 rounded-md border border-input bg-background p-4 w-11/12 justify-end ",
+          className,
+          isEditing && "p-4 border-primary shadow-md",
         )}
       >
         {isUserComment && (

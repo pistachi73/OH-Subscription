@@ -169,6 +169,7 @@ export const CommentSchema = z.object({
   content: z.string().min(1, { message: "Content is required" }),
   videoId: z.number().optional(),
   programId: z.number().optional(),
+  shotId: z.number().optional(),
   userId: z.string(),
 });
 

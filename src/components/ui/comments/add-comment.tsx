@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 type AddCommentProps = AutosizeTextAreaProps & {
+  controlledValue?: string;
+  setControlledValue?: React.Dispatch<React.SetStateAction<string>>;
   commentLabel?: string;
   containerClassName?: string;
   onComment?: (content: string) => Promise<void>;
@@ -16,6 +18,8 @@ type AddCommentProps = AutosizeTextAreaProps & {
 };
 
 export const AddComment = ({
+  controlledValue,
+  setControlledValue,
   containerClassName,
   className,
   onComment,
@@ -24,14 +28,24 @@ export const AddComment = ({
   cancelLabel,
   ...props
 }: AddCommentProps) => {
-  const [content, setContent] = useState("");
+  const [internalValue, setInternalValue] = useState("");
+
+  const isControlled = typeof controlledValue !== "undefined";
+  const value = isControlled ? controlledValue : internalValue;
   const hasLabels = cancelLabel || commentLabel;
 
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (isControlled) {
+      setControlledValue?.(e.target.value);
+    } else {
+      setInternalValue(e.target.value);
+    }
+  };
   return (
     <div className={cn("relative", containerClassName)}>
       <AutosizeTextarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
+        value={value}
+        onChange={onChange}
         minHeight={hasLabels ? 94 : 38}
         className={cn(
           "h-10 overflow-y-hidden p-3 text-xs sm:text-sm resize-none font-light",
@@ -61,8 +75,9 @@ export const AddComment = ({
             size="sm"
             className="w-9 px-0 sm:h-8 text-sm sm:w-fit sm:px-3"
             onClick={async () => {
-              await onComment?.(content);
-              setContent("");
+              await onComment?.(value);
+              setInternalValue("");
+              setControlledValue?.("");
             }}
           >
             <span className="hidden sm:inline-block">{commentLabel}</span>

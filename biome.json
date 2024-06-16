@@ -18,6 +18,9 @@
         "noExplicitAny": "off",
         "noArrayIndexKey": "warn"
       },
+      "performance":{
+        "noAccumulatingSpread": "off"
+      },
       "a11y": {
         "useKeyWithClickEvents": "warn"
       },

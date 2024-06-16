@@ -62,7 +62,7 @@ const ShotContent = ({ shot }: { shot: NonNullable<ShotCarouselData> }) => {
         <ShotLayout shot={shot} />
       </div>
 
-      <ShotCommunity />
+      <ShotCommunity shot={shot} />
       <ShotTranscript transcript={shot.transcript} />
     </motion.div>
   );

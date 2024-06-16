@@ -355,23 +355,34 @@ export const categoriesOnShots = pgTable(
 
 // ----------------- Comments -----------------
 
-export const comments = pgTable("comments", {
-  id: serial("id").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  programId: integer("programId").references(() => programs.id, {
-    onDelete: "cascade",
+export const comments = pgTable(
+  "comments",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    programId: integer("programId").references(() => programs.id, {
+      onDelete: "cascade",
+    }),
+    videoId: integer("videoId").references(() => videos.id, {
+      onDelete: "cascade",
+    }),
+    shotId: integer("shotId").references(() => shots.id, {
+      onDelete: "cascade",
+    }),
+    content: text("content").notNull(),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" })
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => ({
+    videoIdIndex: index().on(t.videoId),
+    programIdIndex: index().on(t.programId),
+    shotIdIndex: index().on(t.shotId),
   }),
-  videoId: integer("videoId").references(() => videos.id, {
-    onDelete: "cascade",
-  }),
-  content: text("content").notNull(),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "date" })
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+);
 
 export const replies = pgTable("replies", {
   id: serial("id").primaryKey(),

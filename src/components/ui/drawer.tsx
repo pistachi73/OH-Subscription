@@ -83,7 +83,7 @@ const DrawerContent = React.forwardRef<
         {...props}
       >
         {(!direction || direction === "bottom") && !hideClose && (
-          <div className="mx-auto mb-2 h-1 w-1/5 rounded-full bg-accent shrink-0" />
+          <div className="mx-auto mt-2 mb-2 h-1 w-1/5 rounded-full bg-accent shrink-0" />
         )}
         {children}
       </DrawerPrimitive.Content>
