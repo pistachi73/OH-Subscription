@@ -9,6 +9,7 @@ import { isNumber } from "@/lib/utils";
 import { CommentSchema } from "@/schemas";
 import { comments, users } from "@/server/db/schema";
 import { alias } from "drizzle-orm/pg-core";
+import { deleteRecursiveComments } from "../lib/comments.lib";
 import { withLimit } from "../query-utils/shared.query";
 
 export const commentRouter = createTRPCRouter({
@@ -23,7 +24,10 @@ export const commentRouter = createTRPCRouter({
         });
       }
 
-      await db.delete(comments).where(eq(comments.id, commentId));
+      await deleteRecursiveComments({
+        db,
+        commentId,
+      });
 
       return { success: true };
     }),

@@ -351,23 +351,25 @@ export const Comment = ({
             <Heart size={16} className="sm:mr-2" />
             <span className="hidden sm:inline">11 Likes</span>
           </Button>
-          <Button
-            variant="ghost"
-            className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
-            onClick={() => {
-              setShowAddReply(!showAddReply);
-            }}
-          >
-            <ReplyIcon size={16} className="sm:mr-2 " />
-            <span className="hidden sm:inline">Reply</span>
-          </Button>
+          {level === 0 && (
+            <Button
+              variant="ghost"
+              className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
+              onClick={() => {
+                setShowAddReply(!showAddReply);
+              }}
+            >
+              <ReplyIcon size={16} className="sm:mr-2 " />
+              <span className="hidden sm:inline">Reply</span>
+            </Button>
+          )}
+
           {Number(comment?.totalReplies) ? (
             <Button
               variant="ghost"
               className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
               onClick={() => {
                 if (!showReplies && !repliesData?.pages) {
-                  console.log("fetching first apge");
                   fetchNextPage();
                 }
                 setShowReplies(!showReplies);
@@ -450,7 +452,6 @@ export const Comment = ({
               key={`reply-${reply.id}`}
               comment={reply}
               parentCommentId={comment.id}
-              // isDeletingParentComment={isDeletingComment}
               className={className}
               level={level + 1}
             />
