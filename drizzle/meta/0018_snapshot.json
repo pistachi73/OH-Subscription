@@ -1,7 +1,5 @@
 {
-  "id": "44ae89ac-b66a-42b9-8ebc-87aa26dbc943",
-  "prevId": "3f448dac-eccc-47bf-8e07-e05f6aacfd1c",
-  "version": "6",
+  "version": "7",
   "dialect": "postgresql",
   "tables": {
     "public.account": {
@@ -80,15 +78,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -146,28 +144,28 @@
         "categories_programs_programId_programs_id_fk": {
           "name": "categories_programs_programId_programs_id_fk",
           "tableFrom": "categories_programs",
-          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
+          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "categories_programs_categoryId_categories_id_fk": {
           "name": "categories_programs_categoryId_categories_id_fk",
           "tableFrom": "categories_programs",
-          "tableTo": "categories",
           "columnsFrom": [
             "categoryId"
           ],
+          "tableTo": "categories",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -203,28 +201,28 @@
         "categories_shots_shotId_shots_id_fk": {
           "name": "categories_shots_shotId_shots_id_fk",
           "tableFrom": "categories_shots",
-          "tableTo": "shots",
           "columnsFrom": [
             "shotId"
           ],
+          "tableTo": "shots",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "categories_shots_categoryId_categories_id_fk": {
           "name": "categories_shots_categoryId_categories_id_fk",
           "tableFrom": "categories_shots",
-          "tableTo": "categories",
           "columnsFrom": [
             "categoryId"
           ],
+          "tableTo": "categories",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -301,86 +299,118 @@
       },
       "indexes": {
         "comments_videoId_index": {
-          "name": "comments_videoId_index",
           "columns": [
-            "videoId"
+            {
+              "expression": "videoId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "comments_videoId_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         },
         "comments_programId_index": {
-          "name": "comments_programId_index",
           "columns": [
-            "programId"
+            {
+              "expression": "programId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "comments_programId_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         },
         "comments_shotId_index": {
-          "name": "comments_shotId_index",
           "columns": [
-            "shotId"
+            {
+              "expression": "shotId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "comments_shotId_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         },
         "comments_parentCommentId_index": {
-          "name": "comments_parentCommentId_index",
           "columns": [
-            "parentCommentId"
+            {
+              "expression": "parentCommentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "comments_parentCommentId_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "comments_userId_user_id_fk": {
           "name": "comments_userId_user_id_fk",
           "tableFrom": "comments",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "comments_programId_programs_id_fk": {
           "name": "comments_programId_programs_id_fk",
           "tableFrom": "comments",
-          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
+          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "comments_videoId_video_id_fk": {
           "name": "comments_videoId_video_id_fk",
           "tableFrom": "comments",
-          "tableTo": "video",
           "columnsFrom": [
             "videoId"
           ],
+          "tableTo": "video",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "comments_shotId_shots_id_fk": {
           "name": "comments_shotId_shots_id_fk",
           "tableFrom": "comments",
-          "tableTo": "shots",
           "columnsFrom": [
             "shotId"
           ],
+          "tableTo": "shots",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -415,11 +445,11 @@
       "uniqueConstraints": {
         "ss": {
           "name": "ss",
-          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
@@ -507,11 +537,19 @@
       },
       "indexes": {
         "programs_slug_index": {
-          "name": "programs_slug_index",
           "columns": [
-            "slug"
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "programs_slug_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -566,28 +604,28 @@
         "replies_userId_user_id_fk": {
           "name": "replies_userId_user_id_fk",
           "tableFrom": "replies",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "replies_commentId_comments_id_fk": {
           "name": "replies_commentId_comments_id_fk",
           "tableFrom": "replies",
-          "tableTo": "comments",
           "columnsFrom": [
             "commentId"
           ],
+          "tableTo": "comments",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -709,28 +747,28 @@
         "teachers_programs_programId_programs_id_fk": {
           "name": "teachers_programs_programId_programs_id_fk",
           "tableFrom": "teachers_programs",
-          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
+          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "teachers_programs_teacherId_teachers_id_fk": {
           "name": "teachers_programs_teacherId_teachers_id_fk",
           "tableFrom": "teachers_programs",
-          "tableTo": "teachers",
           "columnsFrom": [
             "teacherId"
           ],
+          "tableTo": "teachers",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -766,15 +804,15 @@
         "twoFactorConfirmation_user_user_id_fk": {
           "name": "twoFactorConfirmation_user_user_id_fk",
           "tableFrom": "twoFactorConfirmation",
-          "tableTo": "user",
           "columnsFrom": [
             "user"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -809,11 +847,11 @@
       "uniqueConstraints": {
         "twoFactorToken_email_token_unique": {
           "name": "twoFactorToken_email_token_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
@@ -886,11 +924,19 @@
       },
       "indexes": {
         "user_stripeSubscriptionId_index": {
-          "name": "user_stripeSubscriptionId_index",
           "columns": [
-            "stripeSubscriptionId"
+            {
+              "expression": "stripeSubscriptionId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "user_stripeSubscriptionId_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -898,24 +944,24 @@
       "uniqueConstraints": {
         "user_stripeCustomerId_unique": {
           "name": "user_stripeCustomerId_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "stripeCustomerId"
-          ]
+          ],
+          "nullsNotDistinct": false
         },
         "user_stripeSubscriptionId_unique": {
           "name": "user_stripeSubscriptionId_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "stripeSubscriptionId"
-          ]
+          ],
+          "nullsNotDistinct": false
         },
         "user_stripeSubscriptionEndsOn_unique": {
           "name": "user_stripeSubscriptionEndsOn_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "stripeSubscriptionEndsOn"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
@@ -948,11 +994,11 @@
       "uniqueConstraints": {
         "verificationToken_email_token_unique": {
           "name": "verificationToken_email_token_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
@@ -1031,11 +1077,19 @@
       },
       "indexes": {
         "video_slug_index": {
-          "name": "video_slug_index",
           "columns": [
-            "slug"
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "video_slug_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -1070,28 +1124,28 @@
         "videos_programs_programId_programs_id_fk": {
           "name": "videos_programs_programId_programs_id_fk",
           "tableFrom": "videos_programs",
-          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
+          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "videos_programs_videoId_video_id_fk": {
           "name": "videos_programs_videoId_video_id_fk",
           "tableFrom": "videos_programs",
-          "tableTo": "video",
           "columnsFrom": [
             "videoId"
           ],
+          "tableTo": "video",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -1106,12 +1160,12 @@
       "uniqueConstraints": {
         "videos_programs_videoId_programId_chapterNumber_unique": {
           "name": "videos_programs_videoId_programId_chapterNumber_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "videoId",
             "programId",
             "chapterNumber"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     }
@@ -1119,8 +1173,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "44ae89ac-b66a-42b9-8ebc-87aa26dbc943",
+  "prevId": "3f448dac-eccc-47bf-8e07-e05f6aacfd1c"
 }

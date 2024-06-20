@@ -136,7 +136,7 @@ export const ProgramCard = ({
           }
           alt="video"
           fill
-          className="rounded-sm"
+          className="rounded-sm object-cover"
           loading={lazy ? "lazy" : "eager"}
         />
       </Link>
@@ -158,7 +158,11 @@ export const ProgramCard = ({
                 variants={imageVariants}
               >
                 <Image
-                  src="/images/video-thumbnail.png"
+                  src={
+                    thumbnail
+                      ? getImageUrl(thumbnail)
+                      : "/images/video-thumbnail.png"
+                  }
                   alt="video"
                   fill
                   className="rounded-t-sm"

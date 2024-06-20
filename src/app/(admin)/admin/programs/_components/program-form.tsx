@@ -9,10 +9,8 @@ import { ProgramCategorySelect } from "./program-category-select";
 import { ProgramTeacherSelect } from "./program-teachers-select";
 
 import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
-import {
-  AdminMultipleSelect,
-  type Option,
-} from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -43,9 +41,13 @@ import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils";
 import type { ProgramSchema } from "@/schemas/index";
 import type { SelectVideo } from "@/server/db/schema";
+import { api } from "@/trpc/react";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 type ProgramFormProps = {
   form: UseFormReturn<z.infer<typeof ProgramSchema>>;
+  programId?: number;
   teacherOptions: Option[];
   videoOptions?: Option[];
   categoryOptions?: Option[];
@@ -58,6 +60,7 @@ type ProgramFormProps = {
 
 export const ProgramForm = ({
   form,
+  programId,
   videos,
   teacherOptions,
   videoOptions,
@@ -68,6 +71,22 @@ export const ProgramForm = ({
   chaptersNumbers,
 }: ProgramFormProps) => {
   const pathname = usePathname();
+
+  const generateEmbedding = api.program.generateEmbedding.useMutation({
+    onSuccess: () => {
+      toast.success("Embedding generated successfully");
+    },
+  });
+
+  const onGenerateEmbedding = async () => {
+    if (!programId) return;
+    const [title, description] = form.getValues(["title", "description"]);
+    await generateEmbedding.mutateAsync({
+      title,
+      description,
+      id: programId,
+    });
+  };
 
   return (
     <Form {...form}>
@@ -221,6 +240,18 @@ export const ProgramForm = ({
           </Card>
         </div>
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+          <Button
+            className="w-full h-14 text-sm"
+            variant="outline"
+            disabled={generateEmbedding.isLoading || !programId}
+            onClick={onGenerateEmbedding}
+            type="button"
+          >
+            {generateEmbedding.isLoading && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Generate embeding
+          </Button>
           <Card className="w-full">
             <CardContent className="p-6">
               <div className="grid gap-3">

@@ -7,12 +7,10 @@ type ChapterRelatedProps = {
 };
 
 export const ChapterRelated = ({ program }: ChapterRelatedProps) => {
-  const programCategoryIds = program.categories.map(({ id }) => id);
-
   const { data, isLoading } = api.program.getProgramsForCards.useQuery(
     {
-      categoryIds: programCategoryIds,
-      limit: 3,
+      searchQuery: program.title,
+      limit: 4,
     },
     {
       refetchOnWindowFocus: false,

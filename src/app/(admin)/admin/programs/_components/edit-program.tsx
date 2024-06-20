@@ -120,6 +120,7 @@ export const EditProgram = ({
     >
       <ProgramForm
         form={form}
+        programId={program.id}
         videoOptions={videoOptions}
         teacherOptions={teacherOptions}
         categoryOptions={categoryOptions}

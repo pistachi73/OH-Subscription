@@ -215,8 +215,8 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
       </div>
       <div
         className={cn(
-          "mt-3 grid grid-rows-2 gap-16",
-          "lg:mt-2 lg:grid-cols-[1fr,310px] lg:grid-rows-1",
+          "mt-3 flex flex-col gap-4",
+          "lg:mt-2 lg:flex-row lg:gap-16",
         )}
       >
         <div className="w-full space-y-8 lg:space-y-12">
@@ -259,7 +259,7 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
             className="w-full"
             layoutId="chapter-tabs"
           >
-            <TabsList className="flex w-full items-center justify-center lg:mb-7 ">
+            <TabsList className="flex w-full items-center justify-center ">
               <TabsTrigger value="community" className="text-sm!">
                 Community
               </TabsTrigger>
@@ -280,7 +280,7 @@ export const Chapter = ({ chapter, program }: ChapterProps) => {
             </TabsContent>
           </Tabs>
         </div>
-        <div className="lg:mt-16 space-y-4">
+        <div className="lg:basis-[310px] mt-8 lg:mt-16 space-y-4">
           <ChapterRelated program={program} />
         </div>
       </div>

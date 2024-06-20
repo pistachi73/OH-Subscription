@@ -1,4 +1,6 @@
 {
+  "id": "f79e45c7-4646-4b39-808e-3b771b3df6f0",
+  "prevId": "44ae89ac-b66a-42b9-8ebc-87aa26dbc943",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -78,15 +80,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -144,28 +146,28 @@
         "categories_programs_programId_programs_id_fk": {
           "name": "categories_programs_programId_programs_id_fk",
           "tableFrom": "categories_programs",
+          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
-          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "categories_programs_categoryId_categories_id_fk": {
           "name": "categories_programs_categoryId_categories_id_fk",
           "tableFrom": "categories_programs",
+          "tableTo": "categories",
           "columnsFrom": [
             "categoryId"
           ],
-          "tableTo": "categories",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -174,6 +176,63 @@
           "columns": [
             "categoryId",
             "programId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.categories_shots": {
+      "name": "categories_shots",
+      "schema": "",
+      "columns": {
+        "shotId": {
+          "name": "shotId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "categoryId": {
+          "name": "categoryId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "categories_shots_shotId_shots_id_fk": {
+          "name": "categories_shots_shotId_shots_id_fk",
+          "tableFrom": "categories_shots",
+          "tableTo": "shots",
+          "columnsFrom": [
+            "shotId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "categories_shots_categoryId_categories_id_fk": {
+          "name": "categories_shots_categoryId_categories_id_fk",
+          "tableFrom": "categories_shots",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "categoryId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "categories_shots_categoryId_shotId_pk": {
+          "name": "categories_shots_categoryId_shotId_pk",
+          "columns": [
+            "categoryId",
+            "shotId"
           ]
         }
       },
@@ -207,6 +266,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "shotId": {
+          "name": "shotId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parentCommentId": {
+          "name": "parentCommentId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "content": {
           "name": "content",
           "type": "text",
@@ -228,46 +299,120 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "comments_videoId_index": {
+          "name": "comments_videoId_index",
+          "columns": [
+            {
+              "expression": "videoId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "comments_programId_index": {
+          "name": "comments_programId_index",
+          "columns": [
+            {
+              "expression": "programId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "comments_shotId_index": {
+          "name": "comments_shotId_index",
+          "columns": [
+            {
+              "expression": "shotId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "comments_parentCommentId_index": {
+          "name": "comments_parentCommentId_index",
+          "columns": [
+            {
+              "expression": "parentCommentId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "comments_userId_user_id_fk": {
           "name": "comments_userId_user_id_fk",
           "tableFrom": "comments",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "comments_programId_programs_id_fk": {
           "name": "comments_programId_programs_id_fk",
           "tableFrom": "comments",
+          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
-          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "comments_videoId_video_id_fk": {
           "name": "comments_videoId_video_id_fk",
           "tableFrom": "comments",
+          "tableTo": "video",
           "columnsFrom": [
             "videoId"
           ],
-          "tableTo": "video",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "comments_shotId_shots_id_fk": {
+          "name": "comments_shotId_shots_id_fk",
+          "tableFrom": "comments",
+          "tableTo": "shots",
+          "columnsFrom": [
+            "shotId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -302,11 +447,11 @@
       "uniqueConstraints": {
         "ss": {
           "name": "ss",
+          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       }
     },
@@ -385,15 +530,16 @@
           "notNull": false,
           "default": "now()"
         },
-        "document": {
-          "name": "document",
-          "type": "tsvector generated always as (to_tsvector('english', title || ' ' || description)) stored",
+        "embedding": {
+          "name": "embedding",
+          "type": "vector(1536)",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {
         "programs_slug_index": {
+          "name": "programs_slug_index",
           "columns": [
             {
               "expression": "slug",
@@ -402,11 +548,26 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "programs_slug_index",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
+        },
+        "embeddingIndex": {
+          "name": "embeddingIndex",
+          "columns": [
+            {
+              "expression": "embedding",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last",
+              "opclass": "vector_cosine_ops"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hnsw",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -461,30 +622,90 @@
         "replies_userId_user_id_fk": {
           "name": "replies_userId_user_id_fk",
           "tableFrom": "replies",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "replies_commentId_comments_id_fk": {
           "name": "replies_commentId_comments_id_fk",
           "tableFrom": "replies",
+          "tableTo": "comments",
           "columnsFrom": [
             "commentId"
           ],
-          "tableTo": "comments",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.shots": {
+      "name": "shots",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "playbackId": {
+          "name": "playbackId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transcript": {
+          "name": "transcript",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -544,28 +765,28 @@
         "teachers_programs_programId_programs_id_fk": {
           "name": "teachers_programs_programId_programs_id_fk",
           "tableFrom": "teachers_programs",
+          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
-          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "teachers_programs_teacherId_teachers_id_fk": {
           "name": "teachers_programs_teacherId_teachers_id_fk",
           "tableFrom": "teachers_programs",
+          "tableTo": "teachers",
           "columnsFrom": [
             "teacherId"
           ],
-          "tableTo": "teachers",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -601,15 +822,15 @@
         "twoFactorConfirmation_user_user_id_fk": {
           "name": "twoFactorConfirmation_user_user_id_fk",
           "tableFrom": "twoFactorConfirmation",
+          "tableTo": "user",
           "columnsFrom": [
             "user"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -644,11 +865,11 @@
       "uniqueConstraints": {
         "twoFactorToken_email_token_unique": {
           "name": "twoFactorToken_email_token_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       }
     },
@@ -711,10 +932,17 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "stripeSubscriptionEndsOn": {
+          "name": "stripeSubscriptionEndsOn",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
         "user_stripeSubscriptionId_index": {
+          "name": "user_stripeSubscriptionId_index",
           "columns": [
             {
               "expression": "stripeSubscriptionId",
@@ -723,11 +951,10 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "user_stripeSubscriptionId_index",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -735,17 +962,24 @@
       "uniqueConstraints": {
         "user_stripeCustomerId_unique": {
           "name": "user_stripeCustomerId_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "stripeCustomerId"
-          ],
-          "nullsNotDistinct": false
+          ]
         },
         "user_stripeSubscriptionId_unique": {
           "name": "user_stripeSubscriptionId_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "stripeSubscriptionId"
-          ],
-          "nullsNotDistinct": false
+          ]
+        },
+        "user_stripeSubscriptionEndsOn_unique": {
+          "name": "user_stripeSubscriptionEndsOn_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stripeSubscriptionEndsOn"
+          ]
         }
       }
     },
@@ -778,11 +1012,11 @@
       "uniqueConstraints": {
         "verificationToken_email_token_unique": {
           "name": "verificationToken_email_token_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email",
             "token"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       }
     },
@@ -861,6 +1095,7 @@
       },
       "indexes": {
         "video_slug_index": {
+          "name": "video_slug_index",
           "columns": [
             {
               "expression": "slug",
@@ -869,11 +1104,10 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "video_slug_index",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -908,28 +1142,28 @@
         "videos_programs_programId_programs_id_fk": {
           "name": "videos_programs_programId_programs_id_fk",
           "tableFrom": "videos_programs",
+          "tableTo": "programs",
           "columnsFrom": [
             "programId"
           ],
-          "tableTo": "programs",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         },
         "videos_programs_videoId_video_id_fk": {
           "name": "videos_programs_videoId_video_id_fk",
           "tableFrom": "videos_programs",
+          "tableTo": "video",
           "columnsFrom": [
             "videoId"
           ],
-          "tableTo": "video",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -944,12 +1178,12 @@
       "uniqueConstraints": {
         "videos_programs_videoId_programId_chapterNumber_unique": {
           "name": "videos_programs_videoId_programId_chapterNumber_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "videoId",
             "programId",
             "chapterNumber"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       }
     }
@@ -957,10 +1191,8 @@
   "enums": {},
   "schemas": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "cda8503b-6d5c-4ae9-aaa2-5440c63bbae3",
-  "prevId": "6609605c-636f-4f1c-92e8-48ad8e8404bc"
+    "tables": {}
+  }
 }

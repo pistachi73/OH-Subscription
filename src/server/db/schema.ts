@@ -10,8 +10,8 @@ import {
   text,
   timestamp,
   unique,
+  vector,
 } from "drizzle-orm/pg-core";
-import { tsvector } from "./tsvector";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -140,13 +140,15 @@ export const programs = pgTable(
     updatedAt: timestamp("updatedAt", { mode: "date" })
       .defaultNow()
       .$onUpdate(() => new Date()),
-    document: tsvector("document", {
-      sources: ["title", "description"],
-    }),
+    embedding: vector("embedding", { dimensions: 1536 }),
   },
   (table) => {
     return {
       programSlugIdx: index().on(table.slug),
+      embeddingIndex: index("embeddingIndex").using(
+        "hnsw",
+        table.embedding.op("vector_cosine_ops"),
+      ),
     };
   },
 );

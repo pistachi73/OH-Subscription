@@ -10,6 +10,40 @@ import {
   videos,
   videosOnPrograms,
 } from "@/server/db/schema";
+import type { Category, Teacher } from "@/server/db/schema.types";
+
+export const programCategoriesSelect = {
+  categories: sql<Category[] | null>`
+  nullif
+    (json_agg(DISTINCT
+      nullif(
+        jsonb_strip_nulls(
+          jsonb_build_object(
+            'id', ${categories.id},
+            'name', ${categories.name}
+          )
+        )::jsonb,
+      '{}'::jsonb)
+    )::jsonb,
+  '[null]'::jsonb)`,
+};
+
+export const programTeachersSelect = {
+  teachers: sql<Omit<Teacher, "bio">[] | null>`
+  nullif
+    (json_agg(DISTINCT
+      nullif(
+        jsonb_strip_nulls(
+          jsonb_build_object(
+            'id', ${teachers.id},
+            'image', ${teachers.image},
+            'name', ${teachers.name}
+          )
+        )::jsonb,
+      '{}'::jsonb)
+    )::jsonb,
+  '[null]'::jsonb)`,
+};
 
 export const programsWithCategories = <T extends PgSelect>(qb: T) => {
   return qb

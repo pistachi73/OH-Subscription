@@ -48,6 +48,9 @@ export const env = createEnv({
     // STRIPE
     STRIPE_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
+
+    // OPENAI
+    OPENAI_API_KEY: z.string(),
   },
 
   /**
@@ -84,6 +87,7 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
 
     NEXT_PUBLIC_AWS_CLOUDFRONT_URL: process.env.NEXT_PUBLIC_AWS_CLOUDFRONT_URL,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

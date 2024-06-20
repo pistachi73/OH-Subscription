@@ -1,5 +1,15 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, inArray, or, sql } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
+import {
+  and,
+  cosineDistance,
+  desc,
+  eq,
+  gt,
+  inArray,
+  or,
+  sql,
+} from "drizzle-orm";
 import { z } from "zod";
 
 import type {
@@ -9,6 +19,8 @@ import type {
   Video,
 } from "../../db/schema.types";
 import {
+  programCategoriesSelect,
+  programTeachersSelect,
   programsWithCategories,
   programsWithChapters,
   programsWithTeachers,
@@ -38,6 +50,7 @@ import {
   videos,
   videosOnPrograms,
 } from "@/server/db/schema";
+import { generateEmbedding } from "../lib/openai";
 
 const programSelect = {
   with: {
@@ -110,6 +123,55 @@ export const programRouter = createTRPCRouter({
         slug: toKebabCase(values.title) as string,
         thumbnail: typeof thumbnail === "string" ? thumbnail : null,
       });
+
+      return { success: true };
+    }),
+
+  generateEmbedding: adminProtectedProcedure
+    .input(
+      z.object({ description: z.string(), title: z.string(), id: z.number() }),
+    )
+    .mutation(async ({ input: { description, title, id }, ctx }) => {
+      const { db } = ctx;
+
+      if (!id || !isNumber(id)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Program ID is required",
+        });
+      }
+
+      let programQuery = db
+        .select({
+          ...programCategoriesSelect,
+          ...programTeachersSelect,
+        })
+        .from(programs)
+        .where(eq(programs.id, id))
+        .$dynamic();
+
+      programQuery = programsWithTeachers(programQuery);
+      programQuery = programsWithCategories(programQuery);
+      programQuery = programQuery.groupBy(programs.id);
+      const programList = await programQuery.execute();
+      const program = programList[0];
+
+      const teachersEmbedding = program?.teachers
+        ?.map(({ name }) => name)
+        .join(",");
+
+      const categoriesEmbedding = program?.categories
+        ?.map(({ name }) => name)
+        .join(",");
+
+      let embeddingInput = `${title}|${description}`;
+
+      if (teachersEmbedding) embeddingInput += `|${teachersEmbedding}`;
+      if (categoriesEmbedding) embeddingInput += `|${categoriesEmbedding}`;
+
+      const embedding = await generateEmbedding(embeddingInput);
+
+      await db.update(programs).set({ embedding }).where(eq(programs.id, id));
 
       return { success: true };
     }),
@@ -216,6 +278,18 @@ export const programRouter = createTRPCRouter({
       const hasCategoryFilters =
         categoryIds?.length || categoryNames?.length || levelIds?.length;
 
+      let similarity: SQL<number> | null = null;
+      if (searchQuery) {
+        const embedding = await generateEmbedding(searchQuery);
+
+        if (embedding) {
+          similarity = sql<number>`1 - (${cosineDistance(
+            programs.embedding,
+            embedding,
+          )})`;
+        }
+      }
+
       let programsForCardsQuery = ctx.db
         .select({
           id: programs.id,
@@ -231,6 +305,7 @@ export const programRouter = createTRPCRouter({
                       'image', ${teachers.image},
                       'name', ${teachers.name})
                     )`,
+          ...(similarity && { similarity }),
         })
         .from(programs)
         .$dynamic();
@@ -263,17 +338,19 @@ export const programRouter = createTRPCRouter({
         whereClauses.push(inArray(programs.level, levelIds as ProgramLevel[]));
       }
 
-      programsForCardsQuery.where(
-        searchQuery
-          ? and(
-              sql`${programs.document} @@ to_tsquery('english', ${`${searchQuery
-                .split(" ")
-                .filter(Boolean)
-                .join("&")}:*`})`,
-              or(...whereClauses),
-            )
-          : or(...whereClauses),
-      );
+      if (similarity) {
+        programsForCardsQuery = programsForCardsQuery.where(
+          and(gt(similarity, 0.5), or(...whereClauses)),
+        );
+        programsForCardsQuery = programsForCardsQuery.orderBy((t) =>
+          // biome-ignore lint/style/noNonNullAssertion: Already checked for null
+          desc(t.similarity!),
+        );
+      } else {
+        programsForCardsQuery = programsForCardsQuery.where(
+          or(...whereClauses),
+        );
+      }
 
       if (limit) {
         programsForCardsQuery = withLimit(programsForCardsQuery, limit);

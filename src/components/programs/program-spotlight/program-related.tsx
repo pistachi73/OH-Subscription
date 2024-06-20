@@ -8,10 +8,9 @@ type RelatedProgramsProps = {
 };
 
 export const RelatedPrograms = ({ program }: RelatedProgramsProps) => {
-  const programCategoryIds = program.categories.map(({ id }) => id);
-
   const { data, isLoading } = api.program.getProgramsForCards.useQuery({
-    categoryIds: programCategoryIds,
+    searchQuery: program.title,
+    limit: 7,
   });
 
   const relatedPrograms = data?.filter((p) => p.slug !== program.slug);

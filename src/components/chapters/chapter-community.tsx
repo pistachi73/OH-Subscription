@@ -87,7 +87,7 @@ export const ChapterCommunity = ({ chapter }: ChapterCommunityProps) => {
   }, [data]);
 
   return (
-    <div className="my-8 w-full sm:mt-12">
+    <div className="w-full sm:mt-8">
       <div className="mb-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-medium sm:text-xl">Discussion (20)</h2>
       </div>
