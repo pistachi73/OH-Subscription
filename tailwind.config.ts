@@ -45,7 +45,9 @@ const config: Config = {
         "3xs": ["8px", "12px"],
         "2xs": ["10px", "14px"],
       },
-
+      transitionTimingFunction: {
+        card: "cubicBezier(0.23, 1, 0.6, 1)",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -98,6 +100,7 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
       keyframes: {
         "pulse-carousel": {
           "0%": {

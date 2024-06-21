@@ -9,7 +9,7 @@ export const Footer = () => {
 
   if (!canRenderFooter) return null;
   return (
-    <footer className=" min-h-40 border-t border-input py-16">
+    <footer className=" min-h-96 border-t border-input py-16">
       <MaxWidthWrapper>
         <div />
       </MaxWidthWrapper>

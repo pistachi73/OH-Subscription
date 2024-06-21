@@ -1,26 +1,19 @@
 "use client";
 
-import { AnimatePresence, type Variants, motion } from "framer-motion";
-import { Heart, Play, User } from "lucide-react";
-import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 import Image from "next/image";
 
-import { DeviceOnly } from "../device-only/device-only";
-
-import { useCardAnimation } from "./cards.hooks";
-import { animationConfig } from "./utils";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { ChapterIcon } from "@/components/ui/icons/chapter-icon";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { cardsEase } from "@/lib/animation";
 import { cn } from "@/lib/utils";
+import { Heart, InfoIcon, PlayIcon, User } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
+import { Badge } from "../badge";
+import { Button } from "../button";
+import { ChapterOutlineIcon } from "../icons/chapter-outline-icon";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 
 export type BookCardProps = {
   lazy?: boolean;
@@ -36,253 +29,190 @@ export const BookCard = ({
   lazy,
   className,
 }: BookCardProps) => {
-  const { hovered, setCanHover, onMouseEnter, onMouseLeave } =
-    useCardAnimation();
-  const { duration, ease, shadow } = animationConfig;
-
-  const variants: Variants = {
-    initial: {
-      scale: 1,
-
-      transitionEnd: {
-        zIndex: 10,
-      },
-      x: 0,
-      ...(!isRightBorder && { left: 0 }),
-      ...(isRightBorder && { right: 0 }),
-      transition: {
-        duration,
-        ease,
-      },
-    },
-    animate: {
-      scale: 1.3,
-      zIndex: 50,
-      ...(!isRightBorder && { left: "-67%" }),
-      transition: {
-        duration,
-        ease,
-      },
-    },
-  };
-
-  const imageVariants: Variants = {
-    initial: {
-      zIndex: 0,
-      boxShadow: "none",
-      ...(!isRightBorder && {
-        borderTopRightRadius: 4,
-        borderBottomRightRadius: 4,
-      }),
-      ...(isRightBorder && {
-        borderTopRightRadius: 4,
-        borderBottomRightRadius: 4,
-      }),
-      transition: { duration, ease },
-    },
-    animate: {
-      zIndex: 50,
-      boxShadow: shadow,
-      ...(!isRightBorder && {
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-      }),
-      ...(isRightBorder && {
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-      }),
-      transition: { duration, ease },
-    },
-  };
-
-  const textVariants: Variants = {
-    initial: { opacity: 0, boxShadow: "none" },
-    animate: {
-      opacity: 1,
-      boxShadow: shadow,
-      transition: { duration, ease },
-    },
-  };
-  const buttonVariants: Variants = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { duration, ease },
-    },
-  };
-
-  const tagVariants: Variants = {
-    initial: { opacity: 1 },
-    animate: { opacity: 0, transition: { duration, ease } },
-  };
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div
+    <article
       className={cn(
-        "relative w-full",
-        {
-          "cursor-pointer": !publishDate,
-        },
+        "group relative w-full ",
+        !publishDate ? "cursor-pointer" : "pointer-events-none",
         className,
       )}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative aspect-[3/4] shrink-0 overflow-visible ">
-        <span className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-primary-800 px-1 py-0.5 text-2xs font-medium text-white">
-          Beginner
-        </span>
-        <Image
-          src="/images/book-thumbnail.png"
-          alt="cover"
-          fill
-          className="rounded-sm object-cover"
-        />
-        {publishDate && (
-          <div className="absolute bottom-1 left-1/2 z-10 -translate-x-1/2 rounded-sm bg-gradient-to-t from-primary-900 to-primary-800 p-1 px-2 text-center ">
-            <p className="text-3xs  text-gray-400">Coming soon</p>
-            <p className="text-xs font-medium text-gray-50"> 24/03/2024</p>
-          </div>
-        )}
-      </div>
-      <DeviceOnly allowedDevices={"desktop"}>
-        {!publishDate && (
-          <AnimatePresence
-            mode="wait"
-            initial={false}
-            onExitComplete={() => setCanHover(true)}
-          >
-            {hovered && (
-              <motion.div
-                initial="initial"
-                animate="animate"
-                exit="initial"
-                variants={variants}
-                className={cn(
-                  "absolute top-0 z-50 flex h-full w-[375px] rounded-sm  ",
-                  {
-                    "origin-left": !isRightBorder,
-                    "origin-right flex-row-reverse": isRightBorder,
-                  },
-                )}
-              >
-                <motion.div
-                  className={cn("relative aspect-[3/4] h-full bg-transparent")}
-                  variants={imageVariants}
-                >
-                  <Image
-                    src="/images/book-thumbnail.png"
-                    alt="video"
-                    fill
-                    className={cn("object-cover", {
-                      "rounded-l-sm": !isRightBorder,
-                      "rounded-r-sm": isRightBorder,
-                    })}
-                    loading={lazy ? "lazy" : "eager"}
-                  />
-                  <motion.span
-                    className="absolute left-1 top-1 z-10 h-fit shrink-0 rounded bg-gray-800/70 px-1 py-0.5 text-2xs font-medium text-white"
-                    variants={tagVariants}
-                  >
-                    Beginner
-                  </motion.span>
-                  <motion.div
-                    className="absolute bottom-3 left-3 flex items-center space-x-1"
-                    variants={buttonVariants}
-                  >
-                    <Button
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
-                      variant="outline"
-                      size="icon"
-                    >
-                      <Play
-                        className="-ml-px fill-primary stroke-primary"
-                        size={16}
-                      />
-                    </Button>
-
-                    <Button
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-primary bg-primary-50/70"
-                      variant="outline"
-                      size="icon"
-                    >
-                      <Heart className="stroke-primary " size={16} />
-                    </Button>
-                  </motion.div>
-                </motion.div>
-                <motion.div
-                  variants={textVariants}
-                  className={cn(
-                    "h-full bg-background px-4 py-3",
-                    { "-translate-x-1 rounded-r-sm": !isRightBorder },
-                    { "translate-x-1 rounded-l-sm": isRightBorder },
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "flex h-full flex-col justify-between space-y-4",
-                      {
-                        "ml-1": !isRightBorder,
-                        "mr-1": isRightBorder,
-                      },
-                    )}
-                  >
-                    <div className="space-y-1">
-                      <div className="space-y-0.5">
-                        <h3 className=" text-left text-sm font-bold ">
-                          Hamlet
-                          <span className="ml-1 inline-block w-fit -translate-y-0.5  rounded bg-gray-800 px-1 py-0.5 text-3xs font-normal text-white">
-                            Beginner
-                          </span>
-                        </h3>
-                        <p className="text-2xs text-gray-400">
-                          William Shakespeare
-                        </p>
-                      </div>
-
-                      <p className="w-full text-left text-xs font-light text-primary-800">
-                        Lorem ipsum dolor sit amet consectetur. Enim dolor
-                        porttitor at scelerisque pellentesque imperdiet a enim
-                        ullamcorper.
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="-gap-2 flex flex-row">
-                        {Array.from({ length: 3 }).map((_, index) => (
-                          <TooltipProvider key={index}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Avatar className="-ml-2 h-9 w-9 border border-gray-800 first:ml-0 hover:bg-gray-400">
-                                  <AvatarImage src={undefined} />
-                                  <AvatarFallback className="bg-slate-50">
-                                    <User className="text-gray-800" size={16} />
-                                  </AvatarFallback>
-                                </Avatar>
-                              </TooltipTrigger>
-                              <TooltipContent className="p-1 px-2 ">
-                                <p className="text-center  text-2xs font-medium text-gray-800">
-                                  John Doe
-                                </p>
-                                <p className="text-center  text-3xs text-gray-600">
-                                  Teacher at OH
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        ))}
-                      </div>
-                      <div className="flex flex-col items-center gap-0.5">
-                        <ChapterIcon className="h-7 w-7 fill-gray-800" />
-                        <p className="text-3xs text-gray-600">12 chapters</p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
+      <section className="relative aspect-[6/9] shrink-0 overflow-visible group-hover:z-20">
+        <div
+          className={cn(
+            "w-full h-full transition-transform ease-out",
+            "group-hover:scale-125 group-hover:delay-300",
+            {
+              "group-hover:-translate-x-12": !isRightBorder,
+              "origin-right flex-row-reverse": isRightBorder,
+            },
+          )}
+        >
+          <Badge
+            variant="accent"
+            className={cn(
+              "absolute left-1 top-1 z-10 h-fit shrink-0 rounded px-1 py-0.5 text-3xs font-medium transition-opacity delay-0",
+              "group-hover:opacity-0 group-hover:delay-300",
             )}
-          </AnimatePresence>
-        )}
-      </DeviceOnly>
-    </div>
+          >
+            Beginner
+          </Badge>
+          <Image
+            src="/images/book-thumbnail.png"
+            alt="cover"
+            fill
+            className={cn(
+              "rounded-lg delay-0 group-hover:delay-300 group-hover:transition-all object-cover group-hover:shadow-lg",
+              isRightBorder && "group-hover:rounded-l-none",
+              !isRightBorder && "group-hover:rounded-r-none",
+            )}
+          />
+          {publishDate && (
+            <div className="absolute bottom-1 left-1/2 z-10 -translate-x-1/2 rounded-sm bg-gradient-to-t from-primary-900 to-primary-800 p-1 px-2 text-center ">
+              <p className="text-3xs  text-gray-400">Coming soon</p>
+              <p className="text-xs font-medium text-gray-50"> 24/03/2024</p>
+            </div>
+          )}
+        </div>
+        <AnimatePresence>
+          {isHovered && (
+            <motion.article
+              initial={{
+                opacity: 0,
+                left: isRightBorder
+                  ? "calc(-12.5% - 300px)"
+                  : "calc(112.5% - 38px)",
+              }}
+              animate={{
+                opacity: 1,
+                left: isRightBorder
+                  ? "calc(-25% - 300px)"
+                  : "calc(112.5% - 48px)",
+                transition: {
+                  delay: 0.3,
+                  duration: 0.15,
+                  ease: cardsEase,
+                },
+              }}
+              className={cn(
+                "p-4 bg-background absolute top-[-12.5%] w-[300px] h-[125%] flex flex-col justify-between",
+                "group-hover:shadow-lg",
+                !isRightBorder && "rounded-r-lg",
+                isRightBorder && " rounded-l-lg",
+              )}
+            >
+              <div>
+                <section className="flex flex-row justify-between">
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="default"
+                      className="rounded-full w-14 h-14 p-0 flex items-center justify-center"
+                      asChild
+                    >
+                      <Link href={"/programs/test"}>
+                        <PlayIcon className="ml-0.5 w-6 h-6 fill-current" />
+                      </Link>
+                    </Button>
+                    <p className="font-semibold tracking-tight text-base text-muted-foreground">
+                      Play C1
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="accent"
+                          className="w-12 h-12 rounded-full p-0"
+                        >
+                          <Heart className="w-5 h-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent sideOffset={6} className="p-1 px-2">
+                        <p className="text-sm text-foreground">
+                          Add to favorites
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="accent"
+                          className="w-12 h-12 rounded-full p-0"
+                          asChild
+                        >
+                          <Link href={"/programs/test"}>
+                            <InfoIcon className="w-5 h-5" />
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent sideOffset={6} className="p-1 px-2">
+                        <p className="text-sm text-foreground">Details</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </section>
+                <section className="mt-2 space-y-0.5">
+                  <h3 className="text-lg font-bold">Hamlet</h3>
+                  <p className="line-clamp-2 text-base text-muted-foreground">
+                    Lorem ipsum dolor sit amet consectetur. Enim dolor porttitor
+                    at scelerisque pellentesque imperdiet a enim ullamcorper.
+                  </p>
+                </section>
+              </div>
+
+              <section className="mt-5 flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center">
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <Tooltip key="hello">
+                      <TooltipTrigger asChild>
+                        <Avatar
+                          className={cn(
+                            "h-14 w-14 border-2",
+                            index !== 0 && "-ml-3",
+                          )}
+                        >
+                          <AvatarImage src={undefined} />
+                          <AvatarFallback className="bg-accent relative">
+                            <Image
+                              src="/images/avatar-placeholder.png"
+                              fill
+                              alt="teacher avatar placeholder"
+                            />
+
+                            <User
+                              className="text-accent-foreground"
+                              size={20}
+                            />
+                          </AvatarFallback>
+                        </Avatar>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        align="center"
+                        side="top"
+                        className="p-1 px-3 text-center"
+                      >
+                        <p className="text-sm  text-foreground">Jhon Doe</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          Teacher at OH
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                </div>
+                <div className="flex flex-col items-center gap-1 text-foreground">
+                  <ChapterOutlineIcon className="fill-foreground w-9 h-9" />
+                  <p className="text-xs text-muted-foreground">11 chapters</p>
+                </div>
+              </section>
+            </motion.article>
+          )}
+        </AnimatePresence>
+      </section>
+    </article>
   );
 };

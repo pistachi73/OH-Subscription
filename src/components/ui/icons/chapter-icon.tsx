@@ -9,6 +9,7 @@ export const ChapterIcon = ({ className }: { className?: string }) => {
       preserveAspectRatio="xMidYMid meet"
       className={className}
     >
+      <title>Chapter Icon</title>
       <g
         transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
         stroke="none"

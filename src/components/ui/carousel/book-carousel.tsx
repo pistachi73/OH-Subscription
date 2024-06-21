@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import { BookCard, type BookCardProps } from "../cards/book-card";
 
 import { CarouselHeader } from "./carousel-header";

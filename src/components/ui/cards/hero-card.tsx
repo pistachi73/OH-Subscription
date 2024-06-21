@@ -24,7 +24,7 @@ type HeroCardProps = {
 
 const MotionButton = motion(Button);
 export const heroCardHeightProps =
-  "h-[83vw] landscape:max-h-[55vh] sm:min-h-[450px] xs:h-[72vw] sm:h-[70vw]";
+  "h-[83vw] landscape:max-h-[65vh] sm:min-h-[450px] xs:h-[72vw] sm:h-[70vw]";
 
 const TRANSITION: Transition = {
   ease: "easeOut",

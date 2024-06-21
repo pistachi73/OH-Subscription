@@ -299,22 +299,15 @@ export const programRouter = createTRPCRouter({
           level: programs.level,
           slug: programs.slug,
           totalChapters: programs.totalChapters,
-          teachers: sql<Omit<Teacher, "bio">[]>`json_agg(DISTINCT
-                    jsonb_build_object(
-                      'id', ${teachers.id},
-                      'image', ${teachers.image},
-                      'name', ${teachers.name})
-                    )`,
+          ...programTeachersSelect,
+          ...programCategoriesSelect,
           ...(similarity && { similarity }),
         })
         .from(programs)
         .$dynamic();
 
       programsForCardsQuery = programsWithTeachers(programsForCardsQuery);
-
-      if (hasCategoryFilters) {
-        programsForCardsQuery = programsWithCategories(programsForCardsQuery);
-      }
+      programsForCardsQuery = programsWithCategories(programsForCardsQuery);
 
       const whereClauses = [];
 

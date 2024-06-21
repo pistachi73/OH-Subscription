@@ -8,7 +8,6 @@ import { CustomSessionProvider } from "@/components/auth/auth-session-provider";
 import { Providers } from "@/components/providers";
 import { DeviceOnlyProvider } from "@/components/ui/device-only/device-only-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { getHeaders } from "@/lib/get-headers";
 import { TRPCReactProvider } from "@/trpc/react";
 
@@ -47,10 +46,8 @@ export default async function RootLayout({
                 cookies={cookies().toString()}
                 authorization={authorization?.toString() ?? ""}
               >
-                <TooltipProvider>
-                  <Toaster />
-                  {children}
-                </TooltipProvider>
+                <Toaster />
+                {children}
               </TRPCReactProvider>
             </DeviceOnlyProvider>
           </CustomSessionProvider>

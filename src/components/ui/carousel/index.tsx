@@ -3,7 +3,6 @@
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import { motion, type Variants } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 
@@ -149,17 +148,6 @@ const Carousel = React.forwardRef<
       api?.reInit({ ...opts });
     }, [api, opts]);
 
-    const variants: Variants = {
-      initial: {
-        zIndex: 1,
-        transition: { delay: 0.2, ease: [0, 1, 0, 1] },
-      },
-      hover: {
-        zIndex: 5,
-        transition: { delay: 0.3, ease: [0, 1, 0, 1] },
-      },
-    };
-
     return (
       <CarouselContext.Provider
         value={{
@@ -178,16 +166,7 @@ const Carousel = React.forwardRef<
           total,
         }}
       >
-        <motion.div
-          whileHover="hover"
-          whileTap="hover"
-          whileFocus="hover"
-          whileDrag="hover"
-          initial="initial"
-          animate="initial"
-          variants={variants}
-          className="group/carousel relative w-full"
-        >
+        <div className="group/carousel relative w-full transition-[z-index] delay-300 hover:z-10 group-hover:delay-0">
           {orientation === "horizontal" && (
             <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px 2xl:right-14">
               {Array.from({ length: total }).map((_, index) => (
@@ -225,7 +204,7 @@ const Carousel = React.forwardRef<
           >
             {children}
           </div>
-        </motion.div>
+        </div>
       </CarouselContext.Provider>
     );
   },
