@@ -19,6 +19,15 @@ export const shotCategoriesSelect = {
   '[null]'::jsonb)`,
 };
 
+export const shotSelectCarousel = {
+  id: shots.id,
+  playbackId: shots.playbackId,
+  slug: shots.slug,
+  title: shots.title,
+  transcript: shots.transcript,
+  description: shots.description,
+};
+
 export const shotSelect = <T extends PgSelect>(qb: T) => {
   return qb;
 };

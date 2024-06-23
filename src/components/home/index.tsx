@@ -22,15 +22,15 @@ export const Home = async () => {
     <div className="header-translate">
       <HeroCarousel programs={heroPrograms} />
       <ProgramCarousel
-        title="Grammar"
-        href="/programs/?categories=4"
-        programs={grammarPrograms}
-      />
-      <ShotList shots={shots} />
-      <ProgramCarousel
         title="Vocabulary"
         href="/programs/?categories=3"
         programs={vocabularyPrograms}
+      />
+      <ShotList shots={shots} />
+      <ProgramCarousel
+        title="Grammar"
+        href="/programs/?categories=4"
+        programs={grammarPrograms}
       />
     </div>
   );

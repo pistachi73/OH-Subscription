@@ -1,5 +1,16 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, getTableColumns, sql } from "drizzle-orm";
+import {
+  and,
+  cosineDistance,
+  count,
+  desc,
+  eq,
+  getTableColumns,
+  gt,
+  lt,
+  ne,
+  sql,
+} from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -13,9 +24,11 @@ import { isNumber } from "@/lib/utils";
 import { CategoriesOnShotsSchema, ShotSchema } from "@/schemas";
 import { categories, categoriesOnShots, shots } from "@/server/db/schema";
 import type { Category } from "@/server/db/schema.types";
+import { generateEmbedding } from "../lib/openai";
 import { withLimit } from "../query-utils/shared.query";
 import {
   shotCategoriesSelect,
+  shotSelectCarousel,
   shotsWithCategories,
 } from "../query-utils/shots.query";
 
@@ -123,7 +136,6 @@ export const shotRouter = createTRPCRouter({
       shotQuery = shotQuery.groupBy(shots.id);
 
       const shotList = await shotQuery.execute();
-      const shot = shotList?.[0];
 
       return shotList[0];
     }),
@@ -153,11 +165,7 @@ export const shotRouter = createTRPCRouter({
         playbackId: shots.playbackId,
         slug: shots.slug,
         title: shots.title,
-        categories: sql<Category[]>`json_agg(DISTINCT
-        jsonb_build_object(
-          'id', ${categories.id},
-          'name', ${categories.name})
-       )`,
+        ...shotCategoriesSelect,
       })
       .from(shots)
       .$dynamic();
@@ -171,7 +179,7 @@ export const shotRouter = createTRPCRouter({
     return allShots;
   }),
 
-  getCarouselShots: publicProcedure
+  getInitialCarouselShot: publicProcedure
     .input(
       z.object({
         initialShotSlug: z.string(),
@@ -180,12 +188,7 @@ export const shotRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       let initialShotQuery = ctx.db
         .select({
-          id: shots.id,
-          playbackId: shots.playbackId,
-          slug: shots.slug,
-          title: shots.title,
-          transcript: shots.transcript,
-          description: shots.description,
+          ...shotSelectCarousel,
           ...shotCategoriesSelect,
         })
         .from(shots)
@@ -196,7 +199,86 @@ export const shotRouter = createTRPCRouter({
       initialShotQuery = initialShotQuery.groupBy(shots.id);
       const initialShot = (await initialShotQuery.execute())[0];
 
-      return [initialShot];
+      if (!initialShot) return null;
+
+      const embedding = await generateEmbedding(initialShot.title);
+
+      return { shot: initialShot, embedding };
+    }),
+  getCarouselShots: publicProcedure
+    .input(
+      z.object({
+        initialShotSlug: z.string(),
+        initialShotTitle: z.string(),
+        cursor: z.number().nullish(),
+        pageSize: z.number().optional(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { initialShotTitle, cursor } = input;
+
+      const embedding = await generateEmbedding(initialShotTitle);
+
+      const similarity = sql<number>`1 - (${cosineDistance(
+        shots.embedding,
+        embedding,
+      )})`;
+
+      const whereClauses = [
+        gt(similarity, 0.5),
+        ne(shots.slug, input.initialShotSlug),
+      ];
+
+      if (cursor) {
+        whereClauses.push(lt(similarity, cursor));
+      }
+
+      let shotQuery = ctx.db
+        .select({
+          id: shots.id,
+          playbackId: shots.playbackId,
+          slug: shots.slug,
+          title: shots.title,
+          transcript: shots.transcript,
+          description: shots.description,
+          similarity,
+          ...shotCategoriesSelect,
+        })
+        .from(shots)
+        .where(and(...whereClauses))
+        .$dynamic();
+
+      shotQuery = shotsWithCategories(shotQuery);
+      shotQuery = shotQuery.groupBy(shots.id);
+      shotQuery = shotQuery.orderBy((t) => desc(t.similarity));
+      shotQuery = shotQuery.limit(input.pageSize ?? 3);
+      const shotList = await shotQuery.execute();
+
+      let nextCursor = shotList.length
+        ? shotList?.[shotList.length - 1]?.similarity
+        : null;
+
+      if (nextCursor) {
+        const nextCursorCount = await ctx.db
+          .select({ count: count(shots.id) })
+          .from(shots)
+          .where(and(...whereClauses, lt(similarity, nextCursor)))
+          .groupBy(shots.id)
+          .execute();
+
+        if (!nextCursorCount[0]?.count) {
+          nextCursor = null;
+        }
+      }
+
+      console.log(
+        "fetched next page,",
+        shotList?.map(({ id }) => id).join("-"),
+      );
+      return {
+        shots: shotList,
+        nextCursor,
+      };
     }),
 
   addCategory: adminProtectedProcedure
@@ -223,5 +305,47 @@ export const shotRouter = createTRPCRouter({
         );
 
       return true;
+    }),
+
+  generateEmbedding: adminProtectedProcedure
+    .input(
+      z.object({ description: z.string(), title: z.string(), id: z.number() }),
+    )
+    .mutation(async ({ input: { description, title, id }, ctx }) => {
+      const { db } = ctx;
+
+      if (!id || !isNumber(id)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Shot ID is required",
+        });
+      }
+
+      let shotQuery = db
+        .select({
+          ...shotCategoriesSelect,
+        })
+        .from(shots)
+        .where(eq(shots.id, id))
+        .$dynamic();
+
+      shotQuery = shotsWithCategories(shotQuery);
+      shotQuery = shotQuery.groupBy(shots.id);
+      const shotList = await shotQuery.execute();
+      const shot = shotList[0];
+
+      const categoriesEmbedding = shot?.categories
+        ?.map(({ name }) => name)
+        .join(",");
+
+      let embeddingInput = `${title}|${description}`;
+
+      if (categoriesEmbedding) embeddingInput += `|${categoriesEmbedding}`;
+
+      const embedding = await generateEmbedding(embeddingInput);
+
+      await db.update(shots).set({ embedding }).where(eq(shots.id, id));
+
+      return { success: true };
     }),
 });

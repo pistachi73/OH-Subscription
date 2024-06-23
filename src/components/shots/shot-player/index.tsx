@@ -20,6 +20,7 @@ import { MediaVideo } from "./media-video";
 
 export const ShotPlayer = ({ shot }: ShotProps) => {
   const { isMobile } = useDeviceType();
+
   return (
     <MediaController class="h-full w-full">
       <MediaVideo shot={shot} />

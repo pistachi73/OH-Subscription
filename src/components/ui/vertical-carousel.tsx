@@ -64,6 +64,7 @@ const VerticalCarousel = React.forwardRef<
     const [carouselRef, api] = useEmblaCarousel(
       {
         ...opts,
+        inViewThreshold: 0,
         axis: orientation === "horizontal" ? "x" : "y",
       },
       [...(plugins ?? [])],

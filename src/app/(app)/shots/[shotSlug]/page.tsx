@@ -9,17 +9,21 @@ type ShotPageProps = {
 };
 
 const ShotPage = async ({ params: { shotSlug } }: ShotPageProps) => {
-  const initialShot = await api.shot.getCarouselShots.query({
-    initialShotSlug: shotSlug,
-  });
+  const { shot, embedding } =
+    (await api.shot.getInitialCarouselShot.query({
+      initialShotSlug: shotSlug,
+    })) ?? {};
 
-  if (!initialShot[0]) {
+  if (!shot || !embedding) {
     redirect("/");
   }
 
-  console.log({ initialShot });
-
-  return <ShotCarousel initialShots={initialShot} />;
+  return (
+    <ShotCarousel
+      initialShot={{ ...shot, similarity: 1 }}
+      embedding={embedding}
+    />
+  );
 };
 
 export default ShotPage;

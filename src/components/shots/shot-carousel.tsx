@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   VerticalCarousel,
@@ -13,31 +13,59 @@ import { cn } from "@/lib/utils";
 import type { ShotCarouselData } from "@/server/db/schema.types";
 import Image from "next/image";
 import Link from "next/link";
+import { api as trpcApi } from "../../trpc/react";
 import { DeviceOnly } from "../ui/device-only/device-only";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
-import { Shot } from "./shot/index";
+import { Shot } from "./shot";
 
 type ShotCarouselProps = {
-  initialShots: ShotCarouselData[];
+  initialShot: ShotCarouselData;
+  embedding: number[];
   className?: string;
 };
 
-export const ShotCarousel = ({
-  initialShots,
-  className,
-}: ShotCarouselProps) => {
+export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
   const [api, setApi] = useState<VerticalCarouselApi>();
+  const [current, setCurrent] = useState(0);
   const { deviceType } = useDeviceType();
+
+  const { data, hasNextPage, fetchNextPage } =
+    trpcApi.shot.getCarouselShots.useInfiniteQuery(
+      {
+        initialShotSlug: initialShot.slug,
+        initialShotTitle: initialShot.title,
+        pageSize: 2,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        refetchOnMount: false,
+      },
+    );
+
+  const shots = useMemo(
+    () => [initialShot, ...(data?.pages.flatMap((page) => page.shots) ?? [])],
+    [data, initialShot],
+  );
+
+  useEffect(() => {
+    if (!shots?.[current]) return;
+
+    window.history.pushState(null, "", `/shots/${shots?.[current]?.slug}/`);
+
+    if (current === shots.length - 1 && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [current, shots, fetchNextPage, hasNextPage]);
 
   useEffect(() => {
     if (!api) {
       return;
     }
 
+    setCurrent(api.selectedScrollSnap());
+
     api.on("select", () => {
-      const selected = api.selectedScrollSnap();
-      if (!initialShots?.[selected]) return;
-      window.history.pushState(null, "", `/shots/${initialShots?.[selected]}/`);
+      setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
 
@@ -78,19 +106,20 @@ export const ShotCarousel = ({
         <VerticalCarouselContent
           className={cn("h-full", deviceType === "mobile" && "sm:mt-0")}
         >
-          {initialShots?.map((shot, index) => {
+          {shots?.map((shot, index) => {
             if (!shot) return null;
+            console.log({ current, index, inView: current === index });
             return (
               <VerticalCarouselItem
-                key={index}
+                key={shot.slug}
                 className={cn(
                   "flex h-full w-full basis-full justify-center",
                   deviceType === "mobile"
                     ? "pt-0 sm:pt-0 mt-0 sm:mt-0"
-                    : "sm:max-h-[97%] sm:basis-[97%]",
+                    : "sm:max-h-[100%] sm:basis-full",
                 )}
               >
-                <Shot shot={shot} />
+                <Shot shot={shot} inView={current === index} />
               </VerticalCarouselItem>
             );
           })}

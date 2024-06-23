@@ -321,18 +321,30 @@ export const categoriesOnProgramsRelations = relations(
 );
 
 // ----------------- Shots -----------------
-export const shots = pgTable("shots", {
-  id: serial("id").primaryKey(),
-  slug: text("slug").notNull(),
-  playbackId: text("playbackId").notNull(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  transcript: text("transcript"),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "date" })
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+export const shots = pgTable(
+  "shots",
+  {
+    id: serial("id").primaryKey(),
+    slug: text("slug").notNull(),
+    playbackId: text("playbackId").notNull(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    transcript: text("transcript"),
+    createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" })
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+    embedding: vector("embedding", { dimensions: 1536 }),
+  },
+  (table) => {
+    return {
+      shotsEmbeddingIndex: index("shotsEmbeddingIndex").using(
+        "hnsw",
+        table.embedding.op("vector_cosine_ops"),
+      ),
+    };
+  },
+);
 
 export const categoriesOnShots = pgTable(
   "categories_shots",

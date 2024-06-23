@@ -32,10 +32,14 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
     },
   });
 
-  console.log(shot.categories);
-
   const initialCategories =
     shot?.categories?.map(({ id }) => id.toString()).join(",") ?? "";
+
+  const generateShotEmbedding = api.shot.generateEmbedding.useMutation({
+    onSuccess: () => {
+      toast.success("Shot embedding generated successfully");
+    },
+  });
 
   const saveShot = api.shot.update.useMutation({
     onError: (error) => {
@@ -52,6 +56,16 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
     shotIdSignal.value = shot.id;
   };
 
+  const onGenerateEmbedding = async () => {
+    if (!shot.id) return;
+    const [title, description] = form.getValues(["title", "description"]);
+    await generateShotEmbedding.mutateAsync({
+      title,
+      description,
+      id: shot.id,
+    });
+  };
+
   return (
     <AdminFormLayout
       form={form}
@@ -60,6 +74,9 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
       onSave={onSave}
       isSaving={saveShot.isLoading}
       onDelete={onDelete}
+      onGenerateEmbedding={onGenerateEmbedding}
+      isGenerateEmbedding={generateShotEmbedding.isLoading}
+      id={shot.id}
     >
       <ShotForm
         form={form}

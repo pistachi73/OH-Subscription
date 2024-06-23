@@ -18,18 +18,24 @@ type AdminFormLayoutProps<T extends FieldValues> = {
   backHref: string;
   form: UseFormReturn<T>;
   onSave: SubmitHandler<T>;
+  id?: string | number;
   isSaving?: boolean;
   onDelete?: () => void;
+  isGenerateEmbedding?: boolean;
+  onGenerateEmbedding?: () => void;
 };
 
 export const AdminFormLayout = <T extends FieldValues>({
   children,
+  id,
   form,
   title,
   onDelete,
   onSave,
   backHref,
   isSaving,
+  isGenerateEmbedding,
+  onGenerateEmbedding,
 }: AdminFormLayoutProps<T>) => {
   return (
     <div className="mx-auto w-full max-w-[1080px] ">
@@ -50,9 +56,23 @@ export const AdminFormLayout = <T extends FieldValues>({
             </h1>
 
             <div className=" ml-auto flex items-center gap-2">
-              {onDelete && (
+              {onGenerateEmbedding && (
                 <Button
                   variant="outline"
+                  size="sm"
+                  disabled={isSaving || !id || isGenerateEmbedding}
+                  onClick={onGenerateEmbedding}
+                  type="button"
+                >
+                  {isGenerateEmbedding && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Generate embedding
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  variant="destructive"
                   size="sm"
                   disabled={isSaving}
                   onClick={onDelete}

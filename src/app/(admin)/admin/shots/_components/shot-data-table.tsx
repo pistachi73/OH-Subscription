@@ -6,6 +6,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { isShotDeleteModalOpenSignal, shotIdSignal } from "./shot-signals";
 
 import { SlugCell } from "@/components/admin/slug-cell";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -35,6 +36,23 @@ export const columns: ColumnDef<Shot>[] = [
     header: "Description",
     cell: (row) => {
       return <p className="line-clamp-3">{row.getValue() as string}</p>;
+    },
+  },
+  {
+    accessorKey: "embedding",
+    header: "Embedding generated",
+    cell: (row) => {
+      const value = Boolean(row.getValue());
+      return (
+        <div className="w-full flex justify-center">
+          <Badge
+            variant={value ? "success" : "accent"}
+            className="line-clamp-3 w-fit"
+          >
+            {value ? "Yes" : "No"}
+          </Badge>
+        </div>
+      );
     },
   },
   actionColumn({

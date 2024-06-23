@@ -52,40 +52,6 @@ import {
 } from "@/server/db/schema";
 import { generateEmbedding } from "../lib/openai";
 
-const programSelect = {
-  with: {
-    teachers: {
-      columns: {
-        teacherId: false,
-        programId: false,
-      },
-      with: {
-        teacher: {
-          columns: {
-            name: true,
-            id: true,
-          },
-        },
-      },
-    },
-    categories: {
-      columns: {
-        categoryId: false,
-        programId: false,
-      },
-      with: {
-        category: {
-          columns: {
-            name: true,
-            id: true,
-          },
-        },
-      },
-    },
-    chapters: true,
-  },
-} as const;
-
 export const programRouter = createTRPCRouter({
   delete: adminProtectedProcedure
     .input(z.number())
@@ -225,29 +191,6 @@ export const programRouter = createTRPCRouter({
     return allPrograms;
   }),
 
-  getAllForLanding: publicProcedure.query(async ({ ctx }) => {
-    const { db } = ctx;
-
-    return await db.query.programs.findMany({
-      with: {
-        teachers: {
-          columns: {
-            teacherId: false,
-            programId: false,
-          },
-          with: {
-            teacher: {
-              columns: {
-                name: true,
-                id: true,
-              },
-            },
-          },
-        },
-      },
-    });
-  }),
-
   getProgramsForCards: publicProcedure
     .input(
       z
@@ -274,9 +217,6 @@ export const programRouter = createTRPCRouter({
         levelIds,
         searchQuery,
       } = input ?? {};
-
-      const hasCategoryFilters =
-        categoryIds?.length || categoryNames?.length || levelIds?.length;
 
       let similarity: SQL<number> | null = null;
       if (searchQuery) {
