@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 
 import { Input, type InputProps } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
 import { useRef, useState } from "react";
+import { SearchOutlineIcon } from "./icons";
 
 type SearchInputProps = InputProps & {
   openWidth?: string;
@@ -49,6 +49,7 @@ export const SearchInput = ({
         type="button"
         className={cn(
           "absolute top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center",
+          "text-foreground/80 hover:text-foreground/60 transition-colors",
           open && "pointer-events-none",
         )}
         aria-label="Search"
@@ -57,7 +58,7 @@ export const SearchInput = ({
           inputRef.current?.focus();
         }}
       >
-        <Search className="text-foreground w-4 h-4  sm:w-[18px] sm:h-[18px]" />
+        <SearchOutlineIcon className="w-6 h-6" />
       </button>
       <Input
         ref={inputRef}

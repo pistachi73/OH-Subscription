@@ -29,6 +29,12 @@
 
       --muted-background: 228 100% 99%;
       --hero-gradient: linear-gradient(90deg, #fafbff, rgba(250,251,255, .991) 6.67%, rgba(250,251,255, .964) 13.33%, rgba(250,251,255, .918) 20%, rgba(250,251,255, .853) 26.67%, rgba(250,251,255, .768) 33.33%, rgba(250,251,255, .668) 40%, rgba(250,251,255, .557) 46.67%, rgba(250,251,255, .443) 53.33%, rgba(250,251,255, .332) 60%, rgba(250,251,255, .232) 66.67%, rgba(250,251,255, .147) 73.33%, rgba(250,251,255, .082) 80%, rgba(250,251,255, 0) 86.67%);
+    
+    
+    
+      --dark-muted-background: 232 52% 4%;
+      --dark-accent: 234.55 22.58% 20.08%;
+      --dark-foreground: 232 21% 100%;
     }
 
     .dark {
@@ -164,6 +170,10 @@
 
   .header-translate {
     @apply sm:-translate-y-12 lg:-translate-y-14;
+  }
+
+  .icon-stroke {
+    @apply stroke-[0.2px] overflow-visible;
   }
 
   .no-scrollbar::-webkit-scrollbar {

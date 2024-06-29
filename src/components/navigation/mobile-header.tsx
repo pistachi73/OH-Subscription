@@ -90,34 +90,43 @@ export const MobileHeader = () => {
         layoutRoot
         className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1"
       >
-        {mobileNavItems.map(({ href, title, icon: Icon }) => {
-          const isActive = segment ? href.includes(segment) : href === "/";
-          return (
-            <li
-              key={title}
-              className={cn(
-                "relative flex basis-1/5 items-center justify-center pt-2 transition-colors",
-                isActive ? "text-foreground" : "text-muted-foreground ",
-              )}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="mobile-nav-active-underline"
-                  className="absolute top-0 w-full bg-foreground h-px z-10"
-                />
-              )}
-              <Link
-                href={href}
+        {mobileNavItems.map(
+          ({ href, title, icon: Icon, iconOutline: IconOutline }) => {
+            const isActive = segment ? href.includes(segment) : href === "/";
+            return (
+              <li
+                key={title}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-px",
+                  "relative flex basis-1/5 items-center justify-center pt-2 transition-colors",
+                  isActive ? "text-foreground" : "text-muted-foreground ",
                 )}
               >
-                <Icon size={24} strokeWidth={isActive ? 1.5 : 1} />
-                <span className="text-2xs">{title}</span>
-              </Link>
-            </li>
-          );
-        })}
+                {isActive && (
+                  <motion.div
+                    layoutId="mobile-nav-active-underline"
+                    className="absolute top-0 w-full bg-foreground h-0.5 z-10"
+                  />
+                )}
+                <Link
+                  href={href}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-px",
+                  )}
+                >
+                  {isActive ? (
+                    <Icon className="fill-foreground h-5 w-5" />
+                  ) : (
+                    <IconOutline className="fill-muted-foreground h-5 w-5" />
+                  )}
+                  {/* <Icon size={24} strokeWidth={isActive ? 1.5 : 1} /> */}
+                  <span className="text-2xs text-muted-foreground">
+                    {title}
+                  </span>
+                </Link>
+              </li>
+            );
+          },
+        )}
       </motion.ol>
     </nav>
   );

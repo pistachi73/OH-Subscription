@@ -1,12 +1,17 @@
 "use client";
 
-import { CalendarClock, Heart, LibraryBig, Play, Share2 } from "lucide-react";
+import { CalendarClock, Layers3 } from "lucide-react";
 
 import { HeroImage } from "../../ui/hero-image";
 import { MaxWidthWrapper } from "../../ui/max-width-wrapper";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  HeartOutlineIcon,
+  PlayIcon,
+  ShareOutlineIcon,
+} from "@/components/ui/icons";
 import { ShareButton } from "@/components/ui/share-button/share-button";
 import { getBaseUrl } from "@/lib/get-url";
 import { cn } from "@/lib/utils";
@@ -72,7 +77,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
             </p>
           )}
           <p className="mx-2 flex flex-row items-center gap-1 shrink-0">
-            <LibraryBig size={18} />
+            <Layers3 size={18} />
             {totalChapters} chapters
           </p>
           {categories.map((category) => (
@@ -95,7 +100,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               asChild
             >
               <Link href={`chapters/${firstChapterSlug}`}>
-                <Play size={22} className="mr-2 fill-current" />
+                <PlayIcon className="mr-2 w-7 h-7" />
                 Reproduce
               </Link>
             </Button>
@@ -124,7 +129,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
                 size="lg"
                 className="w-full sm:w-fit text-sm sm:text-base h-10 sm:h-12"
               >
-                <Share2 size={22} className="mr-2" />
+                <ShareOutlineIcon className="mr-2 w-7 h-7" />
                 Share
               </Button>
             </ShareButton>
@@ -133,7 +138,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               size="lg"
               className="w-full sm:w-fit  text-sm sm:text-base h-10 sm:h-12"
             >
-              <Heart size={22} className="mr-2" />
+              <HeartOutlineIcon className="mr-2 w-7 h-7" />
               Add to favorites
             </Button>
           </div>

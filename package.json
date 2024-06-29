@@ -14,7 +14,8 @@
     "dev": "next dev --turbo",
     "start": "next start",
     "prod": "next build && next start --port 3001",
-    "email": "email dev --dir src/emails --port 4000"
+    "email": "email dev --dir src/emails --port 4000",
+    "generate:icons": "tsx src/scripts/generate-icons.ts && npx biome format --write ./src/components/ui/icons/generated/*"
   },
   "dependencies": {
     "@auth/core": "^0.23.0",

@@ -1,11 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Moon, SunMedium } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import { MoonOutlineIcon, SunOutlineIcon } from "./ui/icons";
 
 export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false);
@@ -36,9 +36,9 @@ export default function ThemeSwitch() {
           title="Loading Light/Dark Toggle"
         />
       ) : resolvedTheme === "dark" ? (
-        <SunMedium />
+        <SunOutlineIcon className="w-6" />
       ) : (
-        <Moon />
+        <MoonOutlineIcon className="w-6" />
       )}
     </Button>
   );

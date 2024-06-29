@@ -1,4 +1,4 @@
-import { Chapter } from "@/components/chapters/chapter";
+import { Chapter } from "@/components/chapter/index";
 import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
 

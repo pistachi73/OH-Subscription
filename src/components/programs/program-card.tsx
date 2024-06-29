@@ -1,17 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import {
+  ChapterOutlineIcon,
+  HeartOutlineIcon,
+  InfoOutlineIcon,
+  PlayIcon,
+} from "@/components/ui/icons";
 import { cardsEase } from "@/lib/animation";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn, getImageUrl } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, InfoIcon, PlayIcon, User } from "lucide-react";
+import { User } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { ChapterOutlineIcon } from "../ui/icons/chapter-outline-icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export type ProgramCardProps = {
@@ -112,7 +117,7 @@ export const ProgramCard = ({
                     asChild
                   >
                     <Link href={`/programs/${slug}`}>
-                      <PlayIcon className="ml-0.5 w-6 h-6 fill-current" />
+                      <PlayIcon className="ml-0.5 w-7 h-7" />
                     </Link>
                   </Button>
                   <p className="font-semibold tracking-tight text-base text-muted-foreground">
@@ -126,7 +131,7 @@ export const ProgramCard = ({
                         variant="accent"
                         className="w-12 h-12 rounded-full p-0"
                       >
-                        <Heart className="w-5 h-5" />
+                        <HeartOutlineIcon className="w-6 h-6" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent sideOffset={6} className="p-1 px-2">
@@ -144,7 +149,7 @@ export const ProgramCard = ({
                         asChild
                       >
                         <Link href={`/programs/${slug}`}>
-                          <InfoIcon className="w-5 h-5" />
+                          <InfoOutlineIcon className="w-6 h-6" />
                         </Link>
                       </Button>
                     </TooltipTrigger>

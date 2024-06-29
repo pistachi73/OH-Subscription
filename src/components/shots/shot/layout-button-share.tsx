@@ -1,5 +1,5 @@
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import type { Icon } from "@/components/ui/icons";
+import type { Icon } from "@/components/ui/icons/icons.type";
 import { ShareButton } from "@/components/ui/share-button/share-button";
 import { cn } from "@/lib/utils";
 import type { ShotCarouselData } from "@/server/db/schema.types";

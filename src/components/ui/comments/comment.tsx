@@ -2,16 +2,7 @@
 
 import "@github/relative-time-element";
 import { motion } from "framer-motion";
-import {
-  Edit,
-  EllipsisVertical,
-  Heart,
-  Loader2,
-  MessageCircleOff,
-  ReplyIcon,
-  SendHorizonal,
-  Trash,
-} from "lucide-react";
+import { Loader2, MessageCircleOff, SendHorizonal } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { AddComment } from "./add-comment";
 
@@ -30,6 +21,13 @@ import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 import type { Comment as CommentData } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
+import {
+  DeleteOutlineIcon,
+  EditCommentOutlineIcon,
+  HeartOutlineIcon,
+  ReplyOutlineIcon,
+  VerticalDotsOutlineIcon,
+} from "../icons";
 import { SkeletonComment } from "./skeleton-comment";
 
 export const COMMENTS_PAGE_SIZE = 5;
@@ -40,8 +38,9 @@ type CommentProps = {
   videoId?: number;
   shotId?: number;
   parentCommentId?: number;
-  className?: string;
   level?: number;
+  className?: string;
+  optionsButtonClassname?: string;
 };
 
 export const Comment = ({
@@ -52,6 +51,7 @@ export const Comment = ({
   parentCommentId,
   className,
   level = 0,
+  optionsButtonClassname,
 }: CommentProps) => {
   const user = useCurrentUser();
   const apiUtils = api.useUtils();
@@ -60,11 +60,6 @@ export const Comment = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editInputValue, setEditInputValue] = useState(comment?.content ?? "");
   const inputRef = useRef<AutosizeTextAreaRef>(null);
-
-  console.log({
-    comment: comment.id,
-    totalReplies: comment?.totalReplies,
-  });
 
   const queryParams = useMemo(() => {
     return {
@@ -254,8 +249,6 @@ export const Comment = ({
     [repliesData],
   );
 
-  console.log({ replies });
-
   return (
     <>
       <div
@@ -275,9 +268,12 @@ export const Comment = ({
               <Button
                 size="icon"
                 variant="ghost"
-                className="absolute right-2 top-2 h-7 w-7"
+                className={cn(
+                  "absolute right-2 top-2 h-7 w-7",
+                  optionsButtonClassname,
+                )}
               >
-                <EllipsisVertical size={16} />
+                <VerticalDotsOutlineIcon className="w-3 h-3" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-10">
@@ -287,14 +283,14 @@ export const Comment = ({
                   setTimeout(() => inputRef?.current?.textArea.focus(), 200);
                 }}
               >
-                <Edit size={16} className="mr-2" />
+                <EditCommentOutlineIcon className="mr-2 w-4  " />
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive"
                 onClick={onCommentDelete}
               >
-                <Trash size={16} className="mr-2" />
+                <DeleteOutlineIcon className="mr-2 w-4 " />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -348,7 +344,7 @@ export const Comment = ({
             variant="ghost"
             className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
           >
-            <Heart size={16} className="sm:mr-2" />
+            <HeartOutlineIcon className="sm:mr-2" />
             <span className="hidden sm:inline">11 Likes</span>
           </Button>
           {level === 0 && (
@@ -359,7 +355,7 @@ export const Comment = ({
                 setShowAddReply(!showAddReply);
               }}
             >
-              <ReplyIcon size={16} className="sm:mr-2 " />
+              <ReplyOutlineIcon className="sm:mr-2 w-3" />
               <span className="hidden sm:inline">Reply</span>
             </Button>
           )}
@@ -468,7 +464,7 @@ export const Comment = ({
                   className="-mt-2"
                 >
                   {isFetchingNextPage && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 w-3 animate-spin" />
                   )}
                   Load more replies
                 </Button>

@@ -1,5 +1,5 @@
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import type { Icon } from "@/components/ui/icons";
+import type { Icon } from "@/components/ui/icons/icons.type";
 import { cn } from "@/lib/utils";
 
 export const LayoutButton = ({

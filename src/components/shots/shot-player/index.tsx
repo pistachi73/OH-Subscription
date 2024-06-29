@@ -12,7 +12,14 @@ import { cn } from "@/lib/utils";
 
 import { DeviceOnly } from "@/components/ui/device-only/device-only";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import { Pause, Play } from "lucide-react";
+import {
+  PauseIcon,
+  PlayIcon,
+  SpeakerHighIcon,
+  SpeakerLowIcon,
+  SpeakerMediumIcon,
+  SpeakerOffIcon,
+} from "@/components/ui/icons";
 import type { ShotProps } from "../shot/index";
 import { MediaFullScreenPlayButton } from "./media-full-screen-play-button";
 import { MediaTimeRange } from "./media-time-range";
@@ -32,28 +39,28 @@ export const ShotPlayer = ({ shot }: ShotProps) => {
         >
           <MediaPlayButton class="pointer-events-auto h-20 w-20 text-2xl rounded-full bg-foreground/70 dark:bg-background/70 text-background">
             <div slot="play">
-              <Play size={30} className="fill-white stroke-white" />
+              <PlayIcon className="w-8 h-8 " />
             </div>
             <div slot="pause">
-              <Pause size={30} className="fill-white stroke-white" />
+              <PauseIcon className="w-8 h-8 " />
             </div>
           </MediaPlayButton>
         </MediaControlBar>
       </DeviceOnly>
 
       <DeviceOnly allowedDevices={["desktop", "tablet"]}>
-        <MediaControlBar class="flex w-full gap-2 p-4 z-10" slot="top-chrome">
+        <MediaControlBar class="flex w-full  p-3 z-10" slot="top-chrome">
           <MediaPlayButton
             class={cn(
-              "shrink-0 h-12 w-12 rounded-full bg-foreground/70 dark:bg-background/70  text-background delay-0",
+              "shrink-0 h-10 w-10 rounded-full bg-foreground/70 dark:bg-background/70  text-background delay-0",
               "hover:bg-foreground/90",
             )}
           >
             <div slot="play">
-              <Play size={20} className="fill-white stroke-white" />
+              <PlayIcon className="w-5 h-5 fill-white" />
             </div>
             <div slot="pause">
-              <Pause size={20} className="fill-white stroke-white" />
+              <PauseIcon className="w-5 h-5 fill-white" />
             </div>
           </MediaPlayButton>
           <div
@@ -64,13 +71,26 @@ export const ShotPlayer = ({ shot }: ShotProps) => {
           >
             <MediaMuteButton
               class={cn(
-                "h-12 w-12 shrink-0 rounded-full bg-foreground/70 dark:bg-background/70  ",
+                "h-10 w-10 shrink-0 rounded-full bg-foreground/70 dark:bg-background/70  ",
                 "hover:bg-foreground/90 group-hover/volume:rounded-r-none",
               )}
-            />
+            >
+              <span slot="off">
+                <SpeakerOffIcon className="w-5 h-5" />
+              </span>
+              <span slot="low">
+                <SpeakerLowIcon className="w-5 h-5" />
+              </span>
+              <span slot="medium">
+                <SpeakerMediumIcon className="w-5 h-5" />
+              </span>
+              <span slot="high">
+                <SpeakerHighIcon className="w-5 h-5" />
+              </span>
+            </MediaMuteButton>
             <MediaVolumeRange
               class={cn(
-                "hidden w-full h-12 rounded-r-full  bg-foreground/70 px-4 text-background dark:bg-foreground/70",
+                "hidden w-full h-10 rounded-r-full  bg-foreground/70 px-4 text-background dark:bg-foreground/70",
                 "hover:bg-foreground/90 dark:bg-background/90  group-hover/volume:inline-block",
               )}
             />

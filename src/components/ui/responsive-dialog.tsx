@@ -90,7 +90,7 @@ export const ResponsiveDialogContent = React.forwardRef<
   const Content = isMobile ? DrawerContent : DialogContent;
 
   const contentProps = {
-    className: isMobile ? cn(className, "w-full max-h-[95%]") : className,
+    className: isMobile ? cn("w-full max-h-[95%]", className) : className,
     ...(isMobile ? {} : { hideClose }),
     ...props,
   };

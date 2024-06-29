@@ -66,7 +66,7 @@ const DrawerContent = React.forwardRef<
         className={cn(
           "fixed z-50 flex h-auto flex-col border bg-background p-4",
           {
-            "inset-x-0 bottom-0 mt-24 rounded-t-[10px] pt-2":
+            "inset-x-0 bottom-0 mt-24 rounded-t-[10px] pt-0":
               !direction || direction === "bottom",
           },
           {
@@ -83,7 +83,7 @@ const DrawerContent = React.forwardRef<
         {...props}
       >
         {(!direction || direction === "bottom") && !hideClose && (
-          <div className="mx-auto mt-2 mb-2 h-1 w-1/5 rounded-full bg-accent shrink-0" />
+          <div className="mx-auto mt-2 mb-4 h-1 w-1/5 rounded-full bg-accent shrink-0" />
         )}
         {children}
       </DrawerPrimitive.Content>

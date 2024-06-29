@@ -16,10 +16,10 @@ export const RelatedPrograms = ({ program }: RelatedProgramsProps) => {
   const relatedPrograms = data?.filter((p) => p.slug !== program.slug);
 
   return (
-    <div className=" mx-auto my-8 w-full max-w-[1400px] sm:my-12">
+    <section className="w-full my-8 sm:my-12">
       <h2 className="text-lg font-semibold sm:text-xl">You might also like</h2>
 
-      <div className="grid grid-cols-2  gap-x-2 gap-y-4 py-4 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2  gap-x-2 gap-y-6 py-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         <ProgramList
           programs={relatedPrograms}
           isLoading={isLoading}
@@ -28,9 +28,10 @@ export const RelatedPrograms = ({ program }: RelatedProgramsProps) => {
             sm: 2,
             md: 3,
             lg: 4,
+            xl: 5,
           }}
         />
       </div>
-    </div>
+    </section>
   );
 };

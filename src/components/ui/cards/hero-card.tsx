@@ -1,6 +1,5 @@
 "use client";
 import { motion, type Transition, type Variants } from "framer-motion";
-import { Info, Play } from "lucide-react";
 import React from "react";
 
 import Link from "next/link";
@@ -11,6 +10,7 @@ import { HeroImage } from "@/components/ui/hero-image";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { cn, getImageUrl } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
+import { InfoOutlineIcon, PlayIcon } from "../icons";
 
 type HeroCardProps = {
   className?: string;
@@ -196,12 +196,15 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 variants={buttonOneVariants}
                 variant="default"
                 size={isMobile ? "sm" : "lg"}
-                className={cn("w-full text-sm", "sm:w-fit sm:text-base")}
+                className={cn(
+                  "w-full text-sm h-10",
+                  "sm:w-fit sm:text-base sm:px-8 sm:h-12",
+                )}
                 custom={{ isMobile }}
                 asChild
               >
                 <Link href={`/programs/${slug}`}>
-                  <Play size={22} className="mr-2 fill-current" />
+                  <PlayIcon className="w-7 h-7 mr-2 fill-current" />
                   Reproduce
                 </Link>
               </MotionButton>
@@ -209,12 +212,15 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 variants={buttonTwoVariants}
                 variant="outline"
                 size={isMobile ? "sm" : "lg"}
-                className={cn("w-full text-sm", "sm:w-fit sm:text-base")}
+                className={cn(
+                  "w-full text-sm h-10",
+                  "sm:w-fit sm:text-base sm:px-8 sm:h-12",
+                )}
                 custom={{ isMobile: isMobile }}
                 asChild
               >
                 <Link href={`/programs/${slug}`}>
-                  <Info size={22} className="mr-2" />
+                  <InfoOutlineIcon className="w-7 h-7 mr-2 fill-current" />
                   Program details
                 </Link>
               </MotionButton>

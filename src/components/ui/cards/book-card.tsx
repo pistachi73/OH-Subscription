@@ -4,16 +4,20 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import Image from "next/image";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ChapterOutlineIcon } from "@/components/ui/icons";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cardsEase } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 import { Heart, InfoIcon, PlayIcon, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
-import { Badge } from "../badge";
-import { Button } from "../button";
-import { ChapterOutlineIcon } from "../icons/chapter-outline-icon";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
 
 export type BookCardProps = {
   lazy?: boolean;

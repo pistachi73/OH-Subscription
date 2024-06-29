@@ -7,7 +7,6 @@ import { ShotTranscript } from "./shot-transcript";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { cn } from "@/lib/utils";
 import type { ShotCarouselData } from "@/server/db/schema.types";
-import "media-chrome";
 import {
   MediaActionTypes,
   MediaProvider,

@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   darkMode: ["class"],
@@ -68,6 +69,11 @@ const config: Config = {
           900: "#0c0d18",
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+        },
+        dark: {
+          "muted-background": "hsl(var(--dark-muted-background))",
+          accent: "hsl(var(--dark-accent))",
+          foreground: "hsl(var(--dark-foreground))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -186,7 +192,18 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        ".icon-stroke": {
+          "stroke-width": "0.3px",
+          overflow: "visible",
+          stroke: "currentColor",
+        },
+      });
+    }),
+  ],
 } satisfies Config;
 
 export default config;

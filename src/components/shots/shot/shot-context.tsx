@@ -1,6 +1,6 @@
 import {
   HeartIcon,
-  ShareArrowIcon,
+  ShareIcon,
   SpeachBubbleIcon,
   TranscriptIcon,
 } from "@/components/ui/icons";
@@ -64,7 +64,7 @@ export const useShotContext = () => {
     },
     { icon: HeartIcon, label: "Like" },
     {
-      icon: ShareArrowIcon,
+      icon: ShareIcon,
       label: "Share",
     },
   ] as const;
