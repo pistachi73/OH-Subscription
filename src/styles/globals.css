@@ -28,13 +28,49 @@
 
 
       --muted-background: 228 100% 99%;
-      --hero-gradient: linear-gradient(90deg, #fafbff, rgba(250,251,255, .991) 6.67%, rgba(250,251,255, .964) 13.33%, rgba(250,251,255, .918) 20%, rgba(250,251,255, .853) 26.67%, rgba(250,251,255, .768) 33.33%, rgba(250,251,255, .668) 40%, rgba(250,251,255, .557) 46.67%, rgba(250,251,255, .443) 53.33%, rgba(250,251,255, .332) 60%, rgba(250,251,255, .232) 66.67%, rgba(250,251,255, .147) 73.33%, rgba(250,251,255, .082) 80%, rgba(250,251,255, 0) 86.67%);
-    
+      --muted-background-rgb: 250,251,255;
+      
+      --hero-gradient-: linear-gradient(
+        to right,
+        rgb(var(--muted-background-rgb)),
+        rgba(var(--muted-background-rgb), .92) 20%,
+        rgba(var(--muted-background-rgb), .70) 40%,
+        rgba(var(--muted-background-rgb), .65) 50%,
+        rgba(var(--muted-background-rgb), .45) 60%,
+        rgba(var(--muted-background-rgb), .20) 70%,
+        rgba(var(--muted-background-rgb), 0) 80%);
+
+      --hero-gradient: linear-gradient(
+        90deg,
+        rgb(var(--muted-background-rgb)),
+        rgba(var(--muted-background-rgb),.991) 6.67%,
+        rgba(var(--muted-background-rgb),.964) 13.33%,
+        rgba(var(--muted-background-rgb),.918) 20%,
+        rgba(var(--muted-background-rgb),.853) 26.67%,
+        rgba(var(--muted-background-rgb),.768) 33.33%,
+        rgba(var(--muted-background-rgb),.668) 40%,
+        rgba(var(--muted-background-rgb),.557) 46.67%,
+        rgba(var(--muted-background-rgb),.443) 53.33%,
+        rgba(var(--muted-background-rgb),.332) 60%,
+        rgba(var(--muted-background-rgb),.232) 66.67%,
+        rgba(var(--muted-background-rgb),.147) 73.33%,
+        rgba(var(--muted-background-rgb),.082) 80%,
+        rgba(var(--muted-background-rgb),.036) 86.67%,
+        rgba(var(--muted-background-rgb),.009) 93.33%,
+        rgba(var(--muted-background-rgb),0)
+      );
+
+      --hero-gradient-bottom: linear-gradient(
+        0deg,
+        rgb(var(--muted-background-rgb)),
+        rgba(var(--muted-background-rgb),0) 33.42%
+      );
     
     
       --dark-muted-background: 232 52% 4%;
       --dark-accent: 234.55 22.58% 20.08%;
       --dark-foreground: 232 21% 100%;
+      
     }
 
     .dark {
@@ -58,55 +94,11 @@
       --destructive-foreground: 0 0% 100%;
    
       --muted-background: 232 52% 4%;
-      --hero-gradient: linear-gradient(90deg, #04060F, rgba(4,6,15, .991) 6.67%, rgba(4,6,15, .964) 13.33%, rgba(4,6,15, .918) 20%, rgba(4,6,15, .853) 26.67%, rgba(4,6,15, .768) 33.33%, rgba(4,6,15, .668) 40%, rgba(4,6,15, .557) 46.67%, rgba(4,6,15, .443) 53.33%, rgba(4,6,15, .332) 60%, rgba(4,6,15, .232) 66.67%, rgba(4,6,15, .147) 73.33%, rgba(4,6,15, .082) 80%, rgba(4,6,15, 0) 86.67%);
+      --muted-background-rgb: 4,6,15;
+ 
 
     }
-    /* :root {
-      --background: 232 0% 100%;
-      --foreground: 232 0% 10%;
-      --card: 232 0% 100%;
-      --card-foreground: 232 0% 15%;
-      --popover: 232 0% 100%;
-      --popover-foreground: 232 95% 10%;
-      --primary: 232 34.1% 35.1%;
-      --primary-foreground: 0 0% 100%;
-      --secondary: 232 10% 90%;
-      --secondary-foreground: 0 0% 0%;
-      --muted: 194 10% 95%;
-      --muted-foreground: 232 0% 40%;
-      --accent: 194 10% 95%;
-      --accent-foreground: 232 0% 15%;
-      --destructive: 0 50% 50%;
-      --destructive-foreground: 232 0% 100%;
-      --border: 232 20% 82%;
-      --input: 232 20% 50%;
-      --ring: 232 34.1% 35.1%;
-      --radius: 0.5rem;
-
-      --header-height: 48px;
-    }
-    .dark {
-      --background: 232 10% 10%;
-      --foreground: 232 0% 100%;
-      --card: 232 0% 10%;
-      --card-foreground: 232 0% 100%;
-      --popover: 232 10% 5%;
-      --popover-foreground: 232 0% 100%;
-      --primary: 232 34.1% 35.1%;
-      --primary-foreground: 0 0% 100%;
-      --secondary: 232 10% 20%;
-      --secondary-foreground: 0 0% 100%;
-      --muted: 194 10% 25%;
-      --muted-foreground: 232 0% 65%;
-      --accent: 194 10% 25%;
-      --accent-foreground: 232 0% 95%;
-      --destructive: 0 50% 50%;
-      --destructive-foreground: 232 0% 100%;
-      --border: 232 20% 50%;
-      --input: 232 20% 50%;
-      --ring: 232 34.1% 35.1%;
-      --radius: 0.5rem;
-    } */
+  
   }
 }
 
@@ -169,7 +161,7 @@
   }
 
   .header-translate {
-    @apply sm:-translate-y-12 lg:-translate-y-14;
+    @apply -translate-y-12 lg:-translate-y-14;
   }
 
   .icon-stroke {
@@ -179,4 +171,5 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
 }

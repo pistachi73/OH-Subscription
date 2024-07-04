@@ -92,7 +92,7 @@ export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
           href="/"
           className={cn(
             "absolute sm:hidden top-0 z-50 rounded-full px-4 py-2",
-            "left-[2%] sm:left-[4%] 2xl:left-14 sm:text-foreground -ml-4",
+            "left-[4%] sm:left-[4%] 2xl:left-14 sm:text-foreground -ml-4",
           )}
         >
           <Image
@@ -125,7 +125,7 @@ export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
           })}
         </VerticalCarouselContent>
         <DeviceOnly allowedDevices={["tablet", "desktop"]}>
-          <div className="z-0 absolute right-[2%] sm:right-[4%] 2xl:right-14 top-0 h-full flex items-end justify-center flex-col gap-3">
+          <div className="z-0 absolute right-[4%] sm:right-[4%] 2xl:right-14 top-0 h-full flex items-end justify-center flex-col gap-3">
             <VerticalCarouselPrevious className="hidden sm:block" />
             <VerticalCarouselNext className="hidden sm:block" />
           </div>

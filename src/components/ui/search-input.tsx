@@ -48,7 +48,7 @@ export const SearchInput = ({
       <button
         type="button"
         className={cn(
-          "absolute top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center",
+          "absolute top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center",
           "text-foreground/80 hover:text-foreground/60 transition-colors",
           open && "pointer-events-none",
         )}

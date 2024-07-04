@@ -167,7 +167,7 @@ const Carousel = React.forwardRef<
         }}
       >
         <div className="group/carousel relative w-full transition-[z-index] delay-300 hover:z-10 group-hover:delay-0">
-          {orientation === "horizontal" && (
+          {/* {orientation === "horizontal" && (
             <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px 2xl:right-14">
               {Array.from({ length: total }).map((_, index) => (
                 <button
@@ -181,7 +181,7 @@ const Carousel = React.forwardRef<
                 />
               ))}
             </div>
-          )}
+          )} */}
           <div
             ref={ref}
             onKeyDownCapture={handleKeyDown}
@@ -190,7 +190,7 @@ const Carousel = React.forwardRef<
 
               className,
               {
-                "my-1 overflow-x-clip overflow-y-visible px-[2%] sm:px-[4%] 2xl:px-14 ":
+                "my-1 overflow-x-clip overflow-y-visible px-[4%] sm:px-[4%] 2xl:px-14 ":
                   orientation === "horizontal",
               },
               {

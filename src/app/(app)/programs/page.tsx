@@ -35,16 +35,14 @@ const ProgramsPage = async ({ searchParams }: ProgramsPageProps) => {
   }));
 
   return (
-    <div className="header-translate">
-      <FilteredProgramsProvider
-        initialPrograms={initialPrograms}
-        categoryOptions={CATEGORY_OPTIONS}
-        teacherOptions={TEACHER_OPTIONS}
-        levelOptions={LEVEL_OPTIONS}
-      >
-        <Programs />
-      </FilteredProgramsProvider>
-    </div>
+    <FilteredProgramsProvider
+      initialPrograms={initialPrograms}
+      categoryOptions={CATEGORY_OPTIONS}
+      teacherOptions={TEACHER_OPTIONS}
+      levelOptions={LEVEL_OPTIONS}
+    >
+      <Programs />
+    </FilteredProgramsProvider>
   );
 };
 

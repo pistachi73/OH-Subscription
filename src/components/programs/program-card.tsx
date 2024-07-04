@@ -75,7 +75,10 @@ export const ProgramCard = ({
             {levelMap[level].shortFormat}
           </Badge>
 
-          <Link href={`/programs/${slug}`}>
+          <Link
+            href={`/programs/${slug}`}
+            className="relative w-full h-full block"
+          >
             <Image
               src={
                 thumbnail
@@ -84,8 +87,12 @@ export const ProgramCard = ({
               }
               alt="video"
               fill
-              className="rounded-lg group-hover:rounded-b-none delay-0 group-hover:delay-300  object-cover"
+              className="rounded-lg group-hover:rounded-b-none xl:delay-0 group-hover:delay-300  object-cover"
               loading={lazy ? "lazy" : "eager"}
+              sizes={`(max-width: 640px) 50vw,
+                 (max-width: 1024px) 33vw,
+                 (max-width: 1280px) 25vw,
+                 20vw`}
             />
           </Link>
         </div>

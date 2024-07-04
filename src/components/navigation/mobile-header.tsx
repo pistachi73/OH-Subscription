@@ -22,6 +22,7 @@ import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 export const MobileHeader = () => {
   const { scrollY } = useScroll();
   const [hiddenTopBar, setHiddenTopBar] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { visible } = useCanRenderHeader();
 
   const user = useCurrentUser();
@@ -32,7 +33,10 @@ export const MobileHeader = () => {
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious() ?? 0;
 
-    if (latest === 0 && prev > 68) {
+    if (latest > 10) setIsScrolled(true);
+    else setIsScrolled(false);
+
+    if (latest === 0 && prev > 82) {
       //Opening of drawer or modal
       return;
     }
@@ -48,8 +52,11 @@ export const MobileHeader = () => {
       <div className="h-12 block w-full" />
       <MaxWidthWrapper
         className={cn(
-          "fixed top-0 z-50 flex h-12 w-full items-center bg-muted-background border-b border-accent justify-between gap-4 transition-transform duration-300",
+          "fixed top-0 z-50 flex h-12 w-full items-center  border-b border-accent justify-between gap-4 transition-transform duration-300",
           hiddenTopBar ? "-translate-y-full" : "translate-y-0",
+          isScrolled || segment === "(auth)"
+            ? "bg-background border-accent [transition:background-color_500ms,border-color_400ms_100ms,transform_300ms_ease-in-out]"
+            : "border-transparent [transition:background-color_500ms,border-color_300ms,transform_300ms_ease-in-out]",
         )}
       >
         <Link href="/">
@@ -109,14 +116,12 @@ export const MobileHeader = () => {
                 )}
                 <Link
                   href={href}
-                  className={cn(
-                    "flex flex-col items-center justify-center gap-px",
-                  )}
+                  className={cn("flex flex-col items-center justify-center")}
                 >
                   {isActive ? (
-                    <Icon className="fill-foreground h-5 w-5" />
+                    <Icon className="fill-foreground h-6 w-6" />
                   ) : (
-                    <IconOutline className="fill-muted-foreground h-5 w-5" />
+                    <IconOutline className="fill-muted-foreground h-6 w-6" />
                   )}
                   {/* <Icon size={24} strokeWidth={isActive ? 1.5 : 1} /> */}
                   <span className="text-2xs text-muted-foreground">

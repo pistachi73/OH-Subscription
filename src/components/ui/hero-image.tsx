@@ -19,7 +19,9 @@ export const HeroImage = ({
   return (
     <div
       className={cn(
-        "absolute left-0 top-0 aspect-video max-h-[calc(100vh-100px+var(--header-height))] w-full ",
+        "absolute left-0 top-0 aspect-video w-full",
+        "after:absolute after:z-10 after:left-0 after:top-0 after:h-full after:w-full after:bg-hero-gradient-bottom after:content-['']",
+        "before:absolute before:z-10 before:left-0 before:top-0 before:h-full before:w-full before:bg-hero-gradient  before:content-['']",
         containerClassname,
       )}
     >
@@ -30,13 +32,6 @@ export const HeroImage = ({
         fill
         priority={true}
         sizes="(min-width: 1300px) 50vw, 100vw"
-      />
-      <div
-        className={cn(
-          "absolute -bottom-px left-0 z-0 h-[calc(100%+1px)] w-full bg-gradient-to-t from-muted-background to-50%",
-          " before:absolute before:left-0 before:top-0 before:h-full before:w-full before:bg-hero-gradient sm:to-35% before:content-['']",
-          shadowClassname,
-        )}
       />
     </div>
   );

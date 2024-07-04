@@ -17,6 +17,7 @@ type CardListProps = {
   programs?: RouterOutputs["program"]["getProgramsForCards"];
   isLoading?: boolean;
   initialAnimation?: boolean;
+  loadingRows?: number;
 };
 
 export const ProgramList = ({
@@ -24,6 +25,7 @@ export const ProgramList = ({
   cardsPerRow,
   isLoading = false,
   initialAnimation = true,
+  loadingRows = 2,
 }: CardListProps) => {
   const { deviceSize } = useDeviceType();
 
@@ -76,7 +78,7 @@ export const ProgramList = ({
   }, [cardsPerRow, deviceSize]);
 
   if (isLoading) {
-    return Array.from({ length: getLoadingCardsNumber() * 2 }).map(
+    return Array.from({ length: getLoadingCardsNumber() * loadingRows }).map(
       (_, index) => (
         <Skeleton
           key={`program-skeleton-${index}`}

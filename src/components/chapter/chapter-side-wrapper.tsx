@@ -45,7 +45,7 @@ export const ChapterSideWrapper = ({
         className={cn(
           "max-h-[95%] w-full p-0 bg-muted-background",
           deviceType === "mobile"
-            ? "w-full rounded-md h-[75%]"
+            ? "w-full max-w-[500px] h-[75%] mx-auto landscape:h-[90%]"
             : "w-[500px] pt-0 h-[80%]  rounded-md ",
         )}
         hideClose

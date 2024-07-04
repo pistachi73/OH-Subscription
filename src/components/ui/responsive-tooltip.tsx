@@ -7,66 +7,58 @@ import { cn } from "@/lib/utils";
 import { createContext } from "react";
 import { useDeviceType } from "./device-only/device-only-provider";
 
-type TooltipTriggerContextType = {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+type ResponsiveTooltipTriggerContextType = {
+  isMobile?: boolean;
 };
 
-export const TooltipTriggerContext = createContext<TooltipTriggerContextType>({
-  open: false,
-  setOpen: () => {}, // eslint-disable-line
-});
+export const ResponsiveTooltipTriggerContext =
+  createContext<ResponsiveTooltipTriggerContextType>({
+    isMobile: false,
+  });
 
-const TooltipProvider = TooltipPrimitive.Provider;
+const ResponsiveTooltipProvider = TooltipPrimitive.Provider;
 
-const Tooltip: React.FC<TooltipPrimitive.TooltipProps> = ({
+const ResponsiveTooltip: React.FC<TooltipPrimitive.TooltipProps> = ({
   children,
   ...props
 }) => {
-  const [open, setOpen] = React.useState<boolean>(props.defaultOpen ?? false);
-
-  // we only want to enable the "click to open" functionality on mobile
   const { isMobile } = useDeviceType();
 
+  const Root = isMobile ? TooltipPrimitive.Root : TooltipPrimitive.Root;
+
+  const triggerButton = React.Children.map(
+    React.Children.map(children, (child) => child)?.[0],
+    (child) => child,
+  )?.[0];
+
+  const rootChildren = isMobile
+    ? triggerButton
+      ? triggerButton
+      : null
+    : children;
+
+  const rootProps = isMobile ? {} : props;
   return (
-    <TooltipPrimitive.Root
-      delayDuration={!isMobile ? props.delayDuration : 0}
-      onOpenChange={(e) => {
-        setOpen(e);
-      }}
-      open={open}
-    >
-      <TooltipTriggerContext.Provider value={{ open, setOpen }}>
-        {children}
-      </TooltipTriggerContext.Provider>
-    </TooltipPrimitive.Root>
+    <ResponsiveTooltipTriggerContext.Provider value={{ isMobile }}>
+      <Root {...rootProps}>{rootChildren}</Root>
+    </ResponsiveTooltipTriggerContext.Provider>
   );
 };
 
-const TooltipTrigger = React.forwardRef<
+const ResponsiveTooltipTrigger = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>
 >(({ children, ...props }, ref) => {
   const { isMobile } = useDeviceType();
-  const { setOpen } = React.useContext(TooltipTriggerContext);
 
   return (
-    <TooltipPrimitive.Trigger
-      ref={ref}
-      {...props}
-      onClick={(e) => {
-        if (isMobile) {
-          e.preventDefault();
-          setOpen(true);
-        }
-      }}
-    >
+    <TooltipPrimitive.Trigger ref={ref} {...props}>
       {children}
     </TooltipPrimitive.Trigger>
   );
 });
 
-const TooltipContent = React.forwardRef<
+const ResponsiveTooltipContent = React.forwardRef<
   React.ElementRef<typeof TooltipPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => (
@@ -80,6 +72,11 @@ const TooltipContent = React.forwardRef<
     {...props}
   />
 ));
-TooltipContent.displayName = TooltipPrimitive.Content.displayName;
+ResponsiveTooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger };
+export {
+  ResponsiveTooltip,
+  ResponsiveTooltipContent,
+  ResponsiveTooltipProvider,
+  ResponsiveTooltipTrigger,
+};

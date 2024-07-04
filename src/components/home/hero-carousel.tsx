@@ -1,13 +1,13 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { HeroCard, heroCardHeightProps } from "../ui/cards/hero-card";
 
-import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { cn } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
+import { buttonVariants } from "../ui/button";
+import { ChevronLeftIcon, ChevronRightIcon } from "../ui/icons";
 
 type HeroCarouselProps = {
   programs: RouterOutputs["program"]["getProgramsForCards"];
@@ -15,43 +15,87 @@ type HeroCarouselProps = {
 
 export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
   const [current, setCurrent] = useState<number>(0);
+  const autoSlideInterval = useRef<NodeJS.Timeout>();
+
+  const onNavigate = useCallback(
+    (direction: "next" | "prev") => {
+      if (direction === "prev") {
+        setCurrent(
+          (current) => (current - 1 + programs.length) % programs.length,
+        );
+      } else {
+        setCurrent((current) => (current + 1) % programs.length);
+      }
+
+      autoSlide();
+    },
+    [programs.length],
+  );
+
+  const autoSlide = useCallback(() => {
+    if (autoSlideInterval.current) {
+      clearInterval(autoSlideInterval.current);
+    }
+
+    autoSlideInterval.current = setInterval(() => {
+      onNavigate("next");
+    }, 7000);
+  }, [onNavigate]);
+
+  useEffect(() => {
+    autoSlide();
+
+    return () => {
+      if (autoSlideInterval.current) {
+        clearInterval(autoSlideInterval.current);
+      }
+    };
+  }, [autoSlide]);
 
   return (
-    <>
-      <div className={cn("relative z-0 mb-8 sm:mb-12", heroCardHeightProps)}>
-        <AnimatePresence initial={false} mode="wait">
-          <HeroCard
-            key={`hero-card-${current}`}
-            program={programs[current]}
-            index={current}
-          />
-        </AnimatePresence>
-      </div>
-      <MaxWidthWrapper
+    <div className={cn("relative z-0 sm:mb-12", heroCardHeightProps)}>
+      {programs.map((program, index) => (
+        <HeroCard
+          key={`hero-card-${program.slug}`}
+          program={program}
+          index={index}
+          active={current === index}
+        />
+      ))}
+      <div
         className={cn(
-          "relative z-20 mx-0 mb-8 flex w-full items-center justify-center sm:mb-12  sm:w-fit sm:justify-normal",
+          "absolute z-20 right-[4%] 2xl:right-14 top-14 md:top-1/2 md:-translate-y-1/2 flex flex-row items-center justify-center gap-1",
         )}
       >
-        {Array.from({ length: programs.length }).map((_, index) => (
-          <button
-            key={`hero-carousel-navigation-${index}`}
-            className="py-1 px-1"
-            onClick={() => {
-              setCurrent(index);
-            }}
-            type="button"
-            name="hero-carousel-navigation"
-            aria-label="Navigate to next program"
-          >
-            <div
-              className={cn(
-                "rounded-sm bg-primary opacity-15 dark:opacity-30 transition-all h-1 w-3",
-                { "opacity-100 dark:opacity-100 w-6": current === index },
-              )}
-            />
-          </button>
-        ))}
-      </MaxWidthWrapper>
-    </>
+        <button
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "h-8 w-8 md:h-12 md:w-12 p-0",
+            "bg-background/80 hover:bg-background border-none",
+          )}
+          onClick={() => {
+            onNavigate("prev");
+          }}
+          type="button"
+          aria-label="Navigate to next program"
+        >
+          <ChevronLeftIcon className="w-4 h-4 md:w-5 md:h-5" />
+        </button>
+        <button
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "h-8 w-8 md:h-12 md:w-12 p-0",
+            "bg-background/80 hover:bg-background border-none",
+          )}
+          onClick={() => {
+            onNavigate("next");
+          }}
+          type="button"
+          aria-label="Navigate to next program"
+        >
+          <ChevronRightIcon className="w-4 h-4 md:w-5 md:h-5" />
+        </button>
+      </div>
+    </div>
   );
 };

@@ -50,7 +50,7 @@ const centerButtonIconClassname = cn(
 );
 
 export const topButtonClassname = cn(
-  "shrink-0 p-0 h-10 w-10 bg-transparent group/top-button",
+  "shrink-0 p-0 h-10 px-2 bg-transparent group/top-button",
 );
 
 export const topButtonIconClassname = cn(
@@ -70,7 +70,10 @@ export const ChapterPlayer = ({ chapter, program }: ChapterProps) => {
   const { bottomButtons } = useChapterContext();
 
   return (
-    <MediaController class="max-h-screen h-full w-full relative" autohide="1">
+    <MediaController
+      class="h-[100dvh] w-full relative transition-[height]"
+      autohide="1"
+    >
       <ChapterMediaVideo chapter={chapter} program={program} />
       <MediaControlBar
         class={cn(
@@ -123,11 +126,11 @@ export const ChapterPlayer = ({ chapter, program }: ChapterProps) => {
               className={cn(
                 topButtonClassname,
                 topButtonIconClassname,
-                "flex items-center justify-center",
+                "flex items-center justify-center pr-0",
               )}
               type="button"
             >
-              <X className={topButtonIconClassname} strokeWidth={1.5} />
+              <X className={cn(topButtonIconClassname)} strokeWidth={1.5} />
             </Link>
           </TooltipTrigger>
           <TooltipContent
@@ -167,17 +170,27 @@ export const ChapterPlayer = ({ chapter, program }: ChapterProps) => {
       </MediaControlBar>
       {/* <div className="w-full h-full absolute top-0 left-0 bg-foreground/40 dark:bg-background/40 pointer-events-none " /> */}
       <div className="relative z-10 w-full bg-gradient-to-t from-black/50 from-25% to-black/0 pt-[100px] lg:pt-[200px] pointer-events-none">
-        <MediaControlBar class="mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row justify-between gap-2 mb-5 items-end ">
-          <div className="space-y-2">
+        <MediaControlBar
+          class={cn(
+            "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row justify-between items-end",
+            isMobile ? "mb-3" : "mb-5",
+          )}
+        >
+          <div className={cn(isMobile ? "space-y-0" : "space-y-2")}>
             <h1
               className={cn(
                 "font-semibold tracking-tighter text-background dark:text-foreground",
-                isMobile ? "text-3xl" : "text-5xl",
+                isMobile ? "text-2xl" : "text-4xl",
               )}
             >
               {program.title}
             </h1>
-            <h2 className="text-lg md:text-2xl font-medium tracking-tight text-background dark:text-foreground">
+            <h2
+              className={cn(
+                "font-medium tracking-tight text-background dark:text-foreground",
+                isMobile ? "text-base" : "text-2xl",
+              )}
+            >
               C{chapter.chapterNumber}: {chapter.title}
             </h2>
           </div>
@@ -197,7 +210,12 @@ export const ChapterPlayer = ({ chapter, program }: ChapterProps) => {
           </div>
         </MediaControlBar>
 
-        <MediaControlBar class="w-full flex items-center justify-center xl:mb-6 mb-3">
+        <MediaControlBar
+          class={cn(
+            "w-full flex items-center justify-center",
+            isMobile ? "mb-1" : "xl:mb-6 mb-3",
+          )}
+        >
           <div
             className={cn(
               "w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row gap-6 items-center",
@@ -210,10 +228,15 @@ export const ChapterPlayer = ({ chapter, program }: ChapterProps) => {
             <MediaTimeRange />
           </div>
         </MediaControlBar>
-        <MediaControlBar class="mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex justify-between mb-4 xl:hidden">
+        <MediaControlBar
+          class={cn(
+            "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex justify-between xl:hidden",
+            isMobile ? "mb-1" : "mb-4",
+          )}
+        >
           <MediaTimeDisplay
             showduration
-            class="bg-transparent font-inter p-0 h-10 text-base"
+            class="bg-transparent font-inter p-0 h-10 text-sm text-foreground/70"
           />
           <div className=" flex-row gap-1 flex shrink-0">
             {bottomButtons.map(({ icon, label, ...rest }, index) => {

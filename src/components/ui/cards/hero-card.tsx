@@ -1,16 +1,23 @@
 "use client";
-import { motion, type Transition, type Variants } from "framer-motion";
 import React from "react";
 
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { HeroImage } from "@/components/ui/hero-image";
+import {
+  HeartOutlineIcon,
+  InfoOutlineIcon,
+  PlayIcon,
+} from "@/components/ui/icons";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
+import {
+  ResponsiveTooltip,
+  ResponsiveTooltipContent,
+  ResponsiveTooltipTrigger,
+} from "@/components/ui/responsive-tooltip";
 import { cn, getImageUrl } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
-import { InfoOutlineIcon, PlayIcon } from "../icons";
 
 type HeroCardProps = {
   className?: string;
@@ -20,123 +27,30 @@ type HeroCardProps = {
   >;
   notFound?: boolean;
   index?: number;
+  active?: boolean;
 };
 
-const MotionButton = motion(Button);
 export const heroCardHeightProps =
-  "h-[83vw] landscape:max-h-[65vh] sm:min-h-[450px] xs:h-[72vw] sm:h-[70vw]";
-
-const TRANSITION: Transition = {
-  ease: "easeOut",
-  duration: 0.1,
-};
-const IMAGE_ANIMATION_DURATION: number = 0.35;
-const DELAY_INCREMENT: number = 0.05;
-const SAFE_TO_REMOVE_MS: number =
-  (IMAGE_ANIMATION_DURATION + TRANSITION.duration + DELAY_INCREMENT * 3) * 1000;
+  "h-[70vw] landscape:max-h-[80vh] sm:landscape:max-h-[65vh] sm:min-h-[500px] xs:h-[65vw] sm:h-[60vw]";
 
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
-  ({ className, index, program, notFound = false }, ref) => {
-    const { isMobile } = useDeviceType();
-
+  ({ className, index, program, notFound = false, active = false }, ref) => {
     const { title, slug, description, thumbnail } = program ?? {};
 
-    const containerVariants: Variants = {
-      animate: {
-        zIndex: 1,
-        opacity: 1,
-      },
-      exit: {
-        zIndex: 2,
-        opacity: 0,
-        transition: {
-          delay: TRANSITION.duration + DELAY_INCREMENT * 3,
-          duration: IMAGE_ANIMATION_DURATION,
-          zIndex: {
-            delay: 0,
-          },
-        },
-      },
-    };
-
-    const contentVariants = {
-      initial: {
-        opacity: 0,
-        y: "50%",
-      },
-      animate: {
-        opacity: 1,
-        y: 0,
-      },
-    };
-
-    const titleVariants: Variants = {
-      exit: {
-        ...contentVariants.initial,
-        transition: { ...TRANSITION, delay: DELAY_INCREMENT * 3 },
-      },
-      animate: {
-        ...contentVariants.animate,
-        transition: {
-          ...TRANSITION,
-          delay: IMAGE_ANIMATION_DURATION,
-        },
-      },
-    };
-    const subtitleVariants: Variants = {
-      exit: {
-        ...contentVariants.initial,
-        transition: { ...TRANSITION, delay: DELAY_INCREMENT * 2 },
-      },
-      animate: {
-        ...contentVariants.animate,
-        transition: {
-          ...TRANSITION,
-          delay: IMAGE_ANIMATION_DURATION + DELAY_INCREMENT,
-        },
-      },
-    };
-    const buttonOneVariants: Variants = {
-      exit: {
-        ...contentVariants.initial,
-        transition: { ...TRANSITION, delay: DELAY_INCREMENT },
-      },
-      animate: {
-        ...contentVariants.animate,
-        transition: {
-          ...TRANSITION,
-          delay: IMAGE_ANIMATION_DURATION + DELAY_INCREMENT * 2,
-        },
-      },
-    };
-
-    const buttonTwoVariants: Variants = {
-      exit: {
-        ...contentVariants.initial,
-        transition: { ...TRANSITION, delay: 0 },
-      },
-      animate: {
-        ...contentVariants.animate,
-        transition: {
-          ...TRANSITION,
-          delay: IMAGE_ANIMATION_DURATION + DELAY_INCREMENT * 3,
-        },
-      },
-    };
-
     return (
-      <motion.div
+      <div
         ref={ref}
-        className={cn(heroCardHeightProps, className)}
-        initial="exit"
-        animate="animate"
-        exit="exit"
+        className={cn(
+          heroCardHeightProps,
+          className,
+          "transition-opacity duration-500 ease-in-out",
+          active ? "opacity-100 z-10 " : "opacity-0 ",
+        )}
       >
-        <motion.div
+        <div
           className={cn(
-            "absolute left-0 top-0 -z-10 flex aspect-video w-full sm:h-[137%]",
+            "absolute left-0 top-0 -z-10 flex aspect-video w-full h-[calc(100%+4rem)]  sm:h-[calc(100%+8rem)]",
           )}
-          variants={containerVariants}
         >
           <HeroImage
             src={
@@ -149,85 +63,121 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                     : "/images/hero-background.png"
             }
             alt="Hero background image"
-            containerClassname="h-full min-h-[100%]"
-            shadowClassname="to-60% sm:to-10%"
+            containerClassname="h-full"
+            shadowClassname="to-20% sm:to-10%"
           />
-        </motion.div>
+        </div>
 
         <MaxWidthWrapper
           className={cn(
-            "absolute bottom-0 left-0 z-30 mx-0 flex flex-col justify-end gap-5",
+            "mb-6 sm:mb-0 absolute bottom-0 sm:bottom-8 left-0 z-30 mx-0 flex flex-col justify-end gap-5",
             "sm:max-w-[45ch]",
             "md:max-w-[56ch]",
             "xl:max-w-[64ch]",
             "2xl:max-w-[72ch]",
           )}
         >
-          <div className="space-y-3">
-            <motion.h1
+          <div className="space-y-1 sm:space-y-3 lg:space-y-5">
+            <h1
               className={cn(
-                "text-balance text-left font-sans text-3xl font-bold tracking-tighter text-foreground",
+                "text-balance text-left text-xl font-bold tracking-tighter text-foreground capitalize  max-w-[90%]",
                 "sm:text-4xl",
                 "lg:text-5xl",
+                "2xl:text-6xl",
+                "opacity-0 translate-y-10",
+                active &&
+                  " animate-show-hero-card-content fill-mode-forwards delay-600",
               )}
-              variants={titleVariants}
-              custom={{
-                isMobile: isMobile,
-              }}
             >
               {title ? title : "Advanced English Conversation"}
-            </motion.h1>
-            <motion.p
+            </h1>
+            <p
               className={cn(
-                "mb-2 line-clamp-3 w-full text-balance text-left text-sm text-foreground",
+                "mb-2 line-clamp-3 w-full text-left text-base text-foreground",
                 "sm:line-clamp-4 sm:text-base",
-                "md:text-lg",
+                "md:text-lg hidden",
+                "opacity-0 translate-y-10",
+                active &&
+                  " animate-show-hero-card-content fill-mode-forwards delay-700",
               )}
-              variants={subtitleVariants}
             >
               {description
                 ? description
                 : "Tailored for advanced learners, this course focuses on real-life scenarios, idiomatic expressions, and nuanced vocabulary to enhance conversational fluency through role-plays and discussions, empowering confident communication in English-speaking environments."}
-            </motion.p>
+            </p>
           </div>
+
           {!notFound && (
-            <div className="flex w-full flex-row items-center gap-2">
-              <MotionButton
-                variants={buttonOneVariants}
-                variant="default"
-                size={isMobile ? "sm" : "lg"}
-                className={cn(
-                  "w-full text-sm h-10",
-                  "sm:w-fit sm:text-base sm:px-8 sm:h-12",
-                )}
-                custom={{ isMobile }}
-                asChild
-              >
-                <Link href={`/programs/${slug}`}>
-                  <PlayIcon className="w-7 h-7 mr-2 fill-current" />
-                  Reproduce
-                </Link>
-              </MotionButton>
-              <MotionButton
-                variants={buttonTwoVariants}
-                variant="outline"
-                size={isMobile ? "sm" : "lg"}
-                className={cn(
-                  "w-full text-sm h-10",
-                  "sm:w-fit sm:text-base sm:px-8 sm:h-12",
-                )}
-                custom={{ isMobile: isMobile }}
-                asChild
-              >
-                <Link href={`/programs/${slug}`}>
-                  <InfoOutlineIcon className="w-7 h-7 mr-2 fill-current" />
-                  Program details
-                </Link>
-              </MotionButton>
+            <div
+              className={cn(
+                "flex w-full flex-row items-center gap-8  sm:mt-4 ",
+                "opacity-0 translate-y-10",
+                active &&
+                  " animate-show-hero-card-content fill-mode-forwards delay-800",
+              )}
+            >
+              <div className="flex items-center gap-3 sm:gap-4">
+                <Button
+                  variant="default"
+                  className="rounded-full w-14 h-14 md:w-20 md:h-20 p-0 flex items-center justify-center"
+                  asChild
+                >
+                  <Link href={`/programs/${slug}`}>
+                    <PlayIcon className="ml-0.5 md:w-9 md:h-9 w-6 h-6" />
+                  </Link>
+                </Button>
+                <p className="font-semibold tracking-tight text-lg md:text-xl text-muted-foreground">
+                  Play
+                </p>
+              </div>
+              <div className="flex items-center gap-1 md:gap-2">
+                <ResponsiveTooltip>
+                  <ResponsiveTooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0 hover:bg-primary"
+                    >
+                      <HeartOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
+                    </Button>
+                  </ResponsiveTooltipTrigger>
+                  <ResponsiveTooltipContent
+                    sideOffset={8}
+                    side="bottom"
+                    className="p-2 px-3"
+                  >
+                    <p className="text-lg font-medium text-foreground">
+                      Add to favorites
+                    </p>
+                  </ResponsiveTooltipContent>
+                </ResponsiveTooltip>
+
+                <ResponsiveTooltip>
+                  <ResponsiveTooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0 border-none bg-accent"
+                      asChild
+                    >
+                      <Link href={`/programs/${slug}`}>
+                        <InfoOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
+                      </Link>
+                    </Button>
+                  </ResponsiveTooltipTrigger>
+                  <ResponsiveTooltipContent
+                    sideOffset={8}
+                    side="bottom"
+                    className="p-2 px-3"
+                  >
+                    <p className="text-lg font-medium text-foreground">
+                      Details
+                    </p>
+                  </ResponsiveTooltipContent>
+                </ResponsiveTooltip>
+              </div>
             </div>
           )}
         </MaxWidthWrapper>
-      </motion.div>
+      </div>
     );
   },
 );

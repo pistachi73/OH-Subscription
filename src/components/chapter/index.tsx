@@ -6,7 +6,6 @@ import type {
   ProgramSpotlight,
 } from "@/server/db/schema.types";
 import { MediaProvider } from "media-chrome/react/media-store";
-import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { ChapterCommunity } from "./chapter-community";
 import { ChapterContextProvider, useChapterContext } from "./chapter-context";
 import { ChapterList } from "./chapter-list";
@@ -32,14 +31,10 @@ export const Chapter = ({ program, chapter }: ChapterProps) => {
 export const ChapterContent = ({ program, chapter }: ChapterProps) => {
   const { activeTab } = useChapterContext();
 
-  const { deviceSize } = useDeviceType();
-
-  console.table({ trans: Boolean(chapter.transcript) });
-
   return (
     <div
       className={cn(
-        "h-[100dvh] w-full transition-[grid,height] bg-muted-background ease-in-out duration-300 overflow-hidden ",
+        "fixed top-0 left-0 block h-full w-full transition-[grid,height] bg-muted-background ease-in-out duration-300",
         "grid-cols-[1fr,0px] grid",
         activeTab ? "lg:grid-cols-[1fr,450px]" : "lg:grid-cols-[1fr,0px]",
       )}

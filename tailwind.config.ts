@@ -27,12 +27,18 @@ const config: Config = {
       },
       transitionDelay: {
         400: "400ms",
+        800: "800ms",
+        900: "900ms",
+        1200: "1200ms",
+        1300: "1300ms",
+        1400: "1400ms",
       },
 
       backgroundImage: {
         "hero-gradient-olf":
           "linear-gradient(90deg, #fff, rgba(255,255,255, .991) 6.67%, rgba(255, 255, 255, .964) 13.33%, rgba(255, 255, 255, .918) 20%, rgba(255, 255, 255, .853) 26.67%, rgba(255, 255, 255, .768) 33.33%, rgba(255, 255, 255, .668) 40%, rgba(255, 255, 255, .557) 46.67%, rgba(255, 255, 255, .443) 53.33%, rgba(255, 255, 255, .332) 60%, rgba(255, 255, 255, .232) 66.67%, rgba(255, 255, 255, .147) 73.33%, rgba(255, 255, 255, .082) 80%, rgba(255, 255, 255, 0) 86.67%);",
         "hero-gradient": "var(--hero-gradient)",
+        "hero-gradient-bottom": "var(--hero-gradient-bottom)",
       },
       height: {
         header: "var(--header-height)",
@@ -108,6 +114,12 @@ const config: Config = {
       },
 
       keyframes: {
+        "show-hero-card-content": {
+          to: {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
+        },
         "pulse-carousel": {
           "0%": {
             opacity: "1",
@@ -177,6 +189,8 @@ const config: Config = {
         },
       },
       animation: {
+        "show-hero-card-content":
+          "show-hero-card-content 0.5s 0.6s cubic-bezier(0.23,1,0.32,1) 1 forwards",
         "pulse-carousel":
           "pulse-carousel 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "accordion-down": "accordion-down 0.2s ease-out",

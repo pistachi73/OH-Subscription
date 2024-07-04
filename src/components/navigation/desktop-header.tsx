@@ -44,7 +44,7 @@ export const DesktopHeader = ({
       className={cn(
         "sticky top-0 z-50 h-12 lg:h-14 border-b",
         isScrolled || segment === "(auth)" || renderAsScrolled
-          ? "bg-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
+          ? "bg-muted-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
           : "border-transparent [transition:background-color_500ms,border-color_300ms]",
       )}
     >
