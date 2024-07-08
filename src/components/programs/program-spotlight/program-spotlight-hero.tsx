@@ -47,7 +47,6 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
         src="/images/hero-thumbnail-2.jpg"
         alt="testing"
         containerClassname="-z-20 max-h-[100%]"
-        shadowClassname="to-45% sm:to-35%"
       />
       <div
         className={cn(

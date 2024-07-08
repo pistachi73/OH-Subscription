@@ -21,7 +21,7 @@ const ShareItem = ({
   children?: React.ReactNode;
 } & ButtonProps) => {
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="shrink-0 flex flex-col items-center gap-2">
       <Button
         variant="accent"
         size="icon"

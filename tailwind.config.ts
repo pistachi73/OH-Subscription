@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   darkMode: ["class"],
@@ -53,7 +52,7 @@ const config: Config = {
         "2xs": ["10px", "14px"],
       },
       transitionTimingFunction: {
-        card: "cubicBezier(0.23, 1, 0.6, 1)",
+        card: "cubic-bezier(0.23, 1, 0.6, 1)",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -206,18 +205,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    plugin(({ addUtilities }) => {
-      addUtilities({
-        ".icon-stroke": {
-          "stroke-width": "0.3px",
-          overflow: "visible",
-          stroke: "currentColor",
-        },
-      });
-    }),
-  ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
 export default config;

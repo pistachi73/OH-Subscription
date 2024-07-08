@@ -62,7 +62,7 @@ export const ShareButton = ({
       <ResponsiveDialogTrigger asChild={asChild}>
         {children}
       </ResponsiveDialogTrigger>
-      <ResponsiveDialogContent>
+      <ResponsiveDialogContent className="max-w-[500px] mx-auto">
         <div className={cn("flex flex-col gap-4")}>
           <div className="space-y-1">
             <ResponsiveDialogTitle>
@@ -86,7 +86,7 @@ export const ShareButton = ({
             </div>
           )}
 
-          <div className="mt-2  flex flex-row justify-between gap-2">
+          <div className="mt-2  flex flex-row justify-between gap-3 overflow-x-auto no-scrollbar">
             {config?.link && <LinkButton url={url} />}
             {config?.email && <EmailButton url={url} {...config.email} />}
             {config?.linkedin && <LinkedinButton url={url} />}

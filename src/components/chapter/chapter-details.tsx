@@ -4,6 +4,7 @@ import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils";
 import { getBaseUrl } from "@/trpc/shared";
 import { ArrowRightIcon, UserIcon } from "lucide-react";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -15,7 +16,7 @@ export const ChapterDetails = () => {
   const { chapter, program } = useChapterContext();
   return (
     <>
-      <section className="space-y-3">
+      <section>
         <h2
           className={cn("text-lg text-foreground font-semibold tracking-tight")}
         >
@@ -35,7 +36,7 @@ export const ChapterDetails = () => {
             </Badge>
           ))}
         </section>
-        <p className="text-sm">{chapter.description}</p>
+        <p className="mt-2 text-base text-balance">{chapter.description}</p>
 
         <div className="mt-4 flex gap-2 w-full ">
           <ShareButton
@@ -74,9 +75,10 @@ export const ChapterDetails = () => {
           </h2>
           <div className="space-y-4">
             {program.teachers.map((teacher) => (
-              <div
+              <Link
+                href={"/"}
                 key={`teacher-${teacher.name}`}
-                className="flex flex-row gap-4 items-start border border-input shadow-sm px-4 py-4 rounded-lg"
+                className="group flex flex-row gap-4 items-start border border-input shadow-sm px-4 py-4 rounded-lg"
               >
                 <Avatar className="h-20 w-20 border-2 border-accent">
                   <AvatarImage
@@ -86,28 +88,25 @@ export const ChapterDetails = () => {
                     <UserIcon className="text-accent-foreground" size={20} />
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col gap-1">
+                <div>
                   <p className="text-base text-foreground font-medium">
                     {teacher.name}
                   </p>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="mt-0.5 text-muted-foreground text-sm">
                     Teacher at OH{" "}
                   </p>
-                  <p className="text-sm text-foreground line-clamp-3">
+                  <p className="mt-1 text-base text-foreground line-clamp-4">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                     non risus. Suspendisse lectus tortor, dignissim sit amet,
                     adipiscing nec, ultricies sed, dolor. Cras elementum
                     ultrices diam. Maecenas ligula.
                   </p>
-                  <button
-                    type="button"
-                    className="text-sm text-secondary text-left align-start flex flex-row items-center gap-2"
-                  >
+                  <span className="mt-2 text-base text-secondary text-left align-start flex flex-row items-center gap-2">
                     View profile
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </button>
+                    <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

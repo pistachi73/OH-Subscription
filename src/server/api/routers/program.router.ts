@@ -50,6 +50,7 @@ import {
   videos,
   videosOnPrograms,
 } from "@/server/db/schema";
+import getObjWithImagePlaceholder from "../lib/get-placeholder-image";
 import { generateEmbedding } from "../lib/openai";
 
 export const programRouter = createTRPCRouter({
@@ -298,6 +299,13 @@ export const programRouter = createTRPCRouter({
       const startTime = Date.now();
 
       const res = await programsForCardsQuery.execute();
+
+      const resWithPlaceholders = await getObjWithImagePlaceholder({
+        obj: res,
+        key: "thumbnail",
+        placeholderImageSrc: "/images/hero-thumbnail-2.jpg",
+      });
+
       const timeTaken = Date.now() - startTime;
 
       if (minQueryTime && timeTaken < minQueryTime) {
@@ -306,7 +314,7 @@ export const programRouter = createTRPCRouter({
         );
       }
 
-      return res;
+      return resWithPlaceholders;
     }),
 
   getById: publicProcedure

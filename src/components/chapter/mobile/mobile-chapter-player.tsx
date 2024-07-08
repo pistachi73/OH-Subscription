@@ -44,7 +44,7 @@ export const MobileChapterPlayer = () => {
     <MediaController
       autohide="1"
       class={cn(
-        "w-full h-[var(--aspect-ratio-height)] z-10 transition-transform ease-in-out duration-300 bg-black",
+        "block w-full h-[var(--aspect-ratio-height)] z-10 transition-transform ease-in-out duration-300 bg-black overflow-hidden",
         isHidden ? "-translate-y-12" : "translate-y-0",
         "sticky top-12 left-0 sm:relative sm:top-0 sm:left-0",
         "sm:translate-y-0",
@@ -52,7 +52,7 @@ export const MobileChapterPlayer = () => {
     >
       <div className="absolute top-0 left-0 w-full h-full bg-black/30 pointer-events-none z-0" />
 
-      <ChapterMediaVideo chapter={chapter} program={program} />
+      <ChapterMediaVideo />
       <MediaControlBar
         class={cn(
           "relative z-10 w-[92%] lg flex items-center justify-between mt-[3%] mx-auto gap-1",

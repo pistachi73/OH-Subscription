@@ -25,8 +25,8 @@ const ChapterListContent = () => {
   const params = useParams();
 
   return (
-    <div className="p-4 flex flex-col gap-3">
-      {program.chapters.map((chapter, index) => {
+    <div className="p-4 flex flex-col gap-3 overflow-y-auto no-scrollbar">
+      {program.chapters.map((chapter) => {
         const isActiveChapter = params.chapterSlug === chapter.slug;
 
         return isActiveChapter ? (
@@ -55,7 +55,8 @@ export const InactiveChapterCard = ({
     <Link
       key={chapter.slug}
       className={cn(
-        "shrink-0 group w-full rounded-lg relative overflow-hidden bg-muted flex justify-between items-center p-3 gap-4",
+        "shrink-0 group w-full rounded-lg relative overflow-hidden bg-muted flex justify-between items-center gap-4",
+        "p-3 md:p-4",
       )}
       href={`/programs/${programSlug}/chapters/${chapter.slug}`}
     >
@@ -63,7 +64,7 @@ export const InactiveChapterCard = ({
         <p className="text-sm text-muted-foreground mb-0.5">
           {chapter.duration} min
         </p>
-        <p className="w-full gap-3 leading-normal text-foreground text-base md:text-xl font-medium tracking-tighter">
+        <p className="w-full gap-3 leading-normal text-foreground text-lg font-semibold tracking-tight">
           {chapter.title}
         </p>
       </div>
@@ -101,16 +102,18 @@ export const ActiveChapterCard = ({
           />
           <div className="z-0 absolute top-0 left-0 h-full w-full bg-gradient-to-t from-10% from-muted" />
         </div>
-        <div className={cn("relative w-full p-3  pt-[40%]")}>
+        <div
+          className={cn("relative w-full", "p-3 pt-[40%] md:p-4 md:pt-[40%]")}
+        >
           <div className="relative z-10 w-full h-full">
             <span className="text-xs text-secondary mb-1 flex items-center gap-1">
               <PlayCircleIcon className="w-4 h-4" />
               Currenty playing
             </span>
-            <p className="w-full gap-3 text-foreground text-base md:text-xl font-semibold tracking-tight">
+            <p className="w-full gap-3 text-foreground text-lg font-semibold tracking-tight">
               {chapter.title}
             </p>
-            <p className="mt-1 text-sm md:text-base leading-relaxed  text-foreground line-clamp-4">
+            <p className="mt-1 text-base leading-relaxed text-foreground text-balance">
               {chapter.description}
             </p>
           </div>

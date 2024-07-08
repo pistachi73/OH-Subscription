@@ -166,44 +166,31 @@ const Carousel = React.forwardRef<
           total,
         }}
       >
-        <div className="group/carousel relative w-full transition-[z-index] delay-300 hover:z-10 group-hover:delay-0">
-          {/* {orientation === "horizontal" && (
-            <div className="absolute -top-2 right-[4%] flex flex-row items-center gap-px 2xl:right-14">
-              {Array.from({ length: total }).map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => scrollTo(index)}
-                  className={cn(
-                    "h-0.5 w-3 rounded-sm bg-primary-800 opacity-25 transition-opacity",
-                    { "opacity-100": current === index + 1 },
-                  )}
-                />
-              ))}
-            </div>
-          )} */}
-          <div
-            ref={ref}
-            onKeyDownCapture={handleKeyDown}
-            className={cn(
-              "relative w-full",
+        <div
+          ref={ref}
+          onKeyDownCapture={handleKeyDown}
+          className={cn(
+            "group/carousel w-full transition-[z-index] delay-300 hover:z-10 group-hover:delay-0",
+            "relative w-full",
+            "[--items-spacing:12px]",
+            "[--items-spacing-lg:20px]",
+            "[--items-spacing-xl:20px]",
 
-              className,
-              {
-                "my-1 overflow-x-clip overflow-y-visible px-[4%] sm:px-[4%] 2xl:px-14 ":
-                  orientation === "horizontal",
-              },
-              {
-                "overflow-y-clip overflow-x-visible pb-4":
-                  orientation === "vertical",
-              },
-            )}
-            role="region"
-            aria-roledescription="carousel"
-            {...props}
-          >
-            {children}
-          </div>
+            className,
+            {
+              "my-1 overflow-x-clip overflow-y-visible px-[4%] sm:px-[4%] 2xl:px-14 ":
+                orientation === "horizontal",
+            },
+            {
+              "overflow-y-clip overflow-x-visible pb-4":
+                orientation === "vertical",
+            },
+          )}
+          role="region"
+          aria-roledescription="carousel"
+          {...props}
+        >
+          {children}
         </div>
       </CarouselContext.Provider>
     );
@@ -224,7 +211,7 @@ const CarouselContent = React.forwardRef<
         className={cn(
           "flex",
           orientation === "horizontal"
-            ? "-ml-1  lg:-ml-2 xl:-ml-3"
+            ? "-ml-[var(--items-spacing)]  lg:-ml-[var(--items-spacing-lg)] xl:-ml-[var(--items-spacing-xl)]"
             : "-mt-4 flex-col",
           className,
         )}
@@ -248,7 +235,9 @@ const CarouselItem = React.forwardRef<
       aria-roledescription="slide"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-1 lg:pl-2 xl:pl-3" : "pt-4",
+        orientation === "horizontal"
+          ? "pl-[var(--items-spacing)] lg:pl-[var(--items-spacing-lg)] xl:pl-[var(--items-spacing-xl)]"
+          : "pt-4",
         className,
       )}
       {...props}
@@ -267,12 +256,12 @@ const CarouselPrevious = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-prev absolute flex h-full w-[calc(4%-4px)]  items-center  justify-center rounded-none rounded-r-sm bg-muted-background/50 opacity-100  transition-opacity",
+        "group/chevron-prev absolute flex h-full w-[calc(4%-var(--items-spacing))]  items-center  justify-center rounded-none rounded-r-sm bg-muted-background/50 opacity-100  transition-opacity",
         "hover:bg-muted-background/60",
         "disabled:opacity-0",
         "group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0",
-        "lg:w-[calc(4%-8px)]",
-        "xl:w-[calc(4%-12px)]",
+        "lg:w-[calc(4%-var(--items-spacing-lg))]",
+        "xl:w-[calc(4%-var(--items-spacing-xl))]",
         "2xl:w-[48px]",
         orientation === "horizontal"
           ? "-left-0 top-1/2 -translate-y-1/2"
@@ -306,12 +295,12 @@ const CarouselNext = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-next absolute flex h-full w-[calc(4%-4px)] items-center justify-center rounded-none rounded-l-sm bg-muted-background/50 opacity-100  transition-opacity",
+        "group/chevron-next absolute flex h-full w-[calc(4%-var(--items-spacing))] items-center justify-center rounded-none rounded-l-sm bg-muted-background/50 opacity-100  transition-opacity",
         "hover:bg-muted-background/60",
         "disabled:opacity-0",
         "group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0",
-        "lg:w-[calc(4%-8px)]",
-        "xl:w-[calc(4%-12px)]",
+        "lg:w-[calc(4%-var(--items-spacing-lg))]",
+        "xl:w-[calc(4%-var(--items-spacing-xl))]",
         "2xl:w-[48px]",
         orientation === "horizontal"
           ? "-right-0 top-1/2 -translate-y-1/2"

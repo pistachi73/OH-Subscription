@@ -159,9 +159,6 @@
     -moz-appearance: textfield;
   }
 
-  p {
-    font-weight: 300;
-  }
 
   .header-translate {
     @apply -translate-y-12 lg:-translate-y-14;

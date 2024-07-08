@@ -80,19 +80,21 @@ export const ProgramCard = ({
             className="relative w-full h-full block"
           >
             <Image
-              src={
-                thumbnail
-                  ? getImageUrl(thumbnail)
-                  : "/images/video-thumbnail.png"
-              }
+              src={thumbnail?.src ?? "/images/video-thumbnail.png"}
               alt="video"
               fill
-              className="rounded-lg group-hover:rounded-b-none xl:delay-0 group-hover:delay-300  object-cover"
+              className={cn(
+                "rounded-lg group-hover:rounded-b-none xl:delay-0 group-hover:delay-300  object-cover",
+              )}
+              {...(thumbnail?.placeholder && {
+                placeholder: "blur",
+                blurDataURL: thumbnail.placeholder,
+              })}
               loading={lazy ? "lazy" : "eager"}
               sizes={`(max-width: 640px) 50vw,
-                 (max-width: 1024px) 33vw,
-                 (max-width: 1280px) 25vw,
-                 20vw`}
+     (max-width: 1024px) 33vw,
+     (max-width: 1280px) 25vw,
+     20vw`}
             />
           </Link>
         </div>
@@ -169,7 +171,7 @@ export const ProgramCard = ({
 
               <section className="mt-2 space-y-0.5">
                 <h3 className="text-lg font-bold">{title}</h3>
-                <p className="line-clamp-2 text-base text-muted-foreground">
+                <p className="line-clamp-2 text-base text-foreground">
                   {description}
                 </p>
               </section>

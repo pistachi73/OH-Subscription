@@ -1,9 +1,8 @@
 import { cn } from "@/lib/utils";
 import MuxVideo from "@mux/mux-video-react";
 import { useMediaRef } from "media-chrome/react/media-store";
-import type { ChapterProps } from "../chapter";
 
-export const ChapterMediaVideo = ({ chapter }: ChapterProps) => {
+export const ChapterMediaVideo = () => {
   const mediaRef = useMediaRef();
   return (
     <MuxVideo

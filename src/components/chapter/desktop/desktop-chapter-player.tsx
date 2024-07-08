@@ -22,7 +22,6 @@ import {
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
 
-import { DeviceOnly } from "@/components/ui/device-only/device-only";
 import {
   PauseIcon,
   PlayIcon,
@@ -80,80 +79,71 @@ export const DesktopChapterPlayer = () => {
   return (
     <div
       className={cn(
-        "w-full transition-[grid] bg-muted-background ease-in-out duration-300 overflow-hidden",
+        "w-full transition-[grid] h-[100svh] bg-muted-background ease-in-out duration-300 overflow-hidden",
         "grid-cols-[1fr,0px] grid",
         activeTab
           ? "lg:grid-cols-[1fr,350px]  xl:grid-cols-[1fr,450px] "
           : "lg:grid-cols-[1fr,0px]",
-        isMobile ? "h-full aspect-video" : "h-[100svh]",
       )}
     >
       <MediaController autohide="1" class="w-full relative flex z-10">
-        <ChapterMediaVideo chapter={chapter} program={program} />
+        <ChapterMediaVideo />
         <MediaControlBar
           class={cn(
             "w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex justify-end items-center my-3 mx-auto",
           )}
           slot="top-chrome"
         >
-          <DeviceOnly allowedDevices={["desktop", "tablet"]}>
-            <Switch
-              checked={autoPlay}
-              onCheckedChange={setAutoPlay}
-              className="h-7 mr-2 data-[state=checked]:bg-primary data-[state=unchecked]:bg-dark-accent/90"
-              thumbClassName="w-5 h-5  flex items-center justify-center bg-background/70 dark:bg-foreground/70 text-foreground/70 dark:text-background/70"
-            >
-              {autoPlay ? (
-                <PlayIcon className="w-3 h-3" />
-              ) : (
-                <PauseIcon className="w-3 h-3" />
-              )}
-            </Switch>
-            <Popover>
-              <PopoverTrigger className="h-10 w-10 flex items-center justify-center">
-                <MediaMuteButton
-                  class={cn(topButtonClassname)}
-                  onClick={() => {
-                    console.log("clicked");
-                  }}
-                  disabled
-                >
-                  <span slot="off">
-                    <SpeakerOffIcon
-                      className={cn(topButtonIconFillClassname)}
-                    />
-                  </span>
-                  <span slot="low">
-                    <SpeakerLowIcon
-                      className={cn(topButtonIconFillClassname)}
-                    />
-                  </span>
-                  <span slot="medium">
-                    <SpeakerMediumIcon
-                      className={cn(topButtonIconFillClassname)}
-                    />
-                  </span>
-                  <span slot="high">
-                    <SpeakerHighIcon
-                      className={cn(topButtonIconFillClassname)}
-                    />
-                  </span>
-                </MediaMuteButton>
-              </PopoverTrigger>
-              <PopoverContent
-                side="bottom"
-                align="center"
-                sideOffset={8}
-                className="px-2 border-transparent bg-foreground/70 dark:bg-background/70 h-[300px] w-10 p-0 "
+          <Switch
+            checked={autoPlay}
+            onCheckedChange={setAutoPlay}
+            className="h-7 mr-2 data-[state=checked]:bg-primary data-[state=unchecked]:bg-dark-accent/90"
+            thumbClassName="w-5 h-5  flex items-center justify-center bg-background/70 dark:bg-foreground/70 text-foreground/70 dark:text-background/70"
+          >
+            {autoPlay ? (
+              <PlayIcon className="w-3 h-3" />
+            ) : (
+              <PauseIcon className="w-3 h-3" />
+            )}
+          </Switch>
+          <Popover>
+            <PopoverTrigger className="h-10 w-10 flex items-center justify-center">
+              <MediaMuteButton
+                class={cn(topButtonClassname)}
+                onClick={() => {
+                  console.log("clicked");
+                }}
+                disabled
               >
-                <MediaVolumeRange
-                  class={cn(
-                    " h-10  translate-x-[32.5px] p-0 w-[300px]  origin-top-left rotate-90 px-2  rounded-sm text-background bg-transparent",
-                  )}
-                />
-              </PopoverContent>
-            </Popover>
-          </DeviceOnly>
+                <span slot="off">
+                  <SpeakerOffIcon className={cn(topButtonIconFillClassname)} />
+                </span>
+                <span slot="low">
+                  <SpeakerLowIcon className={cn(topButtonIconFillClassname)} />
+                </span>
+                <span slot="medium">
+                  <SpeakerMediumIcon
+                    className={cn(topButtonIconFillClassname)}
+                  />
+                </span>
+                <span slot="high">
+                  <SpeakerHighIcon className={cn(topButtonIconFillClassname)} />
+                </span>
+              </MediaMuteButton>
+            </PopoverTrigger>
+            <PopoverContent
+              side="bottom"
+              align="center"
+              sideOffset={8}
+              className="px-2 border-transparent bg-foreground/70 dark:bg-background/70 h-[300px] w-10 p-0 "
+            >
+              <MediaVolumeRange
+                class={cn(
+                  " h-10  translate-x-[32.5px] p-0 w-[300px]  origin-top-left rotate-90 px-2  rounded-sm text-background bg-transparent",
+                )}
+              />
+            </PopoverContent>
+          </Popover>
 
           <ChapterMediaFullScreen />
 
@@ -187,8 +177,7 @@ export const DesktopChapterPlayer = () => {
         <MediaControlBar
           slot="centered-chrome"
           class={cn(
-            "w-full flex items-center justify-center z-10 pointer-events-none",
-            isMobile ? "gap-4" : "gap-16",
+            "w-full flex items-center justify-center z-10 pointer-events-none gap-16",
           )}
         >
           <MediaSeekBackwardButton class={centerButtonClassname}>
@@ -210,101 +199,87 @@ export const DesktopChapterPlayer = () => {
             </div>
           </MediaSeekForwardButton>
         </MediaControlBar>
-        {/* <div className="w-full h-full absolute top-0 left-0 bg-foreground/40 dark:bg-background/40 pointer-events-none " /> */}
         <div className="relative z-10 w-full bg-gradient-to-t from-black/50 from-25% to-black/0 pt-[100px] lg:pt-[200px] pointer-events-none">
-          <DeviceOnly allowedDevices={["desktop", "tablet"]}>
-            <MediaControlBar
-              class={cn(
-                "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row justify-between items-end",
-                isMobile ? "mb-3" : "mb-5",
-              )}
-            >
-              <div className={cn(isMobile ? "space-y-0" : "space-y-2")}>
-                <h1
-                  className={cn(
-                    "font-semibold tracking-tighter text-background dark:text-foreground",
-                    isMobile ? "text-2xl" : "text-4xl",
-                  )}
-                >
-                  {program.title}
-                </h1>
-                <h2
-                  className={cn(
-                    "font-medium tracking-tight text-background dark:text-foreground",
-                    isMobile ? "text-base" : "text-2xl",
-                  )}
-                >
-                  C{chapter.chapterNumber}: {chapter.title}
-                </h2>
-              </div>
-              <div className=" flex-row gap-1 hidden xl:flex shrink-0">
-                {bottomButtons.map(({ icon, label, ...rest }, index) => {
-                  if (label === "Transcript" && !chapter.transcript)
-                    return null;
-                  return (
-                    <ChapterButton
-                      key={label}
-                      label={label}
-                      icon={icon}
-                      lastButton={index === bottomButtons.length - 1}
-                      {...rest}
-                    />
-                  );
-                })}
-              </div>
-            </MediaControlBar>
-          </DeviceOnly>
           <MediaControlBar
             class={cn(
-              "w-full flex items-center justify-center",
-              isMobile ? "mb-4" : "xl:mb-6 mb-3",
+              "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row justify-between items-end",
+              isMobile ? "mb-3" : "mb-5",
             )}
+          >
+            <div className={cn(isMobile ? "space-y-0" : "space-y-2")}>
+              <h1
+                className={cn(
+                  "font-semibold tracking-tighter text-background dark:text-foreground",
+                  isMobile ? "text-2xl" : "text-4xl",
+                )}
+              >
+                {program.title}
+              </h1>
+              <h2
+                className={cn(
+                  "font-medium tracking-tight text-background dark:text-foreground",
+                  isMobile ? "text-base" : "text-2xl",
+                )}
+              >
+                C{chapter.chapterNumber}: {chapter.title}
+              </h2>
+            </div>
+            <div className=" flex-row gap-1 hidden xl:flex shrink-0">
+              {bottomButtons.map(({ icon, label, ...rest }, index) => {
+                if (label === "Transcript" && !chapter.transcript) return null;
+                return (
+                  <ChapterButton
+                    key={label}
+                    label={label}
+                    icon={icon}
+                    lastButton={index === bottomButtons.length - 1}
+                    {...rest}
+                  />
+                );
+              })}
+            </div>
+          </MediaControlBar>
+          <MediaControlBar
+            class={cn("w-full flex items-center justify-center xl:mb-6 mb-3")}
           >
             <div
               className={cn(
-                "w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row items-center",
-                isMobile ? "gap-4" : "gap-6",
+                "w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row items-center gap-6",
               )}
             >
               <MediaTimeDisplay
                 class={cn(
-                  "bg-transparent font-inter p-0  text-sm xl:text-base  ",
-
-                  isMobile ? "block text-sm" : "hidden text-base",
+                  "bg-transparent font-inter p-0  xl:text-base  hidden text-base",
                 )}
               />
               <MediaTimeRange />
             </div>
           </MediaControlBar>
-          <DeviceOnly allowedDevices={["desktop", "tablet"]}>
-            <MediaControlBar
-              class={cn(
-                "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex justify-between xl:hidden",
-                isMobile ? "mb-1" : "mb-4",
-              )}
-            >
-              <MediaTimeDisplay
-                showduration
-                class="bg-transparent font-inter p-0 h-10 text-sm text-foreground/70"
-              />
-              <div className=" flex-row gap-1 flex shrink-0">
-                {bottomButtons.map(
-                  ({ icon, label, hidden, ...rest }, index) => {
-                    if (hidden) return null;
-                    return (
-                      <ChapterButton
-                        key={label}
-                        label={label}
-                        icon={icon}
-                        lastButton={index === bottomButtons.length - 1}
-                        {...rest}
-                      />
-                    );
-                  },
-                )}
-              </div>
-            </MediaControlBar>
-          </DeviceOnly>
+          <MediaControlBar
+            class={cn(
+              "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex justify-between xl:hidden",
+              isMobile ? "mb-1" : "mb-4",
+            )}
+          >
+            <MediaTimeDisplay
+              showduration
+              class="bg-transparent font-inter p-0 h-10 text-sm text-foreground/70"
+            />
+            <div className=" flex-row gap-1 flex shrink-0">
+              {bottomButtons.map(({ icon, label, hidden, ...rest }, index) => {
+                if (hidden) return null;
+                return (
+                  <ChapterButton
+                    key={label}
+                    label={label}
+                    icon={icon}
+                    lastButton={index === bottomButtons.length - 1}
+                    {...rest}
+                  />
+                );
+              })}
+            </div>
+          </MediaControlBar>
         </div>
       </MediaController>
       <div className="relative w-full h-full z-0">

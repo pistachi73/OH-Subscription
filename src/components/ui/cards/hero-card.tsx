@@ -15,15 +15,12 @@ import {
   ResponsiveTooltipContent,
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
-import { cn, getImageUrl } from "@/lib/utils";
-import type { RouterOutputs } from "@/trpc/shared";
+import { cn } from "@/lib/utils";
+import type { ProgramCard } from "@/server/db/schema.types";
 
 type HeroCardProps = {
   className?: string;
-  program?: Pick<
-    RouterOutputs["program"]["getProgramsForCards"][0],
-    "title" | "slug" | "description" | "thumbnail"
-  >;
+  program?: NonNullable<ProgramCard>;
   notFound?: boolean;
   index?: number;
   active?: boolean;
@@ -55,8 +52,8 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             src={
               notFound
                 ? "/images/program-not-found.jpg"
-                : thumbnail
-                  ? getImageUrl(thumbnail)
+                : program?.thumbnail
+                  ? program.thumbnail.src
                   : index ?? 0 % 2 === 0
                     ? "/images/hero-thumbnail-2.jpg"
                     : "/images/hero-background.png"
@@ -64,7 +61,10 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             priority={active}
             alt="Hero background image"
             containerClassname="h-full"
-            shadowClassname="to-20% sm:to-10%"
+            {...(program?.thumbnail?.placeholder && {
+              placeholder: "blur",
+              blurDataURL: program.thumbnail.placeholder,
+            })}
           />
         </div>
 
