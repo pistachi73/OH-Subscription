@@ -344,7 +344,7 @@ export const Comment = ({
             variant="ghost"
             className="h-6 px-0 py-0 text-xs font-normal text-muted-foreground hover:bg-transparent"
           >
-            <HeartOutlineIcon className="sm:mr-2" />
+            <HeartOutlineIcon className="sm:mr-2 w-4 h-4" />
             <span className="hidden sm:inline">11 Likes</span>
           </Button>
           {level === 0 && (
@@ -355,7 +355,7 @@ export const Comment = ({
                 setShowAddReply(!showAddReply);
               }}
             >
-              <ReplyOutlineIcon className="sm:mr-2 w-3" />
+              <ReplyOutlineIcon className="sm:mr-2 w-4 h-4" />
               <span className="hidden sm:inline">Reply</span>
             </Button>
           )}

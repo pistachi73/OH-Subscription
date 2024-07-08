@@ -69,15 +69,22 @@ const renderDesktopHeaderAsScrolledPathnames = [
 
 export const useCanRenderHeader = () => {
   const pathname = usePathname();
-  const { deviceType } = useDeviceType();
+  const { deviceType, isMobile } = useDeviceType();
 
-  const isShotsMobile = pathname.includes("/shots") && deviceType === "mobile";
-  const isChapter = pathname.includes("/chapter");
+  const isShotsMobile = pathname.includes("/shots") && isMobile;
+  const isChapter = pathname.includes("/chapter") && !isMobile;
 
   const renderAsScrolled =
-    renderDesktopHeaderAsScrolledPathnames.includes(pathname);
+    renderDesktopHeaderAsScrolledPathnames.includes(pathname) ||
+    pathname.includes("/chapter");
 
-  return { visible: !isShotsMobile && !isChapter, renderAsScrolled };
+  const renderBottomBar = !pathname.includes("/chapter");
+
+  return {
+    visible: !isShotsMobile && !isChapter,
+    renderAsScrolled,
+    renderBottomBar,
+  };
 };
 
 export const useCanRenderFooter = () => {

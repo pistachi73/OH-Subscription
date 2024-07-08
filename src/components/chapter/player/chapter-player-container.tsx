@@ -5,7 +5,7 @@ export const ChapterPlayerContainer = ({
 }: { children: React.ReactNode }) => {
   const mediaFullscreenRef = useMediaFullscreenRef();
   return (
-    <div className="w-full h-full relative z-10" ref={mediaFullscreenRef}>
+    <div className="w-full relative" ref={mediaFullscreenRef}>
       {children}
     </div>
   );

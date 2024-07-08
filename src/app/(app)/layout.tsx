@@ -10,7 +10,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <main className="h-full min-h-[50vh]">{children}</main>
+      <main className="relative h-full min-h-[50vh]">{children}</main>
       <Footer />
       <AuthModal />
     </>

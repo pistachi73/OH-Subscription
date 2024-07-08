@@ -70,6 +70,9 @@
       --dark-muted-background: 232 52% 4%;
       --dark-accent: 234.55 22.58% 20.08%;
       --dark-foreground: 232 21% 100%;
+
+
+      --aspect-ratio-height:round(up, calc(100vw*9/16), 1px);
       
     }
 

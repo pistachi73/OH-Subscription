@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 
 import Link from "next/link";
@@ -62,6 +61,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                     ? "/images/hero-thumbnail-2.jpg"
                     : "/images/hero-background.png"
             }
+            priority={active}
             alt="Hero background image"
             containerClassname="h-full"
             shadowClassname="to-20% sm:to-10%"
@@ -134,8 +134,8 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 <ResponsiveTooltip>
                   <ResponsiveTooltipTrigger asChild>
                     <Button
-                      variant="outline"
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0 hover:bg-primary"
+                      variant="accent"
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
                     >
                       <HeartOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
                     </Button>
@@ -154,8 +154,8 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 <ResponsiveTooltip>
                   <ResponsiveTooltipTrigger asChild>
                     <Button
-                      variant="outline"
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0 border-none bg-accent"
+                      variant="accent"
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
                       asChild
                     >
                       <Link href={`/programs/${slug}`}>

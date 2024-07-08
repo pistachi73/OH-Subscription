@@ -9,11 +9,11 @@ export const ChapterMediaVideo = ({ chapter }: ChapterProps) => {
     <MuxVideo
       ref={mediaRef}
       className={cn(
-        "h-full object-contain",
+        "w-full object-contain max-h-screen aspect-video min-h-full ",
         // deviceType === "mobile" &&
         //   "landscape::aspect-[9/16] portrait:object-cover",
       )}
-      playbackId={"3dXbin4ef01o00yT02rlAT3afe4o01a2Sgp2weX2XSSon9E"}
+      playbackId={"CEFyhtKTvLs9mayHn7mg028XlsE3T9rS9tiSXeo01uw100"}
       slot="media"
     />
   );

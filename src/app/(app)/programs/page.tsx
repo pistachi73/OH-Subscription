@@ -9,20 +9,21 @@ type ProgramsPageProps = {
 };
 
 const ProgramsPage = async ({ searchParams }: ProgramsPageProps) => {
-  const initialPrograms = await api.program.getProgramsForCards.query({
-    limit: 20,
-    ...(searchParams?.categories && {
-      categoryIds: searchParams.categories.split(",").map(Number),
+  const [initialPrograms, categories, teachers] = await Promise.all([
+    api.program.getProgramsForCards.query({
+      limit: 20,
+      ...(searchParams?.categories && {
+        categoryIds: searchParams.categories.split(",").map(Number),
+      }),
+      ...(searchParams?.teachers && {
+        teacherIds: searchParams.teachers.split(",").map(Number),
+      }),
+      ...(searchParams?.levels && { levelIds: searchParams.levels.split(",") }),
+      ...(searchParams?.search && { searchQuery: searchParams.search }),
     }),
-    ...(searchParams?.teachers && {
-      teacherIds: searchParams.teachers.split(",").map(Number),
-    }),
-    ...(searchParams?.levels && { levelIds: searchParams.levels.split(",") }),
-    ...(searchParams?.search && { searchQuery: searchParams.search }),
-  });
-
-  const categories = await api.category.getAll.query();
-  const teachers = await api.teacher.getAll.query();
+    api.category.getAll.query(),
+    api.teacher.getAll.query(),
+  ]);
 
   const CATEGORY_OPTIONS: Option[] = categories.map((category) => ({
     label: category.name,

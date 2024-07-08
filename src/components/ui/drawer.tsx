@@ -54,42 +54,48 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     hideClose?: boolean;
+    overlayClassName?: string;
   }
->(({ className, children, hideClose = false, ...props }, ref) => {
-  const { direction } = useDrawer();
+>(
+  (
+    { className, children, overlayClassName, hideClose = false, ...props },
+    ref,
+  ) => {
+    const { direction } = useDrawer();
 
-  return (
-    <DrawerPortal>
-      <DrawerOverlay />
-      <DrawerPrimitive.Content
-        ref={ref}
-        className={cn(
-          "fixed z-50 flex h-auto flex-col border bg-background p-4",
-          {
-            "inset-x-0 bottom-0 mt-24 rounded-t-[10px] pt-0":
-              !direction || direction === "bottom",
-          },
-          {
-            "inset-y-0 right-0 mr-24 ": direction === "right",
-          },
-          {
-            "inset-x-0 top-0 mb-24 rounded-b-[10px]": direction === "top",
-          },
-          {
-            "inset-y-0 left-0 h-full": direction === "left",
-          },
-          className,
-        )}
-        {...props}
-      >
-        {(!direction || direction === "bottom") && !hideClose && (
-          <div className="mx-auto mt-2 mb-4 h-1 w-1/5 rounded-full bg-accent shrink-0" />
-        )}
-        {children}
-      </DrawerPrimitive.Content>
-    </DrawerPortal>
-  );
-});
+    return (
+      <DrawerPortal>
+        <DrawerOverlay className={overlayClassName} />
+        <DrawerPrimitive.Content
+          ref={ref}
+          className={cn(
+            "fixed z-50 flex h-auto flex-col border bg-background p-4",
+            {
+              "inset-x-0 bottom-0 mt-24 rounded-t-[10px] pt-0":
+                !direction || direction === "bottom",
+            },
+            {
+              "inset-y-0 right-0 mr-24 ": direction === "right",
+            },
+            {
+              "inset-x-0 top-0 mb-24 rounded-b-[10px]": direction === "top",
+            },
+            {
+              "inset-y-0 left-0 h-full": direction === "left",
+            },
+            className,
+          )}
+          {...props}
+        >
+          {(!direction || direction === "bottom") && !hideClose && (
+            <div className="mx-auto mt-2 mb-2 h-1 w-20 rounded-full bg-accent shrink-0" />
+          )}
+          {children}
+        </DrawerPrimitive.Content>
+      </DrawerPortal>
+    );
+  },
+);
 DrawerContent.displayName = "DrawerContent";
 
 const DrawerHeader = ({

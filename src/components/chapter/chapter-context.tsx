@@ -2,35 +2,50 @@
 
 import {
   HeartIcon,
+  InfoIcon,
   LayersIcon,
   ShareIcon,
   SpeachBubbleIcon,
   TranscriptIcon,
 } from "@/components/ui/icons";
-import {
-  MediaActionTypes,
-  useMediaDispatch,
-} from "media-chrome/react/media-store";
+import type {
+  ProgramChapter,
+  ProgramSpotlight,
+} from "@/server/db/schema.types";
 import React, { useState } from "react";
+import { useDeviceType } from "../ui/device-only/device-only-provider";
 
-export type ChapterTab = "comments" | "transcript" | "chapters";
+export type ChapterTab = "details" | "comments" | "transcript" | "chapters";
 
 const ChapterContext = React.createContext<{
   activeTab: ChapterTab | null;
   setActiveTab: React.Dispatch<React.SetStateAction<ChapterTab | null>>;
   autoPlay: boolean;
   setAutoPlay: React.Dispatch<React.SetStateAction<boolean>>;
+  chapter: NonNullable<ProgramChapter>;
+  program: NonNullable<ProgramSpotlight>;
 }>({
   activeTab: null,
   setActiveTab: () => {},
   autoPlay: false,
   setAutoPlay: () => {},
+  chapter: {} as any,
+  program: {} as any,
 });
 
 export const ChapterContextProvider = ({
   children,
-}: { children: React.ReactNode }) => {
-  const [activeTab, setActiveTab] = useState<ChapterTab | null>(null);
+  chapter,
+  program,
+}: {
+  children: React.ReactNode;
+  chapter: NonNullable<ProgramChapter>;
+  program: NonNullable<ProgramSpotlight>;
+}) => {
+  const { isMobile } = useDeviceType();
+  const [activeTab, setActiveTab] = useState<ChapterTab | null>(
+    isMobile ? "details" : null,
+  );
   const [autoPlay, setAutoPlay] = useState(false);
 
   const value = React.useMemo(
@@ -39,7 +54,10 @@ export const ChapterContextProvider = ({
       setActiveTab,
       autoPlay,
       setAutoPlay,
+      chapter,
+      program,
     }),
+
     [activeTab, autoPlay],
   );
 
@@ -48,15 +66,42 @@ export const ChapterContextProvider = ({
   );
 };
 
-export const ChapterProvider = ({
-  children,
-}: { children: React.ReactNode }) => {
-  return <ChapterContextProvider>{children}</ChapterContextProvider>;
-};
-
 export const useChapterContext = () => {
   const context = React.useContext(ChapterContext);
-  const dispatch = useMediaDispatch();
+
+  const mobileButtons = [
+    {
+      label: "Details",
+      isActive: context.activeTab === "details",
+      onClick: () => {
+        context.setActiveTab((tab) => (tab === "details" ? null : "details"));
+      },
+    },
+    {
+      label: "Chapters",
+      isActive: context.activeTab === "chapters",
+      onClick: () => {
+        context.setActiveTab((tab) => (tab === "chapters" ? null : "chapters"));
+      },
+    },
+    {
+      label: "Discussion",
+      isActive: context.activeTab === "comments",
+      onClick: () => {
+        context.setActiveTab((tab) => (tab === "comments" ? null : "comments"));
+      },
+    },
+    {
+      label: "Transcript",
+      isActive: context.activeTab === "transcript",
+      onClick: () => {
+        context.setActiveTab((tab) =>
+          tab === "transcript" ? null : "transcript",
+        );
+      },
+      hidden: context.chapter && !context.chapter.transcript,
+    },
+  ];
 
   const bottomButtons = [
     {
@@ -64,9 +109,13 @@ export const useChapterContext = () => {
       label: "Chapters",
       onClick: () => {
         context.setActiveTab((tab) => (tab === "chapters" ? null : "chapters"));
-        dispatch({
-          type: MediaActionTypes.MEDIA_EXIT_FULLSCREEN_REQUEST,
-        });
+      },
+    },
+    {
+      icon: InfoIcon,
+      label: "Details",
+      onClick: () => {
+        context.setActiveTab((tab) => (tab === "details" ? null : "details"));
       },
     },
     {
@@ -76,10 +125,8 @@ export const useChapterContext = () => {
         context.setActiveTab((tab) =>
           tab === "transcript" ? null : "transcript",
         );
-        dispatch({
-          type: MediaActionTypes.MEDIA_EXIT_FULLSCREEN_REQUEST,
-        });
       },
+      hidden: context.chapter && !context.chapter.transcript,
     },
 
     {
@@ -87,9 +134,6 @@ export const useChapterContext = () => {
       label: "Comment",
       onClick: () => {
         context.setActiveTab((tab) => (tab === "comments" ? null : "comments"));
-        dispatch({
-          type: MediaActionTypes.MEDIA_EXIT_FULLSCREEN_REQUEST,
-        });
       },
     },
     {
@@ -97,7 +141,7 @@ export const useChapterContext = () => {
       label: "Share",
     },
     { icon: HeartIcon, label: "Add to favorites" },
-  ] as const;
+  ];
 
   if (context === undefined) {
     throw new Error(
@@ -105,5 +149,5 @@ export const useChapterContext = () => {
     );
   }
 
-  return { ...context, bottomButtons };
+  return { ...context, bottomButtons, mobileButtons };
 };

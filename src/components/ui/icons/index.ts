@@ -1,4 +1,8 @@
 export * from "./generated/apple-icon";
+export * from "./generated/arrow-left-outline-icon";
+export * from "./generated/arrow-left-icon";
+export * from "./generated/arrow-right-outline-icon";
+export * from "./generated/arrow-right-icon";
 export * from "./generated/backward10-icon";
 export * from "./generated/chapter-outline-icon";
 export * from "./generated/chevron-left-icon";
@@ -27,6 +31,7 @@ export * from "./generated/mic-icon";
 export * from "./generated/moon-outline-icon";
 export * from "./generated/pause-outline-icon";
 export * from "./generated/pause-icon";
+export * from "./generated/play-circle-icon";
 export * from "./generated/play-outline-icon";
 export * from "./generated/play-icon";
 export * from "./generated/reply-outline-icon";

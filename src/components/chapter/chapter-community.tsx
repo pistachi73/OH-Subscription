@@ -5,71 +5,29 @@ import { useMemo, useState } from "react";
 import { COMMENTS_PAGE_SIZE, Comment } from "@/components/ui/comments/comment";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { Filter, Loader2, SendHorizonal, X } from "lucide-react";
+import { Loader2, SendHorizonal } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddComment } from "../ui/comments/add-comment";
 import { FirstToComment } from "../ui/comments/first-to-comment";
 import { MustBeLoggedIn } from "../ui/comments/must-be-logged-in";
 import { SkeletonComment } from "../ui/comments/skeleton-comment";
-import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { UserAvatar } from "../ui/user-avatar";
-import type { ChapterProps } from "./chapter";
 import { useChapterContext } from "./chapter-context";
-import { ChapterSideWrapper } from "./chapter-side-wrapper";
 
-export const ChapterCommunity = ({
-  chapter,
-}: Omit<ChapterProps, "program">) => {
+export const ChapterCommunity = () => {
   const user = useCurrentUser();
-  const { activeTab, setActiveTab } = useChapterContext();
-  const { isMobile } = useDeviceType();
 
-  return (
-    <ChapterSideWrapper
-      isDialogOpen={activeTab === "comments"}
-      onDialogOpenChange={(open) => {
-        if (!open) {
-          setActiveTab(null);
-        }
-      }}
-    >
-      <div className={cn("flex h-full w-full flex-col", "overflow-hidden")}>
-        <div
-          className={cn(
-            "flex flex-row items-center justify-between p-4  pb-0",
-            isMobile && "pt-0",
-          )}
-        >
-          <h2 className={cn("text-base font-medium md:text-lg")}>Discussion</h2>
-          <div className="flex items-center">
-            <Button variant="ghost" className="p-2">
-              <Filter size={20} />
-            </Button>
-            <Button
-              variant="ghost"
-              className="p-2 hidden md:block"
-              onClick={() => setActiveTab(null)}
-            >
-              <X size={20} />
-            </Button>
-          </div>
-        </div>
-        {user ? (
-          <ChapterCommunityComments chapter={chapter} />
-        ) : (
-          <div className="px-4 flex items-center justify-center h-full pb-4 w-full">
-            <MustBeLoggedIn />
-          </div>
-        )}
-      </div>
-    </ChapterSideWrapper>
+  return user ? (
+    <ChapterCommunityComments />
+  ) : (
+    <div className="px-4 flex items-center justify-center h-full py-4 w-full">
+      <MustBeLoggedIn />
+    </div>
   );
 };
-const ChapterCommunityComments = ({
-  chapter,
-}: Omit<ChapterProps, "program">) => {
+const ChapterCommunityComments = () => {
+  const { chapter } = useChapterContext();
   const user = useCurrentUser();
   const apiUtils = api.useUtils();
   const [commentValue, setCommentValue] = useState("");

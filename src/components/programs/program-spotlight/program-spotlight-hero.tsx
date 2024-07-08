@@ -121,14 +121,11 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           <div className="flex items-center gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-14 h-14 rounded-full p-0"
-                >
+                <Button variant="accent" className="w-14 h-14 rounded-full p-0">
                   <HeartOutlineIcon className="w-7 h-7" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent sideOffset={8} className="p-2 px-3">
+              <TooltipContent sideOffset={8} side="bottom" className="p-2 px-3">
                 <p className="text-lg font-medium text-foreground">
                   Add to favorites
                 </p>
@@ -156,14 +153,18 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
                 <TooltipTrigger asChild>
                   <span
                     className={cn(
-                      buttonVariants({ variant: "outline" }),
+                      buttonVariants({ variant: "accent" }),
                       "w-14 h-14 rounded-full p-0",
                     )}
                   >
                     <ShareOutlineIcon className="w-7 h-7" />
                   </span>
                 </TooltipTrigger>
-                <TooltipContent sideOffset={8} className="p-2 px-3">
+                <TooltipContent
+                  sideOffset={8}
+                  side="bottom"
+                  className="p-2 px-3"
+                >
                   <p className="text-lg font-medium text-foreground">Share</p>
                 </TooltipContent>
               </Tooltip>
@@ -204,7 +205,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               }}
             >
               <Button
-                variant="outline"
+                variant="accent"
                 size="lg"
                 className="w-full sm:w-fit text-sm sm:text-base h-10 sm:h-12"
               >
@@ -213,7 +214,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               </Button>
             </ShareButton>
             <Button
-              variant="outline"
+              variant="accent"
               size="lg"
               className="w-full sm:w-fit  text-sm sm:text-base h-10 sm:h-12"
             >

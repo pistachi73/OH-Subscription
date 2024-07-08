@@ -1,83 +1,36 @@
 import { Button } from "@/components/ui/button";
 import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
-import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import { PauseIcon, PlayIcon } from "@/components/ui/icons";
-import { Switch } from "@/components/ui/switch";
+import { PlayCircleIcon, PlayIcon } from "@/components/ui/icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
+import type { ProgramSpotlight } from "@/server/db/schema.types";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import type { ChapterProps } from "./chapter";
 import { useChapterContext } from "./chapter-context";
-import { ChapterSideWrapper } from "./chapter-side-wrapper";
 
-type ChapterListProps = Omit<ChapterProps, "chapter">;
-
-export const ChapterList = ({ program }: ChapterListProps) => {
-  const { activeTab, setActiveTab, autoPlay, setAutoPlay } =
-    useChapterContext();
+export const ChapterList = () => {
   const user = useCurrentUser();
-  const { isMobile } = useDeviceType();
-  return (
-    <ChapterSideWrapper
-      isDialogOpen={activeTab === "chapters"}
-      onDialogOpenChange={(open) => {
-        if (!open) {
-          setActiveTab(null);
-        }
-      }}
-    >
-      <div
-        className={cn(
-          "flex h-full w-full flex-col overflow-y-auto no-scrollbar",
-        )}
-      >
-        <div
-          className={cn(
-            "flex flex-row items-center justify-between p-4 lg-p-5 pb-0",
-            isMobile && "pt-0",
-          )}
-        >
-          <h2 className={cn("text-base font-medium md:text-lg")}>Chapters</h2>
-          <Switch
-            checked={autoPlay}
-            onCheckedChange={setAutoPlay}
-            thumbClassName="flex items-center justify-center"
-          >
-            {autoPlay ? (
-              <PlayIcon className="w-2 h-2 fill-foreground/70" />
-            ) : (
-              <PauseIcon className="w-2 h-2 fill-foreground/70" />
-            )}
-          </Switch>
-        </div>
-        {user ? (
-          <ChapterListContent program={program} />
-        ) : (
-          <div className="px-4 flex items-center justify-center h-full pb-4 w-full">
-            <MustBeLoggedIn />
-          </div>
-        )}
-      </div>
-    </ChapterSideWrapper>
+  return user ? (
+    <ChapterListContent />
+  ) : (
+    <div className="px-4 flex items-center justify-center h-full py-4 w-full">
+      <MustBeLoggedIn />
+    </div>
   );
 };
 
-const ChapterListContent = ({ program }: ChapterListProps) => {
+const ChapterListContent = () => {
+  const { program } = useChapterContext();
   const params = useParams();
 
   return (
-    <div className="p-4 lg:p-5 flex flex-col gap-3">
+    <div className="p-4 flex flex-col gap-3">
       {program.chapters.map((chapter, index) => {
         const isActiveChapter = params.chapterSlug === chapter.slug;
 
         return isActiveChapter ? (
-          <ActiveChapterCard
-            key={chapter.slug}
-            chapter={chapter}
-            programSlug={program.slug}
-          />
+          <ActiveChapterCard key={chapter.slug} chapter={chapter} />
         ) : (
           <InactiveChapterCard
             key={chapter.slug}
@@ -90,11 +43,11 @@ const ChapterListContent = ({ program }: ChapterListProps) => {
   );
 };
 
-const InactiveChapterCard = ({
+export const InactiveChapterCard = ({
   programSlug,
   chapter,
 }: {
-  chapter: ChapterListProps["program"]["chapters"][0];
+  chapter: NonNullable<ProgramSpotlight>["chapters"][0];
   programSlug: string;
 }) => {
   if (!chapter) return null;
@@ -102,16 +55,16 @@ const InactiveChapterCard = ({
     <Link
       key={chapter.slug}
       className={cn(
-        "group w-full rounded-lg relative overflow-hidden bg-muted flex justify-between items-center p-3 gap-4",
+        "shrink-0 group w-full rounded-lg relative overflow-hidden bg-muted flex justify-between items-center p-3 gap-4",
       )}
       href={`/programs/${programSlug}/chapters/${chapter.slug}`}
     >
       <div className="relative z-10 w-full">
-        <p className="w-full gap-3 text-foreground text-lg md:text-xl font-medium tracking-tighter dark:text-foreground">
-          {chapter.title}
-        </p>
-        <p className="text-base text-foreground/70 dark:text-foreground/70">
+        <p className="text-sm text-muted-foreground mb-0.5">
           {chapter.duration} min
+        </p>
+        <p className="w-full gap-3 leading-normal text-foreground text-base md:text-xl font-medium tracking-tighter">
+          {chapter.title}
         </p>
       </div>
       <Button
@@ -127,20 +80,18 @@ const InactiveChapterCard = ({
   );
 };
 
-const ActiveChapterCard = ({
-  programSlug,
+export const ActiveChapterCard = ({
   chapter,
 }: {
-  chapter: ChapterListProps["program"]["chapters"][0];
-  programSlug: string;
+  chapter: NonNullable<ProgramSpotlight>["chapters"][0];
 }) => {
   return (
     <div
       className={cn(
-        "group w-full rounded-lg relative overflow-hidden bg-dark-accent",
+        "shrink-0 group w-full rounded-lg relative overflow-hidden bg-muted ",
       )}
     >
-      <div className="relative aspect-video w-full flex flex-col items-end justify-end">
+      <div className="relative  w-full flex flex-col items-end justify-end">
         <div className="absolute aspect-video top-0 left-0 w-full overflow-hidden">
           <Image
             src={chapter.thumbnail ?? "/images/hero-thumbnail-2.jpg"}
@@ -148,21 +99,22 @@ const ActiveChapterCard = ({
             fill
             className="object-cover"
           />
+          <div className="z-0 absolute top-0 left-0 h-full w-full bg-gradient-to-t from-10% from-muted" />
         </div>
-        <div className="relative z-10 w-full p-3 ">
-          <div className="absolute bottom-0 left-0 -z-10 h-[140%] w-full bg-gradient-to-t from-[hsl(234.55,22.58%,20.08%)] dark:from-accent" />
-          <p className="w-full gap-3 text-dark-foreground text-lg md:text-xl font-medium tracking-tighter">
-            {chapter.title}
-          </p>
-          <p className="text-base text-background/70 dark:text-foreground/70">
-            {chapter.duration} min
-          </p>
+        <div className={cn("relative w-full p-3  pt-[40%]")}>
+          <div className="relative z-10 w-full h-full">
+            <span className="text-xs text-secondary mb-1 flex items-center gap-1">
+              <PlayCircleIcon className="w-4 h-4" />
+              Currenty playing
+            </span>
+            <p className="w-full gap-3 text-foreground text-base md:text-xl font-semibold tracking-tight">
+              {chapter.title}
+            </p>
+            <p className="mt-1 text-sm md:text-base leading-relaxed  text-foreground line-clamp-4">
+              {chapter.description}
+            </p>
+          </div>
         </div>
-      </div>
-      <div className={"p-3 pt-1"}>
-        <p className="text-base leading-relaxed  text-dark-foreground line-clamp-4">
-          {chapter.description}
-        </p>
       </div>
     </div>
   );

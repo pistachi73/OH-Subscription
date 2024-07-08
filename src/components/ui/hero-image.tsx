@@ -6,14 +6,14 @@ import { cn } from "@/lib/utils";
 
 type HeroImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   containerClassname?: string;
-  shadowClassname?: string;
+  priority?: boolean;
 };
 
 export const HeroImage = ({
   src,
   alt,
   containerClassname,
-  shadowClassname,
+  priority = false,
 }: HeroImageProps) => {
   if (!src || !alt) return null;
   return (
@@ -30,8 +30,8 @@ export const HeroImage = ({
         alt={alt}
         className="w-full object-cover"
         fill
-        priority={true}
-        sizes="(min-width: 1300px) 50vw, 100vw"
+        priority={priority}
+        sizes="(max-width: 1300px) 100vw, 75vw"
       />
     </div>
   );

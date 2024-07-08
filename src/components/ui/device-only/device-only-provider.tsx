@@ -43,6 +43,13 @@ const getIsMobileUsingViewport = (
     };
   }
 
+  if (serverDeviceType === "tablet" && isLandscape) {
+    return {
+      deviceType: "tablet",
+      deviceSize: ["xs", "sm", "md"],
+    };
+  }
+
   switch (true) {
     case viewportWidth < SCREENS.SM:
       return { deviceType, deviceSize: ["xs"] };
@@ -70,7 +77,7 @@ export const DeviceOnlyProvider = ({
     useState<DeviceType>(serverDeviceType);
   const [deviceSizeState, setDeviceSize] = useState<DeviceSize[]>(
     serverDeviceType === "mobile"
-      ? ["xs"]
+      ? ["xs", "sm"]
       : serverDeviceType === "tablet"
         ? ["xs", "sm", "md"]
         : ["xs", "sm", "md", "lg", "xl", "2xl"],
@@ -107,6 +114,7 @@ export const DeviceOnlyProvider = ({
       deviceType: deviceTypeState,
       deviceSize: deviceSizeState,
       isMobile: deviceTypeState === "mobile",
+      isTabled: deviceTypeState === "tablet",
     }),
     [deviceTypeState, deviceSizeState],
   );

@@ -42,10 +42,10 @@ export const DesktopHeader = ({
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 h-12 lg:h-14 border-b",
+        "sticky top-0 z-50 h-12 lg:h-14",
         isScrolled || segment === "(auth)" || renderAsScrolled
-          ? "bg-muted-background border-accent [transition:background-color_500ms,border-color_400ms_100ms]"
-          : "border-transparent [transition:background-color_500ms,border-color_300ms]",
+          ? "bg-muted-background  shadow-sm [transition:background-color_500ms,border-color_400ms_100ms]"
+          : "shadow-none [transition:background-color_500ms,border-color_300ms]",
       )}
     >
       <MaxWidthWrapper

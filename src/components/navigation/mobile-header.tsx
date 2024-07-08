@@ -13,37 +13,20 @@ import { SearchInput } from "../ui/search-input";
 import { mobileNavItems, useCanRenderHeader } from "./helpers";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useMobileHeaderHide } from "@/hooks/use-mobile-header-hide";
 import { cn } from "@/lib/utils";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { UserButton } from "../auth/user-button";
 import ThemeSwitch from "../theme-switch";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 export const MobileHeader = () => {
-  const { scrollY } = useScroll();
-  const [hiddenTopBar, setHiddenTopBar] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const { visible } = useCanRenderHeader();
+  const { isHidden, isScrolled } = useMobileHeaderHide();
+  const { visible, renderAsScrolled, renderBottomBar } = useCanRenderHeader();
 
   const user = useCurrentUser();
   const segment = useSelectedLayoutSegment();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const prev = scrollY.getPrevious() ?? 0;
-
-    if (latest > 10) setIsScrolled(true);
-    else setIsScrolled(false);
-
-    if (latest === 0 && prev > 82) {
-      //Opening of drawer or modal
-      return;
-    }
-
-    if (latest > prev && latest > 68) setHiddenTopBar(true);
-    else setHiddenTopBar(false);
-  });
 
   if (!visible) return null;
 
@@ -52,11 +35,11 @@ export const MobileHeader = () => {
       <div className="h-12 block w-full" />
       <MaxWidthWrapper
         className={cn(
-          "fixed top-0 z-50 flex h-12 w-full items-center  border-b border-accent justify-between gap-4 transition-transform duration-300",
-          hiddenTopBar ? "-translate-y-full" : "translate-y-0",
-          isScrolled || segment === "(auth)"
-            ? "bg-background border-accent [transition:background-color_500ms,border-color_400ms_100ms,transform_300ms_ease-in-out]"
-            : "border-transparent [transition:background-color_500ms,border-color_300ms,transform_300ms_ease-in-out]",
+          "fixed top-0 z-50 flex h-12 w-full items-center  justify-between gap-4 transition-transform duration-300",
+          isHidden ? "-translate-y-full" : "translate-y-0",
+          isScrolled || segment === "(auth)" || renderAsScrolled
+            ? "bg-muted-background shadow-sm [transition:background-color_500ms,border-color_400ms_100ms,transform_300ms_cubic-bezier(0.4,0,0.2,1)]"
+            : "shadow-none [transition:background-color_500ms,border-color_300ms,transform_300ms_cubic-bezier(0.4,0,0.2,1)]",
         )}
       >
         <Link href="/">
@@ -92,47 +75,42 @@ export const MobileHeader = () => {
         </div>
       </MaxWidthWrapper>
 
-      <motion.ol
-        layout
-        layoutRoot
-        className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1"
-      >
-        {mobileNavItems.map(
-          ({ href, title, icon: Icon, iconOutline: IconOutline }) => {
-            const isActive = segment ? href.includes(segment) : href === "/";
-            return (
-              <li
-                key={title}
-                className={cn(
-                  "relative flex basis-1/5 items-center justify-center pt-2 transition-colors",
-                  isActive ? "text-foreground" : "text-muted-foreground ",
-                )}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="mobile-nav-active-underline"
-                    className="absolute top-0 w-full bg-foreground h-0.5 z-10"
-                  />
-                )}
-                <Link
-                  href={href}
-                  className={cn("flex flex-col items-center justify-center")}
-                >
-                  {isActive ? (
-                    <Icon className="fill-foreground h-6 w-6" />
-                  ) : (
-                    <IconOutline className="fill-muted-foreground h-6 w-6" />
+      {renderBottomBar && (
+        <ol className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1">
+          {mobileNavItems.map(
+            ({ href, title, icon: Icon, iconOutline: IconOutline }) => {
+              const isActive = segment ? href.includes(segment) : href === "/";
+              return (
+                <li
+                  key={title}
+                  className={cn(
+                    "relative flex basis-1/5 items-center justify-center pt-2 transition-colors",
+                    isActive ? "text-foreground" : "text-muted-foreground ",
                   )}
-                  {/* <Icon size={24} strokeWidth={isActive ? 1.5 : 1} /> */}
-                  <span className="text-2xs text-muted-foreground">
-                    {title}
-                  </span>
-                </Link>
-              </li>
-            );
-          },
-        )}
-      </motion.ol>
+                >
+                  {isActive && (
+                    <div className="absolute top-0 w-full bg-foreground h-0.5 z-10" />
+                  )}
+                  <Link
+                    href={href}
+                    className={cn("flex flex-col items-center justify-center")}
+                  >
+                    {isActive ? (
+                      <Icon className="fill-foreground h-6 w-6" />
+                    ) : (
+                      <IconOutline className="fill-muted-foreground h-6 w-6" />
+                    )}
+                    {/* <Icon size={24} strokeWidth={isActive ? 1.5 : 1} /> */}
+                    <span className="text-2xs text-muted-foreground">
+                      {title}
+                    </span>
+                  </Link>
+                </li>
+              );
+            },
+          )}
+        </ol>
+      )}
     </nav>
   );
 };
