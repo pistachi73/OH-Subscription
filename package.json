@@ -73,7 +73,7 @@
     "react-hook-form": "^7.50.1",
     "resend": "^3.1.0",
     "server-only": "^0.0.1",
-    "sharp": "^0.33.4",
+    "sharp": "^0.32.6",
     "sonner": "^1.4.0",
     "stripe": "^15.9.0",
     "superjson": "^2.2.1",
@@ -104,16 +104,5 @@
   "ct3aMetadata": {
     "initVersion": "7.25.1"
   },
-  "packageManager": "pnpm@9.5.0+sha256.dbdf5961c32909fb030595a9daa1dae720162e658609a8f92f2fa99835510ca5",
-  "pnpm": {
-    "supportedArchitectures": {
-      "os": [
-        "current"
-      ],
-      "cpu": [
-        "x64",
-        "arm64"
-      ]
-    }
-  }
+  "packageManager": "pnpm@9.5.0+sha256.dbdf5961c32909fb030595a9daa1dae720162e658609a8f92f2fa99835510ca5"
 }

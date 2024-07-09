@@ -12,7 +12,7 @@ export const ChapterMediaVideo = () => {
         // deviceType === "mobile" &&
         //   "landscape::aspect-[9/16] portrait:object-cover",
       )}
-      playbackId={"CEFyhtKTvLs9mayHn7mg028XlsE3T9rS9tiSXeo01uw100"}
+      playbackId={"mPtGAwdVak5efLNzTUoZkligfSAlyu01GdXFaRL46BQU"}
       slot="media"
     />
   );
