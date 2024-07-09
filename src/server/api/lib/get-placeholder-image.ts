@@ -1,6 +1,7 @@
 "use server";
 import { getImageUrl } from "@/lib/utils";
 import fs from "node:fs/promises";
+import path from "node:path";
 import sharp from "sharp";
 
 const bufferToBase64 = (buffer: Buffer) => {
@@ -8,7 +9,8 @@ const bufferToBase64 = (buffer: Buffer) => {
 };
 
 const getStaticImagePlaceholder = async (src: string) => {
-  const buffer = await fs.readFile(`./public${src}`);
+  const realFilepath = path.join(process.cwd(), "public", src);
+  const buffer = await fs.readFile(realFilepath);
   const image = await sharp(buffer).resize(20).toBuffer();
   const base64 = bufferToBase64(image);
 
