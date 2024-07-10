@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import type { PropsWithChildren } from "react";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
@@ -23,7 +23,7 @@ export const ShotSideWrapper = ({
   return deviceSize.includes("xl") ? (
     <AnimatePresence mode="wait">
       {isDialogOpen && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: "-90%" }}
           animate={{
             opacity: 1,
@@ -37,7 +37,7 @@ export const ShotSideWrapper = ({
           className="absolute left-full aspect-[9/16] h-full w-full max-w-[500px] -z-10"
         >
           {children}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   ) : (

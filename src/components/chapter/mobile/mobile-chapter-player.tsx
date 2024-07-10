@@ -16,7 +16,6 @@ import { MediaTimeRange } from "@/components/shots/shot-player/media-time-range"
 import { Button } from "@/components/ui/button";
 import {
   ArrowLeftIcon,
-  FullscreenIcon,
   PauseIcon,
   PlayIcon,
   SkipBackward10Icon,
@@ -26,6 +25,49 @@ import { Switch } from "@/components/ui/switch";
 import { useMobileHeaderHide } from "@/hooks/use-mobile-header-hide";
 import { useChapterContext } from "../chapter-context";
 import { ChapterMediaVideo } from "../player/chapter-media-video";
+import { MobileMediaFullscreen } from "./mobile-media-fullscreen";
+
+// const MediaControlBar = dynamic(
+//   () => import("media-chrome/react").then((mod) => mod.MediaControlBar),
+//   {
+//     ssr: false,
+//   },
+// );
+
+// const MediaController = dynamic(
+//   () => import("media-chrome/react").then((mod) => mod.MediaController),
+//   {
+//     ssr: false,
+//   },
+// );
+
+// const MediaPlayButton = dynamic(
+//   () => import("media-chrome/react").then((mod) => mod.MediaPlayButton),
+//   {
+//     ssr: false,
+//   },
+// );
+
+// const MediaSeekBackwardButton = dynamic(
+//   () => import("media-chrome/react").then((mod) => mod.MediaSeekBackwardButton),
+//   {
+//     ssr: false,
+//   },
+// );
+
+// const MediaSeekForwardButton = dynamic(
+//   () => import("media-chrome/react").then((mod) => mod.MediaSeekForwardButton),
+//   {
+//     ssr: false,
+//   },
+// );
+
+// const MediaTimeDisplay = dynamic(
+//   () => import("media-chrome/react").then((mod) => mod.MediaTimeDisplay),
+//   {
+//     ssr: false,
+//   },
+// );
 
 const centerButtonClassname = cn(
   "shrink-0 h-12 w-12 rounded-full  delay-0 bg-transparent group/chapter-play",
@@ -83,13 +125,7 @@ export const MobileChapterPlayer = () => {
               <PauseIcon className="w-3 h-3" />
             )}
           </Switch>
-          <Button
-            variant={"ghost"}
-            size={"icon"}
-            className="h-8 w-fit px-3 pr-0 bg-transparent flex flex-row items-center justify-center gap-2"
-          >
-            <FullscreenIcon className="w-4 h-4 text-background dark:text-foreground" />
-          </Button>
+          <MobileMediaFullscreen />
         </div>
       </MediaControlBar>
       <MediaControlBar

@@ -29,8 +29,15 @@ type ProgramSpotlightHero = {
 };
 
 export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
-  const { title, description, categories, totalChapters, chapters, updatedAt } =
-    program;
+  const {
+    title,
+    description,
+    categories,
+    totalChapters,
+    chapters,
+    updatedAt,
+    thumbnail,
+  } = program;
 
   const firstChapterSlug = chapters?.[0]?.slug;
 
@@ -44,7 +51,12 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
     >
       <div className="absolute -bottom-px left-0 -z-10 h-[calc(100%+1px)] w-full bg-gradient-to-t from-muted-background to-25%" />
       <HeroImage
-        src="/images/hero-thumbnail-2.jpg"
+        src={thumbnail ? thumbnail.src : "/images/hero-thumbnail-2.jpg"}
+        {...(thumbnail?.placeholder && {
+          placeholder: "blur",
+          blurDataURL: thumbnail.placeholder,
+        })}
+        priority={true}
         alt="testing"
         containerClassname="-z-20 max-h-[100%]"
       />

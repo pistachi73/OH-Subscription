@@ -82,6 +82,7 @@ export const ChapterDetails = () => {
               >
                 <Avatar className="h-20 w-20 border-2 border-accent">
                   <AvatarImage
+                    alt="teacher avatar"
                     src={teacher.image ?? "/images/avatar-placeholder.png"}
                   />
                   <AvatarFallback className="bg-accent">

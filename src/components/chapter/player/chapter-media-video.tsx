@@ -7,12 +7,13 @@ export const ChapterMediaVideo = () => {
   return (
     <MuxVideo
       ref={mediaRef}
+      // poster="https://image.mux.com/WmUUjIIRSYxguY1n0218ygJNIT02FV669Jq02JEdlsxS02k/thumbnail.png?width=214&height=121&time=2"
       className={cn(
         "w-full object-contain max-h-screen aspect-video min-h-full ",
         // deviceType === "mobile" &&
         //   "landscape::aspect-[9/16] portrait:object-cover",
       )}
-      playbackId={"mPtGAwdVak5efLNzTUoZkligfSAlyu01GdXFaRL46BQU"}
+      playbackId={"WmUUjIIRSYxguY1n0218ygJNIT02FV669Jq02JEdlsxS02k"}
       slot="media"
     />
   );

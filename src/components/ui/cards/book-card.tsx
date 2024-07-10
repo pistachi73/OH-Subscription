@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 
 import Image from "next/image";
 
@@ -84,7 +84,7 @@ export const BookCard = ({
         </div>
         <AnimatePresence>
           {isHovered && (
-            <motion.article
+            <m.article
               initial={{
                 opacity: 0,
                 left: isRightBorder
@@ -213,7 +213,7 @@ export const BookCard = ({
                   <p className="text-xs text-muted-foreground">11 chapters</p>
                 </div>
               </section>
-            </motion.article>
+            </m.article>
           )}
         </AnimatePresence>
       </section>

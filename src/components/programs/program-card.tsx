@@ -11,7 +11,7 @@ import { cardsEase } from "@/lib/animation";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn, getImageUrl } from "@/lib/utils";
 import type { RouterOutputs } from "@/trpc/shared";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { User } from "lucide-react";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -100,7 +100,7 @@ export const ProgramCard = ({
         </div>
         <AnimatePresence>
           {isHovered && (
-            <motion.article
+            <m.article
               initial={{ opacity: 0, top: "107.5%" }}
               animate={{
                 opacity: 1,
@@ -237,7 +237,7 @@ export const ProgramCard = ({
                   </p>
                 </div>
               </section>
-            </motion.article>
+            </m.article>
           )}
         </AnimatePresence>
       </section>

@@ -12,6 +12,7 @@ import type {
   ProgramChapter,
   ProgramSpotlight,
 } from "@/server/db/schema.types";
+import { MediaProvider } from "media-chrome/react/media-store";
 import React, { useState } from "react";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
 
@@ -58,11 +59,13 @@ export const ChapterContextProvider = ({
       program,
     }),
 
-    [activeTab, autoPlay],
+    [activeTab, autoPlay, chapter, program],
   );
 
   return (
-    <ChapterContext.Provider value={value}>{children}</ChapterContext.Provider>
+    <ChapterContext.Provider value={value}>
+      <MediaProvider>{children}</MediaProvider>
+    </ChapterContext.Provider>
   );
 };
 

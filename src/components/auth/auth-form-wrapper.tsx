@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/card";
 import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useEffect } from "react";
 import { useAuthContext } from "./auth-context";
 
-const MotionCard = motion(Card);
+const MotionCard = m(Card);
 
 type FormWrapperProps = {
   children: React.ReactNode;

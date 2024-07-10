@@ -1,13 +1,11 @@
 "use client";
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { motion } from "framer-motion";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
 type TabsContextProps = {
-  layoutId: string;
   selected?: string;
 };
 
@@ -25,13 +23,11 @@ export function useTabs() {
 
 const Tabs = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
-    layoutId: string;
-  }
->(({ className, layoutId, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
+>(({ className, ...props }, ref) => {
   const [selected, setSelected] = React.useState(props.defaultValue);
   return (
-    <TabsContext.Provider value={{ selected, layoutId }}>
+    <TabsContext.Provider value={{ selected }}>
       <TabsPrimitive.Root
         ref={ref}
         className={cn(className)}
@@ -65,8 +61,6 @@ const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => {
-  const { selected, layoutId } = useTabs();
-
   return (
     <>
       <TabsPrimitive.Trigger
@@ -78,14 +72,6 @@ const TabsTrigger = React.forwardRef<
         {...props}
       >
         {children}
-        {selected === props.value && (
-          <motion.span
-            layoutId={layoutId}
-            className="absolute inset-0 top-full z-10 h-0.5 bg-foreground"
-            style={{ borderRadius: 9999 }}
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-          />
-        )}
       </TabsPrimitive.Trigger>
     </>
   );

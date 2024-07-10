@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import type { PropsWithChildren } from "react";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
@@ -27,7 +27,7 @@ export const ChapterSideWrapper = ({
   return deviceType === "desktop" ? (
     <AnimatePresence mode="wait">
       {isDialogOpen && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: "-75%" }}
           animate={{
             opacity: 1,
@@ -55,7 +55,7 @@ export const ChapterSideWrapper = ({
             </div>
           </div>
           {children}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   ) : deviceType === "tablet" ? (

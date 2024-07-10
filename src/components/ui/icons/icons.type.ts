@@ -1,4 +1,5 @@
-export type Icon = ({
+
+  export type Icon = ({
   className,
 }: {
   className?: string;

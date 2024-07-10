@@ -103,13 +103,6 @@ const Carousel = React.forwardRef<
       api?.scrollNext();
     }, [api]);
 
-    const scrollTo = React.useCallback(
-      (index: number) => {
-        api?.scrollTo(index);
-      },
-      [api],
-    );
-
     const handleKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "ArrowLeft") {

@@ -8,9 +8,6 @@ await import("./src/env.js");
 const config = {
   trailingSlash: true,
   reactStrictMode: false,
-  experimental: {
-    scrollRestoration: true,
-  },
   images: {
     remotePatterns: [
       {

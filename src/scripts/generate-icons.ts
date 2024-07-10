@@ -49,6 +49,7 @@ for (const svg of svgs) {
   `;
 
   icons.push({
+    iconReactName: `${iconReactName}Icon`,
     fileName: iconFileName,
     content: svgFileContent,
   });
@@ -64,7 +65,10 @@ for (const icon of icons) {
 const exportStatements = icons
   .map(
     (icon) =>
-      `export * from "./generated/${icon.fileName.replace(".tsx", "")}";`,
+      `export { ${icon.iconReactName.replace(
+        ".tsx",
+        "",
+      )} } from "./generated/${icon.fileName.replace(".tsx", "")}";`,
   )
   .join("\n");
 

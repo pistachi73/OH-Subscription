@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import {
   BookUser,
   ChevronDown,
@@ -213,7 +213,7 @@ export const DesktopProgramFilter = () => {
         </div>
         <AnimatePresence initial={false}>
           {(teachers?.length || levels?.length || categories?.length) && (
-            <motion.div
+            <m.div
               className="overflow-hidden"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
@@ -260,7 +260,7 @@ export const DesktopProgramFilter = () => {
                   </Button>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </CardContent>

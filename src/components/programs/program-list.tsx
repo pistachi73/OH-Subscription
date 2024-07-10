@@ -5,7 +5,7 @@ import { useDeviceType } from "@/components/ui/device-only/device-only-provider"
 import { Skeleton } from "@/components/ui/skeleton";
 import { regularEase } from "@/lib/animation";
 import type { RouterOutputs } from "@/trpc/shared";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useCallback, useMemo } from "react";
 import { ProgramCard } from "./program-card";
 
@@ -101,7 +101,7 @@ export const ProgramList = ({
         const { isLeftBorder, isRightBorder } = isBorder(index);
 
         return (
-          <motion.div
+          <m.div
             key={`program-${program.id}`}
             initial={initialAnimation ? "initial" : false}
             animate="animate"
@@ -121,7 +121,7 @@ export const ProgramList = ({
               isRightBorder={isRightBorder}
               program={program}
             />
-          </motion.div>
+          </m.div>
         );
       })}
     </>

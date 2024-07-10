@@ -1,5 +1,5 @@
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 
 import { ShotCommunity } from "./shot-community";
 import { ShotTranscript } from "./shot-transcript";
@@ -84,7 +84,7 @@ const ShotContent = ({ shot, inView = false }: ShotProps) => {
   }, [inView, dispatch]);
 
   return (
-    <motion.div
+    <m.div
       // ref={ref}
       // Half of the width of the comments section
       animate={{
@@ -111,7 +111,7 @@ const ShotContent = ({ shot, inView = false }: ShotProps) => {
         <ShotPlayer shot={shot} />
         <AnimatePresence>
           {!inView && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{
                 opacity: 1,
@@ -132,13 +132,13 @@ const ShotContent = ({ shot, inView = false }: ShotProps) => {
                 fill
                 className="object-cover"
               />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
         <ShotLayout shot={shot} />
       </div>
       <ShotCommunity shot={shot} />
       <ShotTranscript transcript={shot.transcript} />
-    </motion.div>
+    </m.div>
   );
 };

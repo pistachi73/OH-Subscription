@@ -420,8 +420,13 @@ export const programRouter = createTRPCRouter({
       programQuery = programQuery.groupBy(programs.id);
 
       const res = await programQuery.execute();
+      const resWithPlaceholders = await getObjWithImagePlaceholder({
+        obj: res,
+        key: "thumbnail",
+        placeholderImageSrc: "/images/hero-thumbnail-2.jpg",
+      });
 
-      const p = res[0];
+      const p = resWithPlaceholders[0];
 
       if (!p) return null;
 

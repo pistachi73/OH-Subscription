@@ -1,7 +1,6 @@
 "use client";
 
 import "@github/relative-time-element";
-import { motion } from "framer-motion";
 import { Loader2, MessageCircleOff, SendHorizonal } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { AddComment } from "./add-comment";
@@ -15,19 +14,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserAvatar } from "@/components/ui/user-avatar";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { regularEase } from "@/lib/animation";
-import { cn } from "@/lib/utils";
-import type { Comment as CommentData } from "@/server/db/schema.types";
-import { api } from "@/trpc/react";
 import {
   DeleteOutlineIcon,
   EditCommentOutlineIcon,
   HeartOutlineIcon,
   ReplyOutlineIcon,
   VerticalDotsOutlineIcon,
-} from "../icons";
+} from "@/components/ui/icons";
+import { UserAvatar } from "@/components/ui/user-avatar";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { regularEase } from "@/lib/animation";
+import { cn } from "@/lib/utils";
+import type { Comment as CommentData } from "@/server/db/schema.types";
+import { api } from "@/trpc/react";
+import { m } from "framer-motion";
 import { SkeletonComment } from "./skeleton-comment";
 
 export const COMMENTS_PAGE_SIZE = 5;
@@ -409,7 +409,7 @@ export const Comment = ({
         )}
       </div>
       {showAddReply && (
-        <motion.div
+        <m.div
           animate={{
             opacity: 1,
             y: 0,
@@ -436,7 +436,7 @@ export const Comment = ({
             placeholder="Add your reply..."
             onComment={onReply}
           />
-        </motion.div>
+        </m.div>
       )}
       {showReplies && (
         <>

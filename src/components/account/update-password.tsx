@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { SettingsSchema } from "@/schemas";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { ChevronDown, Loader2, Lock } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -95,7 +95,7 @@ export const UpdatePassword = () => {
       </CardHeader>
       <AnimatePresence initial={false}>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -189,7 +189,7 @@ export const UpdatePassword = () => {
                 </form>
               </Form>
             </CardContent>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </Card>
