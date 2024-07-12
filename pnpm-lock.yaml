@@ -26,12 +26,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.4
         version: 3.3.4(react-hook-form@7.51.0(react@18.2.0))
-      '@libsql/client':
-        specifier: ^0.5.6
-        version: 0.5.6
-      '@mux/mux-player-react':
-        specifier: ^2.4.1
-        version: 2.4.1(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@mux/mux-video-react':
         specifier: ^0.10.0
         version: 0.10.0(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1195,22 +1189,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@mux/mux-player-react@2.4.1':
-    resolution: {integrity: sha512-grM6T847fKnzlK786NG1AxhNS+6A78pEPc5zG4yYvKe3ayGNTOpq/Hnm9pDVkOx5/uMI/yCdSsfiNyytYaw8qA==}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18
-      '@types/react-dom': '*'
-      react: ^17.0.2 || ^18
-      react-dom: ^17.0.2 || ^18
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
-  '@mux/mux-player@2.4.1':
-    resolution: {integrity: sha512-Lm7KkG/lD1tqqqtL1nacZsCll9JY4gVNGxUw/MPYmgIevYACYtQ/76iaEtaN67DmHYYxep1QUpYEDZPXallkEg==}
-
   '@mux/mux-video-react@0.10.0':
     resolution: {integrity: sha512-EPd5vFYGeGxO9Wk/IO6QfCDJAIjEPeEw48BqQziajvzAxewPyEVb+jMf8J/85BZf8ePz/2PbGmdTO4n99PtCew==}
     peerDependencies:
@@ -1223,12 +1201,6 @@ packages:
         optional: true
       '@types/react-dom':
         optional: true
-
-  '@mux/mux-video@0.17.5':
-    resolution: {integrity: sha512-EMLflDnr/o7XQiWKfwnq9BJmj30kpSszzXwpXE4hmBIgc9JAuF3Hl94qv1kyWQAUhrO5hnnOxwGHgv0FvkJ1GQ==}
-
-  '@mux/playback-core@0.22.4':
-    resolution: {integrity: sha512-f/jWcYbFRjXjdFRNq3MK79D1YHTqvwcfchRLYukE384P3cb027dru+bSxMKESrfkhAhnWFy7fdq/llawl7SU9g==}
 
   '@mux/playback-core@0.23.1':
     resolution: {integrity: sha512-2sPwjUkxZ4vQLr9igAEw0P7fwPC0PmVORn/Mlewlsbn2fPlYkv1XNKFQ5eFny9HLkNSlRCI9cJDg0xVRIXdpMw==}
@@ -2708,6 +2680,11 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
+  browserslist@4.23.2:
+    resolution: {integrity: sha512-qkqSyistMYdxAcw+CzbZwlBy8AGmS/eEWs+sEV5TnLRGDOL+C5M2EnH6tlZyg0YoAxGJAFKh61En9BR941GnHA==}
+    engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
+    hasBin: true
+
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
@@ -2741,8 +2718,8 @@ packages:
   caniuse-lite@1.0.30001597:
     resolution: {integrity: sha512-7LjJvmQU6Sj7bL0j5b5WY/3n7utXUJvAe1lxhsHDbLmwX9mdL86Yjtr+5SRCyf8qME4M7pU2hswj0FpyBVCv9w==}
 
-  castable-video@1.0.6:
-    resolution: {integrity: sha512-Ykw2uL4ZQnqX0j9KF9ksbDpyc8I53mFMswCKW9yV5TrwpWkdNqRHLlcU85W30BIw61fgDjgm0Xh5G0rbcmv23g==}
+  caniuse-lite@1.0.30001641:
+    resolution: {integrity: sha512-Phv5thgl67bHYo1TtMY/MurjkHhV4EDaCosezRXgZ8jzA/Ub+wjxAvbGvjoFENStinwi5kCyOYV3mi5tOGykwA==}
 
   chalk@1.1.3:
     resolution: {integrity: sha512-U3lRVLMSlsCfjqYPbLyVv11M9CPW4I728d6TCKMAOJueEeB9/8o+eSsMnxPJD+Q+K909sdESg7C+tIkoH6on1A==}
@@ -2890,9 +2867,6 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
-
-  custom-media-element@1.2.3:
-    resolution: {integrity: sha512-xr9Hbrslkjm1fapJP5hL98pySeZmNepBSefQS/XTxynamqPTfRBK5MnhReMOiAj8xvJApVPrVnlYxIrknay8jg==}
 
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
@@ -3097,6 +3071,9 @@ packages:
 
   electron-to-chromium@1.4.707:
     resolution: {integrity: sha512-qRq74Mo7ChePOU6GHdfAJ0NREXU8vQTlVlfWz3wNygFay6xrd/fY2J7oGHwrhFeU30OVctGLdTh/FcnokTWpng==}
+
+  electron-to-chromium@1.4.827:
+    resolution: {integrity: sha512-VY+J0e4SFcNfQy19MEoMdaIcZLmDCprqvBtkii1WTCTQHpRvf5N8+3kTYCgL/PcntvwQvmMJWTuDPsq+IlhWKQ==}
 
   embla-carousel-react@8.0.0:
     resolution: {integrity: sha512-qT0dii8ZwoCtEIBE6ogjqU2+5IwnGfdt2teKjCzW88JRErflhlCpz8KjWnW8xoRZOP8g0clRtsMEFoAgS/elfA==}
@@ -3462,9 +3439,6 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hls.js@1.4.14:
-    resolution: {integrity: sha512-UppQjyvPVclg+6t2KY/Rv03h0+bA5u6zwqVoz4LAC/L0fgYmIaCD7ZCrwe8WI1Gv01be1XL0QFsRbSdIHV/Wbw==}
-
   hls.js@1.5.8:
     resolution: {integrity: sha512-hJYMPfLhWO7/7+n4f9pn6bOheCGx0WgvVz7k3ouq3Pp1bja48NN+HeCQu3XCGYzqWQF/wo7Sk6dJAyWVJD8ECA==}
 
@@ -3742,14 +3716,8 @@ packages:
       react: 18.x
       react-email: '>1.9.3'
 
-  media-chrome@3.1.1:
-    resolution: {integrity: sha512-EqofPNX7Eq1dv9ixuRo51Wv/Wo3P4PIPjY4iM1jGqu/Jyond8BqdigQKdhxPM2rH9SohdUXZvUWS1OJ1xMO6Ww==}
-
   media-chrome@3.2.2:
     resolution: {integrity: sha512-Fjf1rNxlZqVR5nj7a9ay+XpzeKVPMMBltK2XiMOTc5bomxAvyo3vJZ9JKzmAYVoiZ6sbDNWJJVSVf6b3laFwew==}
-
-  media-tracks@0.3.0:
-    resolution: {integrity: sha512-kicD8eOFwe6nD7jn7iM/0yuLzWuo6abWHURYwY7NhxL1dBif+lt0on4rLTs6VhKwAEE/BjT3wr+0vn1w8SBpag==}
 
   meow@7.1.1:
     resolution: {integrity: sha512-GWHvA5QOcS412WCo8vwKDlTelGLsCGBVevQB5Kva961rmNfun0PCbv5+xta2kUMFJyR8/oWnn7ddeKdosbAPbA==}
@@ -3817,9 +3785,6 @@ packages:
 
   ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
-
-  mux-embed@4.30.0:
-    resolution: {integrity: sha512-XAgAp4CEvsiZL26GbruzeG1g33OWyrzuskDMavXUxDufTxS0/AxAhwoTTRqEzEJS9vnZa/X9R2GV3xRX1XMp2w==}
 
   mux-embed@5.2.1:
     resolution: {integrity: sha512-NukHw91xeEVDBeXVDBpi2BvXNix7gSuvdtyvOph5yR/ROn1hHbTlcYWoKQyCyJX9frsF00UROEul+S8wPzU3aQ==}
@@ -4081,6 +4046,9 @@ packages:
 
   picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
+
+  picocolors@1.0.1:
+    resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
 
   picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
@@ -4727,6 +4695,12 @@ packages:
 
   update-browserslist-db@1.0.13:
     resolution: {integrity: sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==}
+    hasBin: true
+    peerDependencies:
+      browserslist: '>= 4.21.0'
+
+  update-browserslist-db@1.1.0:
+    resolution: {integrity: sha512-EdRAaAyk2cUE1wOf2DkEhzxqOQvFOoRJFNS6NeyJ01Gp2beMRpBAINjM2iDXE3KCuKhwnvHIQCJm6ThL2Z+HzQ==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
@@ -5478,7 +5452,7 @@ snapshots:
   '@babel/code-frame@7.24.2':
     dependencies:
       '@babel/highlight': 7.24.2
-      picocolors: 1.0.0
+      picocolors: 1.0.1
 
   '@babel/compat-data@7.24.1': {}
 
@@ -5513,7 +5487,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.24.1
       '@babel/helper-validator-option': 7.23.5
-      browserslist: 4.23.0
+      browserslist: 4.23.2
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -5576,7 +5550,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.22.20
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.0
+      picocolors: 1.0.1
 
   '@babel/parser@7.24.1':
     dependencies:
@@ -5977,10 +5951,12 @@ snapshots:
       - bufferutil
       - encoding
       - utf-8-validate
+    optional: true
 
   '@libsql/core@0.5.6':
     dependencies:
       js-base64: 3.7.7
+    optional: true
 
   '@libsql/darwin-arm64@0.3.10':
     optional: true
@@ -5998,6 +5974,7 @@ snapshots:
       - bufferutil
       - encoding
       - utf-8-validate
+    optional: true
 
   '@libsql/isomorphic-fetch@0.1.12':
     dependencies:
@@ -6005,6 +5982,7 @@ snapshots:
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   '@libsql/isomorphic-ws@0.1.5':
     dependencies:
@@ -6013,6 +5991,7 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    optional: true
 
   '@libsql/linux-arm64-gnu@0.3.10':
     optional: true
@@ -6029,23 +6008,6 @@ snapshots:
   '@libsql/win32-x64-msvc@0.3.10':
     optional: true
 
-  '@mux/mux-player-react@2.4.1(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@mux/mux-player': 2.4.1
-      '@mux/playback-core': 0.22.4
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    optionalDependencies:
-      '@types/react': 18.2.66
-      '@types/react-dom': 18.2.22
-
-  '@mux/mux-player@2.4.1':
-    dependencies:
-      '@mux/mux-video': 0.17.5
-      '@mux/playback-core': 0.22.4
-      media-chrome: 3.1.1
-
   '@mux/mux-video-react@0.10.0(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@mux/playback-core': 0.23.1
@@ -6056,24 +6018,13 @@ snapshots:
       '@types/react': 18.2.66
       '@types/react-dom': 18.2.22
 
-  '@mux/mux-video@0.17.5':
-    dependencies:
-      '@mux/playback-core': 0.22.4
-      castable-video: 1.0.6
-      custom-media-element: 1.2.3
-      media-tracks: 0.3.0
-
-  '@mux/playback-core@0.22.4':
-    dependencies:
-      hls.js: 1.4.14
-      mux-embed: 4.30.0
-
   '@mux/playback-core@0.23.1':
     dependencies:
       hls.js: 1.5.8
       mux-embed: 5.2.1
 
-  '@neon-rs/load@0.0.4': {}
+  '@neon-rs/load@0.0.4':
+    optional: true
 
   '@neondatabase/serverless@0.9.1':
     dependencies:
@@ -7721,6 +7672,7 @@ snapshots:
   '@types/ws@8.5.10':
     dependencies:
       '@types/node': 18.19.24
+    optional: true
 
   '@ungap/structured-clone@1.2.0': {}
 
@@ -7966,6 +7918,13 @@ snapshots:
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
+  browserslist@4.23.2:
+    dependencies:
+      caniuse-lite: 1.0.30001641
+      electron-to-chromium: 1.4.827
+      node-releases: 2.0.14
+      update-browserslist-db: 1.1.0(browserslist@4.23.2)
+
   buffer-from@1.1.2: {}
 
   buffer@5.7.1:
@@ -7999,9 +7958,7 @@ snapshots:
 
   caniuse-lite@1.0.30001597: {}
 
-  castable-video@1.0.6:
-    dependencies:
-      custom-media-element: 1.2.3
+  caniuse-lite@1.0.30001641: {}
 
   chalk@1.1.3:
     dependencies:
@@ -8150,9 +8107,8 @@ snapshots:
 
   csstype@3.1.3: {}
 
-  custom-media-element@1.2.3: {}
-
-  data-uri-to-buffer@4.0.1: {}
+  data-uri-to-buffer@4.0.1:
+    optional: true
 
   date-fns@3.6.0: {}
 
@@ -8195,7 +8151,8 @@ snapshots:
 
   denque@2.1.0: {}
 
-  detect-libc@2.0.2: {}
+  detect-libc@2.0.2:
+    optional: true
 
   detect-libc@2.0.3: {}
 
@@ -8261,6 +8218,8 @@ snapshots:
       semver: 7.6.0
 
   electron-to-chromium@1.4.707: {}
+
+  electron-to-chromium@1.4.827: {}
 
   embla-carousel-react@8.0.0(react@18.2.0):
     dependencies:
@@ -8545,6 +8504,7 @@ snapshots:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.3.3
+    optional: true
 
   file-entry-cache@6.0.1:
     dependencies:
@@ -8593,6 +8553,7 @@ snapshots:
   formdata-polyfill@4.0.10:
     dependencies:
       fetch-blob: 3.2.0
+    optional: true
 
   fraction.js@4.3.7: {}
 
@@ -8726,8 +8687,6 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hls.js@1.4.14: {}
-
   hls.js@1.5.8: {}
 
   hosted-git-info@2.8.9: {}
@@ -8839,7 +8798,8 @@ snapshots:
 
   jose@5.2.3: {}
 
-  js-base64@3.7.7: {}
+  js-base64@3.7.7:
+    optional: true
 
   js-beautify@1.15.1:
     dependencies:
@@ -8894,6 +8854,7 @@ snapshots:
       '@libsql/linux-x64-gnu': 0.3.10
       '@libsql/linux-x64-musl': 0.3.10
       '@libsql/win32-x64-msvc': 0.3.10
+    optional: true
 
   lilconfig@2.1.0: {}
 
@@ -8964,11 +8925,7 @@ snapshots:
       react: 18.2.0
       react-email: 2.1.0(@babel/core@7.24.3)(eslint@8.57.0)
 
-  media-chrome@3.1.1: {}
-
   media-chrome@3.2.2: {}
-
-  media-tracks@0.3.0: {}
 
   meow@7.1.1:
     dependencies:
@@ -9032,8 +8989,6 @@ snapshots:
   mrmime@2.0.0: {}
 
   ms@2.1.2: {}
-
-  mux-embed@4.30.0: {}
 
   mux-embed@5.2.1: {}
 
@@ -9197,6 +9152,7 @@ snapshots:
       data-uri-to-buffer: 4.0.1
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
+    optional: true
 
   node-releases@2.0.14: {}
 
@@ -9354,6 +9310,8 @@ snapshots:
       split2: 4.2.0
 
   picocolors@1.0.0: {}
+
+  picocolors@1.0.1: {}
 
   picomatch@2.3.1: {}
 
@@ -10256,6 +10214,12 @@ snapshots:
       escalade: 3.1.2
       picocolors: 1.0.0
 
+  update-browserslist-db@1.1.0(browserslist@4.23.2):
+    dependencies:
+      browserslist: 4.23.2
+      escalade: 3.1.2
+      picocolors: 1.0.1
+
   uri-js@4.4.1:
     dependencies:
       punycode: 2.3.1
@@ -10429,7 +10393,8 @@ snapshots:
 
   ws@8.11.0: {}
 
-  ws@8.16.0: {}
+  ws@8.16.0:
+    optional: true
 
   xmlhttprequest-ssl@2.0.0: {}
 

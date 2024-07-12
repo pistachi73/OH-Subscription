@@ -25,8 +25,6 @@
     "@aws-sdk/s3-presigned-post": "^3.554.0",
     "@github/relative-time-element": "^4.4.0",
     "@hookform/resolvers": "^3.3.4",
-    "@libsql/client": "^0.5.6",
-    "@mux/mux-player-react": "^2.4.1",
     "@mux/mux-video-react": "^0.10.0",
     "@neondatabase/serverless": "^0.9.1",
     "@preact/signals-react": "^2.0.1",

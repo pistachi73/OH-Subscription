@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export type ProgramCardProps = {
@@ -32,6 +33,7 @@ export const ProgramCard = ({
   isRightBorder,
   program,
 }: ProgramCardProps) => {
+  const { deviceType } = useDeviceType();
   const [isHovered, setIsHovered] = useState(false);
 
   const {
@@ -45,10 +47,15 @@ export const ProgramCard = ({
     categories,
   } = program;
 
+  const onMouseEnter = () => {
+    if (deviceType === "mobile" || deviceType === "tablet") return;
+    setIsHovered(true);
+  };
+
   return (
     <article
       className="group relative flex aspect-video h-full w-full"
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={() => setIsHovered(false)}
     >
       <section
