@@ -52,7 +52,8 @@ export const FilteredProgramsProvider = ({
       },
       {
         initialData: initialPrograms,
-        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
       },
     );
 

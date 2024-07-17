@@ -8,16 +8,14 @@ import { ProgramList } from "./program-list";
 export const Programs = () => {
   const { filteredPrograms, isFiltering } = useFilteredPrograms();
 
-  const [...restPrograms] = filteredPrograms ?? [];
-
   return (
     <>
-      <MaxWidthWrapper className="relative z-10 mb-6 sm:mb-12 mt-4">
+      <MaxWidthWrapper className="relative z-10 mb-6 sm:mb-12 mt-8">
         <ProgramFilter />
       </MaxWidthWrapper>
       <MaxWidthWrapper className="relative z-10 grid grid-cols-2  gap-x-2 gap-y-6 sm:gap-y-12 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         <ProgramList
-          programs={restPrograms}
+          programs={filteredPrograms}
           isLoading={isFiltering}
           loadingRows={4}
           cardsPerRow={{

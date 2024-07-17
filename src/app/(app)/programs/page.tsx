@@ -4,6 +4,15 @@ import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
 import { api } from "@/trpc/server";
 
+export const metadata = {
+  title: "Find the best programs for your needs | Filter & Search Programs",
+  description:
+    "Explore and filter a wide variety of educational programs by categories, teachers, and levels. Find the perfect program for your learning goals.",
+  keywords:
+    "educational programs, program filter, search programs, categories, teachers, levels",
+  viewport: "width=device-width, initial-scale=1",
+};
+
 type ProgramsPageProps = {
   searchParams?: { [key: string]: string | undefined };
 };

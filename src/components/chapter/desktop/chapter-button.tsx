@@ -13,7 +13,7 @@ import type { Icon } from "../../ui/icons/icons.type";
 export const chapterButtonClassname = cn(
   "group/chapter-button px-2 flex items-center justify-center gap-2 pointer-events-auto",
   "h-10 rounded-md xl:px-3 text-sm",
-  "text-foreground/70 hover:text-foreground/60",
+  "text-background/70 hover:text-background dark:text-foreground/70 dark:hover:text-foreground",
 );
 
 export const chapterButtonIconClassname = cn("w-7 h-7 xl:w-8 xl:h-8 ");
