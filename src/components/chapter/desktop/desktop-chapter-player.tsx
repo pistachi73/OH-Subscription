@@ -37,10 +37,12 @@ import { Switch } from "@/components/ui/switch";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { X } from "lucide-react";
 import Link from "next/link";
-import type { Icon } from "../../ui/icons/icons.type";
 import { useChapterContext } from "../chapter-context";
+import { useLikeChapter } from "../hooks/use-like-chapter";
 import { ChapterMediaFullScreen } from "../player/chapter-media-full-screen";
 import { ChapterMediaVideo } from "../player/chapter-media-video";
+import { ChapterButton } from "./chapter-button";
+import { DesktopLikeChapterButton } from "./desktop-like-chapter-button";
 
 const centerButtonClassname = cn(
   "shrink-0 h-12 w-12 rounded-full  delay-0 bg-transparent group/chapter-play",
@@ -71,6 +73,10 @@ export const DesktopChapterPlayer = () => {
 
   const { autoPlay, setAutoPlay, bottomButtons, activeTab, chapter, program } =
     useChapterContext();
+
+  const { isLikedByUser, isLikeLoading, likeChapter } = useLikeChapter({
+    initialLiked: chapter.isLikedByUser,
+  });
 
   return (
     <MediaController autohide="1" class="w-full relative flex z-10">
@@ -223,6 +229,7 @@ export const DesktopChapterPlayer = () => {
                 />
               );
             })}
+            <DesktopLikeChapterButton />
           </div>
         </MediaControlBar>
         <MediaControlBar
@@ -264,42 +271,10 @@ export const DesktopChapterPlayer = () => {
                 />
               );
             })}
+            <DesktopLikeChapterButton />
           </div>
         </MediaControlBar>
       </div>
     </MediaController>
-  );
-};
-
-const ChapterButton = ({
-  icon: Icon,
-  label,
-  lastButton = false,
-  ...rest
-}: { icon: Icon; label: string; lastButton?: boolean }) => {
-  return (
-    <ResponsiveTooltip>
-      <ResponsiveTooltipTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "group/chapter-button px-2 flex items-center justify-center gap-2 pointer-events-auto",
-            "h-10 rounded-md xl:px-3 text-sm",
-            "text-background/70 dark:text-foreground/70 hover:text-background dark:hover:text-foreground",
-            lastButton && "pr-0",
-          )}
-          {...rest}
-        >
-          <Icon className={cn("w-5 h-5 xl:w-8 xl:h-8 transition-colors")} />
-        </button>
-      </ResponsiveTooltipTrigger>
-      <ResponsiveTooltipContent
-        side="top"
-        align="center"
-        className="p-1 px-2 border-transparent bg-foreground/70 dark:bg-background/70"
-      >
-        <p className="text-sm  text-background dark:text-foreground">{label}</p>
-      </ResponsiveTooltipContent>
-    </ResponsiveTooltip>
   );
 };

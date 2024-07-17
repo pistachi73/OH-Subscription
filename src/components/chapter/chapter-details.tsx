@@ -5,15 +5,23 @@ import { cn } from "@/lib/utils";
 import { getBaseUrl } from "@/trpc/shared";
 import { ArrowRightIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
+import {
+  LikeButton,
+  LikeButtonIcon,
+  LikeButtonLabel,
+} from "../programs/components/like-button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { HeartOutlineIcon, ShareOutlineIcon } from "../ui/icons";
+import { useDeviceType } from "../ui/device-only/device-only-provider";
+import { ShareOutlineIcon } from "../ui/icons";
 import { ShareButton } from "../ui/share-button/share-button";
 import { useChapterContext } from "./chapter-context";
 
 export const ChapterDetails = () => {
-  const { chapter, program } = useChapterContext();
+  const { isMobile } = useDeviceType();
+  const { chapter, program, isLikeLoading, isLikedByUser, likeChapter } =
+    useChapterContext();
   return (
     <>
       <section>
@@ -38,37 +46,51 @@ export const ChapterDetails = () => {
         </section>
         <p className="mt-2 text-base text-balance">{chapter.description}</p>
 
-        <div className="mt-4 flex gap-2 w-full ">
-          <ShareButton
-            asChild
-            title="Share this chapter"
-            description="Share this chpater with your friends and family."
-            videoTitle={chapter.title}
-            videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
-            url={`${getBaseUrl()}/programs/${program.slug}`}
-            config={{
-              link: true,
-              facebook: true,
-              twitter: { title: chapter.title, hashtags: "" },
-              linkedin: true,
-              email: {
-                subject: chapter.title,
-                body: chapter.description,
-              },
-            }}
-          >
-            <Button variant="accent" size="lg" className="w-full  text-sm h-10">
-              <ShareOutlineIcon className="mr-2 w-5 h-5" />
-              Share
-            </Button>
-          </ShareButton>
-          <Button variant="accent" size="lg" className="w-full text-sm h-10">
-            <HeartOutlineIcon className="mr-2 w-5 h-5" />
-            Add to favorites
-          </Button>
-        </div>
+        {isMobile && (
+          <div className="mt-4 flex gap-2 w-full ">
+            <ShareButton
+              asChild
+              title="Share this chapter"
+              description="Share this chpater with your friends and family."
+              videoTitle={chapter.title}
+              videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
+              url={`${getBaseUrl()}/programs/${program.slug}`}
+              config={{
+                link: true,
+                facebook: true,
+                twitter: { title: chapter.title, hashtags: "" },
+                linkedin: true,
+                email: {
+                  subject: chapter.title,
+                  body: chapter.description,
+                },
+              }}
+            >
+              <Button
+                variant="accent"
+                size="lg"
+                className="w-full  text-sm h-10"
+              >
+                <ShareOutlineIcon className="mr-2 w-5 h-5" />
+                Share
+              </Button>
+            </ShareButton>
+            <LikeButton
+              variant="accent"
+              isLikedByUser={isLikedByUser}
+              isLikeLoading={isLikeLoading}
+              likeProgram={() => likeChapter({ videoId: chapter.id })}
+            >
+              <LikeButtonIcon className="mr-2 w-5 h-5" />
+              <LikeButtonLabel
+                likedLabel="Remove from favorites"
+                unlikedLabel="Add to favorites"
+              />
+            </LikeButton>
+          </div>
+        )}
       </section>
-      {!!program.teachers.length && (
+      {!!program?.teachers?.length && (
         <section className="space-y-4">
           <h2 className="text-lg font-semibold tracking-tight">
             About the teachers

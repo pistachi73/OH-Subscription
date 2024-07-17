@@ -46,7 +46,7 @@ export const DesktopChapter = () => {
     <ChapterPlayerContainer>
       <div
         className={cn(
-          "w-full transition-[grid] h-[100svh] bg-black ease-in-out duration-300 overflow-hidden",
+          "w-full transition-[grid] h-[100svh] bg-muted-background ease-in-out duration-300 overflow-hidden",
           "grid-cols-[1fr,0px] grid",
           activeTab
             ? "lg:grid-cols-[1fr,350px]  xl:grid-cols-[1fr,450px] "

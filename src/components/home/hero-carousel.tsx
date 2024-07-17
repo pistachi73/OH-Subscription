@@ -39,7 +39,7 @@ export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
 
     autoSlideInterval.current = setInterval(() => {
       onNavigate("next");
-    }, 7000);
+    }, 100000000);
   }, [onNavigate]);
 
   useEffect(() => {

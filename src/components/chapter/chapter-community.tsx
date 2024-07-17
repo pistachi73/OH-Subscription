@@ -1,15 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { COMMENTS_PAGE_SIZE, Comment } from "@/components/ui/comments/comment";
+import { Comment } from "@/components/ui/comments/comment";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { api } from "@/trpc/react";
 import { Loader2, SendHorizonal } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddComment } from "../ui/comments/add-comment";
 import { FirstToComment } from "../ui/comments/first-to-comment";
+import { useComments } from "../ui/comments/hooks/use-comments";
 import { MustBeLoggedIn } from "../ui/comments/must-be-logged-in";
 import { SkeletonComment } from "../ui/comments/skeleton-comment";
 import { UserAvatar } from "../ui/user-avatar";
@@ -29,81 +29,26 @@ export const ChapterCommunity = () => {
 const ChapterCommunityComments = () => {
   const { chapter } = useChapterContext();
   const user = useCurrentUser();
-  const apiUtils = api.useUtils();
   const [commentValue, setCommentValue] = useState("");
 
-  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    api.comment.getBySourceId.useInfiniteQuery(
-      {
-        videoId: chapter.id,
-        pageSize: COMMENTS_PAGE_SIZE,
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      },
-    );
-
-  const { mutateAsync: addComment } = api.comment.create.useMutation({
-    onSuccess: ({ comment: newComment }) => {
-      const reply = newComment
-        ? {
-            ...newComment,
-            videoId: chapter.id,
-            parentCommentId: null,
-            totalReplies: 0,
-            user: {
-              id: user.id as string,
-              name: user.name as string,
-              image: user.image ?? null,
-            },
-          }
-        : null;
-
-      apiUtils.comment.getBySourceId.setInfiniteData(
-        {
-          videoId: chapter.id,
-          pageSize: COMMENTS_PAGE_SIZE,
-        },
-        (data) => {
-          if (!reply) return data;
-          return {
-            pages: [
-              {
-                comments: [reply],
-                nextCursor: reply.updatedAt,
-              },
-              ...(data?.pages ?? []),
-            ],
-            pageParams: data?.pageParams ?? [],
-          };
-        },
-      );
-    },
+  const {
+    onComment,
+    comments,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useComments({
+    videoId: chapter.id,
   });
-
-  const onComment = async () => {
-    if (!user.id) return;
-
-    await addComment({
-      userId: user.id,
-      videoId: chapter.id,
-      content: commentValue,
-    });
-
-    setCommentValue("");
-  };
-
-  const comments = useMemo(() => {
-    return data?.pages.flatMap((page) => page.comments);
-  }, [data]);
 
   return (
     <div className="flex flex-col h-full overflow-hidden overflow-y-auto justify-between">
       <div className="flex flex-col gap-5 overflow-y-auto p-4 items-end no-scrollbar">
         {isLoading ? (
-          <SkeletonComment className="p-0 border-transparent" />
+          <SkeletonComment className="p-0 border-transparent bg-transparent" />
         ) : !comments?.length ? (
-          <FirstToComment className="p-0 border-transparent" />
+          <FirstToComment className="p-0 border-transparent bg-transparent" />
         ) : (
           comments?.map((comment) => (
             <Comment
@@ -151,7 +96,10 @@ const ChapterCommunityComments = () => {
               variant={"ghost"}
               type="button"
               size={"icon"}
-              onClick={onComment}
+              onClick={async () => {
+                await onComment(commentValue);
+                setCommentValue("");
+              }}
               className="flex items-center justify-center h-8 w-8"
             >
               <SendHorizonal size={16} />

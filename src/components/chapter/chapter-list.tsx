@@ -26,7 +26,7 @@ const ChapterListContent = () => {
 
   return (
     <div className="p-4 flex flex-col gap-3 overflow-y-auto no-scrollbar">
-      {program.chapters.map((chapter) => {
+      {program.chapters?.map((chapter) => {
         const isActiveChapter = params.chapterSlug === chapter.slug;
 
         return isActiveChapter ? (
@@ -47,7 +47,7 @@ export const InactiveChapterCard = ({
   programSlug,
   chapter,
 }: {
-  chapter: NonNullable<ProgramSpotlight>["chapters"][0];
+  chapter: NonNullable<NonNullable<ProgramSpotlight>["chapters"]>[0];
   programSlug: string;
 }) => {
   if (!chapter) return null;
@@ -84,7 +84,7 @@ export const InactiveChapterCard = ({
 export const ActiveChapterCard = ({
   chapter,
 }: {
-  chapter: NonNullable<ProgramSpotlight>["chapters"][0];
+  chapter: NonNullable<NonNullable<ProgramSpotlight>["chapters"]>[0];
 }) => {
   return (
     <div

@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import {
   ChapterOutlineIcon,
-  HeartOutlineIcon,
   InfoOutlineIcon,
   PlayIcon,
 } from "@/components/ui/icons";
@@ -19,6 +18,8 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { LikeButton, LikeButtonIcon } from "./components/like-button";
+import { useLikeProgram } from "./hooks/use-like-program";
 
 export type ProgramCardProps = {
   lazy?: boolean;
@@ -47,8 +48,13 @@ export const ProgramCard = ({
     categories,
   } = program;
 
+  const { isLikedByUser, likeProgram, isLikeLoading } = useLikeProgram({
+    initialLiked: program.isLikedByUser,
+  });
+
   const onMouseEnter = () => {
     if (deviceType === "mobile" || deviceType === "tablet") return;
+
     setIsHovered(true);
   };
 
@@ -143,16 +149,23 @@ export const ProgramCard = ({
                 <div className="flex items-center gap-1">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button
+                      <LikeButton
                         variant="accent"
                         className="w-12 h-12 rounded-full p-0"
+                        isLikedByUser={isLikedByUser ?? false}
+                        isLikeLoading={isLikeLoading}
+                        likeProgram={() =>
+                          likeProgram({ programId: program.id })
+                        }
                       >
-                        <HeartOutlineIcon className="w-6 h-6" />
-                      </Button>
+                        <LikeButtonIcon className="w-6 h-6" />
+                      </LikeButton>
                     </TooltipTrigger>
                     <TooltipContent sideOffset={6} className="p-1 px-2">
                       <p className="text-sm text-foreground">
-                        Add to favorites
+                        {isLikedByUser
+                          ? "Remove from favorites"
+                          : "Add to favorites"}
                       </p>
                     </TooltipContent>
                   </Tooltip>

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  HeartIcon,
   InfoIcon,
   LayersIcon,
   ShareIcon,
@@ -15,6 +14,7 @@ import type {
 import { MediaProvider } from "media-chrome/react/media-store";
 import React, { useState } from "react";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
+import { useLikeChapter } from "./hooks/use-like-chapter";
 
 export type ChapterTab = "details" | "comments" | "transcript" | "chapters";
 
@@ -23,6 +23,9 @@ const ChapterContext = React.createContext<{
   setActiveTab: React.Dispatch<React.SetStateAction<ChapterTab | null>>;
   autoPlay: boolean;
   setAutoPlay: React.Dispatch<React.SetStateAction<boolean>>;
+  isLikedByUser: boolean;
+  isLikeLoading: boolean;
+  likeChapter: ReturnType<typeof useLikeChapter>["likeChapter"];
   chapter: NonNullable<ProgramChapter>;
   program: NonNullable<ProgramSpotlight>;
 }>({
@@ -30,6 +33,9 @@ const ChapterContext = React.createContext<{
   setActiveTab: () => {},
   autoPlay: false,
   setAutoPlay: () => {},
+  isLikedByUser: false,
+  isLikeLoading: false,
+  likeChapter: () => {},
   chapter: {} as any,
   program: {} as any,
 });
@@ -44,9 +50,14 @@ export const ChapterContextProvider = ({
   program: NonNullable<ProgramSpotlight>;
 }) => {
   const { isMobile } = useDeviceType();
+
   const [activeTab, setActiveTab] = useState<ChapterTab | null>(
     isMobile ? "details" : null,
   );
+  const { isLikedByUser, isLikeLoading, likeChapter } = useLikeChapter({
+    initialLiked: chapter.isLikedByUser,
+  });
+
   const [autoPlay, setAutoPlay] = useState(false);
 
   const value = React.useMemo(
@@ -55,11 +66,22 @@ export const ChapterContextProvider = ({
       setActiveTab,
       autoPlay,
       setAutoPlay,
+      isLikedByUser: isLikedByUser ?? false,
+      isLikeLoading,
+      likeChapter,
       chapter,
       program,
     }),
 
-    [activeTab, autoPlay, chapter, program],
+    [
+      activeTab,
+      autoPlay,
+      chapter,
+      program,
+      isLikedByUser,
+      isLikeLoading,
+      likeChapter,
+    ],
   );
 
   return (
@@ -143,7 +165,6 @@ export const useChapterContext = () => {
       icon: ShareIcon,
       label: "Share",
     },
-    { icon: HeartIcon, label: "Add to favorites" },
   ];
 
   if (context === undefined) {

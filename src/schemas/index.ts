@@ -171,7 +171,6 @@ export const CommentSchema = z.object({
   programId: z.number().optional(),
   shotId: z.number().optional(),
   parentCommentId: z.number().optional(),
-  userId: z.string(),
 });
 
 export const ReplySchema = z.object({

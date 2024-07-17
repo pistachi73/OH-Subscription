@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 
 type ChapterProps = {
-  chapter: NonNullable<ProgramSpotlight>["chapters"][0];
+  chapter: NonNullable<NonNullable<ProgramSpotlight>["chapters"]>[0];
 };
 
 export const Chapter = ({ chapter }: ChapterProps) => {

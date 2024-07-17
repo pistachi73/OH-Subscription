@@ -13,6 +13,7 @@ import { toKebabCase } from "@/lib/case-converters";
 import { isNumber } from "@/lib/utils";
 import { VideoSchema } from "@/schemas";
 import { videos, videosOnPrograms } from "@/server/db/schema";
+import { isVideoLikedByUserSubquery } from "../query-utils/video.query";
 
 export const videoRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -120,26 +121,30 @@ export const videoRouter = createTRPCRouter({
         programId,
       });
 
-      let videoQuery = db
+      const res = await db
         .select({
           ...getTableColumns(videos),
           chapterNumber: videosOnPrograms.chapterNumber,
+          isLikedByUser: isVideoLikedByUserSubquery({
+            db: ctx.db,
+            userId: ctx.session?.user?.id,
+          }),
         })
         .from(videos)
         .leftJoin(
           videosOnPrograms,
-          and(eq(videos.id, videosOnPrograms.videoId)),
+          and(
+            eq(videos.id, videosOnPrograms.videoId),
+            programId ? eq(videosOnPrograms.programId, programId) : undefined,
+          ),
         )
-        .$dynamic();
+        .where(
+          and(
+            eq(videos.slug, videoSlug),
+            programId ? eq(videosOnPrograms.programId, programId) : undefined,
+          ),
+        );
 
-      const whereCaluses = [eq(videos.slug, videoSlug)];
-      if (programId) {
-        whereCaluses.push(eq(videosOnPrograms.programId, programId));
-      }
-
-      videoQuery = videoQuery.where(and(...whereCaluses));
-
-      const res = await videoQuery.execute();
       const video = res?.[0];
 
       return video;

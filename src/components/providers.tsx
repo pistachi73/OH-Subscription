@@ -8,7 +8,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     <LazyMotion features={domAnimation} strict>
       <ThemeProvider
         attribute="class"
-        defaultTheme="light"
+        defaultTheme="dark"
         disableTransitionOnChange
       >
         <TooltipProvider delayDuration={100}>{children}</TooltipProvider>

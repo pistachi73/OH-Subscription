@@ -12,14 +12,11 @@ import {
 } from "drizzle-orm";
 import { z } from "zod";
 
-import type {
-  Category,
-  ProgramLevel,
-  Teacher,
-  Video,
-} from "../../db/schema.types";
+import type { ProgramLevel } from "../../db/schema.types";
 import {
+  isProgramLikedByUserSubquery,
   programCategoriesSelect,
+  programChaptersSelect,
   programTeachersSelect,
   programsWithCategories,
   programsWithChapters,
@@ -47,7 +44,6 @@ import {
   programs,
   teachers,
   teachersOnPrograms,
-  videos,
   videosOnPrograms,
 } from "@/server/db/schema";
 import getObjWithImagePlaceholder from "../lib/get-placeholder-image";
@@ -110,8 +106,8 @@ export const programRouter = createTRPCRouter({
 
       let programQuery = db
         .select({
-          ...programCategoriesSelect,
-          ...programTeachersSelect,
+          categories: programCategoriesSelect,
+          teachers: programTeachersSelect,
         })
         .from(programs)
         .where(eq(programs.id, id))
@@ -240,8 +236,12 @@ export const programRouter = createTRPCRouter({
           level: programs.level,
           slug: programs.slug,
           totalChapters: programs.totalChapters,
-          ...programTeachersSelect,
-          ...programCategoriesSelect,
+          teachers: programTeachersSelect,
+          categories: programCategoriesSelect,
+          isLikedByUser: isProgramLikedByUserSubquery({
+            db: ctx.db,
+            userId: ctx.session?.user?.id,
+          }),
           ...(similarity && { similarity }),
         })
         .from(programs)
@@ -250,27 +250,19 @@ export const programRouter = createTRPCRouter({
       programsForCardsQuery = programsWithTeachers(programsForCardsQuery);
       programsForCardsQuery = programsWithCategories(programsForCardsQuery);
 
-      const whereClauses = [];
-
-      if (teacherIds?.length) {
-        whereClauses.push(inArray(teachers.id, teacherIds));
-      }
-      if (categoryIds?.length) {
-        whereClauses.push(inArray(categories.id, categoryIds));
-      }
-
-      if (categoryNames?.length) {
-        whereClauses.push(
-          inArray(
-            sql`lower(${categories.name})`,
-            categoryNames.map((name) => name.toLowerCase()),
-          ),
-        );
-      }
-
-      if (levelIds?.length) {
-        whereClauses.push(inArray(programs.level, levelIds as ProgramLevel[]));
-      }
+      const whereClauses = [
+        teacherIds?.length ? inArray(teachers.id, teacherIds) : undefined,
+        categoryIds?.length ? inArray(categories.id, categoryIds) : undefined,
+        levelIds?.length
+          ? inArray(programs.level, levelIds as ProgramLevel[])
+          : undefined,
+        categoryNames?.length
+          ? inArray(
+              sql`lower(${categories.name})`,
+              categoryNames.map((name) => name.toLowerCase()),
+            )
+          : undefined,
+      ];
 
       if (similarity) {
         programsForCardsQuery = programsForCardsQuery.where(
@@ -378,37 +370,13 @@ export const programRouter = createTRPCRouter({
           slug: programs.slug,
           totalChapters: programs.totalChapters,
           updatedAt: programs.updatedAt,
-          teachers: sql<Omit<Teacher, "bio">[]>`json_agg(DISTINCT
-                    jsonb_build_object(
-                      'id', ${teachers.id},
-                      'image', ${teachers.image},
-                      'name', ${teachers.name})
-                    )`,
-          categories: sql<Category[]>`json_agg(DISTINCT
-                    jsonb_build_object(
-                      'id', ${categories.id},
-                      'name', ${categories.name})
-                    )`,
-          chapters: sql<
-            (Pick<
-              Video,
-              | "updatedAt"
-              | "slug"
-              | "duration"
-              | "description"
-              | "thumbnail"
-              | "title"
-            > & { chapterNumber: number })[]
-          >`json_agg(DISTINCT
-            jsonb_build_object(
-              'updatedAt', ${videos.updatedAt},
-              'slug', ${videos.slug},
-              'duration', ${videos.duration},
-              'description', ${videos.description},
-              'thumbnail', ${videos.thumbnail},
-              'title', ${videos.title},
-              'chapterNumber', ${videosOnPrograms.chapterNumber})
-            )`,
+          teachers: programTeachersSelect,
+          categories: programCategoriesSelect,
+          chapters: programChaptersSelect,
+          isLikedByUser: isProgramLikedByUserSubquery({
+            db: ctx.db,
+            userId: ctx.session?.user?.id,
+          }),
         })
         .from(programs)
         .where(eq(programs.slug, slug))
@@ -420,6 +388,7 @@ export const programRouter = createTRPCRouter({
       programQuery = programQuery.groupBy(programs.id);
 
       const res = await programQuery.execute();
+
       const resWithPlaceholders = await getObjWithImagePlaceholder({
         obj: res,
         key: "thumbnail",
@@ -430,7 +399,11 @@ export const programRouter = createTRPCRouter({
 
       if (!p) return null;
 
-      p.chapters = p.chapters.sort((a, b) => a.chapterNumber - b.chapterNumber);
+      if (p.chapters?.length) {
+        p.chapters = p.chapters.sort(
+          (a, b) => a.chapterNumber - b.chapterNumber,
+        );
+      }
 
       return p;
     }),

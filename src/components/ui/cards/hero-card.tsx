@@ -2,13 +2,14 @@ import React from "react";
 
 import Link from "next/link";
 
+import {
+  LikeButton,
+  LikeButtonIcon,
+} from "@/components/programs/components/like-button";
+import { useLikeProgram } from "@/components/programs/hooks/use-like-program";
 import { Button } from "@/components/ui/button";
 import { HeroImage } from "@/components/ui/hero-image";
-import {
-  HeartOutlineIcon,
-  InfoOutlineIcon,
-  PlayIcon,
-} from "@/components/ui/icons";
+import { InfoOutlineIcon, PlayIcon } from "@/components/ui/icons";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import {
   ResponsiveTooltip,
@@ -20,19 +21,20 @@ import type { ProgramCard } from "@/server/db/schema.types";
 
 type HeroCardProps = {
   className?: string;
-  program?: NonNullable<ProgramCard>;
-  notFound?: boolean;
+  program: NonNullable<ProgramCard>;
   index?: number;
   active?: boolean;
 };
 
 export const heroCardHeightProps =
-  "h-[70vw] landscape:max-h-[80vh] sm:landscape:max-h-[65vh] sm:min-h-[500px] xs:h-[65vw] sm:h-[60vw]";
+  "h-[70vw] landscape:max-h-[80vh] sm:landscape:max-h-[65vh] sm:min-h-[500px] xs:h-[65vw] sm:h-[46vw]";
 
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
-  ({ className, index, program, notFound = false, active = false }, ref) => {
-    const { title, slug, description, thumbnail } = program ?? {};
-
+  ({ className, index, program, active = false }, ref) => {
+    const { id, title, slug, description, thumbnail } = program;
+    const { isLikedByUser, isLikeLoading, likeProgram } = useLikeProgram({
+      initialLiked: program.isLikedByUser,
+    });
     return (
       <div
         ref={ref}
@@ -50,13 +52,11 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
         >
           <HeroImage
             src={
-              notFound
-                ? "/images/program-not-found.jpg"
-                : program?.thumbnail
-                  ? program.thumbnail.src
-                  : index ?? 0 % 2 === 0
-                    ? "/images/hero-thumbnail-2.jpg"
-                    : "/images/hero-background.png"
+              program?.thumbnail
+                ? program.thumbnail.src
+                : index ?? 0 % 2 === 0
+                  ? "/images/hero-thumbnail-2.jpg"
+                  : "/images/hero-background.png"
             }
             priority={active}
             alt="Hero background image"
@@ -107,75 +107,75 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             </p>
           </div>
 
-          {!notFound && (
-            <div
-              className={cn(
-                "flex w-full flex-row items-center gap-8  sm:mt-4 ",
-                "opacity-0 translate-y-10",
-                active &&
-                  " animate-show-hero-card-content fill-mode-forwards delay-800",
-              )}
-            >
-              <div className="flex items-center gap-3 sm:gap-4">
-                <Button
-                  variant="default"
-                  className="rounded-full w-14 h-14 md:w-20 md:h-20 p-0 flex items-center justify-center"
-                  asChild
-                >
-                  <Link href={`/programs/${slug}`}>
-                    <PlayIcon className="ml-0.5 md:w-9 md:h-9 w-6 h-6" />
-                  </Link>
-                </Button>
-                <p className="font-semibold tracking-tight text-lg md:text-xl text-muted-foreground">
-                  Play
-                </p>
-              </div>
-              <div className="flex items-center gap-1 md:gap-2">
-                <ResponsiveTooltip>
-                  <ResponsiveTooltipTrigger asChild>
-                    <Button
-                      variant="accent"
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
-                    >
-                      <HeartOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
-                    </Button>
-                  </ResponsiveTooltipTrigger>
-                  <ResponsiveTooltipContent
-                    sideOffset={8}
-                    side="bottom"
-                    className="p-2 px-3"
-                  >
-                    <p className="text-lg font-medium text-foreground">
-                      Add to favorites
-                    </p>
-                  </ResponsiveTooltipContent>
-                </ResponsiveTooltip>
-
-                <ResponsiveTooltip>
-                  <ResponsiveTooltipTrigger asChild>
-                    <Button
-                      variant="accent"
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
-                      asChild
-                    >
-                      <Link href={`/programs/${slug}`}>
-                        <InfoOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
-                      </Link>
-                    </Button>
-                  </ResponsiveTooltipTrigger>
-                  <ResponsiveTooltipContent
-                    sideOffset={8}
-                    side="bottom"
-                    className="p-2 px-3"
-                  >
-                    <p className="text-lg font-medium text-foreground">
-                      Details
-                    </p>
-                  </ResponsiveTooltipContent>
-                </ResponsiveTooltip>
-              </div>
+          <div
+            className={cn(
+              "flex w-full flex-row items-center gap-8  sm:mt-4 ",
+              "opacity-0 translate-y-10",
+              active &&
+                " animate-show-hero-card-content fill-mode-forwards delay-800",
+            )}
+          >
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Button
+                variant="default"
+                className="rounded-full w-14 h-14 md:w-20 md:h-20 p-0 flex items-center justify-center"
+                asChild
+              >
+                <Link href={`/programs/${slug}`}>
+                  <PlayIcon className="ml-0.5 md:w-9 md:h-9 w-6 h-6" />
+                </Link>
+              </Button>
+              <p className="font-semibold tracking-tight text-lg md:text-xl text-muted-foreground">
+                Play
+              </p>
             </div>
-          )}
+            <div className="flex items-center gap-1 md:gap-2">
+              <ResponsiveTooltip>
+                <ResponsiveTooltipTrigger asChild>
+                  <LikeButton
+                    variant="accent"
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
+                    isLikedByUser={isLikedByUser ?? false}
+                    isLikeLoading={isLikeLoading}
+                    likeProgram={() => likeProgram({ programId: program.id })}
+                  >
+                    <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
+                  </LikeButton>
+                </ResponsiveTooltipTrigger>
+                <ResponsiveTooltipContent
+                  sideOffset={12}
+                  side="bottom"
+                  className="p-2 px-3"
+                >
+                  <p className="text-lg font-medium text-foreground">
+                    {isLikedByUser
+                      ? "Remove from favorites"
+                      : "Add to favorites"}
+                  </p>
+                </ResponsiveTooltipContent>
+              </ResponsiveTooltip>
+              <ResponsiveTooltip>
+                <ResponsiveTooltipTrigger asChild>
+                  <Button
+                    variant="accent"
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
+                    asChild
+                  >
+                    <Link href={`/programs/${slug}`}>
+                      <InfoOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
+                    </Link>
+                  </Button>
+                </ResponsiveTooltipTrigger>
+                <ResponsiveTooltipContent
+                  sideOffset={12}
+                  side="bottom"
+                  className="p-2 px-3"
+                >
+                  <p className="text-lg font-medium text-foreground">Details</p>
+                </ResponsiveTooltipContent>
+              </ResponsiveTooltip>
+            </div>
+          </div>
         </MaxWidthWrapper>
       </div>
     );

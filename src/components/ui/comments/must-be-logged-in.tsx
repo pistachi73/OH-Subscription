@@ -12,7 +12,7 @@ export const MustBeLoggedIn = () => {
       mode="modal"
       callbackUrl={encodedCallbackUrl}
       redirect={false}
-      className="w-full"
+      className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background rounded-sm"
     >
       <div
         className={cn(
@@ -28,7 +28,7 @@ export const MustBeLoggedIn = () => {
             />
           </div>
           <div>
-            <h3 className="text-base sm:text-lg font-medium">
+            <h3 className="text-base sm:text-lg font-medium text-left">
               Login to comment
             </h3>
             <p className="text-sm text-muted-foreground line-clamp-1">

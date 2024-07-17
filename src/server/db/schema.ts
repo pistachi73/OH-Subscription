@@ -136,6 +136,7 @@ export const programs = pgTable(
     duration: integer("duration").default(0).notNull(),
     published: boolean("published").default(false),
     thumbnail: text("thumbnail"),
+    likes: integer("likes").notNull().default(0),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
     updatedAt: timestamp("updatedAt", { mode: "date" })
       .defaultNow()
@@ -172,6 +173,7 @@ export const videos = pgTable(
     thumbnail: text("thumbnail"),
     categories: text("categories"),
     transcript: text("transcript"),
+    likes: integer("likes").notNull().default(0),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
     updatedAt: timestamp("updatedAt", { mode: "date" })
       .defaultNow()
@@ -330,6 +332,7 @@ export const shots = pgTable(
     title: text("title").notNull(),
     description: text("description").notNull(),
     transcript: text("transcript"),
+    likes: integer("likes").notNull().default(0),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
     updatedAt: timestamp("updatedAt", { mode: "date" })
       .defaultNow()
@@ -387,6 +390,7 @@ export const comments = pgTable(
     }),
     parentCommentId: integer("parentCommentId"),
     content: text("content").notNull(),
+    likes: integer("likes").notNull().default(0),
     createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
     updatedAt: timestamp("updatedAt", { mode: "date" })
       .defaultNow()
@@ -400,22 +404,38 @@ export const comments = pgTable(
   }),
 );
 
-export const replies = pgTable("replies", {
-  id: serial("id").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  commentId: integer("commentId")
-    .notNull()
-    .references(() => comments.id, {
+export const likes = pgTable(
+  "likes",
+  {
+    id: serial("id").primaryKey(),
+    commentId: integer("commentId").references(() => comments.id, {
       onDelete: "cascade",
     }),
-  content: text("content").notNull(),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "date" })
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-});
+    programId: integer("programId").references(() => programs.id, {
+      onDelete: "cascade",
+    }),
+    videoId: integer("videoId").references(() => videos.id, {
+      onDelete: "cascade",
+    }),
+    shotId: integer("shotId").references(() => shots.id, {
+      onDelete: "cascade",
+    }),
+    isLike: boolean("isLike").notNull().default(true),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+  },
+  (t) => ({
+    videoIdIndex: index().on(t.videoId),
+    programIdIndex: index().on(t.programId),
+    shotIdIndex: index().on(t.shotId),
+    commentIdIndex: index().on(t.commentId),
+    programIdUnique: unique("like_userId_programId").on(t.userId, t.programId),
+    shotIdUnique: unique("like_userId_shotId").on(t.userId, t.shotId),
+    commentIdUnique: unique("like_userId_commentId").on(t.userId, t.commentId),
+    videoIdUnique: unique("like_userId_videoId").on(t.userId, t.videoId),
+  }),
+);
 
 // export type InsertUser = typeof users.$inferInsert;
 export type SelectTeacher = typeof teachers.$inferSelect;

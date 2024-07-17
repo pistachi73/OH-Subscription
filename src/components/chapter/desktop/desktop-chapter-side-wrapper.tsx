@@ -21,7 +21,7 @@ export const ChapterSideWrapper = ({
   isDialogOpen,
   onDialogOpenChange,
 }: ChapterSideWrapperProps) => {
-  const { deviceSize, deviceType } = useDeviceType();
+  const { deviceType } = useDeviceType();
   const { setActiveTab } = useChapterContext();
 
   return deviceType === "desktop" ? (

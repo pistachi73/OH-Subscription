@@ -1,6 +1,13 @@
-import { AuthModal } from "@/components/auth/auth-modal";
 import { Footer } from "@/components/navigation/footer";
 import { Header } from "@/components/navigation/header";
+import dynamic from "next/dynamic";
+
+const AuthModal = dynamic(
+  () => import("@/components/auth/auth-modal").then((mod) => mod.AuthModal),
+  {
+    ssr: false,
+  },
+);
 
 export default function RootLayout({
   children,

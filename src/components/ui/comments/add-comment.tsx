@@ -46,10 +46,10 @@ export const AddComment = ({
       <AutosizeTextarea
         value={value}
         onChange={onChange}
-        minHeight={hasLabels ? 94 : 38}
+        minHeight={hasLabels ? 86 : 38}
         className={cn(
-          "h-10 overflow-y-hidden p-3 text-xs sm:text-sm resize-none font-light",
-          hasLabels ? "h-[96px] pb-[60px]" : "",
+          "h-10 overflow-y-hidden p-3 text-sm resize-none bg-transparent",
+          hasLabels ? "h-[88px] pb-[60px]" : "",
           className,
         )}
         {...props}
@@ -60,12 +60,12 @@ export const AddComment = ({
           <Button
             variant="accent"
             size="sm"
-            className="w-9 sm:h-8 px-0 text-sm sm:w-fit sm:px-3"
+            className="w-7 h-7 px-0 sm:h-8 text-sm sm:w-fit sm:px-3"
             type="button"
             onClick={onCancel}
           >
             <span className="hidden sm:inline-block">{cancelLabel}</span>
-            <MessageCircleOff size={14} className="sm:hidden" />
+            <MessageCircleOff size={12} className="sm:hidden" />
           </Button>
         )}
         {commentLabel && (
@@ -73,7 +73,7 @@ export const AddComment = ({
             type="button"
             variant="default"
             size="sm"
-            className="w-9 px-0 sm:h-8 text-sm sm:w-fit sm:px-3"
+            className="w-7 h-7 px-0 sm:h-8 text-sm sm:w-fit sm:px-3"
             onClick={async () => {
               await onComment?.(value);
               setInternalValue("");
@@ -81,7 +81,7 @@ export const AddComment = ({
             }}
           >
             <span className="hidden sm:inline-block">{commentLabel}</span>
-            <SendHorizonal size={14} className="sm:hidden" />
+            <SendHorizonal size={12} className="sm:hidden" />
           </Button>
         )}
       </div>

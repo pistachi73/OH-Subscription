@@ -61,12 +61,14 @@ const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => {
+  const { selected } = useTabs();
   return (
     <>
       <TabsPrimitive.Trigger
         ref={ref}
         className={cn(
-          "relative  inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium text-muted-foreground ring-offset-background transition-all before:absolute before:top-full before:h-0.5 before:w-0  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground data-[state=active]:before:w-[calc(100%-6px)] xs:text-base lg:text-base  ",
+          "relative  inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium text-muted-foreground ring-offset-background transition-all before:absolute before:top-full before:h-0.5 before:w-0  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-foreground data-[state=active]:before:w-[calc(100%-6px)] data-[state=active]:before:bg-foreground xs:text-base lg:text-base  ",
+          "hover:text-foreground/90",
           className,
         )}
         {...props}

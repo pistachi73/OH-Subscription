@@ -5,6 +5,7 @@ import { useSignals } from "@preact/signals-react/runtime";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import { Slot } from "@radix-ui/react-slot";
 import {
   isAuthModalOpenSignal,
   needsAuthModalRedirectSignal,
@@ -22,8 +23,9 @@ type LoginButtonProps = {
 export const AuthButton = ({
   children,
   callbackUrl,
-  mode,
+  mode = "modal",
   redirect = true,
+  asChild,
   className,
 }: LoginButtonProps) => {
   useSignals();
@@ -38,9 +40,11 @@ export const AuthButton = ({
     }
   };
 
+  const Comp = asChild ? Slot : "button";
+
   //CHANGE THIS TO BUTTON AND USE AS CHILD
   return (
-    <span
+    <Comp
       onClick={onClick}
       className={cn("cursor-pointer", className)}
       onKeyDown={(e) => {
@@ -50,6 +54,6 @@ export const AuthButton = ({
       }}
     >
       {children}
-    </span>
+    </Comp>
   );
 };

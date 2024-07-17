@@ -7,12 +7,12 @@ import { MaxWidthWrapper } from "../../ui/max-width-wrapper";
 
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { LayersIcon, PlayIcon, ShareOutlineIcon } from "@/components/ui/icons";
 import {
-  HeartOutlineIcon,
-  LayersIcon,
-  PlayIcon,
-  ShareOutlineIcon,
-} from "@/components/ui/icons";
+  ResponsiveTooltip,
+  ResponsiveTooltipContent,
+  ResponsiveTooltipTrigger,
+} from "@/components/ui/responsive-tooltip";
 import { ShareButton } from "@/components/ui/share-button/share-button";
 import {
   Tooltip,
@@ -20,16 +20,27 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { getBaseUrl, type RouterOutputs } from "@/trpc/shared";
+import { type RouterOutputs, getBaseUrl } from "@/trpc/shared";
 import { format } from "date-fns";
 import Link from "next/link";
+import {
+  LikeButton,
+  LikeButtonIcon,
+  LikeButtonLabel,
+} from "../components/like-button";
+import { useLikeProgram } from "../hooks/use-like-program";
 
 type ProgramSpotlightHero = {
   program: NonNullable<RouterOutputs["program"]["getBySlug"]>;
 };
 
 export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
+  const { isLikedByUser, isLikeLoading, likeProgram } = useLikeProgram({
+    initialLiked: program.isLikedByUser,
+  });
+
   const {
+    id,
     title,
     description,
     categories,
@@ -103,7 +114,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
             <LayersIcon className="w-5 h-5" />
             {totalChapters} chapters
           </p>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <Badge
               key={`category-${category.name}`}
               variant="accent"
@@ -129,19 +140,29 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               Play Episode 1
             </p>
           </div>
-          <div className="flex items-center gap-1">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="accent" className="w-14 h-14 rounded-full p-0">
-                  <HeartOutlineIcon className="w-7 h-7" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent sideOffset={8} side="bottom" className="p-2 px-3">
+          <div className="flex items-center gap-2">
+            <ResponsiveTooltip>
+              <ResponsiveTooltipTrigger asChild>
+                <LikeButton
+                  variant="accent"
+                  className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
+                  isLikedByUser={isLikedByUser ?? false}
+                  isLikeLoading={isLikeLoading}
+                  likeProgram={() => likeProgram({ programId: program.id })}
+                >
+                  <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
+                </LikeButton>
+              </ResponsiveTooltipTrigger>
+              <ResponsiveTooltipContent
+                sideOffset={12}
+                side="bottom"
+                className="p-2 px-3"
+              >
                 <p className="text-lg font-medium text-foreground">
-                  Add to favorites
+                  {isLikedByUser ? "Remove from favorites" : "Add to favorites"}
                 </p>
-              </TooltipContent>
-            </Tooltip>
+              </ResponsiveTooltipContent>
+            </ResponsiveTooltip>
 
             <ShareButton
               title="Share this program"
@@ -172,7 +193,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent
-                  sideOffset={8}
+                  sideOffset={12}
                   side="bottom"
                   className="p-2 px-3"
                 >
@@ -224,14 +245,21 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
                 Share
               </Button>
             </ShareButton>
-            <Button
+            <LikeButton
               variant="accent"
               size="lg"
-              className="w-full sm:w-fit  text-sm sm:text-base h-10 sm:h-12"
+              className="w-full sm:w-fit  text-sm sm:text-base h-10 sm:h-12 disabled:opacity-100"
+              isLikedByUser={isLikedByUser ?? false}
+              isLikeLoading={isLikeLoading}
+              likeProgram={() => likeProgram({ programId: program.id })}
             >
-              <HeartOutlineIcon className="mr-2 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
-              Add to favorites
-            </Button>
+              <LikeButtonIcon className="mr-2 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+              <LikeButtonLabel
+                className="text-sm text-foreground"
+                likedLabel="Remove from favorites"
+                unlikedLabel="Add to favorites"
+              />
+            </LikeButton>
           </div>
         </div>
       </div>

@@ -1,49 +1,59 @@
-import { eq, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import type { PgSelect } from "drizzle-orm/pg-core";
 
+import type { DB } from "@/server/db";
 import {
   categories,
   categoriesOnPrograms,
+  likes,
   programs,
   teachers,
   teachersOnPrograms,
   videos,
   videosOnPrograms,
 } from "@/server/db/schema";
-import type { Category, Teacher } from "@/server/db/schema.types";
+import type { Category, Teacher, Video } from "@/server/db/schema.types";
 
-export const programCategoriesSelect = {
-  categories: sql<Category[] | null>`
-  nullif
-    (json_agg(DISTINCT
-      nullif(
-        jsonb_strip_nulls(
-          jsonb_build_object(
-            'id', ${categories.id},
-            'name', ${categories.name}
-          )
-        )::jsonb,
-      '{}'::jsonb)
-    )::jsonb,
-  '[null]'::jsonb)`,
-};
+export const programCategoriesSelect = sql<Category[] | null>`json_agg(DISTINCT
+  jsonb_build_object(
+    'id', ${categories.id},
+    'name', ${categories.name})
+  ) FILTER (WHERE ${categories.id} IS NOT NULL)`;
 
-export const programTeachersSelect = {
-  teachers: sql<Omit<Teacher, "bio">[] | null>`
-  nullif
-    (json_agg(DISTINCT
-      nullif(
-        jsonb_strip_nulls(
-          jsonb_build_object(
-            'id', ${teachers.id},
-            'image', ${teachers.image},
-            'name', ${teachers.name}
-          )
-        )::jsonb,
-      '{}'::jsonb)
-    )::jsonb,
-  '[null]'::jsonb)`,
-};
+export const programTeachersSelect = sql<Omit<Teacher, "bio">[] | null>`json_agg(DISTINCT
+  jsonb_build_object(
+    'id', ${teachers.id},
+    'image', ${teachers.image},
+    'name', ${teachers.name})
+  ) FILTER (WHERE ${teachers.id} IS NOT NULL)`;
+
+export const programChaptersSelect = sql<
+  | (Pick<
+      Video,
+      "updatedAt" | "slug" | "duration" | "description" | "thumbnail" | "title"
+    > & { chapterNumber: number })[]
+  | null
+>`json_agg(DISTINCT
+jsonb_build_object(
+  'updatedAt', ${videos.updatedAt},
+  'slug', ${videos.slug},
+  'duration', ${videos.duration},
+  'description', ${videos.description},
+  'thumbnail', ${videos.thumbnail},
+  'title', ${videos.title},
+  'chapterNumber', ${videosOnPrograms.chapterNumber})
+) FILTER (WHERE ${videos.id} IS NOT NULL)`;
+
+export const isProgramLikedByUserSubquery = ({
+  db,
+  userId,
+}: { db: DB; userId?: string }) =>
+  sql<boolean>`exists(${db
+    .select({ n: sql`1` })
+    .from(likes)
+    .where(
+      and(eq(likes.programId, programs.id), eq(likes.userId, userId ?? "")),
+    )})`.as("isLikedByUser");
 
 export const programsWithCategories = <T extends PgSelect>(qb: T) => {
   return qb

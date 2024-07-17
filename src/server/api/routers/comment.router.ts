@@ -3,17 +3,20 @@ import type { SQL } from "drizzle-orm";
 import { and, count, desc, eq, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 import { isNumber } from "@/lib/utils";
 import { CommentSchema } from "@/schemas";
-import { comments, users } from "@/server/db/schema";
+import { comments, likes, users } from "@/server/db/schema";
 import { alias } from "drizzle-orm/pg-core";
-import { deleteRecursiveComments } from "../lib/comments.lib";
+import {
+  deleteRecursiveComments,
+  getRecursiveCommentsCount,
+} from "../lib/comments.lib";
 import { withLimit } from "../query-utils/shared.query";
 
 export const commentRouter = createTRPCRouter({
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(z.object({ commentId: z.number() }))
     .mutation(async ({ input: { commentId }, ctx }) => {
       const { db } = ctx;
@@ -23,18 +26,19 @@ export const commentRouter = createTRPCRouter({
           message: "Comment ID is required",
         });
       }
-
-      await deleteRecursiveComments({
+      let deletedComments = 1;
+      deletedComments = await deleteRecursiveComments({
         db,
         commentId,
+        deletedComments,
       });
 
-      return { success: true };
+      return { success: true, deletedComments };
     }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(CommentSchema)
     .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
+      const { db, session } = ctx;
       const { programId, videoId, shotId, parentCommentId, ...values } = input;
 
       if (
@@ -58,16 +62,18 @@ export const commentRouter = createTRPCRouter({
           ...(videoId ? { videoId } : {}),
           ...(shotId ? { shotId } : {}),
           ...(parentCommentId ? { parentCommentId } : {}),
+          userId: session.user.id,
         })
         .returning({
           id: comments.id,
           content: comments.content,
           updatedAt: comments.updatedAt,
+          likes: comments.likes,
         });
       return { comment: createdComments[0] };
     }),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(CommentSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
@@ -127,18 +133,30 @@ export const commentRouter = createTRPCRouter({
         }
 
         const replies = alias(comments, "replies");
+        const likedByUserSubquery = sql<boolean>`exists(${ctx.db
+          .select({ n: sql`1` })
+          .from(likes)
+          .where(
+            and(
+              eq(likes.commentId, comments.id),
+              eq(likes.userId, ctx.session?.user?.id ?? ""),
+            ),
+          )})`.as("likedByUser");
+
         let commentsQuery = ctx.db
           .selectDistinctOn([comments.updatedAt], {
             id: comments.id,
             content: comments.content,
             updatedAt: comments.updatedAt,
             parentCommentId: comments.parentCommentId,
+            likes: comments.likes,
             user: {
               id: users.id,
               name: users.name,
               image: users.image,
             },
             totalReplies: sql<number>`count(${replies.id})`,
+            isLikeByUser: likedByUserSubquery,
           })
           .from(comments)
           .leftJoin(replies, eq(replies.parentCommentId, comments.id))
@@ -168,6 +186,8 @@ export const commentRouter = createTRPCRouter({
           commentsQuery = withLimit(commentsQuery, pageSize);
         }
 
+        console.log({ commentsQuery: commentsQuery.toSQL() });
+
         const res = await commentsQuery.execute();
         let nextCursor = res.length ? res?.[res.length - 1]?.updatedAt : null;
 
@@ -193,6 +213,47 @@ export const commentRouter = createTRPCRouter({
         };
       },
     ),
+
+  getTotalCommentsBySourceId: publicProcedure
+    .input(
+      z.object({
+        videoId: z.number().optional(),
+        programId: z.number().optional(),
+        shotId: z.number().optional(),
+      }),
+    )
+    .query(async ({ input: { videoId, programId, shotId }, ctx }) => {
+      if (!videoId && !programId && !shotId) return null;
+
+      const { db } = ctx;
+
+      let commentsQuery = ctx.db
+        .select({ id: comments.id })
+        .from(comments)
+        .$dynamic();
+
+      const whereClauses = [
+        videoId ? eq(comments.videoId, videoId) : undefined,
+        programId ? eq(comments.programId, programId) : undefined,
+        shotId ? eq(comments.shotId, shotId) : undefined,
+      ];
+
+      commentsQuery = commentsQuery.where(and(...whereClauses));
+      commentsQuery = commentsQuery.groupBy(comments.id);
+      const resComments = await commentsQuery.execute();
+
+      let totalComments = resComments?.length ?? 0;
+
+      for (const childComment of resComments) {
+        totalComments = await getRecursiveCommentsCount({
+          db,
+          commentId: childComment.id,
+          totalComments,
+        });
+      }
+
+      return totalComments;
+    }),
 
   getById: publicProcedure
     .input(z.number())

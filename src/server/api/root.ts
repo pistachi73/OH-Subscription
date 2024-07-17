@@ -3,13 +3,13 @@ import { categoryRouter } from "./routers/category.router";
 import { commentRouter } from "./routers/comment.router";
 import { paymentRouter } from "./routers/payment.router";
 import { programRouter } from "./routers/program.router";
-import { replyRouter } from "./routers/reply.router";
 import { shotRouter } from "./routers/shot.router";
 import { teacherRouter } from "./routers/teacher.router";
 import { userRouter } from "./routers/user.router";
 import { videoRouter } from "./routers/video.router";
 
 import { createTRPCRouter } from "@/server/api/trpc";
+import { likeRouter } from "./routers/like.router";
 
 /**
  * This is the primary router for your server.
@@ -25,8 +25,8 @@ export const appRouter = createTRPCRouter({
   program: programRouter,
   category: categoryRouter,
   comment: commentRouter,
-  reply: replyRouter,
   payment: paymentRouter,
+  like: likeRouter,
 });
 
 // export type definition of API
