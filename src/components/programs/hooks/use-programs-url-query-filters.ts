@@ -1,13 +1,13 @@
 import { usePathname, useSearchParams } from "next/navigation";
 
-export const useProgramFilters = () => {
+export const useProgramsUrlQueryFilters = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const search = searchParams.get("search");
-  const teachers = searchParams.get("teachers")?.split(",");
-  const categories = searchParams.get("categories")?.split(",");
-  const levels = searchParams.get("levels")?.split(",");
+  const searchFilter = searchParams.get("search");
+  const teachersFilterArray = searchParams.get("teachers")?.split(",");
+  const categoriesFilterArray = searchParams.get("categories")?.split(",");
+  const levelsFilterArray = searchParams.get("levels")?.split(",");
 
   const handleFilterChange = (
     adding: boolean,
@@ -32,7 +32,6 @@ export const useProgramFilters = () => {
     const newPathname = `${pathname}?${params.toString()}`;
     history.scrollRestoration = "manual";
     history.pushState(null, "", newPathname);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSearchKeypress = (search: string) => {
@@ -47,20 +46,18 @@ export const useProgramFilters = () => {
     const newPathname = `${pathname}?${params.toString()}`;
     history.scrollRestoration = "manual";
     history.pushState(null, "", newPathname);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const clearFilters = () => {
     history.scrollRestoration = "manual";
     history.pushState(null, "", pathname);
-    // window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return {
-    search,
-    teachers,
-    categories,
-    levels,
+    searchFilter,
+    teachersFilterArray,
+    categoriesFilterArray,
+    levelsFilterArray,
     clearFilters,
     handleFilterChange,
     handleSearchKeypress,

@@ -2,14 +2,11 @@ import React from "react";
 
 import Link from "next/link";
 
-import {
-  LikeButton,
-  LikeButtonIcon,
-} from "@/components/programs/components/like-button";
 import { useLikeProgram } from "@/components/programs/hooks/use-like-program";
 import { Button } from "@/components/ui/button";
 import { HeroImage } from "@/components/ui/hero-image";
 import { InfoOutlineIcon, PlayIcon } from "@/components/ui/icons";
+import { LikeButton, LikeButtonIcon } from "@/components/ui/like-button";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import {
   ResponsiveTooltip,

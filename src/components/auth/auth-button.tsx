@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import {
+  authModalRedirectToIfNotSubscribed,
   isAuthModalOpenSignal,
   needsAuthModalRedirectSignal,
 } from "./auth-signals";
@@ -16,17 +17,19 @@ type LoginButtonProps = {
   mode?: "modal" | "redirect";
   callbackUrl?: string;
   asChild?: boolean;
-  redirect?: boolean;
   className?: string;
+  redirect?: boolean;
+  redirectToIfNotSubscribed?: string;
 };
 
 export const AuthButton = ({
   children,
   callbackUrl,
   mode = "modal",
-  redirect = true,
   asChild,
   className,
+  redirect = true,
+  redirectToIfNotSubscribed,
 }: LoginButtonProps) => {
   useSignals();
   const router = useRouter();
@@ -37,6 +40,9 @@ export const AuthButton = ({
     } else {
       isAuthModalOpenSignal.value = true;
       needsAuthModalRedirectSignal.value = redirect;
+      authModalRedirectToIfNotSubscribed.value = redirect
+        ? redirectToIfNotSubscribed
+        : undefined;
     }
   };
 

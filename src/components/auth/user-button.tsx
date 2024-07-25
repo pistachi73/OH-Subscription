@@ -63,8 +63,8 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
         </DropdownMenuItem>
         <DropdownMenuSeparator className="my-2 bg-border" />
 
-        <LogoutButton>
-          <DropdownMenuItem className="mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-muted-foreground">
+        <LogoutButton asChild>
+          <DropdownMenuItem className=" mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-muted-foreground">
             <LogOut className="h-5 w-5" />
             Logout
           </DropdownMenuItem>

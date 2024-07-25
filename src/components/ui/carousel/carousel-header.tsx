@@ -15,7 +15,7 @@ export const CarouselHeader = ({ title, href }: CarouselHeaderProps) => {
       href={href as string}
       className="group/carousel-title relative mb-1 ml-[4%] flex w-fit items-center gap-3 sm:ml-[4%] 2xl:ml-14 "
     >
-      <span className="flex items-center gap-2 text-base font-medium tracking-tight lg:text-xl">
+      <span className="flex items-center gap-2 text-lg font-medium tracking-tight lg:text-xl">
         {title}
         {href && (
           <span className="flex items-center gap-1 text-2xs text-orange-500 md:text-sm">

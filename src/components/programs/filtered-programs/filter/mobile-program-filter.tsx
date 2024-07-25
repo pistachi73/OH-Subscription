@@ -2,8 +2,8 @@
 import { Filter, FilterX, Search } from "lucide-react";
 import { useState } from "react";
 
-import { useFilteredPrograms } from "./filtered-programs-context";
-import { useProgramFilters } from "./use-program-filters";
+import { useProgramsUrlQueryFilters } from "../../hooks/use-programs-url-query-filters";
+import { useFilteredPrograms } from "../filtered-programs-context";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,16 +22,16 @@ export const MobileProgramFilter = () => {
     useFilteredPrograms();
 
   const {
-    teachers,
-    categories,
-    levels,
-    search,
+    teachersFilterArray,
+    categoriesFilterArray,
+    levelsFilterArray,
+    searchFilter,
     handleFilterChange,
     clearFilters,
     handleSearchKeypress,
-  } = useProgramFilters();
+  } = useProgramsUrlQueryFilters();
 
-  const [searchInput, setSearchInput] = useState(search ?? "");
+  const [searchInput, setSearchInput] = useState(searchFilter ?? "");
 
   return (
     <Sheet>
@@ -78,7 +78,11 @@ export const MobileProgramFilter = () => {
                 >
                   <Checkbox
                     id={`teacher-${value}`}
-                    checked={teachers ? teachers?.includes(value) : false}
+                    checked={
+                      teachersFilterArray?.length
+                        ? teachersFilterArray?.includes(value)
+                        : false
+                    }
                     onCheckedChange={(checked) =>
                       handleFilterChange(Boolean(checked), value, "teachers")
                     }
@@ -101,7 +105,11 @@ export const MobileProgramFilter = () => {
                 >
                   <Checkbox
                     id={`category-${value}`}
-                    checked={categories ? categories?.includes(value) : false}
+                    checked={
+                      categoriesFilterArray?.length
+                        ? categoriesFilterArray.includes(value)
+                        : false
+                    }
                     onCheckedChange={(checked) => {
                       handleFilterChange(Boolean(checked), value, "categories");
                     }}
@@ -124,7 +132,11 @@ export const MobileProgramFilter = () => {
                 >
                   <Checkbox
                     id={`level-${value}`}
-                    checked={levels ? levels?.includes(value) : false}
+                    checked={
+                      levelsFilterArray?.length
+                        ? levelsFilterArray.includes(value)
+                        : false
+                    }
                     onCheckedChange={(checked) =>
                       handleFilterChange(Boolean(checked), value, "levels")
                     }
@@ -141,7 +153,9 @@ export const MobileProgramFilter = () => {
           </div>
         </div>
 
-        {(teachers?.length || levels?.length || categories?.length) && (
+        {(teachersFilterArray?.length ||
+          levelsFilterArray?.length ||
+          categoriesFilterArray?.length) && (
           <Button
             variant="ghost"
             onClick={() => clearFilters()}

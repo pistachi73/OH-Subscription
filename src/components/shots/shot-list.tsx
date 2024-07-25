@@ -40,7 +40,7 @@ export const ShotList = ({ shots }: ShotListProps) => {
   return (
     <MaxWidthWrapper className={cn("relative z-[2]")} as="section">
       <h2 className="relative mb-1 flex w-fit items-center gap-3">
-        <span className="flex items-center gap-2 text-base font-medium tracking-tight lg:text-xl">
+        <span className="flex items-center gap-2 text-lg font-medium tracking-tight lg:text-xl">
           Shots
         </span>
       </h2>

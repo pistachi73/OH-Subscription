@@ -179,8 +179,6 @@ const VerticalCarouselItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const { orientation } = useVerticalCarousel();
-
   return (
     <div
       ref={ref}

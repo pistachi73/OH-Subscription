@@ -1,21 +1,21 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
+import { ShareOutlineIcon } from "@/components/ui/icons";
+import {
+  LikeButton,
+  LikeButtonIcon,
+  LikeButtonLabel,
+} from "@/components/ui/like-button";
+import { ShareButton } from "@/components/ui/share-button/share-button";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils";
 import { getBaseUrl } from "@/trpc/shared";
 import { ArrowRightIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
-import {
-  LikeButton,
-  LikeButtonIcon,
-  LikeButtonLabel,
-} from "../programs/components/like-button";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { useDeviceType } from "../ui/device-only/device-only-provider";
-import { ShareOutlineIcon } from "../ui/icons";
-import { ShareButton } from "../ui/share-button/share-button";
 import { useChapterContext } from "./chapter-context";
 
 export const ChapterDetails = () => {

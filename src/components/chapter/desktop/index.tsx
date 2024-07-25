@@ -40,7 +40,7 @@ const DynamicDesktopChapterTranscript = dynamic(
   { ssr: false },
 );
 
-export const DesktopChapter = () => {
+const DesktopChapter = () => {
   const { activeTab, chapter } = useChapterContext();
   return (
     <ChapterPlayerContainer>
@@ -64,3 +64,5 @@ export const DesktopChapter = () => {
     </ChapterPlayerContainer>
   );
 };
+
+export default DesktopChapter;

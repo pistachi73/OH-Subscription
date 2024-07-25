@@ -53,7 +53,7 @@ export const ProgramCarousel = ({
   }
 
   return (
-    <div className="my-4 lg:my-12">
+    <div className="my-8 md:my-10 lg:my-12">
       <CarouselHeader title={title} href={href} />
       <Carousel
         slidesPerView={slidesPerView}

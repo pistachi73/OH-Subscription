@@ -1,34 +1,54 @@
-import type {
-  ProgramChapter,
-  ProgramSpotlight,
-} from "@/server/db/schema.types";
-import DeviceOnlyServerComponent from "../ui/device-only/device-only-server";
+import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
+
+import { getHeaders } from "@/lib/get-headers";
+import { api } from "@/trpc/server";
+
+import { isUserSubscribed } from "@/lib/auth";
 import { ChapterContextProvider } from "./chapter-context";
-import { DesktopChapter } from "./desktop";
-import { MobileChapter } from "./mobile";
 
 export type ChapterProps = {
-  program: NonNullable<ProgramSpotlight>;
-  chapter: NonNullable<ProgramChapter>;
+  programSlug: string;
+  chapterSlug: string;
 };
 
-export const Chapter = ({ program, chapter }: ChapterProps) => {
+export const Chapter = async ({ programSlug, chapterSlug }: ChapterProps) => {
+  const isSubscribed = await isUserSubscribed();
+
+  // TODO: Add blocked chapter component
+  // if (!isSubscribed) {
+  //   const DynamicBlockedChapter = dynamic(() =>
+  //     deviceType === "mobile" ? import("./mobile") : import("./desktop"),
+  //   );
+  //   redirect("/plans");
+  // }
+
+  const program = await api.program.getBySlug.query({
+    slug: programSlug,
+  });
+
+  if (!program) {
+    redirect("/");
+  }
+
+  const chapter = await api.video.getBySlug.query({
+    videoSlug: chapterSlug,
+    programId: program.id,
+  });
+
+  if (!chapter) {
+    redirect("/");
+  }
+
+  const { deviceType } = getHeaders();
+
+  const DynamicChapter = dynamic(() =>
+    deviceType === "mobile" ? import("./mobile") : import("./desktop"),
+  );
+
   return (
     <ChapterContextProvider chapter={chapter} program={program}>
-      <ChapterContent />
+      <DynamicChapter />
     </ChapterContextProvider>
-  );
-};
-
-export const ChapterContent = () => {
-  return (
-    <>
-      <DeviceOnlyServerComponent allowedDevices={["desktop", "tablet"]}>
-        <DesktopChapter />
-      </DeviceOnlyServerComponent>
-      <DeviceOnlyServerComponent allowedDevices={["mobile"]}>
-        <MobileChapter />
-      </DeviceOnlyServerComponent>
-    </>
   );
 };

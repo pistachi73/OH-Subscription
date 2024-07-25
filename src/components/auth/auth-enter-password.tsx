@@ -18,6 +18,7 @@ import type { AuthFormSharedProps } from "./auth";
 import { useAuthContext } from "./auth-context";
 import { AuthFormWrapper } from "./auth-form-wrapper";
 import {
+  authModalRedirectToIfNotSubscribed,
   isAuthModalOpenSignal,
   needsAuthModalRedirectSignal,
 } from "./auth-signals";
@@ -44,12 +45,11 @@ export const AuthEnterPassword = ({ authForm }: AuthCreatePasswordProps) => {
       ["loginPassword", "email"],
       { shouldFocus: true },
     );
-    console.log("typeCheckSuccess", typeCheckSuccess);
 
     if (!typeCheckSuccess || !email || !password) return;
 
     startTransition(async () => {
-      const { error, success, twoFactor } =
+      const { error, success, twoFactor, isSubscribed } =
         (await login({
           email,
           password,
@@ -68,10 +68,19 @@ export const AuthEnterPassword = ({ authForm }: AuthCreatePasswordProps) => {
       if (success) {
         authForm.reset();
         isAuthModalOpenSignal.value = false;
-        if (needsAuthModalRedirectSignal.value) {
-          router.push(callbackUrl ?? DEFAULT_LOGIN_REDIRECT);
+
+        if (!isSubscribed && authModalRedirectToIfNotSubscribed.value) {
+          router.push(authModalRedirectToIfNotSubscribed.value);
+          authModalRedirectToIfNotSubscribed.value = undefined;
+          router.refresh();
+          return;
         }
-        router.refresh();
+
+        if (needsAuthModalRedirectSignal.value) {
+          const redirectTo = callbackUrl ?? DEFAULT_LOGIN_REDIRECT;
+          router.push(redirectTo);
+          router.refresh();
+        }
       }
     });
   };
@@ -89,6 +98,14 @@ export const AuthEnterPassword = ({ authForm }: AuthCreatePasswordProps) => {
           onLogin();
         }}
       >
+        <input
+          type="text"
+          name="email"
+          value={authForm.getValues("email")}
+          readOnly
+          autoComplete="email"
+          className="hidden"
+        />
         <FormField
           control={authForm.control}
           name="loginPassword"

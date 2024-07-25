@@ -1,11 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import {
   ChapterOutlineIcon,
   InfoOutlineIcon,
   PlayIcon,
 } from "@/components/ui/icons";
+import { LikeButton, LikeButtonIcon } from "@/components/ui/like-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cardsEase } from "@/lib/animation";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn, getImageUrl } from "@/lib/utils";
@@ -13,12 +23,6 @@ import type { RouterOutputs } from "@/trpc/shared";
 import { AnimatePresence, m } from "framer-motion";
 import { User } from "lucide-react";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { useDeviceType } from "../ui/device-only/device-only-provider";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { LikeButton, LikeButtonIcon } from "./components/like-button";
 import { useLikeProgram } from "./hooks/use-like-program";
 
 export type ProgramCardProps = {
@@ -54,7 +58,6 @@ export const ProgramCard = ({
 
   const onMouseEnter = () => {
     if (deviceType === "mobile" || deviceType === "tablet") return;
-
     setIsHovered(true);
   };
 

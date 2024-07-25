@@ -9,6 +9,9 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 const config = {
   trailingSlash: true,
   reactStrictMode: false,
+  experimental: {
+    optimizePackageImports: ["media-chrome/react"],
+  },
   images: {
     remotePatterns: [
       {

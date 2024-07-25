@@ -20,6 +20,7 @@ export const login = async (
   error?: string;
   success?: string;
   twoFactor?: boolean;
+  isSubscribed?: boolean;
 }> => {
   const verifiedCredentials = LoginSchema.safeParse(credentials);
 
@@ -106,7 +107,10 @@ export const login = async (
     return { error: "Something went wrong!" };
   }
 
-  return { success: "Login successful" };
-
-  // redirect(callbackUrl || DEFAULT_LOGIN_REDIRECT);
+  return {
+    success: "Login successful",
+    isSubscribed: existingUser.stripeSubscriptionEndsOn
+      ? (existingUser.stripeSubscriptionEndsOn as Date) > new Date()
+      : false,
+  };
 };

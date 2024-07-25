@@ -8,15 +8,17 @@ import {
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
 
-import { LikeButton } from "@/components/programs/components/like-button";
 import { HeartIcon } from "@/components/ui/icons";
+import { LikeButton } from "@/components/ui/like-button";
 import { useChapterContext } from "../chapter-context";
 import {
   chapterButtonClassname,
   chapterButtonIconClassname,
 } from "./chapter-button";
 
-export const DesktopLikeChapterButton = () => {
+export const DesktopLikeChapterButton = ({
+  className,
+}: { className?: string }) => {
   const { chapter, isLikedByUser, isLikeLoading, likeChapter } =
     useChapterContext();
   return (
@@ -29,6 +31,7 @@ export const DesktopLikeChapterButton = () => {
           className={cn(
             "p-0 bg-transparent hover:bg-transparent",
             chapterButtonClassname,
+            className,
           )}
         >
           <HeartIcon

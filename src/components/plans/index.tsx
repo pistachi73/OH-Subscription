@@ -82,7 +82,7 @@ export const Plans = () => {
         setPaymentFrequency={setPaymentFrequency}
       />
       <div className="flex flex-col-reverse lg:flex-row gap-6 lg:gap-0 mt-12 lg:mt-24">
-        <Card className="w-full max-w-[450px] origin-center lg:origin-right hover:scale-[1.02] transition-transform">
+        <Card className="w-full max-w-[450px] origin-center lg:origin-right  transition-transform">
           <CardHeader className="p-9 pb-0 lg:pr-[calc(36px+32px+22px)]">
             <CardTitle>Guest</CardTitle>
             <CardDescription className="text-muted-foreground leading-relaxed">
@@ -133,7 +133,7 @@ export const Plans = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className="w-full max-w-[450px]  overflow-hidden bg-muted border-muted-foreground shadow-lg  lg:-ml-8 lg:scale-110 lg:hover:scale-[1.13] hover:scale-105 transition-transform flex flex-col justify-center">
+        <Card className="w-full max-w-[450px]  overflow-hidden bg-muted border-muted-foreground shadow-lg  lg:-ml-8 lg:scale-110  transition-transform flex flex-col justify-center">
           <CardHeader className="p-9 pb-0">
             <CardTitle>OH Member</CardTitle>
             <CardDescription className="text-muted-foreground leading-relaxed">

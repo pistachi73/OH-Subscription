@@ -14,7 +14,7 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
   return (
     <Link
       href={`/shots/${shot.slug}`}
-      className="w-full h-full bg-muted rounded-md relative overflow-hidden flex items-end px-3 py-2"
+      className=" w-full h-full bg-muted rounded-md relative overflow-hidden flex items-end "
       onMouseEnter={() => {
         previewTimeoutRef.current = setTimeout(() => setShowPreview(true), 400);
       }}
@@ -25,9 +25,17 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
         }
       }}
     >
-      <p className="relative z-30 font-medium line-clamp-2 text-lg text-white">
-        {shot.title}
+      <p
+        className={cn(
+          "block overflow-visible w-full px-2 py-2 relative z-30",
+          "before:absolute before:-z-10 before:left-0 before:bottom-0 before:h-[150%] before:w-full before:bg-gradient-to-t from-black/70 from-25% to-black/0 before:content-['']",
+        )}
+      >
+        <span className="line-clamp-2 text-base font-medium text-white">
+          {shot.title}
+        </span>
       </p>
+
       <Image
         src={thumbnailUrl}
         alt="Shot card thumbnail"

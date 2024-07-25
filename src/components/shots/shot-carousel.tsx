@@ -3,11 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 
 import {
   VerticalCarousel,
+  type VerticalCarouselApi,
   VerticalCarouselContent,
   VerticalCarouselItem,
   VerticalCarouselNext,
   VerticalCarouselPrevious,
-  type VerticalCarouselApi,
 } from "@/components/ui/vertical-carousel";
 import { cn } from "@/lib/utils";
 import type { ShotCarouselData } from "@/server/db/schema.types";
@@ -17,6 +17,7 @@ import { api as trpcApi } from "../../trpc/react";
 import { DeviceOnly } from "../ui/device-only/device-only";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { Shot } from "./shot";
+import { LoadingShot } from "./shot/loading-shot";
 
 type ShotCarouselProps = {
   initialShot: ShotCarouselData;
@@ -29,12 +30,12 @@ export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
   const [current, setCurrent] = useState(0);
   const { deviceType } = useDeviceType();
 
-  const { data, hasNextPage, fetchNextPage } =
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     trpcApi.shot.getCarouselShots.useInfiniteQuery(
       {
         initialShotSlug: initialShot.slug,
         initialShotTitle: initialShot.title,
-        pageSize: 2,
+        pageSize: 3,
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -108,7 +109,6 @@ export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
         >
           {shots?.map((shot, index) => {
             if (!shot) return null;
-            console.log({ current, index, inView: current === index });
             return (
               <VerticalCarouselItem
                 key={shot.slug}
@@ -123,6 +123,19 @@ export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
               </VerticalCarouselItem>
             );
           })}
+
+          {isFetchingNextPage && (
+            <VerticalCarouselItem
+              className={cn(
+                "flex h-full w-full basis-full justify-center",
+                deviceType === "mobile"
+                  ? "pt-0 sm:pt-0 mt-0 sm:mt-0"
+                  : "sm:max-h-[100%] sm:basis-full",
+              )}
+            >
+              <LoadingShot />
+            </VerticalCarouselItem>
+          )}
         </VerticalCarouselContent>
         <DeviceOnly allowedDevices={["tablet", "desktop"]}>
           <div className="z-0 absolute right-[4%] sm:right-[4%] 2xl:right-14 top-0 h-full flex items-end justify-center flex-col gap-3">

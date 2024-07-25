@@ -1,21 +1,5 @@
 "use client";
 
-import { AnimatePresence, m } from "framer-motion";
-import {
-  BookUser,
-  ChevronDown,
-  Layers3,
-  RotateCcw,
-  Search,
-  TrendingUp,
-} from "lucide-react";
-import { useEffect, useState } from "react";
-
-import { FilterBadgesList } from "./filter-badge";
-import { useFilteredPrograms } from "./filtered-programs-context";
-import { useProgramFilters } from "./use-program-filters";
-import { getMappedOptions } from "./utils";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,31 +11,47 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { regularEase } from "@/lib/animation";
+import { getMappedOptions } from "@/lib/get-mapped-options";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, m } from "framer-motion";
+import {
+  BookUser,
+  ChevronDown,
+  Layers3,
+  RotateCcw,
+  Search,
+  TrendingUp,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+
+import { useProgramsUrlQueryFilters } from "../../hooks/use-programs-url-query-filters";
+import { useFilteredPrograms } from "../filtered-programs-context";
+import { FilterBadgesList } from "./filter-badge";
 
 export const DesktopProgramFilter = () => {
-  const { levelOptions, categoryOptions, teacherOptions, isFiltering } =
+  const { levelOptions, categoryOptions, teacherOptions } =
     useFilteredPrograms();
 
   const {
-    teachers,
-    categories,
-    levels,
-    search,
+    teachersFilterArray,
+    categoriesFilterArray,
+    levelsFilterArray,
+    searchFilter,
     handleFilterChange,
     clearFilters,
     handleSearchKeypress,
-  } = useProgramFilters();
+  } = useProgramsUrlQueryFilters();
 
   useEffect(() => {
-    setSearchInput(search ?? "");
-  }, [search]);
+    setSearchInput(searchFilter ?? "");
+  }, [searchFilter]);
 
-  const [searchInput, setSearchInput] = useState(search ?? "");
+  const [searchInput, setSearchInput] = useState(searchFilter ?? "");
 
   const mappedTeachers = getMappedOptions(teacherOptions);
   const mappedCategories = getMappedOptions(categoryOptions);
   const mappedLevels = getMappedOptions(levelOptions);
+
   return (
     <div className="mt-8">
       <div className={cn("flex flex-row flex-wrap items-center gap-4 gap-y-2")}>
@@ -84,7 +84,9 @@ export const DesktopProgramFilter = () => {
                 <div className="flex shrink items-center overflow-hidden text-ellipsis">
                   <BookUser className="mr-2 h-4 w-4 shrink-0" />
                   <span className="overflow-hidden text-ellipsis">
-                    Teacher {teachers?.length && `(${teachers?.length})`}
+                    Teacher{" "}
+                    {teachersFilterArray?.length &&
+                      `(${teachersFilterArray?.length})`}
                   </span>
                 </div>
                 <ChevronDown size={16} className="shrink-0" />
@@ -101,7 +103,7 @@ export const DesktopProgramFilter = () => {
                   <DropdownMenuCheckboxItem
                     key={value}
                     className="capitalize"
-                    checked={teachers?.includes(value)}
+                    checked={teachersFilterArray?.includes(value)}
                     onCheckedChange={(adding) =>
                       handleFilterChange(adding, value, "teachers")
                     }
@@ -123,7 +125,9 @@ export const DesktopProgramFilter = () => {
               >
                 <div className="flex items-center space-x-2">
                   <TrendingUp className="mr-2 h-4 w-4" />
-                  Level {levels?.length && `(${levels?.length})`}
+                  Level{" "}
+                  {levelsFilterArray?.length &&
+                    `(${levelsFilterArray?.length})`}
                 </div>
                 <ChevronDown size={16} />
               </Button>
@@ -139,7 +143,7 @@ export const DesktopProgramFilter = () => {
                   <DropdownMenuCheckboxItem
                     key={value}
                     className="capitalize"
-                    checked={levels?.includes(value)}
+                    checked={levelsFilterArray?.includes(value)}
                     onCheckedChange={(adding) =>
                       handleFilterChange(adding, value, "levels")
                     }
@@ -161,7 +165,9 @@ export const DesktopProgramFilter = () => {
               >
                 <div className="flex items-center space-x-2">
                   <Layers3 className="mr-2 h-4 w-4" />
-                  Category {categories?.length && `(${categories?.length})`}
+                  Category{" "}
+                  {categoriesFilterArray?.length &&
+                    `(${categoriesFilterArray?.length})`}
                 </div>
                 <ChevronDown size={16} />
               </Button>
@@ -177,7 +183,7 @@ export const DesktopProgramFilter = () => {
                   <DropdownMenuCheckboxItem
                     key={value}
                     className="capitalize"
-                    checked={categories?.includes(value)}
+                    checked={categoriesFilterArray?.includes(value)}
                     onCheckedChange={(adding) =>
                       handleFilterChange(adding, value, "categories")
                     }
@@ -191,7 +197,9 @@ export const DesktopProgramFilter = () => {
         )}
       </div>
       <AnimatePresence initial={false}>
-        {(teachers?.length || levels?.length || categories?.length) && (
+        {(teachersFilterArray?.length ||
+          levelsFilterArray?.length ||
+          categoriesFilterArray?.length) && (
           <m.div
             className="overflow-hidden"
             initial={{ height: 0, opacity: 0 }}
@@ -203,7 +211,7 @@ export const DesktopProgramFilter = () => {
               <div className="flex flex-row flex-wrap items-center gap-2">
                 <FilterBadgesList
                   title="Teachers"
-                  list={teachers}
+                  list={teachersFilterArray}
                   mappedValues={mappedTeachers}
                   onRemove={(value) =>
                     handleFilterChange(false, value, "teachers")
@@ -211,7 +219,7 @@ export const DesktopProgramFilter = () => {
                 />
                 <FilterBadgesList
                   title="Levels"
-                  list={levels}
+                  list={levelsFilterArray}
                   mappedValues={mappedLevels}
                   onRemove={(value) =>
                     handleFilterChange(false, value, "levels")
@@ -219,7 +227,7 @@ export const DesktopProgramFilter = () => {
                 />
                 <FilterBadgesList
                   title="Categories"
-                  list={categories}
+                  list={categoriesFilterArray}
                   mappedValues={mappedCategories}
                   onRemove={(value) =>
                     handleFilterChange(false, value, "categories")

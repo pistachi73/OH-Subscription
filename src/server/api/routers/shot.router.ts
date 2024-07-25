@@ -271,10 +271,6 @@ export const shotRouter = createTRPCRouter({
         }
       }
 
-      console.log(
-        "fetched next page,",
-        shotList?.map(({ id }) => id).join("-"),
-      );
       return {
         shots: shotList,
         nextCursor,

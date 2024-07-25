@@ -15,7 +15,7 @@ export const ShotLayout = ({ shot }: ShotProps) => {
       className={cn(
         "pointer-events-none py-2 absolute bottom-0 left-0 z-0 w-full transition-all duration-300 ease-in-out",
         "flex flex-row items-end ",
-        "bg-gradient-to-t from-primary-900/50 from-25% to-primary-900/0",
+        "bg-gradient-to-t from-black/50 from-25% to-black/0",
         isMobile
           ? "pb-4 px-2 pr-1 gap-1"
           : "pb-5 px-4 pr-2 gap-2 group-hover:pb-12 rounded-2xl overflow-hidden",
@@ -60,7 +60,14 @@ export const ShotLayout = ({ shot }: ShotProps) => {
           const isShare = label === "Share";
           if (label === "Transcript" && !shot.transcript) return null;
           if (isShare)
-            return <LayoutButtonShare shot={shot} label={label} icon={Icon} />;
+            return (
+              <LayoutButtonShare
+                key={label}
+                shot={shot}
+                label={label}
+                icon={Icon}
+              />
+            );
           return (
             <LayoutButton key={label} label={label} icon={Icon} {...props} />
           );

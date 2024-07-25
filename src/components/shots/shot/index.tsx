@@ -1,9 +1,6 @@
 "use client";
 import { AnimatePresence, m } from "framer-motion";
 
-import { ShotCommunity } from "./shot-community";
-import { ShotTranscript } from "./shot-transcript";
-
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { cn } from "@/lib/utils";
 import type { ShotCarouselData } from "@/server/db/schema.types";
@@ -12,9 +9,10 @@ import {
   MediaProvider,
   useMediaDispatch,
 } from "media-chrome/react/media-store";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { ShotPlayer } from "../shot-player";
+import { LoadingShotPlayer } from "../shot-player/loading-shot-player";
 import { ShotContextProvider, useShotContext } from "./shot-context";
 import { ShotLayout } from "./shot-layout";
 
@@ -32,6 +30,21 @@ export const Shot = ({ shot, inView }: ShotProps) => {
     </ShotContextProvider>
   );
 };
+
+const ShotPlayer = dynamic(
+  () => import("../shot-player/index").then((mod) => mod.ShotPlayer),
+  { ssr: false, loading: () => <LoadingShotPlayer /> },
+);
+
+const ShotCommunity = dynamic(
+  () => import("./shot-community").then((mod) => mod.ShotCommunity),
+  { ssr: false },
+);
+
+const ShotTranscript = dynamic(
+  () => import("./shot-transcript").then((mod) => mod.ShotTranscript),
+  { ssr: false },
+);
 
 const ShotContent = ({ shot, inView = false }: ShotProps) => {
   const { showComments, showTranscript } = useShotContext();

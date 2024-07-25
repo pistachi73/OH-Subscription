@@ -9,6 +9,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { LayersIcon, PlayIcon, ShareOutlineIcon } from "@/components/ui/icons";
 import {
+  LikeButton,
+  LikeButtonIcon,
+  LikeButtonLabel,
+} from "@/components/ui/like-button";
+import {
   ResponsiveTooltip,
   ResponsiveTooltipContent,
   ResponsiveTooltipTrigger,
@@ -23,11 +28,6 @@ import { cn } from "@/lib/utils";
 import { type RouterOutputs, getBaseUrl } from "@/trpc/shared";
 import { format } from "date-fns";
 import Link from "next/link";
-import {
-  LikeButton,
-  LikeButtonIcon,
-  LikeButtonLabel,
-} from "../components/like-button";
 import { useLikeProgram } from "../hooks/use-like-program";
 
 type ProgramSpotlightHero = {
@@ -40,7 +40,6 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
   });
 
   const {
-    id,
     title,
     description,
     categories,

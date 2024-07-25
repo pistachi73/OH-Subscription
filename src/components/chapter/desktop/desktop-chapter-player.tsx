@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import {
   MediaControlBar,
   MediaController,
@@ -10,18 +11,9 @@ import {
   MediaTimeDisplay,
   MediaVolumeRange,
 } from "media-chrome/react";
-
-import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 import { MediaTimeRange } from "@/components/shots/shot-player/media-time-range";
-import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-
-import {
-  ResponsiveTooltip,
-  ResponsiveTooltipContent,
-  ResponsiveTooltipTrigger,
-} from "@/components/ui/responsive-tooltip";
-
 import {
   PauseIcon,
   PlayIcon,
@@ -32,13 +24,20 @@ import {
   SpeakerMediumIcon,
   SpeakerOffIcon,
 } from "@/components/ui/icons";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  ResponsiveTooltip,
+  ResponsiveTooltipContent,
+  ResponsiveTooltipTrigger,
+} from "@/components/ui/responsive-tooltip";
 import { Switch } from "@/components/ui/switch";
-import { PopoverContent } from "@radix-ui/react-popover";
-import { X } from "lucide-react";
-import Link from "next/link";
+import { cn } from "@/lib/utils";
+
 import { useChapterContext } from "../chapter-context";
-import { useLikeChapter } from "../hooks/use-like-chapter";
 import { ChapterMediaFullScreen } from "../player/chapter-media-full-screen";
 import { ChapterMediaVideo } from "../player/chapter-media-video";
 import { ChapterButton } from "./chapter-button";
@@ -69,21 +68,15 @@ export const topButtonIconFillClassname = cn(
 );
 
 export const DesktopChapterPlayer = () => {
-  const { isMobile } = useDeviceType();
-
-  const { autoPlay, setAutoPlay, bottomButtons, activeTab, chapter, program } =
+  const { autoPlay, setAutoPlay, bottomButtons, chapter, program } =
     useChapterContext();
-
-  const { isLikedByUser, isLikeLoading, likeChapter } = useLikeChapter({
-    initialLiked: chapter.isLikedByUser,
-  });
 
   return (
     <MediaController autohide="1" class="w-full relative flex z-10">
       <ChapterMediaVideo />
       <MediaControlBar
         class={cn(
-          "w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex justify-end items-center my-3 mx-auto",
+          "w-[calc(100%-64px)] flex justify-end items-center mt-4 mx-auto",
         )}
         slot="top-chrome"
       >
@@ -192,73 +185,44 @@ export const DesktopChapterPlayer = () => {
         </MediaSeekForwardButton>
       </MediaControlBar>
       <div className="relative z-10 w-full bg-gradient-to-t from-black/50 from-25% to-black/0 pt-[100px] lg:pt-[200px] pointer-events-none">
-        <MediaControlBar
-          class={cn(
-            "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row justify-between items-end",
-            isMobile ? "mb-3" : "mb-5",
-          )}
-        >
-          <div className={cn(isMobile ? "space-y-0" : "space-y-2")}>
-            <h1
-              className={cn(
-                "font-semibold tracking-tighter text-background dark:text-foreground",
-                isMobile ? "text-2xl" : "text-4xl",
-              )}
-            >
-              {program.title}
-            </h1>
-            <h2
-              className={cn(
-                "font-medium tracking-tight text-background dark:text-foreground",
-                isMobile ? "text-base" : "text-2xl",
-              )}
-            >
-              C{chapter.chapterNumber}: {chapter.title}
-            </h2>
-          </div>
-          <div className=" flex-row gap-1 hidden xl:flex shrink-0">
-            {bottomButtons.map(({ icon, label, ...rest }, index) => {
-              if (label === "Transcript" && !chapter.transcript) return null;
-              return (
-                <ChapterButton
-                  key={label}
-                  label={label}
-                  icon={icon}
-                  lastButton={index === bottomButtons.length - 1}
-                  {...rest}
-                />
-              );
-            })}
-            <DesktopLikeChapterButton />
-          </div>
+        <MediaControlBar class="mx-auto w-[calc(100%-64px)] flex items-center gap-6 mb-4 lg:mb-6">
+          <MediaTimeDisplay class="text-foreground/70 bg-transparent font-inter p-0 text-sm lg:text-base" />
+          <MediaTimeRange />
         </MediaControlBar>
         <MediaControlBar
-          class={cn("w-full flex items-center justify-center xl:mb-6 mb-3")}
+          class={cn(
+            "mb-6 lg:mb-8 mx-auto w-[calc(100%-64px)] flex justify-between items-center",
+          )}
         >
-          <div
+          <h1
             className={cn(
-              "w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex flex-row items-center gap-6",
+              "truncate text-lg lg:text-xl text-background dark:text-foreground space-x-2 mr-4",
             )}
           >
-            <MediaTimeDisplay
-              class={cn(
-                "bg-transparent font-inter p-0  xl:text-base  hidden text-base",
-              )}
-            />
-            <MediaTimeRange />
-          </div>
-        </MediaControlBar>
-        <MediaControlBar
-          class={cn(
-            "mx-auto w-[calc(100%-48px)] lg:w-[calc(100%-64px)] flex justify-between xl:hidden",
-            isMobile ? "mb-1" : "mb-4",
-          )}
-        >
-          <MediaTimeDisplay
-            showduration
-            class="bg-transparent font-inter p-0 h-10 text-sm text-foreground/70"
-          />
-          <div className=" flex-row gap-1 flex shrink-0">
+            <ResponsiveTooltip>
+              <ResponsiveTooltipTrigger asChild>
+                <Link
+                  className="font-semibold pointer-events-auto"
+                  href={`/programs/${program.slug}`}
+                >
+                  {program.title}
+                </Link>
+              </ResponsiveTooltipTrigger>
+              <ResponsiveTooltipContent
+                side="bottom"
+                align="center"
+                className="text-lg"
+                sideOffset={8}
+              >
+                Back to program
+              </ResponsiveTooltipContent>
+            </ResponsiveTooltip>
+            <span className="font-normal">
+              C{chapter.chapterNumber}: {chapter.title}
+            </span>
+          </h1>
+
+          <div className="flex-row gap-1 flex shrink-0">
             {bottomButtons.map(({ icon, label, hidden, ...rest }, index) => {
               if (hidden) return null;
               return (
@@ -266,12 +230,11 @@ export const DesktopChapterPlayer = () => {
                   key={label}
                   label={label}
                   icon={icon}
-                  lastButton={index === bottomButtons.length - 1}
                   {...rest}
                 />
               );
             })}
-            <DesktopLikeChapterButton />
+            <DesktopLikeChapterButton className="pr-0" />
           </div>
         </MediaControlBar>
       </div>

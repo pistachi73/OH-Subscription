@@ -1,5 +1,4 @@
 import { Chapter } from "@/components/chapter/index";
-import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
 
 type ChapterPageProps = {
@@ -10,26 +9,16 @@ type ChapterPageProps = {
 };
 
 const ChapterPage = async ({ params }: ChapterPageProps) => {
-  // Get chapter info
-
-  const program = await api.program.getBySlug.query({
-    slug: params.programSlug,
-  });
-
-  if (!program) {
+  if (!params.programSlug || !params.chapterSlug) {
     redirect("/");
   }
 
-  const chapter = await api.video.getBySlug.query({
-    videoSlug: params.chapterSlug,
-    programId: program.id,
-  });
-
-  if (!chapter) {
-    redirect("/");
-  }
-
-  return <Chapter chapter={chapter} program={program} />;
+  return (
+    <Chapter
+      chapterSlug={params.chapterSlug}
+      programSlug={params.programSlug}
+    />
+  );
 };
 
 export default ChapterPage;

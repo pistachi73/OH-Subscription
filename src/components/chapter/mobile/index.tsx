@@ -30,7 +30,7 @@ const DynamicMobileChapterCommunity = dynamic(
     ssr: false,
   },
 );
-export const MobileChapter = () => {
+const MobileChapter = () => {
   return (
     <>
       <DynamicMobileChapterPlayer />
@@ -41,3 +41,5 @@ export const MobileChapter = () => {
     </>
   );
 };
+
+export default MobileChapter;

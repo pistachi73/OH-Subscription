@@ -49,7 +49,10 @@ export const ShotPlayer = ({ shot }: ShotProps) => {
       </DeviceOnly>
 
       <DeviceOnly allowedDevices={["desktop", "tablet"]}>
-        <MediaControlBar class="flex w-full  p-3 z-10" slot="top-chrome">
+        <MediaControlBar
+          class="flex w-full  p-3 z-10 items-center gap-1"
+          slot="top-chrome"
+        >
           <MediaPlayButton
             class={cn(
               "shrink-0 h-10 w-10 rounded-full bg-foreground/70 dark:bg-background/70  text-background delay-0",
