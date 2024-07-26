@@ -32,33 +32,3 @@ export const deleteRecursiveComments = async ({
 
   return deletedComments;
 };
-
-export const getRecursiveCommentsCount = async ({
-  db,
-  commentId,
-  totalComments,
-}: {
-  db: DB;
-  commentId: number;
-  totalComments: number;
-}) => {
-  const childComments = await db
-    .select({
-      id: comments.id,
-    })
-    .from(comments)
-    .where(eq(comments.parentCommentId, commentId))
-    .groupBy(comments.id);
-
-  totalComments += childComments?.length ?? 0;
-
-  for (const childComment of childComments) {
-    await getRecursiveCommentsCount({
-      db,
-      commentId: childComment.id,
-      totalComments,
-    });
-  }
-
-  return totalComments;
-};

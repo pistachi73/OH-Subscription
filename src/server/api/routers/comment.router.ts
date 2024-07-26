@@ -9,10 +9,7 @@ import { isNumber } from "@/lib/utils";
 import { CommentSchema } from "@/schemas";
 import { comments, likes, users } from "@/server/db/schema";
 import { alias } from "drizzle-orm/pg-core";
-import {
-  deleteRecursiveComments,
-  getRecursiveCommentsCount,
-} from "../lib/comments.lib";
+import { deleteRecursiveComments } from "../lib/comments.lib";
 import { withLimit } from "../query-utils/shared.query";
 
 export const commentRouter = createTRPCRouter({
@@ -186,8 +183,6 @@ export const commentRouter = createTRPCRouter({
           commentsQuery = withLimit(commentsQuery, pageSize);
         }
 
-        console.log({ commentsQuery: commentsQuery.toSQL() });
-
         const res = await commentsQuery.execute();
         let nextCursor = res.length ? res?.[res.length - 1]?.updatedAt : null;
 
@@ -225,11 +220,13 @@ export const commentRouter = createTRPCRouter({
     .query(async ({ input: { videoId, programId, shotId }, ctx }) => {
       if (!videoId && !programId && !shotId) return null;
 
-      const { db } = ctx;
-
+      const replies = alias(comments, "replies");
       let commentsQuery = ctx.db
-        .select({ id: comments.id })
+        .select({
+          totalReplies: sql<number>`count(${replies.id})`,
+        })
         .from(comments)
+        .leftJoin(replies, eq(replies.parentCommentId, comments.id))
         .$dynamic();
 
       const whereClauses = [
@@ -242,17 +239,13 @@ export const commentRouter = createTRPCRouter({
       commentsQuery = commentsQuery.groupBy(comments.id);
       const resComments = await commentsQuery.execute();
 
-      let totalComments = resComments?.length ?? 0;
+      console.log({ resComments });
 
-      for (const childComment of resComments) {
-        totalComments = await getRecursiveCommentsCount({
-          db,
-          commentId: childComment.id,
-          totalComments,
-        });
-      }
+      const commentsCount = resComments.reduce((acc, curr) => {
+        return acc + Number(curr.totalReplies) + 1;
+      }, 0);
 
-      return totalComments;
+      return commentsCount ?? null;
     }),
 
   getById: publicProcedure

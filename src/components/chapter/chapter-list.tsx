@@ -113,9 +113,6 @@ export const ActiveChapterCard = ({
             <p className="w-full gap-3 text-foreground text-lg font-semibold tracking-tight">
               {chapter.title}
             </p>
-            <p className="mt-1 text-base leading-relaxed text-foreground text-balance">
-              {chapter.description}
-            </p>
           </div>
         </div>
       </div>

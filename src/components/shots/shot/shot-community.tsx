@@ -5,6 +5,7 @@ import { ShotSideWrapper } from "./shot-side-wrapper";
 import { Button } from "@/components/ui/button";
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
 import { useComments } from "@/components/ui/comments/hooks/use-comments";
+import { useCommentsCount } from "@/components/ui/comments/hooks/use-comments-count";
 import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
 import { UserAvatar } from "@/components/ui/user-avatar";
@@ -20,8 +21,12 @@ import { useShotContext } from "./shot-context";
 export const ShotCommunity = ({ shot }: ShotProps) => {
   const user = useCurrentUser();
   const { showComments, setShowComments } = useShotContext();
+  const { commentsCount, isLoading } = useCommentsCount({
+    shotId: shot.id,
+  });
   const { isMobile } = useDeviceType();
 
+  console.log({ commentsCount });
   return (
     <ShotSideWrapper
       isDialogOpen={showComments}
@@ -43,7 +48,9 @@ export const ShotCommunity = ({ shot }: ShotProps) => {
             isMobile && "pt-0",
           )}
         >
-          <h2 className={cn("text-base font-medium md:text-lg")}>Discussion</h2>
+          <h2 className={cn("text-base font-medium md:text-lg")}>
+            Discussion {!isLoading && `(${commentsCount})`}
+          </h2>
         </div>
         {user ? (
           <ShotCommunityComments shot={shot} />

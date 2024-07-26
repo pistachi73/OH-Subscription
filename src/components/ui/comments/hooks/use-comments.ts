@@ -18,6 +18,7 @@ export const useComments = (commentSource: ExclusiveCommentSource) => {
       },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
+        enabled: Boolean(user),
       },
     );
 
@@ -43,8 +44,7 @@ export const useComments = (commentSource: ExclusiveCommentSource) => {
           ...commentSource,
         },
         (data) => {
-          if (!data) return data;
-          return data + 1;
+          return (data ?? 0) + 1;
         },
       );
 
@@ -71,7 +71,6 @@ export const useComments = (commentSource: ExclusiveCommentSource) => {
   });
 
   const onComment = async (content: string) => {
-    console.log({ content });
     if (!user.id) return;
 
     await addComment({

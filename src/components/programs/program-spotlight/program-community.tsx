@@ -8,12 +8,12 @@ import { Comment } from "@/components/ui/comments/comment";
 
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
 import { useComments } from "@/components/ui/comments/hooks/use-comments";
+import { useCommentsCount } from "@/components/ui/comments/hooks/use-comments-count";
 import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
-import { api } from "@/trpc/react";
 import { RelatedPrograms } from "./program-related";
 
 type ProgramCommunityProps = {
@@ -22,20 +22,15 @@ type ProgramCommunityProps = {
 
 export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
   const user = useCurrentUser();
-  const { data, isLoading } = api.comment.getTotalCommentsBySourceId.useQuery(
-    {
-      programId: program.id,
-    },
-    { enabled: Boolean(user) },
-  );
-
-  console.log({ totalComments: data });
+  const { commentsCount, isLoading } = useCommentsCount({
+    programId: program.id,
+  });
 
   return (
     <div className="my-8 w-full sm:mt-12">
       <div className="mb-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-medium sm:text-xl">
-          Discussion {!isLoading && `(${data})`}
+          Discussion {!isLoading && `(${commentsCount})`}
         </h2>
       </div>
       <div className="flex flex-col gap-5 w-full max-w-[750px] items-end">

@@ -259,6 +259,7 @@ export const Comment = ({
             ) : (
               <>
                 <p className="max-w-[70ch] text-foreground text-sm sm:leading-relaxed">
+                  {comment.id}{" "}
                   {comment?.content ??
                     "Just finished watching this video and I loved it! The production quality was top-notch, and the content was sFuer informative. Can&apos;t wait for more videos like this! 😄👍"}
                 </p>

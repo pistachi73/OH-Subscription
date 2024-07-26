@@ -46,10 +46,10 @@ export const AddComment = ({
       <AutosizeTextarea
         value={value}
         onChange={onChange}
-        minHeight={hasLabels ? 86 : 38}
+        minHeight={hasLabels ? 92 : 38}
         className={cn(
           "h-10 overflow-y-hidden p-3 text-sm resize-none bg-transparent",
-          hasLabels ? "h-[88px] pb-[60px]" : "",
+          hasLabels ? "h-[94px] pb-[60px]" : "",
           className,
         )}
         {...props}

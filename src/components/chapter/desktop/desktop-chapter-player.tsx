@@ -37,6 +37,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
+import { useEffect } from "react";
 import { useChapterContext } from "../chapter-context";
 import { ChapterMediaFullScreen } from "../player/chapter-media-full-screen";
 import { ChapterMediaVideo } from "../player/chapter-media-video";
@@ -70,6 +71,12 @@ export const topButtonIconFillClassname = cn(
 export const DesktopChapterPlayer = () => {
   const { autoPlay, setAutoPlay, bottomButtons, chapter, program } =
     useChapterContext();
+
+  useEffect(() => {
+    return () => {
+      console.log("resetting autoplay");
+    };
+  }, []);
 
   return (
     <MediaController autohide="1" class="w-full relative flex z-10">
