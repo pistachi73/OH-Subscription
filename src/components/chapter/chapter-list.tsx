@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
 import { PlayCircleIcon, PlayIcon } from "@/components/ui/icons";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 import Image from "next/image";
@@ -10,14 +8,7 @@ import { useParams } from "next/navigation";
 import { useChapterContext } from "./chapter-context";
 
 export const ChapterList = () => {
-  const user = useCurrentUser();
-  return user ? (
-    <ChapterListContent />
-  ) : (
-    <div className="px-4 flex items-center justify-center h-full py-4 w-full">
-      <MustBeLoggedIn />
-    </div>
-  );
+  return <ChapterListContent />;
 };
 
 const ChapterListContent = () => {

@@ -6,9 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { AuthButton } from "../auth/auth-button";
-import { Button } from "../ui/button";
-import { SearchInput } from "../ui/search-input";
+import { AuthButton } from "@/components/auth/auth-button";
+import { Button } from "@/components/ui/button";
+import { SearchInput } from "@/components/ui/search-input";
 
 import { mobileNavItems, useCanRenderHeader } from "./helpers";
 
@@ -21,7 +21,8 @@ import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 export const MobileHeader = () => {
   const { isHidden, isScrolled } = useMobileHeaderHide();
-  const { visible, renderAsScrolled, renderBottomBar } = useCanRenderHeader();
+  const { visible, renderAsScrolled, renderBottomBar, renderTopBar } =
+    useCanRenderHeader();
 
   const user = useCurrentUser();
   const segment = useSelectedLayoutSegment();

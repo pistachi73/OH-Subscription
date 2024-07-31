@@ -6,10 +6,13 @@ import { likes, videos } from "@/server/db/schema";
 export const isVideoLikedByUserSubquery = ({
   db,
   userId,
-}: { db: DB; userId?: string }) =>
-  sql<boolean>`exists(${db
+}: { db: DB; userId?: string }) => {
+  if (!userId) return sql<boolean>`false`.as("isLikedByUser");
+
+  return sql<boolean>`exists(${db
     .select({ n: sql`1` })
     .from(likes)
     .where(
       and(eq(likes.videoId, videos.id), eq(likes.userId, userId ?? "")),
     )})`.as("isLikedByUser");
+};

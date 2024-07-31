@@ -72,18 +72,20 @@ export const useCanRenderHeader = () => {
   const { deviceType, isMobile } = useDeviceType();
 
   const isShotsMobile = pathname.includes("/shots") && isMobile;
-  const isChapter = pathname.includes("/chapter") && !isMobile;
+  const isChapter = pathname.includes("/chapter");
 
   const renderAsScrolled =
     renderDesktopHeaderAsScrolledPathnames.includes(pathname) ||
     pathname.includes("/chapter");
 
   const renderBottomBar = !pathname.includes("/chapter");
+  const renderTopBar = !pathname.includes("/chapter");
 
   return {
     visible: !isShotsMobile && !isChapter,
     renderAsScrolled,
     renderBottomBar,
+    renderTopBar,
   };
 };
 

@@ -6,6 +6,7 @@ import {
   integer,
   pgTable,
   primaryKey,
+  real,
   serial,
   text,
   timestamp,
@@ -434,6 +435,44 @@ export const likes = pgTable(
     shotIdUnique: unique("like_userId_shotId").on(t.userId, t.shotId),
     commentIdUnique: unique("like_userId_commentId").on(t.userId, t.commentId),
     videoIdUnique: unique("like_userId_videoId").on(t.userId, t.videoId),
+  }),
+);
+
+export const userProgresses = pgTable(
+  "userProgresses",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    programId: integer("programId")
+      .notNull()
+      .references(() => programs.id, {
+        onDelete: "cascade",
+      }),
+    videoId: integer("videoId")
+      .notNull()
+      .references(() => videos.id, {
+        onDelete: "cascade",
+      }),
+
+    lastWatchedAt: timestamp("lastWatchedAt", { mode: "date" }).defaultNow(),
+    completed: boolean("completed").default(false),
+    watchedDuration: real("watchedDuration").default(0),
+
+    progress: integer("progress").default(0),
+  },
+  (t) => ({
+    compoundKey: primaryKey({
+      columns: [t.userId, t.videoId, t.programId],
+    }),
+    programIdIndex: index().on(t.programId),
+    videoIdIndex: index().on(t.videoId),
+    userIdIndex: index().on(t.userId),
+    userIdUnique: unique("userProgresses_userId_programId_videoId").on(
+      t.userId,
+      t.programId,
+      t.videoId,
+    ),
   }),
 );
 

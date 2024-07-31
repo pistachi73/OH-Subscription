@@ -14,7 +14,9 @@ import { z } from "zod";
 
 import type { ProgramLevel } from "../../db/schema.types";
 import {
+  firstChapterSubquery,
   isProgramLikedByUserSubquery,
+  lastWatchedChapterSubquery,
   programCategoriesSelect,
   programChaptersSelect,
   programTeachersSelect,
@@ -204,6 +206,8 @@ export const programRouter = createTRPCRouter({
         .optional(),
     )
     .query(async ({ input, ctx }) => {
+      const isLoggedIn = Boolean(ctx.session?.user);
+
       const {
         teacherIds,
         categoryIds,
@@ -241,6 +245,14 @@ export const programRouter = createTRPCRouter({
           isLikedByUser: isProgramLikedByUserSubquery({
             db: ctx.db,
             userId: ctx.session?.user?.id,
+          }),
+
+          lastWatchedChapter: lastWatchedChapterSubquery({
+            db: ctx.db,
+            userId: ctx.session?.user?.id,
+          }),
+          firstChapter: firstChapterSubquery({
+            db: ctx.db,
           }),
           ...(similarity && { similarity }),
         })
@@ -360,6 +372,9 @@ export const programRouter = createTRPCRouter({
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input: { slug }, ctx }) => {
+      const user = ctx.session?.user;
+      const isLoggedIn = Boolean(user);
+
       let programQuery = ctx.db
         .select({
           id: programs.id,
@@ -372,7 +387,7 @@ export const programRouter = createTRPCRouter({
           updatedAt: programs.updatedAt,
           teachers: programTeachersSelect,
           categories: programCategoriesSelect,
-          chapters: programChaptersSelect,
+          chapters: programChaptersSelect(isLoggedIn),
           isLikedByUser: isProgramLikedByUserSubquery({
             db: ctx.db,
             userId: ctx.session?.user?.id,
@@ -384,7 +399,8 @@ export const programRouter = createTRPCRouter({
 
       programQuery = programsWithTeachers(programQuery);
       programQuery = programsWithCategories(programQuery);
-      programQuery = programsWithChapters(programQuery);
+      programQuery = programsWithChapters(programQuery, user?.id);
+
       programQuery = programQuery.groupBy(programs.id);
 
       const res = await programQuery.execute();

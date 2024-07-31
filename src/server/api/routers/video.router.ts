@@ -138,12 +138,9 @@ export const videoRouter = createTRPCRouter({
             programId ? eq(videosOnPrograms.programId, programId) : undefined,
           ),
         )
-        .where(
-          and(
-            eq(videos.slug, videoSlug),
-            programId ? eq(videosOnPrograms.programId, programId) : undefined,
-          ),
-        );
+        .where(and(eq(videos.slug, videoSlug)));
+
+      console.log({ res });
 
       const video = res?.[0];
 

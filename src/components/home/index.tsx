@@ -1,6 +1,5 @@
 import { api } from "@/trpc/server";
 import { ProgramCarousel } from "../programs/program-carousel";
-import { ShotList } from "../shots/shot-list";
 import { HeroCarousel } from "./hero-carousel";
 
 export const Home = async () => {
@@ -26,7 +25,7 @@ export const Home = async () => {
         href="/programs/?categories=3"
         programs={vocabularyPrograms}
       />
-      <ShotList shots={shots} />
+      {/* <ShotList shots={shots} /> */}
       <ProgramCarousel
         title="Grammar"
         href="/programs/?categories=4"

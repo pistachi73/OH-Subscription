@@ -9,7 +9,6 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       <ThemeProvider
         attribute="class"
         defaultTheme="dark"
-        forcedTheme="dark"
         disableTransitionOnChange
       >
         <TooltipProvider delayDuration={100}>{children}</TooltipProvider>

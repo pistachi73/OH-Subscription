@@ -27,11 +27,11 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
     >
       <p
         className={cn(
-          "block overflow-visible w-full px-2 py-2 relative z-30",
+          "block overflow-visible w-full px-2 py-3 relative z-30",
           "before:absolute before:-z-10 before:left-0 before:bottom-0 before:h-[150%] before:w-full before:bg-gradient-to-t from-black/70 from-25% to-black/0 before:content-['']",
         )}
       >
-        <span className="line-clamp-2 text-base font-medium text-white">
+        <span className="line-clamp-2 text-sm font-medium text-white">
           {shot.title}
         </span>
       </p>

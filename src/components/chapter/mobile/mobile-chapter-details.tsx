@@ -34,13 +34,13 @@ export const MobileChapterDetails = () => {
         <h2 className="text-lg font-semibold tracking-tight">
           Related programs
         </h2>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <ProgramList
             programs={relatedPrograms}
             isLoading={isLoading}
             initialAnimation={false}
             cardsPerRow={{
-              xs: 2,
+              xs: 1,
               sm: 3,
             }}
           />

@@ -5,6 +5,7 @@ import { paymentRouter } from "./routers/payment.router";
 import { programRouter } from "./routers/program.router";
 import { shotRouter } from "./routers/shot.router";
 import { teacherRouter } from "./routers/teacher.router";
+import { userProgressRouter } from "./routers/user-progress.router";
 import { userRouter } from "./routers/user.router";
 import { videoRouter } from "./routers/video.router";
 
@@ -27,6 +28,7 @@ export const appRouter = createTRPCRouter({
   comment: commentRouter,
   payment: paymentRouter,
   like: likeRouter,
+  userProgress: userProgressRouter,
 });
 
 // export type definition of API

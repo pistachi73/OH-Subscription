@@ -202,3 +202,13 @@ export const AuthRegisterSchema = z.object({
   password: PasswordSchema,
   code: z.string().optional(),
 });
+
+export const UserProgressSchema = z.object({
+  userId: z.string(),
+  programId: z.number(),
+  videoId: z.number(),
+  lastWatchedAt: z.date().optional(),
+  completed: z.boolean().optional(),
+  watchedDuration: z.number().optional(),
+  progress: z.number().min(0).max(100).optional(),
+});

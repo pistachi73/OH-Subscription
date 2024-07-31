@@ -7,6 +7,7 @@ import type { ShotProps } from "../shot";
 export const MediaVideo = ({ shot }: ShotProps) => {
   const { deviceType } = useDeviceType();
   const mediaRef = useMediaRef();
+
   return (
     <MuxVideo
       ref={mediaRef}

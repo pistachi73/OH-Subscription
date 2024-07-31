@@ -3,16 +3,25 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PlayIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
+import { useMemo } from "react";
 
 type ChapterProps = {
   chapter: NonNullable<NonNullable<ProgramSpotlight>["chapters"]>[0];
 };
 
 export const Chapter = ({ chapter }: ChapterProps) => {
+  const timeLeft = useMemo(() => {
+    if (!chapter.userProgress?.watchedDuration) return chapter.duration;
+    return Math.floor(
+      chapter.duration - Math.floor(chapter.userProgress?.watchedDuration) / 60,
+    );
+  }, [chapter.duration, chapter.userProgress?.watchedDuration]);
+
   return (
     <div className="w-full">
       <Link
@@ -35,6 +44,21 @@ export const Chapter = ({ chapter }: ChapterProps) => {
         >
           <PlayIcon className="w-6 h-6" />
         </Button>
+        {chapter.userProgress && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[90%] z-30 flex flex-col gap-1 items-end">
+            <Badge variant="accent" className="text-xs rounded-md px-2">
+              {timeLeft} min left
+            </Badge>
+            <span className="w-full h-[5px] bg-accent/80 rounded-full relative ">
+              <span
+                className="bg-secondary h-full rounded-full block"
+                style={{
+                  width: `${chapter.userProgress.progress}%`,
+                }}
+              />
+            </span>
+          </div>
+        )}
       </Link>
       <div className="mt-4 ">
         <p className="text-muted-foreground font-medium tracking-tight text-sm">

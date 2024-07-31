@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 
+import { isUserSubscribed } from "@/lib/auth";
 import { getHeaders } from "@/lib/get-headers";
 import { api } from "@/trpc/server";
 
-import { isUserSubscribed } from "@/lib/auth";
-import { ChapterContextProvider } from "./chapter-context";
+import { ChapterProviders } from "./chapter-providers";
 
 export type ChapterProps = {
   programSlug: string;
@@ -27,6 +27,8 @@ export const Chapter = async ({ programSlug, chapterSlug }: ChapterProps) => {
     slug: programSlug,
   });
 
+  console.log({ program, chapterSlug });
+
   if (!program) {
     redirect("/");
   }
@@ -47,8 +49,8 @@ export const Chapter = async ({ programSlug, chapterSlug }: ChapterProps) => {
   );
 
   return (
-    <ChapterContextProvider chapter={chapter} program={program}>
+    <ChapterProviders chapter={chapter} program={program}>
       <DynamicChapter />
-    </ChapterContextProvider>
+    </ChapterProviders>
   );
 };

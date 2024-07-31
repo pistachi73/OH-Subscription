@@ -6,7 +6,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useMobileHeaderHide } from "@/hooks/use-mobile-header-hide";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { useChapterContext } from "../chapter-context";
@@ -25,7 +24,6 @@ export const MobileChaterContentDrawer = ({
   className,
 }: MobileChapterContentDrawerProps) => {
   const { deviceSize } = useDeviceType();
-  const { isHidden } = useMobileHeaderHide();
   const { setActiveTab } = useChapterContext();
 
   const isLandscape = deviceSize.includes("sm");
@@ -68,10 +66,7 @@ export const MobileChaterContentDrawer = ({
         overlayClassName="!pointer-events-none bg-transparent"
         className={cn(
           "max-h-full w-full bg-muted-background pointer-events-auto transition-[height] duration-300 ease-in-out",
-
-          isHidden
-            ? "h-[calc(100dvh-var(--aspect-ratio-height))]"
-            : "h-[calc(100dvh-var(--aspect-ratio-height)-48px)]",
+          "h-[calc(100dvh-var(--aspect-ratio-height))]",
           className,
         )}
       >

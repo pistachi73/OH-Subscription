@@ -44,7 +44,9 @@ export const ChapterDetails = () => {
             </Badge>
           ))}
         </section>
-        <p className="mt-2 text-base text-balance">{chapter.description}</p>
+        <p className="mt-2 text-sm lg:text-base text-balance">
+          {chapter.description}
+        </p>
 
         {isMobile && (
           <div className="mt-4 flex gap-2 w-full ">
@@ -102,7 +104,7 @@ export const ChapterDetails = () => {
                 key={`teacher-${teacher.name}`}
                 className="group flex flex-row gap-4 items-start border border-input shadow-sm px-4 py-4 rounded-lg"
               >
-                <Avatar className="h-20 w-20 border-2 border-accent">
+                <Avatar className="h-14 w-14 border-2 border-accent">
                   <AvatarImage
                     alt="teacher avatar"
                     src={teacher.image ?? "/images/avatar-placeholder.png"}
@@ -118,13 +120,13 @@ export const ChapterDetails = () => {
                   <p className="mt-0.5 text-muted-foreground text-sm">
                     Teacher at OH{" "}
                   </p>
-                  <p className="mt-1 text-base text-foreground line-clamp-4">
+                  <p className="mt-1 text-sm lg:text-base text-foreground line-clamp-4">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                     non risus. Suspendisse lectus tortor, dignissim sit amet,
                     adipiscing nec, ultricies sed, dolor. Cras elementum
                     ultrices diam. Maecenas ligula.
                   </p>
-                  <span className="mt-2 text-base text-secondary text-left align-start flex flex-row items-center gap-2">
+                  <span className="mt-2 text-sm lg:text-base text-secondary text-left align-start flex flex-row items-center gap-2">
                     View profile
                     <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>

@@ -22,7 +22,7 @@ import {
   SkipForward10Icon,
 } from "@/components/ui/icons";
 import { Switch } from "@/components/ui/switch";
-import { useMobileHeaderHide } from "@/hooks/use-mobile-header-hide";
+import Link from "next/link";
 import { useChapterContext } from "../chapter-context";
 import { ChapterMediaVideo } from "../player/chapter-media-video";
 import { MobileMediaFullscreen } from "./mobile-media-fullscreen";
@@ -79,17 +79,14 @@ const centerButtonIconClassname = cn(
 );
 
 export const MobileChapterPlayer = () => {
-  const { isHidden } = useMobileHeaderHide();
   const { autoPlay, setAutoPlay, chapter, program } = useChapterContext();
 
   return (
     <MediaController
       autohide="1"
       class={cn(
-        "block w-full h-[var(--aspect-ratio-height)] z-10 transition-transform ease-in-out duration-300 bg-black overflow-hidden",
-        isHidden ? "-translate-y-12" : "translate-y-0",
-        "sticky top-12 left-0 sm:relative sm:top-0 sm:left-0",
-        "sm:translate-y-0",
+        "block w-full h-[var(--aspect-ratio-height)] z-10 bg-black overflow-hidden",
+        "relative top-0 left-0",
       )}
     >
       <div className="absolute top-0 left-0 w-full h-full bg-black/30 pointer-events-none z-0" />
@@ -97,7 +94,7 @@ export const MobileChapterPlayer = () => {
       <ChapterMediaVideo />
       <MediaControlBar
         class={cn(
-          "relative z-10 w-[92%] lg flex items-center justify-between mt-[3%] mx-auto gap-1",
+          "relative z-10 w-[92%] lg flex items-center justify-between mt-[2%] mx-auto gap-1",
         )}
         slot="top-chrome"
       >
@@ -105,24 +102,27 @@ export const MobileChapterPlayer = () => {
           variant={"ghost"}
           size={"icon"}
           className="h-8 w-fit px-3 pl-0 bg-transparent flex flex-row items-center justify-center gap-2"
+          asChild
         >
-          <ArrowLeftIcon className="w-4 h-4 text-background dark:text-foreground" />
-          <p className="text-xs text-white font-medium ">{program.title}</p>
+          <Link href={`/programs/${program.slug}`}>
+            <ArrowLeftIcon className="w-4 h-4 text-background dark:text-foreground" />
+            <p className="text-xs text-white font-medium ">{program.title}</p>
+          </Link>
         </Button>
         <div className="flex flex-row items-center gap-2">
           <Switch
             checked={autoPlay}
             onCheckedChange={setAutoPlay}
-            className="h-3 w-6 data-[state=checked]:bg-primary data-[state=unchecked]:bg-dark-accent/90"
+            className="h-2 w-5 data-[state=checked]:bg-primary data-[state=unchecked]:bg-dark-accent/90"
             thumbClassName={cn(
-              "flex w-5 h-5 items-center justify-center bg-background dark:bg-foreground text-foreground dark:text-background",
+              "flex w-4 h-4 items-center justify-center bg-background dark:bg-foreground text-foreground dark:text-background",
               " data-[state=checked]:translate-x-[calc(100%-10px)] data-[state=unchecked]:-translate-x-[10px]",
             )}
           >
             {autoPlay ? (
-              <PlayIcon className="w-3 h-3" />
+              <PlayIcon className="w-[10px] h-[10px]" />
             ) : (
-              <PauseIcon className="w-3 h-3" />
+              <PauseIcon className="w-[10px] h-[10px]" />
             )}
           </Switch>
           <MobileMediaFullscreen />

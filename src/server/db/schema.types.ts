@@ -4,6 +4,7 @@ import type {
   programs,
   shots,
   teachers,
+  userProgresses,
   users,
   videos,
 } from "./schema";
@@ -14,6 +15,7 @@ export type Category = typeof categories.$inferSelect;
 export type Teacher = typeof teachers.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type Shot = typeof shots.$inferSelect;
+export type UserProgress = typeof userProgresses.$inferSelect;
 
 export type ProgramLevel = Program["level"];
 export type UserRole = User["role"];

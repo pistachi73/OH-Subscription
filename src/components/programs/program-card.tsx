@@ -50,11 +50,21 @@ export const ProgramCard = ({
     title,
     totalChapters,
     categories,
+    lastWatchedChapter,
+    firstChapter,
   } = program;
 
   const { isLikedByUser, likeProgram, isLikeLoading } = useLikeProgram({
     initialLiked: program.isLikedByUser,
   });
+
+  const chapterHrefPrefix = `/programs/${slug}`;
+
+  const chapterHref = lastWatchedChapter
+    ? `${chapterHrefPrefix}/chapters/${lastWatchedChapter.chapterSlug}?start=${Math.floor(lastWatchedChapter.watchedDuration)}`
+    : firstChapter
+      ? `${chapterHrefPrefix}/chapters/${firstChapter?.chapterSlug}`
+      : chapterHrefPrefix;
 
   const onMouseEnter = () => {
     if (deviceType === "mobile" || deviceType === "tablet") return;
@@ -134,6 +144,16 @@ export const ProgramCard = ({
                 isRightBorder && "left-[-25%]",
               )}
             >
+              {lastWatchedChapter ? (
+                <m.span className="absolute bottom-full left-0 w-full h-[6px] bg-accent/80 block">
+                  <span
+                    className="bg-secondary h-full  block"
+                    style={{
+                      width: `${lastWatchedChapter.progress}%`,
+                    }}
+                  />
+                </m.span>
+              ) : null}
               <section className="flex flex-row justify-between">
                 <div className="flex items-center gap-2">
                   <Button
@@ -141,12 +161,14 @@ export const ProgramCard = ({
                     className="rounded-full w-14 h-14 p-0 flex items-center justify-center"
                     asChild
                   >
-                    <Link href={`/programs/${slug}`}>
+                    <Link href={chapterHref}>
                       <PlayIcon className="ml-0.5 w-7 h-7" />
                     </Link>
                   </Button>
                   <p className="font-semibold tracking-tight text-base text-muted-foreground">
-                    Play C1
+                    {program.lastWatchedChapter
+                      ? `Resume C${program.lastWatchedChapter.chapterNumber}`
+                      : "Start watching"}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">

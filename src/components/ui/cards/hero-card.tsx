@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/responsive-tooltip";
 import { cn } from "@/lib/utils";
 import type { ProgramCard } from "@/server/db/schema.types";
+import Image from "next/image";
 
 type HeroCardProps = {
   className?: string;
@@ -28,10 +29,28 @@ export const heroCardHeightProps =
 
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
   ({ className, index, program, active = false }, ref) => {
-    const { id, title, slug, description, thumbnail } = program;
+    const {
+      id,
+      title,
+      slug,
+      description,
+      thumbnail,
+      lastWatchedChapter,
+      firstChapter,
+    } = program;
+
     const { isLikedByUser, isLikeLoading, likeProgram } = useLikeProgram({
       initialLiked: program.isLikedByUser,
     });
+
+    const chapterHrefPrefix = `/programs/${slug}`;
+
+    const chapterHref = lastWatchedChapter
+      ? `${chapterHrefPrefix}/chapters/${lastWatchedChapter.chapterSlug}?start=${Math.floor(lastWatchedChapter.watchedDuration)}`
+      : firstChapter
+        ? `${chapterHrefPrefix}/chapters/${firstChapter?.chapterSlug}`
+        : chapterHrefPrefix;
+
     return (
       <div
         ref={ref}
@@ -75,7 +94,24 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
           )}
         >
           <div className="space-y-1 sm:space-y-3 lg:space-y-5">
-            <h1
+            <Image
+              src="/images/test.svg"
+              alt="test"
+              className={cn(
+                "w-full dark:invert ",
+                "opacity-0 translate-y-10",
+                active &&
+                  "animate-show-hero-card-content fill-mode-forwards delay-600",
+              )}
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{
+                width: "75%",
+                height: "auto",
+              }}
+            />
+            {/* <h1
               className={cn(
                 "text-balance text-left text-xl font-bold tracking-tighter text-foreground capitalize  max-w-[90%]",
                 "sm:text-4xl",
@@ -83,11 +119,11 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 "2xl:text-6xl",
                 "opacity-0 translate-y-10",
                 active &&
-                  " animate-show-hero-card-content fill-mode-forwards delay-600",
+                  "animate-show-hero-card-content fill-mode-forwards delay-600",
               )}
             >
               {title ? title : "Advanced English Conversation"}
-            </h1>
+            </h1> */}
             <p
               className={cn(
                 "mb-2 line-clamp-3 w-full text-left text-base text-foreground",
@@ -118,12 +154,14 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 className="rounded-full w-14 h-14 md:w-20 md:h-20 p-0 flex items-center justify-center"
                 asChild
               >
-                <Link href={`/programs/${slug}`}>
+                <Link href={chapterHref}>
                   <PlayIcon className="ml-0.5 md:w-9 md:h-9 w-6 h-6" />
                 </Link>
               </Button>
               <p className="font-semibold tracking-tight text-lg md:text-xl text-muted-foreground">
-                Play
+                {program.lastWatchedChapter
+                  ? `Resume E${program.lastWatchedChapter.chapterNumber}`
+                  : "Start watching"}
               </p>
             </div>
             <div className="flex items-center gap-1 md:gap-2">

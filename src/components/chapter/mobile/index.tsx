@@ -33,11 +33,15 @@ const DynamicMobileChapterCommunity = dynamic(
 const MobileChapter = () => {
   return (
     <>
-      <DynamicMobileChapterPlayer />
-      <MobileChapterNavigation />
-      <MobileChapterDetails />
-      <DynamicMobileChapterList />
-      <DynamicMobileChapterCommunity />
+      <div className="fixed top-0 left-0 w-full z-50 sm:relative">
+        <DynamicMobileChapterPlayer />
+        <MobileChapterNavigation />
+      </div>
+      <div className="relative w-full pt-[calc(56.25%+48px)] sm:pt-0">
+        <MobileChapterDetails />
+        <DynamicMobileChapterList />
+        <DynamicMobileChapterCommunity />
+      </div>
     </>
   );
 };

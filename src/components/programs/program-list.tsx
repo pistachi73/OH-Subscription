@@ -111,8 +111,8 @@ export const ProgramList = ({
             }}
             transition={{
               ease: regularEase,
-              duration: 0.2,
-              delay: 0.05 * (randomDelayArray?.[index] as number),
+              duration: 0.5,
+              delay: 0.03 * (randomDelayArray?.[index] as number),
             }}
           >
             <ProgramCard

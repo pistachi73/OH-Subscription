@@ -7,14 +7,15 @@ import {
   SpeachBubbleIcon,
   TranscriptIcon,
 } from "@/components/ui/icons";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import type {
   ProgramChapter,
   ProgramSpotlight,
 } from "@/server/db/schema.types";
-import { MediaProvider } from "media-chrome/react/media-store";
 import React, { useState } from "react";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { useLikeChapter } from "./hooks/use-like-chapter";
+import { useUserProgress } from "./hooks/use-user-progress";
 
 export type ChapterTab = "details" | "comments" | "transcript" | "chapters";
 
@@ -49,16 +50,23 @@ export const ChapterContextProvider = ({
   chapter: NonNullable<ProgramChapter>;
   program: NonNullable<ProgramSpotlight>;
 }) => {
+  const user = useCurrentUser();
   const { isMobile } = useDeviceType();
+  const [autoPlay, setAutoPlay] = useState(false);
 
   const [activeTab, setActiveTab] = useState<ChapterTab | null>(
     isMobile ? "details" : null,
   );
+
   const { isLikedByUser, isLikeLoading, likeChapter } = useLikeChapter({
     initialLiked: chapter.isLikedByUser,
   });
 
-  const [autoPlay, setAutoPlay] = useState(false);
+  useUserProgress({
+    userId: user?.id as string,
+    programId: program.id,
+    videoId: chapter.id,
+  });
 
   const value = React.useMemo(
     () => ({
@@ -85,9 +93,7 @@ export const ChapterContextProvider = ({
   );
 
   return (
-    <ChapterContext.Provider value={value}>
-      <MediaProvider>{children}</MediaProvider>
-    </ChapterContext.Provider>
+    <ChapterContext.Provider value={value}>{children}</ChapterContext.Provider>
   );
 };
 
