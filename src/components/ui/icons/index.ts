@@ -46,6 +46,8 @@ export { ScreenPlayIcon } from "./generated/screen-play-icon";
 export { SearchOutlineIcon } from "./generated/search-outline-icon";
 export { ShareOutlineIcon } from "./generated/share-outline-icon";
 export { ShareIcon } from "./generated/share-icon";
+export { ShoppingBagPlayOutlineIcon } from "./generated/shopping-bag-play-outline-icon";
+export { ShoppingBagPlayIcon } from "./generated/shopping-bag-play-icon";
 export { SkipBackward10Icon } from "./generated/skip-backward-10-icon";
 export { SkipForward10Icon } from "./generated/skip-forward-10-icon";
 export { SpeachBubbleOutlineIcon } from "./generated/speach-bubble-outline-icon";

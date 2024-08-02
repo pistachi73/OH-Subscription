@@ -73,6 +73,7 @@ export const useCanRenderHeader = () => {
 
   const isShotsMobile = pathname.includes("/shots") && isMobile;
   const isChapter = pathname.includes("/chapter");
+  const isPlans = pathname.includes("/plans");
 
   const renderAsScrolled =
     renderDesktopHeaderAsScrolledPathnames.includes(pathname) ||
@@ -82,7 +83,7 @@ export const useCanRenderHeader = () => {
   const renderTopBar = !pathname.includes("/chapter");
 
   return {
-    visible: !isShotsMobile && !isChapter,
+    visible: !isShotsMobile && !isChapter && !isPlans,
     renderAsScrolled,
     renderBottomBar,
     renderTopBar,
@@ -94,6 +95,7 @@ export const useCanRenderFooter = () => {
 
   const isShotPage = pathname.includes("/shots");
   const isChapter = pathname.includes("/chapter");
+  const isPlans = pathname.includes("/plans");
 
-  return !isShotPage && !isChapter;
+  return !isShotPage && !isChapter && !isPlans;
 };

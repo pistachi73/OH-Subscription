@@ -3,9 +3,10 @@ import React from "react";
 import Link from "next/link";
 
 import { useLikeProgram } from "@/components/programs/hooks/use-like-program";
+import { ProgramMainCTAButton } from "@/components/programs/program-play-button";
 import { Button } from "@/components/ui/button";
 import { HeroImage } from "@/components/ui/hero-image";
-import { InfoOutlineIcon, PlayIcon } from "@/components/ui/icons";
+import { InfoOutlineIcon } from "@/components/ui/icons";
 import { LikeButton, LikeButtonIcon } from "@/components/ui/like-button";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import {
@@ -13,9 +14,11 @@ import {
   ResponsiveTooltipContent,
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
+import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import { cn } from "@/lib/utils";
 import type { ProgramCard } from "@/server/db/schema.types";
 import Image from "next/image";
+import { SubscribedBanner } from "../subscribed-banner";
 
 type HeroCardProps = {
   className?: string;
@@ -29,27 +32,13 @@ export const heroCardHeightProps =
 
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
   ({ className, index, program, active = false }, ref) => {
-    const {
-      id,
-      title,
-      slug,
-      description,
-      thumbnail,
-      lastWatchedChapter,
-      firstChapter,
-    } = program;
+    const { id, title, slug, description, thumbnail, lastWatchedChapter } =
+      program;
 
+    const isSubscribed = useIsSubscribed();
     const { isLikedByUser, isLikeLoading, likeProgram } = useLikeProgram({
       initialLiked: program.isLikedByUser,
     });
-
-    const chapterHrefPrefix = `/programs/${slug}`;
-
-    const chapterHref = lastWatchedChapter
-      ? `${chapterHrefPrefix}/chapters/${lastWatchedChapter.chapterSlug}?start=${Math.floor(lastWatchedChapter.watchedDuration)}`
-      : firstChapter
-        ? `${chapterHrefPrefix}/chapters/${firstChapter?.chapterSlug}`
-        : chapterHrefPrefix;
 
     return (
       <div
@@ -58,7 +47,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
           heroCardHeightProps,
           className,
           "transition-opacity duration-500 ease-in-out",
-          active ? "opacity-100 z-10 " : "opacity-0 ",
+          active ? "opacity-100 z-10 " : "pointer-events-none opacity-0 ",
         )}
       >
         <div
@@ -86,20 +75,20 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
 
         <MaxWidthWrapper
           className={cn(
-            "mb-6 sm:mb-0 absolute bottom-0 sm:bottom-8 left-0 z-30 mx-0 flex flex-col justify-end gap-5",
+            "mb-6 sm:mb-0 absolute bottom-0 sm:bottom-8 left-0 z-30 mx-0 flex flex-col justify-end gap-8",
             "sm:max-w-[45ch]",
             "md:max-w-[56ch]",
             "xl:max-w-[64ch]",
             "2xl:max-w-[72ch]",
           )}
         >
-          <div className="space-y-1 sm:space-y-3 lg:space-y-5">
+          <div className="space-y-1 sm:space-y-3 lg:space-y-6">
             <Image
               src="/images/test.svg"
               alt="test"
               className={cn(
                 "w-full dark:invert ",
-                "opacity-0 translate-y-10",
+                "opacity-0 translate-y-10 w-3/4 lg:w-[90%]",
                 active &&
                   "animate-show-hero-card-content fill-mode-forwards delay-600",
               )}
@@ -107,7 +96,6 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
               height={0}
               sizes="100vw"
               style={{
-                width: "75%",
                 height: "auto",
               }}
             />
@@ -127,7 +115,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             <p
               className={cn(
                 "mb-2 line-clamp-3 w-full text-left text-base text-foreground",
-                "sm:line-clamp-4 sm:text-base",
+                "sm:line-clamp-4",
                 "md:text-lg hidden",
                 "opacity-0 translate-y-10",
                 active &&
@@ -142,73 +130,67 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
 
           <div
             className={cn(
-              "flex w-full flex-row items-center gap-8  sm:mt-4 ",
+              "w-full",
               "opacity-0 translate-y-10",
               active &&
                 " animate-show-hero-card-content fill-mode-forwards delay-800",
             )}
           >
-            <div className="flex items-center gap-3 sm:gap-4">
-              <Button
-                variant="default"
-                className="rounded-full w-14 h-14 md:w-20 md:h-20 p-0 flex items-center justify-center"
-                asChild
-              >
-                <Link href={chapterHref}>
-                  <PlayIcon className="ml-0.5 md:w-9 md:h-9 w-6 h-6" />
-                </Link>
-              </Button>
-              <p className="font-semibold tracking-tight text-lg md:text-xl text-muted-foreground">
-                {program.lastWatchedChapter
-                  ? `Resume E${program.lastWatchedChapter.chapterNumber}`
-                  : "Start watching"}
-              </p>
-            </div>
-            <div className="flex items-center gap-1 md:gap-2">
-              <ResponsiveTooltip>
-                <ResponsiveTooltipTrigger asChild>
-                  <LikeButton
-                    variant="accent"
-                    className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
-                    isLikedByUser={isLikedByUser ?? false}
-                    isLikeLoading={isLikeLoading}
-                    likeProgram={() => likeProgram({ programId: program.id })}
+            <SubscribedBanner className="mb-3" />
+            <div className="flex flex-row items-center gap-6">
+              <ProgramMainCTAButton
+                program={program}
+                navigationMode="details"
+                size="hero"
+              />
+              <div className="flex items-center gap-1 md:gap-2">
+                <ResponsiveTooltip>
+                  <ResponsiveTooltipTrigger asChild>
+                    <LikeButton
+                      variant="accent"
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
+                      isLikedByUser={isLikedByUser ?? false}
+                      isLikeLoading={isLikeLoading}
+                      likeProgram={() => likeProgram({ programId: program.id })}
+                    >
+                      <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
+                    </LikeButton>
+                  </ResponsiveTooltipTrigger>
+                  <ResponsiveTooltipContent
+                    sideOffset={12}
+                    side="bottom"
+                    className="p-2 px-3"
                   >
-                    <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
-                  </LikeButton>
-                </ResponsiveTooltipTrigger>
-                <ResponsiveTooltipContent
-                  sideOffset={12}
-                  side="bottom"
-                  className="p-2 px-3"
-                >
-                  <p className="text-lg font-medium text-foreground">
-                    {isLikedByUser
-                      ? "Remove from favorites"
-                      : "Add to favorites"}
-                  </p>
-                </ResponsiveTooltipContent>
-              </ResponsiveTooltip>
-              <ResponsiveTooltip>
-                <ResponsiveTooltipTrigger asChild>
-                  <Button
-                    variant="accent"
-                    className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
-                    asChild
+                    <p className="text-lg font-medium text-foreground">
+                      {isLikedByUser
+                        ? "Remove from favorites"
+                        : "Add to favorites"}
+                    </p>
+                  </ResponsiveTooltipContent>
+                </ResponsiveTooltip>
+                <ResponsiveTooltip>
+                  <ResponsiveTooltipTrigger asChild>
+                    <Button
+                      variant="accent"
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
+                      asChild
+                    >
+                      <Link href={`/programs/${slug}`}>
+                        <InfoOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
+                      </Link>
+                    </Button>
+                  </ResponsiveTooltipTrigger>
+                  <ResponsiveTooltipContent
+                    sideOffset={12}
+                    side="bottom"
+                    className="p-2 px-3"
                   >
-                    <Link href={`/programs/${slug}`}>
-                      <InfoOutlineIcon className="w-5 h-5 md:w-7 md:h-7" />
-                    </Link>
-                  </Button>
-                </ResponsiveTooltipTrigger>
-                <ResponsiveTooltipContent
-                  sideOffset={12}
-                  side="bottom"
-                  className="p-2 px-3"
-                >
-                  <p className="text-lg font-medium text-foreground">Details</p>
-                </ResponsiveTooltipContent>
-              </ResponsiveTooltip>
+                    <p className="text-lg font-medium text-foreground">
+                      Details
+                    </p>
+                  </ResponsiveTooltipContent>
+                </ResponsiveTooltip>
+              </div>
             </div>
           </div>
         </MaxWidthWrapper>

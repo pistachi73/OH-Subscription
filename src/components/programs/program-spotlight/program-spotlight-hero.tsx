@@ -7,7 +7,7 @@ import { MaxWidthWrapper } from "../../ui/max-width-wrapper";
 
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { LayersIcon, PlayIcon, ShareOutlineIcon } from "@/components/ui/icons";
+import { LayersIcon, ShareOutlineIcon } from "@/components/ui/icons";
 import {
   LikeButton,
   LikeButtonIcon,
@@ -19,6 +19,7 @@ import {
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
 import { ShareButton } from "@/components/ui/share-button/share-button";
+import { SubscribedBanner } from "@/components/ui/subscribed-banner";
 import {
   Tooltip,
   TooltipContent,
@@ -27,8 +28,8 @@ import {
 import { cn } from "@/lib/utils";
 import { type RouterOutputs, getBaseUrl } from "@/trpc/shared";
 import { format } from "date-fns";
-import Link from "next/link";
 import { useLikeProgram } from "../hooks/use-like-program";
+import { ProgramMainCTAButton } from "../program-play-button";
 
 type ProgramSpotlightHero = {
   program: NonNullable<RouterOutputs["program"]["getBySlug"]>;
@@ -124,98 +125,91 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           ))}
         </div>
 
-        <div className="hidden sm:flex w-full flex-row items-center gap-8  sm:mt-4">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <Button
-              variant="default"
-              className="rounded-full w-16 h-16 sm:w-20 sm:h-20 p-0 flex items-center justify-center"
-              asChild
-            >
-              <Link href={`chapters/${firstChapterSlug}`}>
-                <PlayIcon className="ml-0.5 sm:w-9 sm:h-9 w-8 h-8" />
-              </Link>
-            </Button>
-            <p className="font-semibold tracking-tight text-base md:text-lg text-muted-foreground">
-              Play Episode 1
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <ResponsiveTooltip>
-              <ResponsiveTooltipTrigger asChild>
-                <LikeButton
-                  variant="accent"
-                  className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
-                  isLikedByUser={isLikedByUser ?? false}
-                  isLikeLoading={isLikeLoading}
-                  likeProgram={() => likeProgram({ programId: program.id })}
-                >
-                  <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
-                </LikeButton>
-              </ResponsiveTooltipTrigger>
-              <ResponsiveTooltipContent
-                sideOffset={12}
-                side="bottom"
-                className="p-2 px-3"
-              >
-                <p className="text-lg font-medium text-foreground">
-                  {isLikedByUser ? "Remove from favorites" : "Add to favorites"}
-                </p>
-              </ResponsiveTooltipContent>
-            </ResponsiveTooltip>
+        <section className="hidden md:block w-full">
+          <SubscribedBanner className="text-base mb-3">
+            Auto-renews at €4.99/month after trial
+          </SubscribedBanner>
+          <div className="flex items-center gap-8">
+            <ProgramMainCTAButton
+              program={program}
+              navigationMode="auth"
+              size="hero"
+            />
 
-            <ShareButton
-              title="Share this program"
-              description="Share this program with your friends and family."
-              videoTitle={title}
-              videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
-              url={`${getBaseUrl()}/programs/${program.slug}`}
-              config={{
-                link: true,
-                facebook: true,
-                twitter: { title, hashtags: "" },
-                linkedin: true,
-                email: {
-                  subject: title,
-                  body: description,
-                },
-              }}
-            >
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span
-                    className={cn(
-                      buttonVariants({ variant: "accent" }),
-                      "w-14 h-14 rounded-full p-0",
-                    )}
+            <div className="flex items-center gap-2">
+              <ResponsiveTooltip>
+                <ResponsiveTooltipTrigger asChild>
+                  <LikeButton
+                    variant="accent"
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
+                    isLikedByUser={isLikedByUser ?? false}
+                    isLikeLoading={isLikeLoading}
+                    likeProgram={() => likeProgram({ programId: program.id })}
                   >
-                    <ShareOutlineIcon className="w-7 h-7" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent
+                    <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
+                  </LikeButton>
+                </ResponsiveTooltipTrigger>
+                <ResponsiveTooltipContent
                   sideOffset={12}
                   side="bottom"
                   className="p-2 px-3"
                 >
-                  <p className="text-lg font-medium text-foreground">Share</p>
-                </TooltipContent>
-              </Tooltip>
-            </ShareButton>
+                  <p className="text-lg font-medium text-foreground">
+                    {isLikedByUser
+                      ? "Remove from favorites"
+                      : "Add to favorites"}
+                  </p>
+                </ResponsiveTooltipContent>
+              </ResponsiveTooltip>
+
+              <ShareButton
+                title="Share this program"
+                description="Share this program with your friends and family."
+                videoTitle={title}
+                videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
+                url={`${getBaseUrl()}/programs/${program.slug}`}
+                config={{
+                  link: true,
+                  facebook: true,
+                  twitter: { title, hashtags: "" },
+                  linkedin: true,
+                  email: {
+                    subject: title,
+                    body: description,
+                  },
+                }}
+              >
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span
+                      className={cn(
+                        buttonVariants({ variant: "accent" }),
+                        "w-14 h-14 rounded-full p-0",
+                      )}
+                    >
+                      <ShareOutlineIcon className="w-7 h-7" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    sideOffset={12}
+                    side="bottom"
+                    className="p-2 px-3"
+                  >
+                    <p className="text-lg font-medium text-foreground">Share</p>
+                  </TooltipContent>
+                </Tooltip>
+              </ShareButton>
+            </div>
           </div>
-        </div>
-        <div className="flex sm:hidden w-full flex-col items-center gap-2 overflow-y-clip sm:flex-row mt-2 overflow-visible">
-          {firstChapterSlug && (
-            <Button
-              variant="default"
-              size="lg"
-              className="w-full sm:w-fit text-sm sm:text-base h-10 sm:h-12"
-              asChild
-            >
-              <Link href={`chapters/${firstChapterSlug}`}>
-                <PlayIcon className="mr-2 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
-                Play Episode 1
-              </Link>
-            </Button>
-          )}
+        </section>
+
+        <section className="flex md:hidden w-full flex-col items-center gap-2 overflow-y-clip mt-2 overflow-visible">
+          <ProgramMainCTAButton
+            program={program}
+            navigationMode="auth"
+            size="hero"
+            className="w-full text-base min-h-12"
+          />
           <div className="flex gap-2 w-full ">
             <ShareButton
               asChild
@@ -238,29 +232,29 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               <Button
                 variant="accent"
                 size="lg"
-                className="w-full sm:w-fit text-sm sm:text-base h-10 sm:h-12"
+                className="w-full text-base h-12"
               >
-                <ShareOutlineIcon className="mr-2 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                <ShareOutlineIcon className="mr-2 w-6 h-6" />
                 Share
               </Button>
             </ShareButton>
             <LikeButton
               variant="accent"
               size="lg"
-              className="w-full sm:w-fit  text-sm sm:text-base h-10 sm:h-12 disabled:opacity-100"
+              className="w-full text-base h-12 disabled:opacity-100"
               isLikedByUser={isLikedByUser ?? false}
               isLikeLoading={isLikeLoading}
               likeProgram={() => likeProgram({ programId: program.id })}
             >
-              <LikeButtonIcon className="mr-2 w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+              <LikeButtonIcon className="mr-2 w-6 h-6" />
               <LikeButtonLabel
-                className="text-sm text-foreground"
+                className="text-base text-foreground"
                 likedLabel="Remove from favorites"
                 unlikedLabel="Add to favorites"
               />
             </LikeButton>
           </div>
-        </div>
+        </section>
       </div>
     </MaxWidthWrapper>
   );

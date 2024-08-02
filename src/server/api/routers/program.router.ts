@@ -392,6 +392,13 @@ export const programRouter = createTRPCRouter({
             db: ctx.db,
             userId: ctx.session?.user?.id,
           }),
+          lastWatchedChapter: lastWatchedChapterSubquery({
+            db: ctx.db,
+            userId: ctx.session?.user?.id,
+          }),
+          firstChapter: firstChapterSubquery({
+            db: ctx.db,
+          }),
         })
         .from(programs)
         .where(eq(programs.slug, slug))

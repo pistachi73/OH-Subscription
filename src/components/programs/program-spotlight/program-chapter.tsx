@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PlayIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
@@ -45,10 +44,10 @@ export const Chapter = ({ chapter }: ChapterProps) => {
           <PlayIcon className="w-6 h-6" />
         </Button>
         {chapter.userProgress && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 w-[90%] z-30 flex flex-col gap-1 items-end">
-            <Badge variant="accent" className="text-xs rounded-md px-2">
+          <div className="absolute bottom-0 left-0 w-full z-30 flex flex-col gap-1 items-end">
+            {/* <Badge variant="accent" className="text-xs rounded-md px-2 mr-2">
               {timeLeft} min left
-            </Badge>
+            </Badge> */}
             <span className="w-full h-[5px] bg-accent/80 rounded-full relative ">
               <span
                 className="bg-secondary h-full rounded-full block"

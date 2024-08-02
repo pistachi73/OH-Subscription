@@ -12,7 +12,7 @@ export const PlanFrequencySwitch = ({
   setPaymentFrequency,
 }: PlanFrequencySwitchProps) => {
   return (
-    <div className="relative flex flex-row h-12 bg-foreground dark:bg-background rounded-md">
+    <div className="relative flex flex-row h-12 bg-accent/50 rounded-md">
       <div
         className={cn(
           "bg absolute top-1 left-0 w-[calc(110px-8px)] h-[calc(48px-8px)] rounded-sm z-0",

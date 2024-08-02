@@ -4,6 +4,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { Check, Loader2, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -69,13 +70,18 @@ export const Plans = () => {
 
   return (
     <MaxWidthWrapper className="items-center h-ful flex justify-center pt-12 sm:p-32 sm:pt-12 flex-col">
-      <div className="w-full sm:max-w-[600px] mx-auto text-center space-y-2 mb-6">
+      <div className="w-full flex flex-col items-center sm:max-w-[600px] mx-auto text-center space-y-2 mb-6">
+        <Link href="/" className="shrink-0 mb-8">
+          <Image
+            src={"/images/oh-logo.png"}
+            alt="logo"
+            width={80}
+            height={80}
+          />
+        </Link>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter text-foreground">
           Choose the right plan for you!
         </h1>
-        <p className="text-balance text-base  text-muted-foreground">
-          Select the subscription plan that best fits your needs
-        </p>
       </div>
       <PlanFrequencySwitch
         paymentFrequency={paymentFrequency}
