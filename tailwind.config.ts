@@ -43,7 +43,7 @@ const config: Config = {
         header: "var(--header-height)",
       },
       fontFamily: {
-        inter: ["var(--font-inter)"],
+        sans: ["var(--font-inter)"],
         mono: ["var(--font-mono)"],
       },
 

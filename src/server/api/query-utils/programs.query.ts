@@ -42,7 +42,11 @@ type ChapterSelect =
   | (Pick<
       Video,
       "updatedAt" | "slug" | "duration" | "description" | "thumbnail" | "title"
-    > & { chapterNumber: number; userProgress: UserProgressSelect })[]
+    > & {
+      chapterNumber: number;
+      isFree: boolean;
+      userProgress: UserProgressSelect;
+    })[]
   | null;
 
 export const programChaptersSelect = (withUserProgress = false) => {
@@ -63,7 +67,8 @@ export const programChaptersSelect = (withUserProgress = false) => {
         'description', ${videos.description},
         'thumbnail', ${videos.thumbnail},
         'title', ${videos.title},
-        'chapterNumber', ${videosOnPrograms.chapterNumber}
+        'chapterNumber', ${videosOnPrograms.chapterNumber},
+        'isFree', ${videosOnPrograms.isFree}
         ${userProgressFields})
       ) FILTER (WHERE ${videos.id} IS NOT NULL)`;
 };

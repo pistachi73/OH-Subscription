@@ -12,14 +12,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Button } from "../ui/button";
+import { Button } from "../button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../card";
 import {
   Form,
   FormControl,
@@ -27,8 +27,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { PasswordInput } from "../ui/password-input";
+} from "../form";
+import { PasswordInput } from "../password-input";
 
 export const UpdatePassword = () => {
   const user = useCurrentUser();

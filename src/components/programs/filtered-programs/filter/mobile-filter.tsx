@@ -1,5 +1,5 @@
 "use client";
-import { Filter, FilterX, X } from "lucide-react";
+import { FilterX, X } from "lucide-react";
 import { useState } from "react";
 
 import { useProgramsUrlQueryFilters } from "../../hooks/use-programs-url-query-filters";
@@ -14,26 +14,30 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, m } from "framer-motion";
 
-export const MobileProgramFilter = () => {
-  const { levelOptions, categoryOptions, teacherOptions, isFiltering } =
+type MobileProgramFilterProps = {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const MobileProgramFilter = ({
+  isOpen,
+  setIsOpen,
+}: MobileProgramFilterProps) => {
+  const { levelOptions, categoryOptions, teacherOptions } =
     useFilteredPrograms();
 
   const {
+    filtersApplied,
     teachersFilterArray,
     categoriesFilterArray,
     levelsFilterArray,
-    searchFilter,
     handleFilterChange,
     clearFilters,
-    handleSearchKeypress,
   } = useProgramsUrlQueryFilters();
-
-  const [searchInput, setSearchInput] = useState(searchFilter ?? "");
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Sheet
@@ -42,12 +46,6 @@ export const MobileProgramFilter = () => {
         setIsOpen(open);
       }}
     >
-      <SheetTrigger asChild>
-        <Button variant="outline" className="h-10 w-full shadow-sm text-sm">
-          <Filter size={18} className="mr-2" />
-          Filter programs
-        </Button>
-      </SheetTrigger>
       <SheetContent
         hideClose
         side="right"
@@ -66,25 +64,6 @@ export const MobileProgramFilter = () => {
           </SheetTitle>
         </SheetHeader>
 
-        {/* <div className="relative h-10 w-full items-center rounded-sm ">
-            <Search
-              className="pointer-events-none absolute left-[10px] top-1/2 -translate-y-1/2 transform text-foreground"
-              size={16}
-            />
-            <Input
-              autoFocus={false}
-              placeholder="Title, description..."
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearchKeypress(searchInput);
-                }
-              }}
-              className="h-10 w-full  bg-transparent px-0 py-0 pl-10 text-sm ease-out"
-              disabled={isFiltering}
-              value={searchInput}
-            />
-          </div> */}
         <FilterAccordion
           title="Teachers"
           options={teacherOptions}
@@ -107,9 +86,7 @@ export const MobileProgramFilter = () => {
           type="levels"
         />
 
-        {(teachersFilterArray?.length ||
-          levelsFilterArray?.length ||
-          categoriesFilterArray?.length) && (
+        {filtersApplied ? (
           <Button
             variant="ghost"
             onClick={() => clearFilters()}
@@ -122,13 +99,13 @@ export const MobileProgramFilter = () => {
             <FilterX size={16} />
             Clear filters
           </Button>
-        )}
+        ) : null}
       </SheetContent>
     </Sheet>
   );
 };
 
-const FilterAccordion = ({
+export const FilterAccordion = ({
   title,
   options,
   filterArray,
@@ -148,7 +125,7 @@ const FilterAccordion = ({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex flex-col gap-5 py-5 px-4 border-t border-accent">
+    <div className="flex flex-col  py-5 px-4 border-t border-accent overflow-hidden">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex items-center justify-between w-full py-1"
@@ -162,29 +139,46 @@ const FilterAccordion = ({
         )}
       </button>
 
-      {isOpen &&
-        options.map(({ label, value }) => (
-          <div
-            key={`${type}-${value}`}
-            className="flex cursor-pointer items-center space-x-3"
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <m.div
+            initial={{ opacity: 0, height: 0, y: 20 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: 20 }}
+            transition={{
+              type: "spring",
+              mass: 1,
+              stiffness: 300,
+              damping: 30,
+            }}
           >
-            <Checkbox
-              id={`${type}-${value}`}
-              checked={
-                filterArray?.length ? filterArray?.includes(value) : false
-              }
-              onCheckedChange={(checked) =>
-                handleFilterChange(Boolean(checked), value, type)
-              }
-            />
-            <label
-              htmlFor={`${type}-${value}`}
-              className="text-accent-foreground text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {label}
-            </label>
-          </div>
-        ))}
+            <div className="mt-5 flex flex-col gap-5">
+              {options.map(({ label, value }) => (
+                <div
+                  key={`${type}-${value}`}
+                  className="flex cursor-pointer items-center space-x-3"
+                >
+                  <Checkbox
+                    id={`${type}-${value}`}
+                    checked={
+                      filterArray?.length ? filterArray?.includes(value) : false
+                    }
+                    onCheckedChange={(checked) =>
+                      handleFilterChange(Boolean(checked), value, type)
+                    }
+                  />
+                  <label
+                    htmlFor={`${type}-${value}`}
+                    className="text-accent-foreground text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

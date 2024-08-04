@@ -44,6 +44,7 @@ import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import type { ChapterDetails } from "./edit-program";
 
 type ProgramFormProps = {
   form: UseFormReturn<z.infer<typeof ProgramSchema>>;
@@ -55,7 +56,7 @@ type ProgramFormProps = {
   initialTeachers?: string;
   initialChapters?: string;
   initialCategories?: string;
-  chaptersNumbers?: Record<number, number>;
+  chapterDetails?: ChapterDetails;
 };
 
 export const ProgramForm = ({
@@ -68,7 +69,7 @@ export const ProgramForm = ({
   initialTeachers,
   initialCategories,
   initialChapters,
-  chaptersNumbers,
+  chapterDetails,
 }: ProgramFormProps) => {
   const pathname = usePathname();
 
@@ -234,7 +235,7 @@ export const ProgramForm = ({
                 videoOptions={videoOptions}
                 videos={videos}
                 initialChapters={initialChapters}
-                chaptersNumbers={chaptersNumbers}
+                chapterDetails={chapterDetails}
               />
             </CardContent>
           </Card>

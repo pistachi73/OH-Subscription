@@ -62,11 +62,13 @@ export const ChapterContextProvider = ({
     initialLiked: chapter.isLikedByUser,
   });
 
-  useUserProgress({
-    userId: user?.id as string,
-    programId: program.id,
-    videoId: chapter.id,
-  });
+  if (user?.isSubscribed) {
+    useUserProgress({
+      userId: user?.id as string,
+      programId: program.id,
+      videoId: chapter.id,
+    });
+  }
 
   const value = React.useMemo(
     () => ({

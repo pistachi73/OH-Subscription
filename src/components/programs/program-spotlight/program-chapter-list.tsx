@@ -11,7 +11,7 @@ export const ProgramChapterList = ({ program }: ProgramChapterListProps) => {
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:gap-y-20 py-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 ">
+      <div className="grid grid-cols-1 gap-x-4 gap-y-8 sm:gap-y-20 py-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {program.chapters.map((chapter) => (
           <Chapter key={chapter.slug} chapter={chapter} />
         ))}

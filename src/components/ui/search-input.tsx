@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Input, type InputProps } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";
-import { SearchOutlineIcon } from "./icons";
+import { SearchIcon } from "./icons";
 
 type SearchInputProps = InputProps & {
   openWidth?: string;
@@ -48,8 +48,9 @@ export const SearchInput = ({
       <button
         type="button"
         className={cn(
+          "hover:bg-accent rounded-md",
           "absolute top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center",
-          "text-foreground/80 hover:text-foreground/60 transition-colors",
+          "hover:bg-accent transition-colors",
           open && "pointer-events-none",
         )}
         aria-label="Search"
@@ -58,14 +59,14 @@ export const SearchInput = ({
           inputRef.current?.focus();
         }}
       >
-        <SearchOutlineIcon className="w-6 h-6" />
+        <SearchIcon className="w-6 h-6" />
       </button>
       <Input
         ref={inputRef}
         placeholder="Title, description"
         className={cn(
-          "text-sm h-9 transition-all rounded-sm w-full cursor-text border-none bg-transparent px-0 py-0 pl-8 border-0",
-          "sm:pl-10 placeholder:text-xs placeholder:text-foreground/70",
+          "text-base h-10 transition-all rounded-sm w-full cursor-text border-none bg-transparent px-0 py-0 pl-8 border-0",
+          "sm:pl-10 placeholder:text-sm placeholder:text-foreground/70",
           "focus-visible:ring-offset-0 focus-visible:ring-0",
         )}
         value={inputValue}

@@ -8,6 +8,7 @@ import {
   publicProcedure,
 } from "../trpc";
 
+import { toKebabCase } from "@/lib/case-converters";
 import { isNumber } from "@/lib/utils";
 import { CategorySchema } from "@/schemas";
 import { categories } from "@/server/db/schema";
@@ -36,6 +37,7 @@ export const categoryRouter = createTRPCRouter({
 
       await db.insert(categories).values({
         ...values,
+        slug: toKebabCase(values.name) as string,
       });
 
       return { success: true };
@@ -58,6 +60,7 @@ export const categoryRouter = createTRPCRouter({
         .update(categories)
         .set({
           ...values,
+          slug: toKebabCase(values.name) as string,
         })
         .where(eq(categories.id, Number(id)));
 
@@ -79,6 +82,26 @@ export const categoryRouter = createTRPCRouter({
         .select()
         .from(categories)
         .where(eq(categories.id, id));
+      const category = categorieList?.[0];
+      return category;
+    }),
+
+  getBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ input: { slug }, ctx }) => {
+      console.log({ slug });
+      if (!slug) return null;
+
+      const { db } = ctx;
+
+      const categorieList = await db
+        .select()
+        .from(categories)
+        .where(eq(categories.slug, slug))
+        .limit(1);
+
+      console.log({ categorieList });
+
       const category = categorieList?.[0];
       return category;
     }),

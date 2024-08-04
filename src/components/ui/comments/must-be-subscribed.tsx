@@ -1,17 +1,11 @@
-"use client";
-import { AuthButton } from "@/components/auth/auth-button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { UserStatusLink } from "../user-status-link";
 
-export const MustBeLoggedIn = () => {
-  const pathname = usePathname();
-  const encodedCallbackUrl = encodeURIComponent(pathname);
+export const MustBeSubscribed = () => {
   return (
-    <AuthButton
-      mode="modal"
-      callbackUrl={encodedCallbackUrl}
-      redirect={false}
+    <UserStatusLink
+      href="/"
       className="w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background rounded-sm"
     >
       <div
@@ -29,14 +23,14 @@ export const MustBeLoggedIn = () => {
           </div>
           <div>
             <h3 className="text-base sm:text-lg font-medium text-left">
-              Login to comment
+              Become an OH Premium member
             </h3>
             <p className="text-sm text-muted-foreground line-clamp-1">
-              You must be logged in to leave a comment.
+              You must be subscribed in to leave a comment.
             </p>
           </div>
         </div>
       </div>
-    </AuthButton>
+    </UserStatusLink>
   );
 };

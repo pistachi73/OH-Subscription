@@ -45,12 +45,9 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
     description,
     categories,
     totalChapters,
-    chapters,
     updatedAt,
     thumbnail,
   } = program;
-
-  const firstChapterSlug = chapters?.[0]?.slug;
 
   return (
     <MaxWidthWrapper
@@ -73,7 +70,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
       />
       <div
         className={cn(
-          "flex flex-col grow relative justify-end gap-2 sm:gap-y-3 lg:gap-5",
+          "flex flex-col grow relative justify-end gap-3 lg:gap-5",
           "mt-8 sm:mt-[calc(120px)]",
           "portrait:before:top-0 portrait:before:h-[35vw] sm:portrait:before:h-[25vw] portrait:before:min-h-[100px] portrait:before:content-['']",
           "landscape:mt-[calc(100vw*9/16-48px)] landscape:sm:mt-[calc(120px)]",
@@ -89,7 +86,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
         >
           <h1
             className={cn(
-              "text-left text-2xl font-bold leading-tight  tracking-tighter  text-balance",
+              "text-left text-2xl font-bold leading-tight  tracking-tighter  text-balance font-sans",
               "sm:text-4xl",
               "lg:text-5xl",
               "2xl:text-6xl",
@@ -203,7 +200,10 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
           </div>
         </section>
 
-        <section className="flex md:hidden w-full flex-col items-center gap-2 overflow-y-clip mt-2 overflow-visible">
+        <section className="flex md:hidden w-full flex-col gap-2 overflow-y-clip mt-2 overflow-visible">
+          <SubscribedBanner className="text-sm">
+            Auto-renews at €4.99/month after trial
+          </SubscribedBanner>
           <ProgramMainCTAButton
             program={program}
             navigationMode="auth"
@@ -249,8 +249,8 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               <LikeButtonIcon className="mr-2 w-6 h-6" />
               <LikeButtonLabel
                 className="text-base text-foreground"
-                likedLabel="Remove from favorites"
-                unlikedLabel="Add to favorites"
+                likedLabel="Liked"
+                unlikedLabel="Like"
               />
             </LikeButton>
           </div>

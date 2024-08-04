@@ -1,4 +1,3 @@
-import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
 import { api } from "@/trpc/server";
 
@@ -9,15 +8,22 @@ import { FilteredProgramsList } from "./filtered-programs-list";
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
 
 export const FilteredPrograms = async ({
+  initialCategory,
   searchParams,
 }: {
+  initialCategory?: string;
   searchParams?: { [key: string]: string | undefined };
 }) => {
   const [initialPrograms, categories, teachers] = await Promise.all([
     api.program.getProgramsForCards.query({
       limit: 20,
-      ...(searchParams?.categories && {
-        categoryIds: searchParams.categories.split(",").map(Number),
+      ...((searchParams?.categories || initialCategory) && {
+        categorySlugs: [
+          ...(searchParams?.categories
+            ? searchParams.categories.split(",")
+            : []),
+          ...(initialCategory ? [initialCategory] : []),
+        ],
       }),
       ...(searchParams?.teachers && {
         teacherIds: searchParams.teachers.split(",").map(Number),
@@ -31,7 +37,8 @@ export const FilteredPrograms = async ({
 
   const CATEGORY_OPTIONS: Option[] = categories.map((category) => ({
     label: category.name,
-    value: category.id.toString(),
+    value: category.slug.toString(),
+    disabled: category.slug === initialCategory,
   }));
 
   const TEACHER_OPTIONS: Option[] = teachers.map((teacher) => ({
@@ -46,9 +53,7 @@ export const FilteredPrograms = async ({
       teacherOptions={TEACHER_OPTIONS}
       levelOptions={LEVEL_OPTIONS}
     >
-      <MaxWidthWrapper className="relative z-10 mb-6 sm:mb-12 mt-8">
-        <ProgramFilter />
-      </MaxWidthWrapper>
+      <ProgramFilter />
       <FilteredProgramsList />
     </FilteredProgramsProvider>
   );

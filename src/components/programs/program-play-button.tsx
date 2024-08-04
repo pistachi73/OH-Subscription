@@ -5,10 +5,12 @@ import { forwardRef } from "react";
 
 import { AuthButton } from "@/components/auth/auth-button";
 import { Button } from "@/components/ui/button";
+import { PlayIcon } from "@/components/ui/icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
+
+import type { ButtonProps } from "@/components/ui/button";
 import type { ProgramCard, ProgramSpotlight } from "@/server/db/schema.types";
-import { PlayIcon } from "../ui/icons";
 
 const buttonVariants = cva("py-2", {
   variants: {
@@ -97,7 +99,13 @@ export const ProgramMainCTAButton = forwardRef<
       </Link>
     </ButtonWrapper>
   ) : user || (!user && navigationMode === "details") ? (
-    <ButtonWrapper ref={ref} asChild className={className} size={size}>
+    <ButtonWrapper
+      ref={ref}
+      asChild
+      className={className}
+      size={size}
+      variant={navigationMode === "details" ? "default" : "secondary"}
+    >
       <Link
         href={navigationMode === "details" ? programDetailsHref : "/plans"}
         className={cn(fontVariants({ size }))}
@@ -111,7 +119,7 @@ export const ProgramMainCTAButton = forwardRef<
     <AuthButton mode="modal" asChild redirectToIfNotSubscribed="/plans">
       <Button
         ref={ref}
-        variant="default"
+        variant="secondary"
         className={cn(
           buttonVariants({ size }),
           fontVariants({ size }),
@@ -126,18 +134,19 @@ export const ProgramMainCTAButton = forwardRef<
 
 export const ButtonWrapper = forwardRef<
   HTMLButtonElement,
-  {
+  Omit<ButtonProps, "asChild" | "size"> & {
     children: React.ReactNode;
     className?: string;
     asChild?: boolean;
   } & VariantProps<typeof buttonVariants>
->(({ children, className, size, asChild = false }, ref) => {
+>(({ children, className, size, asChild = false, ...props }, ref) => {
   return (
     <Button
       ref={ref}
       variant="default"
       className={cn(buttonVariants({ size }), className)}
       asChild={asChild}
+      {...props}
     >
       {children}
     </Button>

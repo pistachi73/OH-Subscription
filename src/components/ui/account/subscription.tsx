@@ -4,15 +4,15 @@ import { format } from "date-fns";
 import { Check, CreditCard } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { memberChecks } from "../plans/constants";
-import { Button } from "../ui/button";
+import { memberChecks } from "../../plans/constants";
+import { Button } from "../button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "../card";
 import { BillingPortalButton } from "./billing-portal-button";
 
 type SubscriptionProps = Awaited<ReturnType<typeof getData>>;

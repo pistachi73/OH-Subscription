@@ -2,10 +2,10 @@
 
 import { Save, Trash } from "lucide-react";
 import {
-  useState,
-  useTransition,
   type Dispatch,
   type SetStateAction,
+  useState,
+  useTransition,
 } from "react";
 import { toast } from "sonner";
 
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/admin/admin-multiple-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -28,6 +29,7 @@ import {
 import { isNumber } from "@/lib/utils";
 import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import type { ChapterDetails } from "./edit-program";
 
 export const ChapterTableRow = ({
   chapter,
@@ -35,16 +37,21 @@ export const ChapterTableRow = ({
   handleChapterRemove,
   chapterId,
   initialChapterNumber,
+  initialIsFree,
 }: {
   chapter: SelectVideo;
   chapterId: number;
   setChapters: Dispatch<SetStateAction<string>>;
   handleChapterRemove: (id: number) => void;
+  initialIsFree: boolean;
   initialChapterNumber?: number;
 }) => {
   const [chapterNumber, setChapterNumber] = useState<number>(
     initialChapterNumber ?? 0,
   );
+
+  const [isFree, setIsFree] = useState(initialIsFree);
+
   const { programId } = useParams<{ programId: string }>();
   const [isUpdating, startTransition] = useTransition();
 
@@ -61,6 +68,7 @@ export const ChapterTableRow = ({
         programId: Number(programId),
         videoId: chapterId,
         chapterNumber,
+        isFree,
       });
     });
   };
@@ -93,6 +101,13 @@ export const ChapterTableRow = ({
           disabled={isUpdating}
         />
       </TableCell>
+      <TableCell className="font-medium">
+        <Switch
+          checked={isFree}
+          onCheckedChange={setIsFree}
+          disabled={isUpdating}
+        />
+      </TableCell>
 
       <TableCell className="flex items-end justify-end gap-2">
         <Button
@@ -122,14 +137,14 @@ type ChaptersTableProps = {
   videoOptions?: Option[];
   videos?: SelectVideo[];
   initialChapters?: string;
-  chaptersNumbers?: Record<number, number>;
+  chapterDetails?: ChapterDetails;
 };
 
 export const ChaptersTable = ({
   videoOptions,
   videos,
   initialChapters,
-  chaptersNumbers,
+  chapterDetails,
 }: ChaptersTableProps) => {
   const { programId } = useParams<{ programId: string }>();
 
@@ -195,6 +210,7 @@ export const ChaptersTable = ({
             <TableHead>Title</TableHead>
             <TableHead>Duration</TableHead>
             <TableHead>Chapter number</TableHead>
+            <TableHead>Is free</TableHead>
 
             <TableHead>
               <span className="sr-only">Actions</span>
@@ -214,7 +230,12 @@ export const ChaptersTable = ({
                   chapterId={Number(chapterId)}
                   handleChapterRemove={handleRemoveChapter}
                   setChapters={setChapters}
-                  initialChapterNumber={chaptersNumbers?.[Number(chapterId)]}
+                  initialChapterNumber={
+                    chapterDetails?.[Number(chapterId)]?.chapterNumber
+                  }
+                  initialIsFree={
+                    chapterDetails?.[Number(chapterId)]?.isFree ?? false
+                  }
                 />
               );
             })

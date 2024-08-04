@@ -7,7 +7,7 @@ import { Fingerprint } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "../card";
 import {
   Form,
   FormControl,
@@ -15,8 +15,8 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "../ui/form";
-import { Switch } from "../ui/switch";
+} from "../form";
+import { Switch } from "../switch";
 
 export const UpdateTFA = () => {
   const user = useCurrentUser();

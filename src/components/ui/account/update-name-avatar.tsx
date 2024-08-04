@@ -1,16 +1,14 @@
 "use client";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
-import { SettingsSchema } from "@/schemas";
-import { api } from "@/trpc/react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EditIcon, Loader2, User } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -18,9 +16,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { UserAvatar } from "../ui/user-avatar";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { UserAvatar } from "@/components/ui/user-avatar";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { cn } from "@/lib/utils";
+import { SettingsSchema } from "@/schemas";
+import { api } from "@/trpc/react";
 
 export const UpdateNameAvatar = () => {
   const user = useCurrentUser();

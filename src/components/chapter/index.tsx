@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 
-import { isUserSubscribed } from "@/lib/auth";
+import { currentUser, isUserSubscribed } from "@/lib/auth";
 import { getHeaders } from "@/lib/get-headers";
 import { api } from "@/trpc/server";
 
@@ -13,21 +13,15 @@ export type ChapterProps = {
 };
 
 export const Chapter = async ({ programSlug, chapterSlug }: ChapterProps) => {
-  const isSubscribed = await isUserSubscribed();
+  const user = await currentUser();
 
-  // TODO: Add blocked chapter component
-  // if (!isSubscribed) {
-  //   const DynamicBlockedChapter = dynamic(() =>
-  //     deviceType === "mobile" ? import("./mobile") : import("./desktop"),
-  //   );
-  //   redirect("/plans");
-  // }
+  if (!user) redirect("/");
+
+  const isSubscribed = await isUserSubscribed();
 
   const program = await api.program.getBySlug.query({
     slug: programSlug,
   });
-
-  console.log({ program, chapterSlug });
 
   if (!program) {
     redirect("/");
@@ -38,8 +32,8 @@ export const Chapter = async ({ programSlug, chapterSlug }: ChapterProps) => {
     programId: program.id,
   });
 
-  if (!chapter) {
-    redirect("/");
+  if (!chapter || !(chapter.isFree || isSubscribed)) {
+    redirect(`/programs/${program.slug}`);
   }
 
   const { deviceType } = getHeaders();

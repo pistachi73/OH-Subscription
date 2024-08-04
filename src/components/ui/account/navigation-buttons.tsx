@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { CreditCard, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "../button";
 
 export const NavigationButtons = () => {
   const pathname = usePathname();

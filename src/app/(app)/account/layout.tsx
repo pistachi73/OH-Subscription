@@ -1,4 +1,4 @@
-import { NavigationButtons } from "@/components/account/navigation-buttons";
+import { NavigationButtons } from "@/components/ui/account/navigation-buttons";
 import { Button } from "@/components/ui/button";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { ArrowLeft } from "lucide-react";

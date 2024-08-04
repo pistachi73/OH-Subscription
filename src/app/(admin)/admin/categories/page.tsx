@@ -21,7 +21,7 @@ const CategoryAdminPage = async () => {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/admin">Dashboard</Link>
+              <Link href="/categories">Dashboard</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />

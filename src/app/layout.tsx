@@ -1,6 +1,3 @@
-import "@/styles/globals.css";
-
-import { Inter, Red_Hat_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 
 import { auth } from "@/auth";
@@ -11,15 +8,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { getHeaders } from "@/lib/get-headers";
 import { TRPCReactProvider } from "@/trpc/react";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const mono = Red_Hat_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
+import "@/styles/globals.css";
+import { inter, mono } from "./fonts";
 
 export const metadata = {
   title: "OH Subscription",
@@ -37,10 +27,12 @@ export default async function RootLayout({
   const session = await auth();
   const { deviceType, authorization } = getHeaders();
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`font-inter ${inter.variable} min-h-screen  ${mono.variable} bg-muted-background`}
-      >
+    <html
+      className={`${inter.variable} ${mono.variable}`}
+      lang="en"
+      suppressHydrationWarning
+    >
+      <body className="font-sans min-h-screen bg-muted-background">
         <Providers>
           <CustomSessionProvider session={session}>
             <DeviceOnlyProvider deviceType={deviceType}>

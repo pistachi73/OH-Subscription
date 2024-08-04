@@ -197,6 +197,7 @@ export const programRouter = createTRPCRouter({
           teacherIds: z.array(z.number()).optional(),
           categoryIds: z.array(z.number()).optional(),
           categoryNames: z.array(z.string()).optional(),
+          categorySlugs: z.array(z.string()).optional(),
           levelIds: z.array(z.string()).optional(),
           limit: z.number().optional(),
           offset: z.number().optional(),
@@ -212,6 +213,7 @@ export const programRouter = createTRPCRouter({
         teacherIds,
         categoryIds,
         categoryNames,
+        categorySlugs,
         limit,
         offset,
         minQueryTime,
@@ -273,6 +275,9 @@ export const programRouter = createTRPCRouter({
               sql`lower(${categories.name})`,
               categoryNames.map((name) => name.toLowerCase()),
             )
+          : undefined,
+        categorySlugs?.length
+          ? inArray(categories.slug, categorySlugs)
           : undefined,
       ];
 
@@ -361,6 +366,7 @@ export const programRouter = createTRPCRouter({
             columns: {
               chapterNumber: true,
               videoId: true,
+              isFree: true,
             },
           },
         },
@@ -500,10 +506,10 @@ export const programRouter = createTRPCRouter({
   updateChapter: adminProtectedProcedure
     .input(VideosOnProgramsSchema)
     .mutation(
-      async ({ input: { videoId, programId, chapterNumber }, ctx: { db } }) => {
+      async ({ input: { videoId, programId, ...data }, ctx: { db } }) => {
         await db
           .update(videosOnPrograms)
-          .set({ chapterNumber })
+          .set(data)
           .where(
             and(
               eq(videosOnPrograms.programId, programId),

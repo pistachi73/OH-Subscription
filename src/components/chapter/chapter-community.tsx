@@ -5,24 +5,25 @@ import { useState } from "react";
 import { Comment } from "@/components/ui/comments/comment";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import { Loader2, SendHorizonal } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddComment } from "../ui/comments/add-comment";
 import { FirstToComment } from "../ui/comments/first-to-comment";
 import { useComments } from "../ui/comments/hooks/use-comments";
-import { MustBeLoggedIn } from "../ui/comments/must-be-logged-in";
+import { MustBeSubscribed } from "../ui/comments/must-be-subscribed";
 import { SkeletonComment } from "../ui/comments/skeleton-comment";
 import { UserAvatar } from "../ui/user-avatar";
 import { useChapterContext } from "./chapter-context";
 
 export const ChapterCommunity = () => {
-  const user = useCurrentUser();
+  const isSubscribed = useIsSubscribed();
 
-  return user ? (
+  return isSubscribed ? (
     <ChapterCommunityComments />
   ) : (
-    <div className="px-4 flex items-center justify-center h-full py-4 w-full">
-      <MustBeLoggedIn />
+    <div className="px-4 flex h-auto py-4 w-full">
+      <MustBeSubscribed />
     </div>
   );
 };

@@ -193,7 +193,7 @@ export const DesktopChapterPlayer = () => {
       </MediaControlBar>
       <div className="relative z-10 w-full bg-gradient-to-t from-black/50 from-25% to-black/0 pt-[100px] lg:pt-[200px] pointer-events-none">
         <MediaControlBar class="mx-auto w-[calc(100%-64px)] flex items-center gap-6 mb-4 lg:mb-6">
-          <MediaTimeDisplay class="text-foreground/70 bg-transparent font-inter p-0 text-sm lg:text-base" />
+          <MediaTimeDisplay class="text-foreground/70 bg-transparent font-sans p-0 text-sm lg:text-base" />
           <MediaTimeRange />
         </MediaControlBar>
         <MediaControlBar

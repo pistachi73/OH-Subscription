@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import {
   authModalRedirectToIfNotSubscribed,
+  authModalRedirectToSignal,
   isAuthModalOpenSignal,
-  needsAuthModalRedirectSignal,
 } from "./auth-signals";
 
 type LoginButtonProps = {
@@ -18,7 +18,7 @@ type LoginButtonProps = {
   callbackUrl?: string;
   asChild?: boolean;
   className?: string;
-  redirect?: boolean;
+  redirectTo?: string;
   redirectToIfNotSubscribed?: string;
 };
 
@@ -28,7 +28,7 @@ export const AuthButton = ({
   mode = "modal",
   asChild,
   className,
-  redirect = true,
+  redirectTo,
   redirectToIfNotSubscribed,
 }: LoginButtonProps) => {
   useSignals();
@@ -39,10 +39,8 @@ export const AuthButton = ({
       router.push(`/login/${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`);
     } else {
       isAuthModalOpenSignal.value = true;
-      needsAuthModalRedirectSignal.value = redirect;
-      authModalRedirectToIfNotSubscribed.value = redirect
-        ? redirectToIfNotSubscribed
-        : undefined;
+      authModalRedirectToSignal.value = redirectTo;
+      authModalRedirectToIfNotSubscribed.value = redirectToIfNotSubscribed;
     }
   };
 

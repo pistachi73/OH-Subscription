@@ -1,17 +1,17 @@
 "use client";
 
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { MustBeLoggedIn } from "../ui/comments/must-be-logged-in";
+import { useIsSubscribed } from "@/hooks/use-is-subscribed";
+import { MustBeSubscribed } from "../ui/comments/must-be-subscribed";
 import { useChapterContext } from "./chapter-context";
 
 export const ChapterTranscript = () => {
-  const user = useCurrentUser();
+  const isSubscribed = useIsSubscribed();
 
-  return user ? (
+  return isSubscribed ? (
     <ChapterTranscriptContent />
   ) : (
     <div className="px-4 flex items-center justify-center h-full pb-4 w-full">
-      <MustBeLoggedIn />
+      <MustBeSubscribed />
     </div>
   );
 };

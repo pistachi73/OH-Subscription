@@ -99,3 +99,13 @@ export const useCanRenderFooter = () => {
 
   return !isShotPage && !isChapter && !isPlans;
 };
+
+export const canRenderFooter = (pathname?: string | null): boolean => {
+  if (!pathname) return true;
+
+  const isShotPage = pathname.includes("/shots");
+  const isChapter = pathname.includes("/chapter");
+  const isPlans = pathname.includes("/plans");
+
+  return !isShotPage && !isChapter && !isPlans;
+};

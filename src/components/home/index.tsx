@@ -18,7 +18,7 @@ export const Home = async () => {
     ]);
 
   return (
-    <div>
+    <div className="header-translate">
       <HeroCarousel programs={heroPrograms} />
       <ProgramCarousel
         title="Vocabulary"

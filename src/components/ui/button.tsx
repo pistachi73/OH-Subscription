@@ -28,13 +28,14 @@ const buttonVariants = cva(
         inline: "p-0",
       },
       animate: {
-        default: "transition-colors ease-in-out",
+        default: "transition-colors ease-in-out duration-200",
         scale: "transition-all  hover:scale-110",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      animate: "default",
     },
   },
 );

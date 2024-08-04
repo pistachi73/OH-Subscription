@@ -10,7 +10,7 @@ export const useCommentsCount = (commentSource: ExclusiveCommentSource) => {
     {
       ...commentSource,
     },
-    { enabled: Boolean(user) },
+    { enabled: user?.isSubscribed },
   );
 
   return { commentsCount: data, isLoading };

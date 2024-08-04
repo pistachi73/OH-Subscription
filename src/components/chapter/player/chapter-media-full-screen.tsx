@@ -73,7 +73,7 @@ export const ChapterMediaFullScreen = () => {
         sideOffset={4}
         className="p-1 px-2 border-transparent bg-foreground/70 dark:bg-background/70"
       >
-        <p className="font-inter text-sm text-background dark:text-foreground">
+        <p className="font-sans text-sm text-background dark:text-foreground">
           Fullscreen
         </p>
       </ResponsiveTooltipContent>

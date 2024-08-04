@@ -7,8 +7,8 @@ import { ChevronDown, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../button";
+import { Card, CardContent, CardHeader, CardTitle } from "../card";
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -16,7 +16,7 @@ import {
   ResponsiveDialogFooter,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
-} from "../ui/responsive-dialog";
+} from "../responsive-dialog";
 
 export const DangerZone = () => {
   const [isOpen, setIsOpen] = useState(false);

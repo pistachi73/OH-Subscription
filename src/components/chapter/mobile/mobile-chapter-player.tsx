@@ -160,7 +160,7 @@ export const MobileChapterPlayer = () => {
         )}
       >
         <MediaTimeDisplay
-          class={cn("bg-transparent font-inter p-0  xl:text-base  text-xs")}
+          class={cn("bg-transparent font-sans p-0  xl:text-base  text-xs")}
         />
         <MediaTimeRange />
       </MediaControlBar>

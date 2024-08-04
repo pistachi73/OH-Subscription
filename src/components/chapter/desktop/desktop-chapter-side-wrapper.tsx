@@ -4,9 +4,10 @@ import type { PropsWithChildren } from "react";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Button } from "../../ui/button";
-import { Dialog, DialogContent } from "../../ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "../../ui/dialog";
 import { useChapterContext } from "../chapter-context";
 
 type ChapterSideWrapperProps = PropsWithChildren & {
@@ -36,7 +37,7 @@ export const ChapterSideWrapper = ({
           }}
           exit={{ opacity: 0, x: "-75%" }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="h-full w-[350px] xl:w-[450px] absolute top-0 left-0 bg-muted-background flex flex-col"
+          className="h-full w-[400px] xl:w-[450px] absolute top-0 left-0 bg-muted-background flex flex-col"
         >
           <div
             className={cn(
@@ -63,10 +64,15 @@ export const ChapterSideWrapper = ({
       <DialogContent
         className={cn(
           "max-h-[95%] w-full p-0 bg-muted-background",
-          "w-[500px] pt-0 h-[80%]  rounded-md ",
+          "w-[500px] pt-0 h-[80%]  rounded-md flex flex-col",
         )}
         hideClose
       >
+        <DialogHeader className="p-4 pb-0 h-auto">
+          <DialogTitle className="text-lg font-medium tracking-tight">
+            {header}
+          </DialogTitle>
+        </DialogHeader>
         {children}
       </DialogContent>
     </Dialog>

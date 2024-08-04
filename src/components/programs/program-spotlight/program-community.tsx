@@ -9,10 +9,11 @@ import { Comment } from "@/components/ui/comments/comment";
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
 import { useComments } from "@/components/ui/comments/hooks/use-comments";
 import { useCommentsCount } from "@/components/ui/comments/hooks/use-comments-count";
-import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
+import { MustBeSubscribed } from "@/components/ui/comments/must-be-subscribed";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 import { RelatedPrograms } from "./program-related";
 
@@ -21,7 +22,7 @@ type ProgramCommunityProps = {
 };
 
 export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
-  const user = useCurrentUser();
+  const isSubscribed = useIsSubscribed();
   const { commentsCount, isLoading } = useCommentsCount({
     programId: program.id,
   });
@@ -34,12 +35,10 @@ export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
         </h2>
       </div>
       <div className="flex flex-col gap-5 w-full max-w-[750px] items-end">
-        {user ? (
+        {isSubscribed ? (
           <ProgramCommunityComments program={program} />
         ) : (
-          <div className="flex items-center justify-center h-full py-4 w-full">
-            <MustBeLoggedIn />
-          </div>
+          <MustBeSubscribed />
         )}
       </div>
       <RelatedPrograms program={program} />

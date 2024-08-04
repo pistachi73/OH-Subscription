@@ -4,7 +4,7 @@ import { api } from "@/trpc/react";
 import { ChevronRight, CreditCard, Layers, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
+import { Button } from "../button";
 
 type BillingPortalButtonProps = {
   type: "PAYMENT" | "PLAN";

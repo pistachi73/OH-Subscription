@@ -1,10 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { PlayCircleIcon, PlayIcon } from "@/components/ui/icons";
+import {
+  PersonAccountsIcon,
+  PlayCircleIcon,
+  PlayIcon,
+} from "@/components/ui/icons";
+import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import { cn } from "@/lib/utils";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams } from "next/navigation";
+import { buttonVariants } from "../ui/button";
+import { SubscribedBanner } from "../ui/subscribed-banner";
+import { UserStatusLink } from "../ui/user-status-link";
 import { useChapterContext } from "./chapter-context";
 
 export const ChapterList = () => {
@@ -41,34 +47,52 @@ export const InactiveChapterCard = ({
   chapter: NonNullable<NonNullable<ProgramSpotlight>["chapters"]>[0];
   programSlug: string;
 }) => {
+  const isSubscribed = useIsSubscribed();
+  const canSeeChapter = isSubscribed || chapter.isFree;
+
   if (!chapter) return null;
   return (
-    <Link
+    <UserStatusLink
       key={chapter.slug}
+      href={`/programs/${programSlug}/chapters/${chapter.slug}`}
+      requiredSubscription={!chapter.isFree}
       className={cn(
-        "shrink-0 group w-full rounded-lg relative overflow-hidden bg-muted flex justify-between items-center gap-4",
+        "shrink-0 group w-full rounded-lg relative overflow-hidden bg-muted gap-4",
+        "flex items-center justify-between",
         "p-3 md:p-4",
       )}
-      href={`/programs/${programSlug}/chapters/${chapter.slug}`}
     >
       <div className="relative z-10 w-full">
-        <p className="text-sm text-muted-foreground mb-0.5">
-          {chapter.duration} min
-        </p>
-        <p className="w-full gap-3 leading-normal text-foreground text-lg font-semibold tracking-tight">
+        {isSubscribed ? (
+          <p className="text-sm text-muted-foreground mb-0.5">
+            {chapter.duration} min
+          </p>
+        ) : (
+          <SubscribedBanner className="text-base mb-1 text-muted-foreground">
+            Start your 30-day free trial
+          </SubscribedBanner>
+        )}
+
+        <p className="w-full gap-3 text-left leading-normal text-foreground text-lg font-semibold tracking-tight">
           {chapter.title}
         </p>
       </div>
-      <Button
+
+      <div
         className={cn(
-          "w-14 h-14 rounded-full scale-75 opacity-0 transition-all shrink-0",
+          buttonVariants({ variant: "default" }),
+          "w-14 h-14 rounded-full scale-75 opacity-0 transition-all shrink-0 ",
           "flex items-center justify-center",
           "group-hover:scale-100 group-hover:opacity-100",
         )}
       >
-        <PlayIcon className="w-6 h-6" />
-      </Button>
-    </Link>
+        {canSeeChapter ? (
+          <PlayIcon className="w-6 h-6" />
+        ) : (
+          <PersonAccountsIcon className="w-7 h-7" />
+        )}
+      </div>
+    </UserStatusLink>
   );
 };
 
@@ -77,6 +101,7 @@ export const ActiveChapterCard = ({
 }: {
   chapter: NonNullable<NonNullable<ProgramSpotlight>["chapters"]>[0];
 }) => {
+  const isSubscribed = useIsSubscribed();
   return (
     <div
       className={cn(
@@ -90,6 +115,7 @@ export const ActiveChapterCard = ({
             alt="video"
             fill
             className="object-cover"
+            sizes={"400px"}
           />
           <div className="z-0 absolute top-0 left-0 h-full w-full bg-gradient-to-t from-10% from-muted" />
         </div>
@@ -99,7 +125,7 @@ export const ActiveChapterCard = ({
           <div className="relative z-10 w-full h-full">
             <span className="text-xs text-secondary mb-1 flex items-center gap-1">
               <PlayCircleIcon className="w-4 h-4" />
-              Currenty playing
+              {isSubscribed ? "Currenty playing" : "Free chapter"}
             </span>
             <p className="w-full gap-3 text-foreground text-lg font-semibold tracking-tight">
               {chapter.title}

@@ -17,7 +17,6 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useSelectedLayoutSegment } from "next/navigation";
-import ThemeSwitch from "../theme-switch";
 
 type DesktopHeaderProps = {
   renderAsScrolled?: boolean;
@@ -40,65 +39,68 @@ export const DesktopHeader = ({
   if (!visible) return null;
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 h-12 lg:h-14",
-        isScrolled || segment === "(auth)" || renderAsScrolled
-          ? "bg-muted-background  shadow-sm [transition:background-color_500ms,border-color_400ms_100ms]"
-          : "shadow-none [transition:background-color_500ms,border-color_300ms]",
-      )}
-    >
-      <MaxWidthWrapper
-        as="nav"
+    <>
+      <div className="block h-16" />
+      <header
         className={cn(
-          "w-full relative flex h-full items-center justify-between  gap-4 transition-colors duration-200",
+          "fixed w-full top-0 z-50 h-16   transition-colors duration-300 ease-in-out",
+          isScrolled || segment === "(auth)" || renderAsScrolled
+            ? "bg-muted-background/80 backdrop-blur-lg shadow-sm"
+            : "shadow-none",
         )}
       >
-        <div className="flex flex-row gap-4 items-center">
-          <Link href="/" className="shrink-0">
-            <Image
-              src={"/images/oh-logo.png"}
-              alt="logo"
-              width={40}
-              height={40}
-            />
-          </Link>
-
-          <ul className="flex h-full items-center">
-            {headerNavItems.map((item) => (
-              <li key={item.title}>
-                <NavButton
-                  isActive={
-                    segment ? item.href.includes(segment) : item.href === "/"
-                  }
-                  asChild
-                >
-                  <Link href={item.href}>{item.title}</Link>
-                </NavButton>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex h-full flex-row items-center grow justify-end">
-          <SearchInput
-            placeholder="Title, description"
-            openWidth="w-full"
-            className="max-w-[320px]"
-          />
-          <ThemeSwitch />
-
-          {user ? (
-            <div className="ml-2 flex gap-1 items-center h-9">
-              <UserButton user={user} />
-            </div>
-          ) : (
-            <AuthButton asChild mode="modal">
-              <NavButton className="pr-0">Get started</NavButton>
-            </AuthButton>
+        <MaxWidthWrapper
+          as="nav"
+          className={cn(
+            "w-full relative flex h-full items-center justify-between  gap-4 transition-colors duration-200",
           )}
-        </div>
-      </MaxWidthWrapper>
-    </header>
+        >
+          <div className="flex flex-row gap-8 items-center">
+            <Link href="/" className="shrink-0">
+              <Image
+                src={"/images/oh-logo.png"}
+                alt="logo"
+                width={40}
+                height={40}
+              />
+            </Link>
+
+            <ul className="flex h-full items-center gap-1">
+              {headerNavItems.map((item) => (
+                <li key={item.title}>
+                  <NavButton
+                    isActive={
+                      segment ? item.href.includes(segment) : item.href === "/"
+                    }
+                    asChild
+                  >
+                    <Link href={item.href}>{item.title}</Link>
+                  </NavButton>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex h-full flex-row items-center grow justify-end gap-1">
+            <SearchInput
+              placeholder="Title, description"
+              openWidth="w-full"
+              className="max-w-[320px]"
+            />
+            {/* <ThemeSwitch /> */}
+
+            {user ? (
+              <div className="ml-2 flex gap-1 items-center h-9">
+                <UserButton user={user} />
+              </div>
+            ) : (
+              <AuthButton asChild mode="modal">
+                <NavButton className="-mr-4">Get started</NavButton>
+              </AuthButton>
+            )}
+          </div>
+        </MaxWidthWrapper>
+      </header>
+    </>
   );
 };
 
@@ -110,15 +112,13 @@ const NavButton = React.forwardRef<
     <Button
       ref={ref}
       className={cn(
-        "text-sm text-shadow-lg font-normal hover:no-underline",
-        isActive
-          ? "text-foreground font-medium"
-          : "text-foreground/80 hover:text-foreground/60",
-        justIcon ? "h-9 w-9 px-2" : "px-3",
+        "text-base hover:no-underline font-medium",
+        isActive && "bg-accent/60",
+        justIcon ? "h-9 w-9 px-2" : "h-[42px] px-4",
         className,
       )}
-      variant="link"
-      size="sm"
+      variant="ghost"
+      size="default"
       {...rest}
     >
       {children}

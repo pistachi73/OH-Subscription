@@ -125,6 +125,7 @@ export const videoRouter = createTRPCRouter({
         .select({
           ...getTableColumns(videos),
           chapterNumber: videosOnPrograms.chapterNumber,
+          isFree: videosOnPrograms.isFree,
           isLikedByUser: isVideoLikedByUserSubquery({
             db: ctx.db,
             userId: ctx.session?.user?.id,

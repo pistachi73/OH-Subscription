@@ -29,6 +29,11 @@ type EditProgramProps = {
   videos: SelectVideo[];
 };
 
+export type ChapterDetails = Record<
+  number,
+  { isFree: boolean; chapterNumber: number }
+>;
+
 export const EditProgram = ({
   program,
   teacherOptions,
@@ -75,9 +80,14 @@ export const EditProgram = ({
     .map(({ videoId }) => videoId.toString())
     .join(",");
 
-  const chaptersNumbers: Record<number, number> = program.chapters.reduce(
-    (acc, { videoId, chapterNumber }) => {
-      Object.assign(acc, { [videoId]: chapterNumber });
+  const chapterDetails: ChapterDetails = program.chapters.reduce(
+    (acc, { videoId, chapterNumber, isFree }) => {
+      Object.assign(acc, {
+        [videoId]: {
+          isFree,
+          chapterNumber,
+        },
+      });
       return acc;
     },
     {},
@@ -128,7 +138,7 @@ export const EditProgram = ({
         initialTeachers={initialTeachers}
         initialCategories={initialCategories}
         initialChapters={initialChapters}
-        chaptersNumbers={chaptersNumbers}
+        chapterDetails={chapterDetails}
       />
     </AdminFormLayout>
   );

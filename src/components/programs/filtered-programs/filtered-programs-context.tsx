@@ -25,6 +25,7 @@ const FilteredProgramsContext = React.createContext<{
 export const FilteredProgramsProvider = ({
   children,
   initialPrograms,
+  initialCategory,
   categoryOptions,
   teacherOptions,
   levelOptions,
@@ -34,6 +35,7 @@ export const FilteredProgramsProvider = ({
   categoryOptions: Option[];
   teacherOptions: Option[];
   levelOptions: Option[];
+  initialCategory?: string;
 }) => {
   const params = useSearchParams();
   const teachers = params.get("teachers");
@@ -45,7 +47,12 @@ export const FilteredProgramsProvider = ({
     api.program.getProgramsForCards.useQuery(
       {
         ...(teachers && { teacherIds: teachers.split(",").map(Number) }),
-        ...(categories && { categoryIds: categories.split(",").map(Number) }),
+        ...(categories && {
+          categorySlugs: [
+            ...categories.split(",").map(String),
+            ...(initialCategory ? [initialCategory] : []),
+          ],
+        }),
         ...(levels && { levelIds: levels.split(",") }),
         ...(search && { searchQuery: search }),
         minQueryTime: 500,

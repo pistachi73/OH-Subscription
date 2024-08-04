@@ -1,8 +1,6 @@
 import { login } from "@/actions/login";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { useSignals } from "@preact/signals-react/runtime";
+import { useLoginSuccess } from "@/hooks/use-login-success";
 import { Loader2 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -11,21 +9,13 @@ import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import type { AuthFormSharedProps } from "./auth";
 import { useAuthContext } from "./auth-context";
 import { AuthFormWrapper } from "./auth-form-wrapper";
-import {
-  isAuthModalOpenSignal,
-  needsAuthModalRedirectSignal,
-} from "./auth-signals";
 
 type AuthTwoFactorProps = AuthFormSharedProps;
 
 export const AuthTwoFactor = ({ authForm }: AuthTwoFactorProps) => {
-  useSignals();
   const { setFormType } = useAuthContext();
-  // const { setChildrenForm, childrenFormSignal } = useAuthContext();
+  const onLoginSuccess = useLoginSuccess();
   const [isPending, startTransition] = useTransition();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl");
 
   const onLogin = async () => {
     const [password, email, code] = authForm.getValues([
@@ -42,7 +32,7 @@ export const AuthTwoFactor = ({ authForm }: AuthTwoFactorProps) => {
     if (!typeCheckSuccess || !email || !password || !code) return;
 
     startTransition(async () => {
-      const { error, success, twoFactor } =
+      const { error, success, isSubscribed } =
         (await login({
           email,
           password,
@@ -56,11 +46,7 @@ export const AuthTwoFactor = ({ authForm }: AuthTwoFactorProps) => {
 
       if (success) {
         authForm.reset();
-        isAuthModalOpenSignal.value = false;
-        if (needsAuthModalRedirectSignal.value) {
-          router.push(callbackUrl ?? DEFAULT_LOGIN_REDIRECT);
-        }
-        router.refresh();
+        onLoginSuccess({ isSubscribed: Boolean(isSubscribed) });
       }
     });
   };

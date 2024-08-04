@@ -1,4 +1,5 @@
 import { usePathname, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 
 export const useProgramsUrlQueryFilters = () => {
   const searchParams = useSearchParams();
@@ -8,6 +9,14 @@ export const useProgramsUrlQueryFilters = () => {
   const teachersFilterArray = searchParams.get("teachers")?.split(",");
   const categoriesFilterArray = searchParams.get("categories")?.split(",");
   const levelsFilterArray = searchParams.get("levels")?.split(",");
+
+  const filtersApplied = useMemo(
+    () =>
+      (teachersFilterArray?.length ?? 0) +
+      (levelsFilterArray?.length ?? 0) +
+      (categoriesFilterArray?.length ?? 0),
+    [teachersFilterArray, levelsFilterArray, categoriesFilterArray],
+  );
 
   const handleFilterChange = (
     adding: boolean,
@@ -62,5 +71,6 @@ export const useProgramsUrlQueryFilters = () => {
     clearFilters,
     handleFilterChange,
     handleSearchKeypress,
+    filtersApplied,
   };
 };

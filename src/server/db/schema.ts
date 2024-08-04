@@ -206,6 +206,7 @@ export const videosOnPrograms = pgTable(
         onDelete: "cascade",
       }),
     chapterNumber: integer("chapterNumber").notNull(),
+    isFree: boolean("isFree").default(false),
   },
   (t) => ({
     unq: unique().on(t.videoId, t.programId, t.chapterNumber),
@@ -278,10 +279,17 @@ export const teachersOnProgramsRelations = relations(
 );
 
 // ----------------- Categories -----------------
-export const categories = pgTable("categories", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-});
+export const categories = pgTable(
+  "categories",
+  {
+    id: serial("id").primaryKey(),
+    slug: text("slug").notNull().default(""),
+    name: text("name").notNull(),
+  },
+  (table) => ({
+    slugIdx: index().on(table.slug),
+  }),
+);
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
   programs: many(categoriesOnPrograms),

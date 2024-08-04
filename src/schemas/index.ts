@@ -117,6 +117,7 @@ export const VideosOnProgramsSchema = z.object({
   programId: z.number(),
   videoId: z.number(),
   chapterNumber: z.number().optional(),
+  isFree: z.boolean().optional(),
 });
 export const TeachersOnProgramsSchema = z.object({
   programId: z.number(),

@@ -9,23 +9,17 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Button } from "../ui/button";
+import { Button } from "../button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { CodeInput } from "../ui/code-input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+} from "../card";
+import { CodeInput } from "../code-input";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../form";
+import { Input } from "../input";
 
 export const UpdateEmail = () => {
   const user = useCurrentUser();

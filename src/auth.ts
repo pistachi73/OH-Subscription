@@ -34,6 +34,8 @@ export const {
       //   .where(eq(users.id, user.id ?? ""));
     },
     async createUser({ user }) {
+      console.log("createUser");
+
       const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
         apiVersion: "2024-04-10",
       });
@@ -53,6 +55,7 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
+      console.log("signIn");
       if (!user.id) return false;
 
       //Allow OAuth without email verification

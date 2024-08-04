@@ -1,32 +1,31 @@
 import { Loader2, SendHorizonal } from "lucide-react";
-
-import { ShotSideWrapper } from "./shot-side-wrapper";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { AddComment } from "@/components/ui/comments/add-comment";
+import { Comment } from "@/components/ui/comments/comment";
 import { FirstToComment } from "@/components/ui/comments/first-to-comment";
 import { useComments } from "@/components/ui/comments/hooks/use-comments";
 import { useCommentsCount } from "@/components/ui/comments/hooks/use-comments-count";
-import { MustBeLoggedIn } from "@/components/ui/comments/must-be-logged-in";
+import { MustBeSubscribed } from "@/components/ui/comments/must-be-subscribed";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
+import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+
 import type { ShotProps } from ".";
-import { AddComment } from "../../ui/comments/add-comment";
-import { Comment } from "../../ui/comments/comment";
-import { useDeviceType } from "../../ui/device-only/device-only-provider";
 import { useShotContext } from "./shot-context";
+import { ShotSideWrapper } from "./shot-side-wrapper";
 
 export const ShotCommunity = ({ shot }: ShotProps) => {
-  const user = useCurrentUser();
+  const isSubscribed = useIsSubscribed();
   const { showComments, setShowComments } = useShotContext();
   const { commentsCount, isLoading } = useCommentsCount({
     shotId: shot.id,
   });
   const { isMobile } = useDeviceType();
-
-  console.log({ commentsCount });
   return (
     <ShotSideWrapper
       isDialogOpen={showComments}
@@ -52,11 +51,11 @@ export const ShotCommunity = ({ shot }: ShotProps) => {
             Discussion {!isLoading && `(${commentsCount})`}
           </h2>
         </div>
-        {user ? (
+        {isSubscribed ? (
           <ShotCommunityComments shot={shot} />
         ) : (
           <div className="px-4 flex items-center justify-center h-full pb-4 w-full">
-            <MustBeLoggedIn />
+            <MustBeSubscribed />
           </div>
         )}
       </div>

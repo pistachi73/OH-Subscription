@@ -1,8 +1,6 @@
 import { login } from "@/actions/login";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { useSignals } from "@preact/signals-react/runtime";
+import { useLoginSuccess } from "@/hooks/use-login-success";
 import { Loader2 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -17,21 +15,13 @@ import { PasswordInput } from "../ui/password-input";
 import type { AuthFormSharedProps } from "./auth";
 import { useAuthContext } from "./auth-context";
 import { AuthFormWrapper } from "./auth-form-wrapper";
-import {
-  authModalRedirectToIfNotSubscribed,
-  isAuthModalOpenSignal,
-  needsAuthModalRedirectSignal,
-} from "./auth-signals";
 
 type AuthCreatePasswordProps = AuthFormSharedProps;
 
 export const AuthEnterPassword = ({ authForm }: AuthCreatePasswordProps) => {
-  useSignals();
   const { setFormType } = useAuthContext();
   const [isPending, startTransition] = useTransition();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const onLoginSuccess = useLoginSuccess();
 
   const onBack = () => {
     authForm.reset();
@@ -67,20 +57,7 @@ export const AuthEnterPassword = ({ authForm }: AuthCreatePasswordProps) => {
 
       if (success) {
         authForm.reset();
-        isAuthModalOpenSignal.value = false;
-
-        if (!isSubscribed && authModalRedirectToIfNotSubscribed.value) {
-          router.push(authModalRedirectToIfNotSubscribed.value);
-          authModalRedirectToIfNotSubscribed.value = undefined;
-          router.refresh();
-          return;
-        }
-
-        if (needsAuthModalRedirectSignal.value) {
-          const redirectTo = callbackUrl ?? DEFAULT_LOGIN_REDIRECT;
-          router.push(redirectTo);
-          router.refresh();
-        }
+        onLoginSuccess({ isSubscribed: Boolean(isSubscribed) });
       }
     });
   };

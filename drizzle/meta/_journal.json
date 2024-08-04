@@ -232,6 +232,27 @@
       "when": 1722163803282,
       "tag": "0032_cold_scream",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1722608763152,
+      "tag": "0033_dry_wilson_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1722710977763,
+      "tag": "0034_sour_chamber",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1722791336418,
+      "tag": "0035_modern_mongoose",
+      "breakpoints": true
     }
   ]
 }

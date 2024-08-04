@@ -16,9 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <Header />
-      <main className="relative h-full min-h-[50vh]">{children}</main>
-      <Footer />
+      <div className="overflow-hidden min-h-[100dvh] grid grid-rows-[auto_1fr_auto]">
+        <Header />
+        <main className="relative h-full">{children}</main>
+        <Footer />
+      </div>
       <AuthModal />
     </>
   );

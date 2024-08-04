@@ -232,7 +232,7 @@ export const ProgramCard = ({
                 </span>
               </section>
               <section>
-                <p className="mt-3 line-clamp-3 text-base text-foreground">
+                <p className="mt-3 line-clamp-3 text-base text-foreground font-medium">
                   {description}
                 </p>
               </section>

@@ -16,7 +16,6 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useMobileHeaderHide } from "@/hooks/use-mobile-header-hide";
 import { cn } from "@/lib/utils";
 import { UserButton } from "../auth/user-button";
-import ThemeSwitch from "../theme-switch";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 
 export const MobileHeader = () => {
@@ -36,11 +35,11 @@ export const MobileHeader = () => {
       <div className="h-12 block w-full" />
       <MaxWidthWrapper
         className={cn(
-          "fixed top-0 z-50 flex h-12 w-full items-center  justify-between gap-4 transition-transform duration-300",
+          "fixed top-0 z-50 flex h-12 w-full items-center  justify-between gap-4 transition-[transform, background-color] duration-300",
           isHidden ? "-translate-y-full" : "translate-y-0",
           isScrolled || segment === "(auth)" || renderAsScrolled
-            ? "bg-muted-background shadow-sm [transition:background-color_500ms,border-color_400ms_100ms,transform_300ms_cubic-bezier(0.4,0,0.2,1)]"
-            : "shadow-none [transition:background-color_500ms,border-color_300ms,transform_300ms_cubic-bezier(0.4,0,0.2,1)]",
+            ? "bg-muted-background/80 backdrop-blur-lg shadow-sm"
+            : "shadow-none bg-muted-background/80",
         )}
       >
         <Link href="/">
@@ -52,9 +51,9 @@ export const MobileHeader = () => {
           />
         </Link>
         <div className="flex items-center grow justify-end">
-          <SearchInput openWidth="w-full" className="h-9 text-2xs" />
+          <SearchInput openWidth="w-full" className="h-9 text-xs" />
 
-          <ThemeSwitch />
+          {/* <ThemeSwitch /> */}
           {user ? (
             <div className="ml-2">
               <UserButton user={user} />
@@ -77,7 +76,7 @@ export const MobileHeader = () => {
       </MaxWidthWrapper>
 
       {renderBottomBar && (
-        <ol className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-background pb-1">
+        <ol className="fixed bottom-0 z-50 flex w-dvw flex-row items-end border-t bg-muted-background pb-1">
           {mobileNavItems.map(
             ({ href, title, icon: Icon, iconOutline: IconOutline }) => {
               const isActive = segment ? href.includes(segment) : href === "/";

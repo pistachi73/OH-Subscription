@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { useSignals } from "@preact/signals-react/runtime";
+import { authModalRedirectToSignal } from "./auth-signals";
 
 type Provider = "google" | "facebook" | "apple";
 
@@ -42,12 +44,15 @@ type SocialButtonProps = {
 };
 
 export const SocialButton = ({ provider, className }: SocialButtonProps) => {
+  useSignals();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
   const onClick = () => {
+    const redirectTo =
+      callbackUrl ?? authModalRedirectToSignal.value ?? DEFAULT_LOGIN_REDIRECT;
     signIn(provider, {
-      callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      callbackUrl: redirectTo,
     });
   };
 
