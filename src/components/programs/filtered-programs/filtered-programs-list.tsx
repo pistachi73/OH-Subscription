@@ -8,7 +8,7 @@ import { useFilteredPrograms } from "./filtered-programs-context";
 export const FilteredProgramsList = () => {
   const { filteredPrograms, isFiltering } = useFilteredPrograms();
 
-  if (!filteredPrograms?.length)
+  if (!filteredPrograms?.length && !isFiltering)
     return (
       <MaxWidthWrapper className="mt-6 md:mt-12">
         <h2 className="text-left text-2x text-muted-foreground">

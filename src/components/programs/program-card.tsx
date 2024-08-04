@@ -1,26 +1,28 @@
+import { AnimatePresence, m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { InfoOutlineIcon } from "@/components/ui/icons";
 import { LikeButton, LikeButtonIcon } from "@/components/ui/like-button";
+import { SubscribedBanner } from "@/components/ui/subscribed-banner";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useIsSubscribed } from "@/hooks/use-is-subscribed";
+import { UserProgressBar } from "@/components/ui/user-progress-bar";
 import { cardsEase } from "@/lib/animation";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils";
-import type { RouterOutputs } from "@/trpc/shared";
-import { AnimatePresence, m } from "framer-motion";
-import { useState } from "react";
-import { SubscribedBanner } from "../ui/subscribed-banner";
+
 import { useLikeProgram } from "./hooks/use-like-program";
 import { ProgramMainCTAButton } from "./program-play-button";
+
+import type { RouterOutputs } from "@/trpc/shared";
 
 export type ProgramCardProps = {
   lazy?: boolean;
@@ -36,14 +38,12 @@ export const ProgramCard = ({
   program,
 }: ProgramCardProps) => {
   const { deviceType } = useDeviceType();
-  const isSubscribed = useIsSubscribed();
   const [isHovered, setIsHovered] = useState(false);
 
   const {
     level,
     thumbnail,
     description,
-    teachers,
     slug,
     title,
     totalChapters,
@@ -120,18 +120,11 @@ export const ProgramCard = ({
      (max-width: 1280px) 25vw,
      20vw`}
             />
-            {isSubscribed && lastWatchedChapter ? (
-              <section>
-                <span className="absolute bottom-0 left-0 w-full h-[5px] bg-accent/80 block">
-                  <span
-                    className="bg-secondary h-full  block"
-                    style={{
-                      width: `${lastWatchedChapter.progress}%`,
-                    }}
-                  />
-                </span>
-              </section>
-            ) : null}
+            <UserProgressBar
+              progress={lastWatchedChapter?.progress}
+              className="absolute bottom-0 left-0 w-full z-30"
+              progressClassName="rounded-none"
+            />
           </Link>
         </div>
         <AnimatePresence>

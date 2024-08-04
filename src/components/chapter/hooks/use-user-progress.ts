@@ -45,6 +45,7 @@ export const useUserProgress = ({
   const setUserTimeProgress = useCallback(() => {
     const mediaDuration = mediaStore.getState().mediaDuration;
     const mediaCurrentTime = mediaStore.getState().mediaCurrentTime;
+    const mediaEnded = mediaStore.getState().mediaEnded;
 
     if (!mediaDuration || !mediaCurrentTime) return;
 
@@ -56,6 +57,7 @@ export const useUserProgress = ({
       watchedDuration: mediaCurrentTime,
       progress,
       lastWatchedAt: new Date(),
+      completed: mediaEnded,
     });
   }, [setUserProgress, mediaStore]);
 

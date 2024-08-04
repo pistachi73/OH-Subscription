@@ -153,28 +153,36 @@ export const FilterAccordion = ({
             }}
           >
             <div className="mt-5 flex flex-col gap-5">
-              {options.map(({ label, value }) => (
-                <div
-                  key={`${type}-${value}`}
-                  className="flex cursor-pointer items-center space-x-3"
-                >
-                  <Checkbox
-                    id={`${type}-${value}`}
-                    checked={
-                      filterArray?.length ? filterArray?.includes(value) : false
-                    }
-                    onCheckedChange={(checked) =>
-                      handleFilterChange(Boolean(checked), value, type)
-                    }
-                  />
-                  <label
-                    htmlFor={`${type}-${value}`}
-                    className="text-accent-foreground text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              {options
+                .sort((a, b) => a.label.localeCompare(b.label))
+                .map(({ label, value, disabled }) => (
+                  <div
+                    key={`${type}-${value}`}
+                    className="flex cursor-pointer items-center space-x-3"
                   >
-                    {label}
-                  </label>
-                </div>
-              ))}
+                    <Checkbox
+                      id={`${type}-${value}`}
+                      checked={
+                        disabled
+                          ? true
+                          : filterArray?.length
+                            ? filterArray?.includes(value)
+                            : false
+                      }
+                      disabled={disabled}
+                      onCheckedChange={(checked) =>
+                        handleFilterChange(Boolean(checked), value, type)
+                      }
+                      className="disabled:data-[state=checked]:bg-secondary disabled:border-secondary disabled:opacity-100 disabled:cursor-not-allowed"
+                    />
+                    <label
+                      htmlFor={`${type}-${value}`}
+                      className="peer-disabled:text-foreground disabled:opacity-100 text-sm  peer-disabled:cursor-not-allowed  cursor-pointer"
+                    >
+                      {label}
+                    </label>
+                  </div>
+                ))}
             </div>
           </m.div>
         )}

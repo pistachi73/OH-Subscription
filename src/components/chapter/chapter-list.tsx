@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { buttonVariants } from "../ui/button";
 import { SubscribedBanner } from "../ui/subscribed-banner";
+import { UserProgressBar } from "../ui/user-progress-bar";
 import { UserStatusLink } from "../ui/user-status-link";
 import { useChapterContext } from "./chapter-context";
 
@@ -50,11 +51,13 @@ export const InactiveChapterCard = ({
   const isSubscribed = useIsSubscribed();
   const canSeeChapter = isSubscribed || chapter.isFree;
 
+  const chapterHref = `/programs/${programSlug}/chapters/${chapter.slug}${chapter.userProgress && `?start=${chapter.userProgress.watchedDuration}`}`;
+
   if (!chapter) return null;
   return (
     <UserStatusLink
       key={chapter.slug}
-      href={`/programs/${programSlug}/chapters/${chapter.slug}`}
+      href={chapterHref}
       requiredSubscription={!chapter.isFree}
       className={cn(
         "shrink-0 group w-full rounded-lg relative overflow-hidden bg-muted gap-4",
@@ -62,6 +65,10 @@ export const InactiveChapterCard = ({
         "p-3 md:p-4",
       )}
     >
+      <UserProgressBar
+        progress={chapter.userProgress?.progress}
+        className="absolute bottom-0 left-0 w-full"
+      />
       <div className="relative z-10 w-full">
         {isSubscribed ? (
           <p className="text-sm text-muted-foreground mb-0.5">

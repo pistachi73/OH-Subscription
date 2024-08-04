@@ -58,9 +58,11 @@ DropdownMenuSubContent.displayName =
 
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <DropdownMenuPrimitive.Portal>
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
+    withPortal?: boolean;
+  }
+>(({ className, sideOffset = 4, withPortal = true, ...props }, ref) => {
+  const content = (
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
@@ -70,8 +72,14 @@ const DropdownMenuContent = React.forwardRef<
       )}
       {...props}
     />
-  </DropdownMenuPrimitive.Portal>
-));
+  );
+
+  return withPortal ? (
+    <DropdownMenuPrimitive.Portal>{content}</DropdownMenuPrimitive.Portal>
+  ) : (
+    content
+  );
+});
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
 const DropdownMenuItem = React.forwardRef<
@@ -183,18 +191,18 @@ DropdownMenuShortcut.displayName = "DropdownMenuShortcut";
 
 export {
   DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuPortal,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup,
+  DropdownMenuTrigger,
 };

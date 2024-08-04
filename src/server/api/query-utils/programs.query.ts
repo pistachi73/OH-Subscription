@@ -122,7 +122,7 @@ export const lastWatchedChapterSubquery = ({
         eq(videos.id, videosOnPrograms.videoId),
       ),
     )
-    .orderBy(desc(videosOnPrograms.chapterNumber))
+    .orderBy(desc(userProgresses.lastWatchedAt))
     .limit(1)}`.as("lastChapterWatched");
 };
 

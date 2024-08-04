@@ -5,6 +5,7 @@ import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
 import { PersonAccountsIcon, PlayIcon } from "@/components/ui/icons";
 import { SubscribedBanner } from "@/components/ui/subscribed-banner";
+import { UserProgressBar } from "@/components/ui/user-progress-bar";
 import { UserStatusLink } from "@/components/ui/user-status-link";
 import { useUserStatus } from "@/hooks/use-user-status";
 import { cn } from "@/lib/utils";
@@ -19,10 +20,15 @@ export const Chapter = ({ chapter }: ChapterProps) => {
 
   const canSeeChapter = userStatus === "LOGGED_IN_SUBSCRIBED" || chapter.isFree;
 
+  const { userProgress } = chapter;
   return (
     <article className="w-full">
       <UserStatusLink
-        href={`chapters/${chapter.slug}`}
+        href={
+          userProgress
+            ? `chapters/${chapter.slug}?start=${userProgress.watchedDuration}`
+            : `chapters/${chapter.slug}`
+        }
         requiredSubscription={!chapter.isFree}
         className={cn(
           "group relative block aspect-video w-full  rounded-xl overflow-hidden",
@@ -56,18 +62,10 @@ export const Chapter = ({ chapter }: ChapterProps) => {
             <PersonAccountsIcon className="w-6 h-6" />
           )}
         </div>
-        {userStatus === "LOGGED_IN_SUBSCRIBED" && chapter.userProgress && (
-          <div className="absolute bottom-0 left-0 w-full z-30 flex flex-col gap-1 items-end">
-            <span className="w-full h-[5px] bg-accent/80 rounded-full relative ">
-              <span
-                className="bg-secondary h-full rounded-full block"
-                style={{
-                  width: `${chapter.userProgress.progress}%`,
-                }}
-              />
-            </span>
-          </div>
-        )}
+        <UserProgressBar
+          progress={chapter.userProgress?.progress}
+          className="absolute bottom-0 left-0 w-full z-30"
+        />
       </UserStatusLink>
       {userStatus !== "LOGGED_IN_SUBSCRIBED" && chapter.isFree && (
         <span className="block text-sm mt-2 text-muted-foreground bg-muted px-2 py-[6px] rounded-md w-full">

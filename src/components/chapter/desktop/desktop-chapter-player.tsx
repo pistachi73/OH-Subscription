@@ -80,10 +80,11 @@ export const DesktopChapterPlayer = () => {
 
   return (
     <MediaController autohide="1" class="w-full relative flex z-10">
+      <div className="absolute top-0 left-0 w-full h-full z-0 bg-black/50 pointer-events-none" />
       <ChapterMediaVideo />
       <MediaControlBar
         class={cn(
-          "w-[calc(100%-64px)] flex justify-end items-center mt-4 mx-auto",
+          "w-[calc(100%-64px)] flex justify-end items-center mt-4 mx-auto relative z-10",
         )}
         slot="top-chrome"
       >
@@ -123,6 +124,7 @@ export const DesktopChapterPlayer = () => {
             </MediaMuteButton>
           </PopoverTrigger>
           <PopoverContent
+            withPortal={false}
             side="bottom"
             align="center"
             sideOffset={8}
@@ -130,7 +132,7 @@ export const DesktopChapterPlayer = () => {
           >
             <MediaVolumeRange
               class={cn(
-                " h-10  translate-x-[32.5px] p-0 w-[300px]  origin-top-left rotate-90 px-2  rounded-sm text-background bg-transparent",
+                " h-10  translate-x-[38px] p-0 w-[300px]  origin-top-left rotate-90 px-2  rounded-sm text-background bg-transparent",
               )}
             />
           </PopoverContent>
@@ -191,7 +193,7 @@ export const DesktopChapterPlayer = () => {
           </div>
         </MediaSeekForwardButton>
       </MediaControlBar>
-      <div className="relative z-10 w-full bg-gradient-to-t from-black/50 from-25% to-black/0 pt-[100px] lg:pt-[200px] pointer-events-none">
+      <div className="relative z-10 w-full pointer-events-none">
         <MediaControlBar class="mx-auto w-[calc(100%-64px)] flex items-center gap-6 mb-4 lg:mb-6">
           <MediaTimeDisplay class="text-foreground/70 bg-transparent font-sans p-0 text-sm lg:text-base" />
           <MediaTimeRange />

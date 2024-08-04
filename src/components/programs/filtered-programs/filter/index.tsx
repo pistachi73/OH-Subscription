@@ -32,7 +32,7 @@ export const ProgramFilter = () => {
                 <div className="w-0.5 h-5 bg-border" />
                 <button
                   onClick={clearFilters}
-                  className="px-0 flex items-center gap-2 text-muted-foreground text-base"
+                  className="px-0 flex items-center gap-2 text-muted-foreground text-base hover:underline"
                   type="button"
                 >
                   Clear all

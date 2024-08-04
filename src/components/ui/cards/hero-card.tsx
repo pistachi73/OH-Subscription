@@ -75,7 +75,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
 
         <MaxWidthWrapper
           className={cn(
-            "mb-0 md:mb-6 sm:mb-0 absolute bottom-0 sm:bottom-8 left-0 z-30 mx-0 flex flex-col justify-end gap-4 md:gap-8",
+            "absolute bottom-0 sm:bottom-8 left-0 z-30 mx-0 flex flex-col justify-end gap-4 md:gap-8",
             "sm:max-w-[45ch]",
             "md:max-w-[56ch]",
             "xl:max-w-[64ch]",
