@@ -14,8 +14,11 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
   return (
     <Link
       href={`/shots/${shot.slug}`}
-      className=" w-full h-full bg-muted rounded-md relative overflow-hidden flex items-end "
+      className="w-full aspect-[9/16] bg-muted rounded-md relative overflow-hidden flex items-end "
       onMouseEnter={() => {
+        if (previewTimeoutRef.current) {
+          clearTimeout(previewTimeoutRef.current);
+        }
         previewTimeoutRef.current = setTimeout(() => setShowPreview(true), 400);
       }}
       onMouseLeave={() => {
@@ -25,16 +28,16 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
         }
       }}
     >
-      <p
+      <div
         className={cn(
-          "block overflow-visible w-full px-2 py-3 relative z-30",
+          "absolute bottom-0 left-0 *:w-full px-2 py-3 w-full  z-30",
           "before:absolute before:-z-10 before:left-0 before:bottom-0 before:h-[150%] before:w-full before:bg-gradient-to-t from-black/70 from-25% to-black/0 before:content-['']",
         )}
       >
         <span className="line-clamp-2 text-sm font-medium text-white">
           {shot.title}
         </span>
-      </p>
+      </div>
 
       <Image
         src={thumbnailUrl}
@@ -42,7 +45,7 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
         fill
         priority
         className={cn(
-          "relative z-10 object-cover transition-all aspect-[9/16]",
+          "absolute top-0 left-0 z-10 object-cover transition-all w-full h-full",
           showPreview ? "opacity-0" : "opacity-100",
         )}
       />
@@ -51,7 +54,7 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
         alt="Shot card preview"
         fill
         loading="lazy"
-        className="object-cover relative z-0 aspect-[9/16]"
+        className="object-cover absolute top-0 left-0 z-0 w-full h-full"
       />
     </Link>
   );

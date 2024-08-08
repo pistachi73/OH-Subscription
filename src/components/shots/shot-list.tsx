@@ -1,8 +1,15 @@
 "use client";
-import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import type { ShotCard as ShotCardProps } from "@/server/db/schema.types";
 import { useMemo } from "react";
+import { CarouselHeader } from "../ui/carousel/carousel-header";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { ShotCard } from "./shot-card";
 
@@ -18,13 +25,13 @@ export const useShotList = () => {
       case deviceSize.includes("sm"):
         return 4;
       default:
-        return 3;
+        return 2;
     }
   }, [deviceSize]);
 
   return {
     slidesPerView,
-    slideSizeClassname: "basis-1/3 sm:basis-1/4 lg:basis-1/6 xl:basis-1/7",
+    slideSizeClassname: "basis-1/2 sm:basis-1/4 lg:basis-1/6 xl:basis-1/7",
   };
 };
 
@@ -38,29 +45,33 @@ export const ShotList = ({ shots }: ShotListProps) => {
   if (!shots?.length) return null;
 
   return (
-    <MaxWidthWrapper className={cn("relative z-[2]")} as="section">
-      <h2 className="relative mb-2 flex w-fit items-center gap-3">
-        <span className="flex items-center gap-2 text-lg font-medium tracking-tight lg:text-xl">
-          Shots
-        </span>
-      </h2>
-      <div className="flex flex-row gap-4 overflow-auto">
-        {shots.map((shot, index) => {
-          return (
-            <div
-              key={shot.playbackId}
-              className={cn(
-                "flex aspect-[9/16]  shrink-0 grow-0",
-                "[--gap:16px]",
-                "[--cols:3] sm:[--cols:4] lg:[--cols:6] xl:[--cols:6]",
-                "basis-[calc(100%/var(--cols)-(var(--gap)*(var(--cols)-1)/var(--cols)))]",
-              )}
-            >
-              <ShotCard shot={shot} />
-            </div>
-          );
-        })}
-      </div>
-    </MaxWidthWrapper>
+    <div className="my-8 md:my-10 lg:my-12">
+      <CarouselHeader title={"Shots"} />
+      <Carousel
+        slidesPerView={slidesPerView}
+        totalItems={shots?.length ?? slidesPerView}
+        opts={{
+          slidesToScroll: slidesPerView,
+          align: "start",
+          duration: 20,
+          inViewThreshold: 0.5,
+        }}
+      >
+        <CarouselContent>
+          {shots.map((shot) => {
+            return (
+              <CarouselItem
+                key={shot.playbackId}
+                className={cn(slideSizeClassname)}
+              >
+                <ShotCard shot={shot} />
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </div>
   );
 };

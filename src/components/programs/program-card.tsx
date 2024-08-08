@@ -1,34 +1,32 @@
+import type { Transition } from "framer-motion";
 import { AnimatePresence, m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import { InfoOutlineIcon } from "@/components/ui/icons";
-import { LikeButton, LikeButtonIcon } from "@/components/ui/like-button";
 import { SubscribedBanner } from "@/components/ui/subscribed-banner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { UserProgressBar } from "@/components/ui/user-progress-bar";
-import { cardsEase } from "@/lib/animation";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils";
 
 import { useLikeProgram } from "./hooks/use-like-program";
-import { ProgramMainCTAButton } from "./program-play-button";
 
 import type { RouterOutputs } from "@/trpc/shared";
+import { Button } from "../ui/button";
+import { InfoOutlineIcon } from "../ui/icons";
+import { LikeButton, LikeButtonIcon } from "../ui/like-button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { ProgramMainCTAButton } from "./program-play-button";
+
+const MotionLink = m(Link);
 
 export type ProgramCardProps = {
   lazy?: boolean;
   isLeftBorder?: boolean;
   isRightBorder?: boolean;
   program: RouterOutputs["program"]["getProgramsForCards"][0];
+  index?: number;
 };
 
 export const ProgramCard = ({
@@ -36,8 +34,9 @@ export const ProgramCard = ({
   isLeftBorder,
   isRightBorder,
   program,
+  index,
 }: ProgramCardProps) => {
-  const { deviceType } = useDeviceType();
+  const onHoverTimeoutRef = useRef<NodeJS.Timeout>();
   const [isHovered, setIsHovered] = useState(false);
 
   const {
@@ -56,24 +55,39 @@ export const ProgramCard = ({
     initialLiked: program.isLikedByUser,
   });
 
-  const chapterHrefPrefix = `/programs/${slug}`;
-
-  const chapterHref = lastWatchedChapter
-    ? `${chapterHrefPrefix}/chapters/${lastWatchedChapter.chapterSlug}?start=${Math.floor(lastWatchedChapter.watchedDuration)}`
-    : firstChapter
-      ? `${chapterHrefPrefix}/chapters/${firstChapter?.chapterSlug}`
-      : chapterHrefPrefix;
-
   const onMouseEnter = () => {
-    if (deviceType === "mobile" || deviceType === "tablet") return;
-    setIsHovered(true);
+    if (onHoverTimeoutRef.current) {
+      clearTimeout(onHoverTimeoutRef.current);
+    }
+    onHoverTimeoutRef.current = setTimeout(() => {
+      setIsHovered(true);
+    }, 300);
   };
 
+  const onMouseLeave = () => {
+    if (onHoverTimeoutRef.current) {
+      clearTimeout(onHoverTimeoutRef.current);
+    }
+    setIsHovered(false);
+  };
+
+  const transition: Transition = useMemo(
+    () => ({
+      type: "spring",
+      mass: 1,
+      stiffness: 400,
+      damping: 35,
+    }),
+    [],
+  );
+
   return (
-    <article
+    <m.article
       className="group relative flex aspect-video h-full w-full"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={() => setIsHovered(false)}
+      initial="initial"
+      whileHover="hover"
+      onHoverStart={onMouseEnter}
+      onHoverEnd={onMouseLeave}
     >
       <section
         className={cn(
@@ -81,13 +95,21 @@ export const ProgramCard = ({
           "group-hover:z-20 group-hover:delay-0",
         )}
       >
-        <div
+        <m.div
           className={cn(
-            "w-full h-full transition-transform ease-card",
-            "group-hover:scale-125 group-hover:delay-300",
+            "w-full h-full",
             isLeftBorder && "origin-left",
             isRightBorder && "origin-right",
           )}
+          variants={{
+            initial: { scale: 1, y: 0 },
+            hover: {
+              scale: 1.25,
+              y: -50,
+              transition: { ...transition, delay: 0.3 },
+            },
+          }}
+          transition={transition}
         >
           <Badge
             variant="accent"
@@ -99,9 +121,20 @@ export const ProgramCard = ({
             {levelMap[level].shortFormat}
           </Badge>
 
-          <Link
+          <MotionLink
             href={`/programs/${slug}`}
-            className="relative w-full h-full block rounded-lg group-hover:rounded-b-none overflow-hidden "
+            className="relative w-full h-full block overflow-hidden "
+            variants={{
+              initial: {
+                borderRadius: 8,
+              },
+              hover: {
+                borderRadius: 0,
+                transition: {
+                  duration: 0.3,
+                },
+              },
+            }}
           >
             <Image
               src={thumbnail?.src ?? "/images/video-thumbnail.png"}
@@ -125,26 +158,36 @@ export const ProgramCard = ({
               className="absolute bottom-0 left-0 w-full z-30"
               progressClassName="rounded-none"
             />
-          </Link>
-        </div>
-        <AnimatePresence>
+          </MotionLink>
+        </m.div>
+
+        <AnimatePresence initial={false}>
           {isHovered && (
             <m.article
-              initial={{ opacity: 0, top: "107.5%" }}
+              key={`progra-card-details-${program.slug}`}
+              initial={{ opacity: 0.5, y: -2, top: "100%", scale: 0.8 }}
               animate={{
                 opacity: 1,
                 top: "112.5%",
+                y: -51,
+                scale: 1,
+                transition,
+              }}
+              exit={{
+                opacity: 0,
+                y: 0,
+                scale: 0.8,
+                top: "100%",
                 transition: {
-                  delay: 0.3,
+                  ease: "easeOut",
                   duration: 0.1,
-                  ease: cardsEase,
                 },
               }}
               className={cn(
-                "p-4 bg-background rounded-b-lg opacity-0  delay-0 absolute top-0 left-[-12.5%]  w-[125%] ",
-                "group-hover:shadow-lg",
-                isLeftBorder && "left-0",
-                isRightBorder && "left-[-25%]",
+                "p-4 bg-background rounded-b-lg absolute left-[-12.5%]  w-[125%] ",
+                "group-hover:shadow-lg origin-top",
+                isLeftBorder && "left-0 origin-top-left",
+                isRightBorder && "left-[-25%] origin-top-right",
               )}
             >
               <SubscribedBanner className="mb-2 text-muted-foreground text-sm">
@@ -233,6 +276,6 @@ export const ProgramCard = ({
           )}
         </AnimatePresence>
       </section>
-    </article>
+    </m.article>
   );
 };
