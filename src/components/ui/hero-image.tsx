@@ -1,26 +1,18 @@
-import type React from "react";
-
-import Image from "next/image";
-
 import { cn } from "@/lib/utils";
-import type { PlaceholderValue } from "next/dist/shared/lib/get-img-props";
+import type { CustomImageProps } from "./custom-image";
+import { CustomImage } from "./custom-image";
 
-type HeroImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
+type HeroImageProps = CustomImageProps & {
   containerClassname?: string;
-  priority?: boolean;
-  placeholder?: PlaceholderValue | undefined;
-  blurDataURL?: string | undefined;
 };
 
 export const HeroImage = ({
   src,
-  alt,
+  fallbackSrc,
   containerClassname,
-  priority = false,
-  placeholder,
-  blurDataURL,
+  ...props
 }: HeroImageProps) => {
-  if (!src || !alt) return null;
+  if (!src && !fallbackSrc) return null;
   return (
     <div
       className={cn(
@@ -30,15 +22,12 @@ export const HeroImage = ({
         containerClassname,
       )}
     >
-      <Image
+      <CustomImage
         src={src}
-        alt={alt}
-        className={cn("w-full object-cover duration-500 transition-[filter]")}
-        fill
-        priority={priority}
-        placeholder={placeholder}
-        blurDataURL={blurDataURL}
+        fallbackSrc={fallbackSrc}
         sizes="(max-width: 1300px) 100vw, 75vw"
+        fill
+        {...props}
       />
     </div>
   );

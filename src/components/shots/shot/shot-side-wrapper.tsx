@@ -6,6 +6,7 @@ import {
   ResponsiveDialog,
   ResponsiveDialogContent,
 } from "@/components/ui/responsive-dialog";
+import { springTransition } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 
 type ShotSideWrapperProps = PropsWithChildren & {
@@ -29,11 +30,12 @@ export const ShotSideWrapper = ({
             opacity: 1,
             x: 0,
             transition: {
-              duration: 0.3,
-              ease: "easeInOut",
+              ...springTransition,
+              delay: 0.2,
             },
           }}
           exit={{ opacity: 0, x: "-90%" }}
+          transition={springTransition}
           className="absolute left-full aspect-[9/16] h-full w-full max-w-[500px] -z-10"
         >
           {children}

@@ -14,7 +14,7 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
   return (
     <Link
       href={`/shots/${shot.slug}`}
-      className="w-full aspect-[9/16] bg-muted rounded-md relative overflow-hidden flex items-end "
+      className="w-full aspect-[9/16] bg-muted rounded-md relative overflow-hidden flex items-end z-0"
       onMouseEnter={() => {
         if (previewTimeoutRef.current) {
           clearTimeout(previewTimeoutRef.current);

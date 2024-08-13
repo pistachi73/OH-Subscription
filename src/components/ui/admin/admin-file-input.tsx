@@ -20,13 +20,6 @@ export const AdminFileInput = React.forwardRef<
 
   return (
     <div>
-      {/* <button
-        onClick={() => {
-        }}
-        type="button"
-      >
-        teste
-      </button> */}
       <Input
         type="file"
         onChange={(event) => {
@@ -59,6 +52,7 @@ export const AdminFileInput = React.forwardRef<
               e.stopPropagation();
               onChange?.(null);
             }}
+            role="button"
           >
             <Trash className="text-destructive-foreground" size={16} />
           </div>

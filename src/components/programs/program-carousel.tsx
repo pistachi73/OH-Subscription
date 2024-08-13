@@ -36,6 +36,7 @@ const CarouselProgramCard = ({
       isLeftBorder={isLeftBorder}
       isRightBorder={isRightBorder}
       program={program}
+      index={index}
     />
   );
 };

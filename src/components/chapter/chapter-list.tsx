@@ -6,9 +6,9 @@ import {
 import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import { cn } from "@/lib/utils";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import { buttonVariants } from "../ui/button";
+import { CustomImage } from "../ui/custom-image";
 import { SubscribedBanner } from "../ui/subscribed-banner";
 import { UserProgressBar } from "../ui/user-progress-bar";
 import { UserStatusLink } from "../ui/user-status-link";
@@ -117,8 +117,9 @@ export const ActiveChapterCard = ({
     >
       <div className="relative  w-full flex flex-col items-end justify-end">
         <div className="absolute aspect-video top-0 left-0 w-full overflow-hidden">
-          <Image
-            src={chapter.thumbnail ?? "/images/hero-thumbnail-2.jpg"}
+          <CustomImage
+            src={chapter.thumbnail}
+            fallbackSrc="/images/hero-thumbnail-2.jpg"
             alt="video"
             fill
             className="object-cover"

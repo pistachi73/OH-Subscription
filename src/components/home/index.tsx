@@ -1,6 +1,5 @@
 import { api } from "@/trpc/server";
 import { ProgramCarousel } from "../programs/program-carousel";
-import { ShotList } from "../shots/shot-list";
 import { TeacherCarousel } from "../teachers/teacher-carousel";
 import { HeroCarousel } from "./hero-carousel";
 
@@ -28,7 +27,7 @@ export const Home = async () => {
         href="/programs/?categories=3"
         programs={vocabularyPrograms}
       />
-      <ShotList shots={shots} />
+      {/* <ShotList shots={shots} /> */}
 
       <ProgramCarousel
         title="Grammar"
@@ -58,13 +57,13 @@ export const Home = async () => {
             bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula.",
           },
           {
-            id: 3,
+            id: 4,
             name: "John Doe",
             image: "https://source.unsplash.com/random/100x100",
             bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula.",
           },
           {
-            id: 4,
+            id: 5,
             name: "John Doe",
             image: "https://source.unsplash.com/random/100x100",
             bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula.",

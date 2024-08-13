@@ -1,7 +1,11 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { m } from "framer-motion";
 import dynamic from "next/dynamic";
+
+import { springTransition } from "@/lib/animation";
+import { cn } from "@/lib/utils";
+
 import { useChapterContext } from "../chapter-context";
 import { ChapterPlayerContainer } from "../player/chapter-player-container";
 import { DesktopLoadingChapterPlayer } from "./desktop-loading-chapter-player";
@@ -44,14 +48,22 @@ const DesktopChapter = () => {
   const { activeTab, chapter } = useChapterContext();
   return (
     <ChapterPlayerContainer>
-      <div
+      <m.div
         className={cn(
-          "w-full transition-[grid] h-[100svh] bg-muted-background ease-in-out duration-300 overflow-hidden",
-          "grid-cols-[1fr,0px] grid",
-          activeTab
-            ? "lg:grid-cols-[1fr,400px]  xl:grid-cols-[1fr,450px] "
-            : "lg:grid-cols-[1fr,0px]",
+          "w-full h-[100svh] bg-muted-background  overflow-hidden grid ",
+          "[--cols:1fr_400px] xl:[--cols:1fr_450px]",
         )}
+        initial="close"
+        animate={activeTab ? "open" : "close"}
+        variants={{
+          open: {
+            gridTemplateColumns: "var(--cols)",
+          },
+          close: {
+            gridTemplateColumns: "1fr 0px",
+          },
+        }}
+        transition={springTransition}
       >
         <DynamicDesktopChapterPlayer />
         <div className="relative w-full h-full z-0">
@@ -60,7 +72,7 @@ const DesktopChapter = () => {
           <DynamicDesktopChapterList />
           <DynamicDesktopChapterDetails />
         </div>
-      </div>
+      </m.div>
     </ChapterPlayerContainer>
   );
 };

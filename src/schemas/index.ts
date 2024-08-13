@@ -29,10 +29,10 @@ export const FileSchema = z
   .optional()
   .refine((file) => {
     if (typeof file !== "string" && file?.size) {
-      return file.size <= 3000000;
+      return file.size < 1000000;
     }
     return true;
-  }, "Max image size is 3MB.");
+  }, "Max image size is 1MB.");
 
 export const PasswordSchema = z
   .string()

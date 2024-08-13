@@ -3,11 +3,11 @@
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
 
-import type { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { Button } from "../button";
+import { ChevronLeftIcon, ChevronRightIcon } from "../icons";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -163,7 +163,7 @@ const Carousel = React.forwardRef<
           ref={ref}
           onKeyDownCapture={handleKeyDown}
           className={cn(
-            "group/carousel w-full transition-[z-index] delay-300 hover:z-10 group-hover:delay-0",
+            "group/carousel w-full hover:z-10 z-0 [transition:z-index_0.3s_step-end] delay-300",
             "relative w-full",
             "[--items-spacing:12px]",
             "[--items-spacing-lg:20px]",
@@ -249,8 +249,8 @@ const CarouselPrevious = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-prev absolute flex h-full w-[calc(4%-var(--items-spacing))]  items-center  justify-center rounded-none rounded-r-sm bg-muted-background/50 opacity-100  transition-opacity",
-        "hover:bg-muted-background/60",
+        "group/chevron-prev absolute flex h-full w-[calc(4%-var(--items-spacing))]  items-center  justify-center rounded-none rounded-r-sm bg-muted-background/60 opacity-100  transition-[opacity,background-color] duration-300",
+        "hover:bg-muted-background/80",
         "disabled:opacity-0",
         "group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0",
         "lg:w-[calc(4%-var(--items-spacing-lg))]",
@@ -265,12 +265,12 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeft
+      <ChevronLeftIcon
         className={cn(
-          "text-foreground/50 opacity-0 transition-transform",
+          "w-5 h-5 lg:w-6 lg:h-6 text-foreground",
+          "transition-[opacity,transform] opacity-0",
           "group-hover/chevron-prev:scale-[1.2]  group-hover/carousel:opacity-100",
         )}
-        size={32}
       />
       <span className="sr-only">Previous slide</span>
     </button>
@@ -288,8 +288,8 @@ const CarouselNext = React.forwardRef<
     <button
       ref={ref}
       className={cn(
-        "group/chevron-next absolute flex h-full w-[calc(4%-var(--items-spacing))] items-center justify-center rounded-none rounded-l-sm bg-muted-background/50 opacity-100  transition-opacity",
-        "hover:bg-muted-background/60",
+        "group/chevron-next absolute flex h-full w-[calc(4%-var(--items-spacing))] items-center justify-center rounded-none rounded-l-sm bg-muted-background/60 opacity-100  transition-[opacity,background-color] duration-300",
+        "hover:bg-muted-background/80",
         "disabled:opacity-0",
         "group-hover/carousel:opacity-100 group-hover/carousel:disabled:opacity-0",
         "lg:w-[calc(4%-var(--items-spacing-lg))]",
@@ -305,12 +305,12 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ChevronRight
+      <ChevronRightIcon
         className={cn(
-          "text-foreground/50 opacity-0 transition-transform",
+          "w-5 h-5 lg:w-6 lg:h-6 text-foreground",
+          "transition-[opacity,transform] opacity-0",
           "group-hover/chevron-next:scale-[1.2]  group-hover/carousel:opacity-100",
         )}
-        size={32}
       />
       <span className="sr-only">Next slide</span>
     </button>

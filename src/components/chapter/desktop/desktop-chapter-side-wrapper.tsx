@@ -2,7 +2,7 @@ import { AnimatePresence, m } from "framer-motion";
 import type { PropsWithChildren } from "react";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import { regularEase } from "@/lib/animation";
+import { springTransition } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
@@ -23,20 +23,20 @@ export const ChapterSideWrapper = ({
   onDialogOpenChange,
 }: ChapterSideWrapperProps) => {
   const { deviceType } = useDeviceType();
-  const { setActiveTab } = useChapterContext();
+  const { setActiveTab, activeTab } = useChapterContext();
 
   return deviceType === "desktop" ? (
     <AnimatePresence mode="wait">
       {isDialogOpen && (
         <m.div
-          initial={{ opacity: 0, x: "-75%" }}
+          initial={{ opacity: 0, x: "-100%" }}
           animate={{
             opacity: 1,
             x: 0,
-            transition: { duration: 0.3, ease: regularEase, delay: 0.25 },
+            transition: { ...springTransition, delay: 0.3 },
           }}
-          exit={{ opacity: 0, x: "-75%" }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          exit={{ opacity: 1, x: "-100%" }}
+          transition={springTransition}
           className="h-full w-[400px] xl:w-[450px] absolute top-0 left-0 bg-muted-background flex flex-col"
         >
           <div

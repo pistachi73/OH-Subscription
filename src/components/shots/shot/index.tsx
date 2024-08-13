@@ -2,6 +2,7 @@
 import { AnimatePresence, m } from "framer-motion";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
+import { springTransition } from "@/lib/animation";
 import { cn } from "@/lib/utils";
 import type { ShotCarouselData } from "@/server/db/schema.types";
 import {
@@ -98,15 +99,11 @@ const ShotContent = ({ shot, inView = false }: ShotProps) => {
 
   return (
     <m.div
-      // ref={ref}
       // Half of the width of the comments section
       animate={{
         x: isDesktop && canAnimate ? "max(-250px, -50%)" : 0,
       }}
-      transition={{
-        duration: 0.2,
-        ease: "easeInOut",
-      }}
+      transition={springTransition}
       className={cn(
         "relative flex h-full translate-x-0 items-end  bg-background",
         isMobile ? "w-full" : "aspect-[9/16] w-auto rounded-md",

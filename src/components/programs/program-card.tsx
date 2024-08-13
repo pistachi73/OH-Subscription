@@ -1,23 +1,27 @@
 import type { Transition } from "framer-motion";
 import { AnimatePresence, m } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CustomImage } from "@/components/ui/custom-image";
+import { InfoOutlineIcon } from "@/components/ui/icons";
+import { LikeButton, LikeButtonIcon } from "@/components/ui/like-button";
 import { SubscribedBanner } from "@/components/ui/subscribed-banner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { UserProgressBar } from "@/components/ui/user-progress-bar";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils";
 
 import { useLikeProgram } from "./hooks/use-like-program";
+import { ProgramMainCTAButton } from "./program-play-button";
 
 import type { RouterOutputs } from "@/trpc/shared";
-import { Button } from "../ui/button";
-import { InfoOutlineIcon } from "../ui/icons";
-import { LikeButton, LikeButtonIcon } from "../ui/like-button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { ProgramMainCTAButton } from "./program-play-button";
 
 const MotionLink = m(Link);
 
@@ -123,35 +127,29 @@ export const ProgramCard = ({
 
           <MotionLink
             href={`/programs/${slug}`}
-            className="relative w-full h-full block overflow-hidden "
+            className="relative w-full h-full block overflow-hidden aspect-video"
             variants={{
               initial: {
                 borderRadius: 8,
               },
               hover: {
-                borderRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
                 transition: {
                   duration: 0.3,
                 },
               },
             }}
           >
-            <Image
-              src={thumbnail?.src ?? "/images/video-thumbnail.png"}
+            <CustomImage
+              src={thumbnail}
+              fallbackSrc="/images/video-thumbnail.png"
               alt="video"
               fill
-              className={cn(
-                "rounded-lg group-hover:rounded-b-none xl:delay-0 group-hover:delay-300  object-cover",
-              )}
-              {...(thumbnail?.placeholder && {
-                placeholder: "blur",
-                blurDataURL: thumbnail.placeholder,
-              })}
-              loading={lazy ? "lazy" : "eager"}
               sizes={`(max-width: 640px) 50vw,
-     (max-width: 1024px) 33vw,
-     (max-width: 1280px) 25vw,
-     20vw`}
+                      (max-width: 1024px) 33vw,
+                      (max-width: 1280px) 25vw,
+                      20vw`}
             />
             <UserProgressBar
               progress={lastWatchedChapter?.progress}

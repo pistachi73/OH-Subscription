@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
-
 import { buttonVariants } from "@/components/ui/button";
+import { CustomImage } from "@/components/ui/custom-image";
 import { PersonAccountsIcon, PlayIcon } from "@/components/ui/icons";
 import { SubscribedBanner } from "@/components/ui/subscribed-banner";
 import { UserProgressBar } from "@/components/ui/user-progress-bar";
@@ -34,11 +33,11 @@ export const Chapter = ({ chapter }: ChapterProps) => {
           "group relative block aspect-video w-full  rounded-xl overflow-hidden",
         )}
       >
-        <Image
-          src={chapter.thumbnail ?? "/images/hero-thumbnail-2.jpg"}
-          alt="video"
+        <CustomImage
+          src={chapter.thumbnail}
+          fallbackSrc="/images/hero-thumbnail-2.jpg"
+          alt="Program Chapter Thumbnail"
           fill
-          className="object-cover"
           sizes={`
             (max-width: 640px) 100vw,
             (max-width: 1024px) 50vw,

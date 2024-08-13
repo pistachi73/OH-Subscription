@@ -1,6 +1,7 @@
-import React from "react";
-
+import { type Transition, m } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
 import { useLikeProgram } from "@/components/programs/hooks/use-like-program";
 import { ProgramMainCTAButton } from "@/components/programs/program-play-button";
@@ -14,11 +15,26 @@ import {
   ResponsiveTooltipContent,
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
-import { useIsSubscribed } from "@/hooks/use-is-subscribed";
+import { SubscribedBanner } from "@/components/ui/subscribed-banner";
+
+import { springTransition } from "@/lib/animation";
 import { cn } from "@/lib/utils";
+
 import type { ProgramCard } from "@/server/db/schema.types";
-import Image from "next/image";
-import { SubscribedBanner } from "../subscribed-banner";
+
+const DELAY_INCREMENT = 0.08;
+const DELAY_START = 0.8;
+const getAnimateTransition = (index: number): Transition => ({
+  ...springTransition,
+  delay: DELAY_START + DELAY_INCREMENT * index,
+});
+
+const getExitTransition = (index: number): Transition => ({
+  ...springTransition,
+  delay: DELAY_INCREMENT * index,
+});
+
+const MotionImage = m(Image);
 
 type HeroCardProps = {
   className?: string;
@@ -35,43 +51,48 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
     const { id, title, slug, description, thumbnail, lastWatchedChapter } =
       program;
 
-    const isSubscribed = useIsSubscribed();
     const { isLikedByUser, isLikeLoading, likeProgram } = useLikeProgram({
       initialLiked: program.isLikedByUser,
     });
 
     return (
-      <div
+      <m.div
         ref={ref}
         className={cn(
           heroCardHeightProps,
           className,
-          "transition-opacity duration-500 ease-in-out",
-          active ? "opacity-100 z-10 " : "pointer-events-none opacity-0 ",
+          "absolute top-0 left-0 w-full h-full",
         )}
+        initial={{ zIndex: 0 }}
+        animate={{ zIndex: 0 }}
+        exit={{
+          zIndex: 10,
+          transition: { delay: 0 },
+        }}
       >
-        <div
+        <m.div
           className={cn(
             "absolute left-0 top-0 -z-10 flex aspect-video w-full h-[calc(100%+4rem)]  sm:h-[calc(100%+8rem)]",
           )}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+            transition: { ...springTransition, delay: 0.5 },
+          }}
+          transition={springTransition}
         >
           <HeroImage
-            src={
-              program?.thumbnail
-                ? program.thumbnail.src
-                : index ?? 0 % 2 === 0
-                  ? "/images/hero-thumbnail-2.jpg"
-                  : "/images/hero-background.png"
+            src={program?.thumbnail}
+            fallbackSrc={
+              (index ?? 0) % 2 === 0
+                ? "/images/hero-thumbnail-2.jpg"
+                : "/images/hero-background.png"
             }
-            priority={active}
             alt="Hero background image"
             containerClassname="h-full"
-            {...(program?.thumbnail?.placeholder && {
-              placeholder: "blur",
-              blurDataURL: program.thumbnail.placeholder,
-            })}
           />
-        </div>
+        </m.div>
 
         <MaxWidthWrapper
           className={cn(
@@ -83,58 +104,64 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
           )}
         >
           <div className="space-y-1 sm:space-y-3 lg:space-y-6">
-            <Image
+            <MotionImage
               src="/images/test.svg"
-              alt="test"
-              className={cn(
-                "w-full dark:invert ",
-                "opacity-0 translate-y-10 w-3/4 lg:w-[90%]",
-                active &&
-                  "animate-show-hero-card-content fill-mode-forwards delay-600",
-              )}
+              alt="Program Title"
+              className={cn("w-full dark:invert")}
               width={0}
               height={0}
               sizes="100vw"
               style={{
                 height: "auto",
               }}
+              priority
+              initial={{ opacity: 0, y: 40 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: getAnimateTransition(0),
+              }}
+              exit={{ opacity: 0, y: -40, transition: getExitTransition(0) }}
             />
-            {/* <h1
+            <h1
               className={cn(
-                "text-balance text-left text-xl font-bold tracking-tighter text-foreground capitalize  max-w-[90%]",
+                "sr-only text-balance text-left text-xl font-bold tracking-tighter text-foreground capitalize  max-w-[90%]",
                 "sm:text-4xl",
                 "lg:text-5xl",
                 "2xl:text-6xl",
-                "opacity-0 translate-y-10",
-                active &&
-                  "animate-show-hero-card-content fill-mode-forwards delay-600",
               )}
             >
               {title ? title : "Advanced English Conversation"}
-            </h1> */}
-            <p
+            </h1>
+            <m.p
               className={cn(
                 "mb-2 line-clamp-3 w-full text-left text-base text-foreground",
                 "sm:line-clamp-4",
                 "md:text-lg hidden",
-                "opacity-0 translate-y-10",
-                active &&
-                  " animate-show-hero-card-content fill-mode-forwards delay-700",
               )}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                transition: getAnimateTransition(1),
+              }}
+              exit={{ opacity: 0, y: -40, transition: getExitTransition(1) }}
             >
               {description
                 ? description
                 : "Tailored for advanced learners, this course focuses on real-life scenarios, idiomatic expressions, and nuanced vocabulary to enhance conversational fluency through role-plays and discussions, empowering confident communication in English-speaking environments."}
-            </p>
+            </m.p>
           </div>
 
-          <div
-            className={cn(
-              "w-full",
-              "opacity-0 translate-y-10",
-              active &&
-                " animate-show-hero-card-content fill-mode-forwards delay-800",
-            )}
+          <m.div
+            className={cn("w-full")}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: getAnimateTransition(2),
+            }}
+            exit={{ opacity: 0, y: -40, transition: getExitTransition(2) }}
           >
             <SubscribedBanner className="mb-3" />
             <div className="flex flex-row items-center gap-6">
@@ -192,9 +219,9 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                 </ResponsiveTooltip>
               </div>
             </div>
-          </div>
+          </m.div>
         </MaxWidthWrapper>
-      </div>
+      </m.div>
     );
   },
 );

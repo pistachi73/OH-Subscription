@@ -1,13 +1,14 @@
 "use client";
+import { AnimatePresence } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-
-import { HeroCard, heroCardHeightProps } from "../ui/cards/hero-card";
-
+import { buttonVariants } from "@/components/ui/button";
+import { HeroCard, heroCardHeightProps } from "@/components/ui/cards/hero-card";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
+
+import type { ProgramCard } from "@/server/db/schema.types";
 import type { RouterOutputs } from "@/trpc/shared";
-import { buttonVariants } from "../ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "../ui/icons";
 
 type HeroCarouselProps = {
   programs: RouterOutputs["program"]["getProgramsForCards"];
@@ -39,7 +40,7 @@ export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
 
     autoSlideInterval.current = setInterval(() => {
       onNavigate("next");
-    }, 100000000);
+    }, 10000);
   }, [onNavigate]);
 
   useEffect(() => {
@@ -52,16 +53,19 @@ export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
     };
   }, [autoSlide]);
 
+  const currentProgram = useMemo(
+    () => programs[current] as ProgramCard,
+    [current, programs],
+  );
   return (
     <div className={cn("relative z-0 sm:mb-12", heroCardHeightProps)}>
-      {programs.map((program, index) => (
+      <AnimatePresence initial={false}>
         <HeroCard
-          key={`hero-card-${program.slug}`}
-          program={program}
-          index={index}
-          active={current === index}
+          key={`hero-card-${currentProgram.slug}`}
+          program={currentProgram}
+          index={current}
         />
-      ))}
+      </AnimatePresence>
       <div
         className={cn(
           "absolute z-20 right-[4%] 2xl:right-14 top-14 md:top-1/2 md:-translate-y-1/2 flex flex-row items-center justify-center gap-1",

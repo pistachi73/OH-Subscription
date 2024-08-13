@@ -48,7 +48,6 @@ import {
   teachersOnPrograms,
   videosOnPrograms,
 } from "@/server/db/schema";
-import getObjWithImagePlaceholder from "../lib/get-placeholder-image";
 import { generateEmbedding } from "../lib/openai";
 
 export const programRouter = createTRPCRouter({
@@ -309,12 +308,6 @@ export const programRouter = createTRPCRouter({
 
       const res = await programsForCardsQuery.execute();
 
-      const resWithPlaceholders = await getObjWithImagePlaceholder({
-        obj: res,
-        key: "thumbnail",
-        placeholderImageSrc: "/images/hero-thumbnail-2.jpg",
-      });
-
       const timeTaken = Date.now() - startTime;
 
       if (minQueryTime && timeTaken < minQueryTime) {
@@ -323,7 +316,7 @@ export const programRouter = createTRPCRouter({
         );
       }
 
-      return resWithPlaceholders;
+      return res;
     }),
 
   getById: publicProcedure
@@ -417,15 +410,7 @@ export const programRouter = createTRPCRouter({
       programQuery = programQuery.groupBy(programs.id);
 
       const res = await programQuery.execute();
-
-      const resWithPlaceholders = await getObjWithImagePlaceholder({
-        obj: res,
-        key: "thumbnail",
-        placeholderImageSrc: "/images/hero-thumbnail-2.jpg",
-      });
-
-      const p = resWithPlaceholders[0];
-
+      const p = res[0];
       if (!p) return null;
 
       if (p.chapters?.length) {

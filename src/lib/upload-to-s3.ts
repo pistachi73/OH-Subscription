@@ -7,22 +7,21 @@ export const uploadToS3 = async ({
   file: File;
   createPresignedUrl: () => CreatePresignedUrlOutput;
 }) => {
-  const { url, fields, fileName: uploadFileName } = await createPresignedUrl();
+  const { presignedUrl, fileName: uploadFileName } = await createPresignedUrl();
 
   const data: Record<string, any> = {
-    ...fields,
+    ...presignedUrl.fields,
     "Content-Type": file.type,
     file,
   };
 
-  console.log({ data });
   const formData = new FormData();
   for (const name in data) {
     formData.append(name, data[name]);
   }
 
   try {
-    await fetch(url, {
+    await fetch(presignedUrl.url, {
       method: "POST",
       body: formData,
     });

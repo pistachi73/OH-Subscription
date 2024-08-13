@@ -59,13 +59,10 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
     >
       <div className="absolute -bottom-px left-0 -z-10 h-[calc(100%+1px)] w-full bg-gradient-to-t from-muted-background to-25%" />
       <HeroImage
-        src={thumbnail ? thumbnail.src : "/images/hero-thumbnail-2.jpg"}
-        {...(thumbnail?.placeholder && {
-          placeholder: "blur",
-          blurDataURL: thumbnail.placeholder,
-        })}
-        priority={true}
-        alt="testing"
+        src={thumbnail}
+        fallbackSrc="/images/hero-thumbnail-2.jpg"
+        priority
+        alt="Program Spotlight Hero Image"
         containerClassname="-z-20 max-h-[100%]"
       />
       <div

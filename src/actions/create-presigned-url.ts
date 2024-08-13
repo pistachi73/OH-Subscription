@@ -1,8 +1,9 @@
 "use server";
-import crypto from "node:crypto";
 
 import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import type { Conditions } from "@aws-sdk/s3-presigned-post/dist-types/types";
+import crypto from "node:crypto";
 import { z } from "zod";
 
 import { env } from "@/env";
@@ -23,10 +24,14 @@ const CreatePresignedUrlInputSchema = z.object({
   maxFileSize: z.number().optional(),
 });
 
+const PresignedUrl = z.object({
+  url: z.string(),
+  fields: z.record(z.string()),
+});
+
 const CreatePresignedUrlOutputSchema = z.promise(
   z.object({
-    url: z.string(),
-    fields: z.record(z.string()),
+    presignedUrl: PresignedUrl,
     fileName: z.string(),
   }),
 );
@@ -45,22 +50,24 @@ export const createPresignedUrl = async ({
     fileName = crypto.randomBytes(16).toString("hex");
   }
 
-  const Fields = {};
+  const Bucket = env.AWS_S3_BUCKET;
+  const Conditions: Conditions[] = [
+    ["starts-with", "$Content-Type", ""],
+    ["content-length-range", 0, maxFileSize ?? UPLOAD_MAX_FILE_SIZE],
+  ];
+
   const Key = fileName;
 
   const presignedUrl = await createPresignedPost(s3, {
-    Bucket: env.AWS_S3_BUCKET,
+    Bucket,
     Key,
     Expires: 600,
-    Fields,
-    Conditions: [
-      ["starts-with", "$Content-Type", ""],
-      ["content-length-range", 0, maxFileSize ?? UPLOAD_MAX_FILE_SIZE],
-    ],
+    Fields: {},
+    Conditions,
   });
 
   return {
-    ...presignedUrl,
+    presignedUrl,
     fileName: fileName,
   };
 };

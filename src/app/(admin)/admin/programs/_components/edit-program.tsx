@@ -52,6 +52,7 @@ export const EditProgram = ({
       duration: program.duration,
       published: program.published || false,
       totalChapters: program.totalChapters,
+      thumbnail: program.thumbnail ?? undefined,
     },
   });
 

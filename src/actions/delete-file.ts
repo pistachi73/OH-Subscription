@@ -26,8 +26,13 @@ export const deleteFile = async ({
     Key,
   });
 
+  const thumbnailCommand = new DeleteObjectCommand({
+    Bucket: env.AWS_S3_BUCKET,
+    Key: `${fileName}-thumbnail`,
+  });
+
   try {
-    await s3.send(command);
+    await Promise.all([s3.send(command), s3.send(thumbnailCommand)]);
   } catch (err) {
     console.error(err);
   }
