@@ -38,6 +38,7 @@ export const Chapter = ({ chapter }: ChapterProps) => {
           fallbackSrc="/images/hero-thumbnail-2.jpg"
           alt="Program Chapter Thumbnail"
           fill
+          priority
           sizes={`
             (max-width: 640px) 100vw,
             (max-width: 1024px) 50vw,

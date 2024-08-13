@@ -21,22 +21,23 @@ type ProgramCarouselProps = {
   title: string;
   programs?: RouterOutputs["program"]["getProgramsForCards"];
   href?: string;
+  priority?: boolean;
 };
 
 const CarouselProgramCard = ({
-  lazy,
   index,
   program,
+  priority,
 }: ProgramCardProps & { index: number }) => {
   const { isLeftBorder, isRightBorder } = useCarouselBorders({ index });
 
   return (
     <ProgramCard
-      lazy={lazy}
       isLeftBorder={isLeftBorder}
       isRightBorder={isRightBorder}
       program={program}
       index={index}
+      priority={priority}
     />
   );
 };
@@ -45,6 +46,7 @@ export const ProgramCarousel = ({
   programs,
   title,
   href,
+  priority = false,
 }: ProgramCarouselProps) => {
   const { slideSizeClassname, slidesToScroll, slidesPerView } =
     useCarouselSettings();
@@ -75,7 +77,7 @@ export const ProgramCarousel = ({
               >
                 <CarouselProgramCard
                   index={index}
-                  lazy={index < slidesPerView}
+                  priority={priority && index < slidesPerView}
                   program={program}
                 />
               </CarouselItem>

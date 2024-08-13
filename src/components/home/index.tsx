@@ -26,14 +26,16 @@ export const Home = async () => {
         title="Vocabulary"
         href="/programs/?categories=3"
         programs={vocabularyPrograms}
+        priority
       />
-      {/* <ShotList shots={shots} /> */}
 
       <ProgramCarousel
         title="Grammar"
         href="/programs/?categories=4"
         programs={grammarPrograms}
+        priority
       />
+      {/* <ShotList shots={shots} /> */}
 
       <TeacherCarousel
         title="Meet the teachers"

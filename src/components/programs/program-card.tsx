@@ -26,19 +26,18 @@ import type { RouterOutputs } from "@/trpc/shared";
 const MotionLink = m(Link);
 
 export type ProgramCardProps = {
-  lazy?: boolean;
   isLeftBorder?: boolean;
   isRightBorder?: boolean;
   program: RouterOutputs["program"]["getProgramsForCards"][0];
   index?: number;
+  priority?: boolean;
 };
 
 export const ProgramCard = ({
-  lazy,
   isLeftBorder,
   isRightBorder,
   program,
-  index,
+  priority = false,
 }: ProgramCardProps) => {
   const onHoverTimeoutRef = useRef<NodeJS.Timeout>();
   const [isHovered, setIsHovered] = useState(false);
@@ -145,6 +144,7 @@ export const ProgramCard = ({
               src={thumbnail}
               fallbackSrc="/images/video-thumbnail.png"
               alt="video"
+              priority={priority}
               fill
               sizes={`(max-width: 640px) 50vw,
                       (max-width: 1024px) 33vw,

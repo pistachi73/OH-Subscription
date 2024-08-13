@@ -40,14 +40,14 @@ type HeroCardProps = {
   className?: string;
   program: NonNullable<ProgramCard>;
   index?: number;
-  active?: boolean;
+  priority?: boolean;
 };
 
 export const heroCardHeightProps =
   "h-[70vw] landscape:max-h-[80vh] sm:landscape:max-h-[65vh] sm:min-h-[500px] xs:h-[65vw] sm:h-[46vw]";
 
 export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
-  ({ className, index, program, active = false }, ref) => {
+  ({ className, index, program, priority = false }, ref) => {
     const { id, title, slug, description, thumbnail, lastWatchedChapter } =
       program;
 
@@ -91,6 +91,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
             }
             alt="Hero background image"
             containerClassname="h-full"
+            priority={priority}
           />
         </m.div>
 

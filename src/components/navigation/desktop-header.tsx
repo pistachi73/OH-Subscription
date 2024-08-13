@@ -40,10 +40,10 @@ export const DesktopHeader = ({
 
   return (
     <>
-      <div className="block h-16" />
+      <div className="block h-12 sm:h-16" />
       <header
         className={cn(
-          "fixed w-full top-0 z-50 h-16   transition-colors duration-300 ease-in-out",
+          "fixed w-full top-0 z-50 h-12 sm:h-16   transition-colors duration-300 ease-in-out",
           isScrolled || segment === "(auth)" || renderAsScrolled
             ? "bg-muted-background/80 backdrop-blur-lg shadow-sm"
             : "shadow-none",

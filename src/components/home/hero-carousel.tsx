@@ -63,6 +63,7 @@ export const HeroCarousel = ({ programs }: HeroCarouselProps) => {
         <HeroCard
           key={`hero-card-${currentProgram.slug}`}
           program={currentProgram}
+          priority={current === 0}
           index={current}
         />
       </AnimatePresence>
