@@ -116,7 +116,6 @@ export const ProgramList = ({
             }}
           >
             <ProgramCard
-              lazy={false}
               isLeftBorder={isLeftBorder}
               isRightBorder={isRightBorder}
               program={program}
