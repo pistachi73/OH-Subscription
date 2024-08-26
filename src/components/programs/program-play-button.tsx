@@ -7,7 +7,7 @@ import { AuthButton } from "@/components/auth/auth-button";
 import { Button } from "@/components/ui/button";
 import { PlayIcon } from "@/components/ui/icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import type { ButtonProps } from "@/components/ui/button";
 import type { ProgramCard, ProgramSpotlight } from "@/server/db/schema.types";

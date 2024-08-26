@@ -1,14 +1,22 @@
 import { Badge } from "@/components/ui/badge";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import { cn } from "@/lib/utils";
+import { HeartIcon, ShareIcon } from "@/components/ui/icons";
+import { LikeButton } from "@/components/ui/like-button";
+import { ShareButton } from "@/components/ui/share-button/share-button";
+import { useLikeSource } from "@/hooks/use-like-source";
+import { cn } from "@/lib/utils/cn";
+import { getUrl } from "@/lib/utils/get-url";
 import type { ShotProps } from ".";
 import { useShotContext } from "../shot/shot-context";
 import { LayoutButton } from "./layout-button";
-import { LayoutButtonShare } from "./layout-button-share";
 
 export const ShotLayout = ({ shot }: ShotProps) => {
   const { isMobile } = useDeviceType();
   const { shotOptionsButtons } = useShotContext();
+
+  const { like, isLikeLoading, isLikedByUser } = useLikeSource({
+    initialLiked: shot.isLikedByUser,
+  });
 
   return (
     <div
@@ -57,21 +65,53 @@ export const ShotLayout = ({ shot }: ShotProps) => {
       </div>
       <div className={cn("flex flex-col gap-4")}>
         {shotOptionsButtons.map(({ icon: Icon, label, ...props }) => {
-          const isShare = label === "Share";
           if (label === "Transcript" && !shot.transcript) return null;
-          if (isShare)
-            return (
-              <LayoutButtonShare
-                key={label}
-                shot={shot}
-                label={label}
-                icon={Icon}
-              />
-            );
           return (
-            <LayoutButton key={label} label={label} icon={Icon} {...props} />
+            <LayoutButton key={label} label={label} {...props}>
+              <Icon
+                className={cn(
+                  "w-5 h-5 transition-colors",
+                  "fill-background dark:fill-foreground",
+                )}
+              />
+            </LayoutButton>
           );
         })}
+        <LayoutButton label="Like" asChild>
+          <LikeButton
+            isLikedByUser={isLikedByUser ?? false}
+            isLikeLoading={isLikeLoading}
+            like={() => like({ shotId: shot.id })}
+          >
+            <HeartIcon
+              className={cn("w-5 h-5", isLikedByUser && "text-red-500")}
+            />
+          </LikeButton>
+        </LayoutButton>
+        <LayoutButton label="Share" asChild>
+          <ShareButton
+            title="Share"
+            description="Share this shot with your friends"
+            url={getUrl(`/shots/${shot.id}`)}
+            config={{
+              twitter: { title: "title", hashtags: "hashtag" },
+              facebook: true,
+              linkedin: true,
+              email: {
+                subject: `Check this shot out: ${shot.title}`,
+                body: shot.description,
+              },
+              link: true,
+            }}
+          >
+            <ShareIcon
+              className={cn(
+                "w-5 h-5 transition-colors",
+                "fill-background dark:fill-foreground",
+              )}
+            />
+          </ShareButton>
+        </LayoutButton>
       </div>
     </div>
   );

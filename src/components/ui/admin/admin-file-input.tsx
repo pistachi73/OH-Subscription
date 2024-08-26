@@ -5,7 +5,8 @@ import Image from "next/image";
 
 import { Input, type InputProps } from "../input";
 
-import { cn, getImageUrl } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
+import { getImageUrl } from "@/lib/utils/get-image-url";
 
 interface AdminFileInputProps extends Omit<InputProps, "onChange" | "value"> {
   onChange: (...event: any[]) => void;

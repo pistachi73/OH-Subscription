@@ -4,11 +4,11 @@ import {
   PlayIcon,
 } from "@/components/ui/icons";
 import { useIsSubscribed } from "@/hooks/use-is-subscribed";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 import { useParams } from "next/navigation";
 import { buttonVariants } from "../ui/button";
-import { CustomImage } from "../ui/custom-image";
+import { ImageWithPlaceholder } from "../ui/image-with-placeholder";
 import { SubscribedBanner } from "../ui/subscribed-banner";
 import { UserProgressBar } from "../ui/user-progress-bar";
 import { UserStatusLink } from "../ui/user-status-link";
@@ -117,7 +117,7 @@ export const ActiveChapterCard = ({
     >
       <div className="relative  w-full flex flex-col items-end justify-end">
         <div className="absolute aspect-video top-0 left-0 w-full overflow-hidden">
-          <CustomImage
+          <ImageWithPlaceholder
             src={chapter.thumbnail}
             fallbackSrc="/images/hero-thumbnail-2.jpg"
             alt="video"

@@ -6,7 +6,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { X } from "lucide-react";
 import { useChapterContext } from "../chapter-context";
 

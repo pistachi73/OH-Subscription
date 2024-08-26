@@ -1,7 +1,7 @@
 "use client";
 
 import { useUserStatus } from "@/hooks/use-user-status";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export const UserProgressBar = ({
   progress,

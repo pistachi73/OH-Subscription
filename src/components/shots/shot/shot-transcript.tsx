@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { ShotSideWrapper } from "./shot-side-wrapper";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { DeviceOnly } from "../../ui/device-only/device-only";
 import { useDeviceType } from "../../ui/device-only/device-only-provider";
 import { useShotContext } from "./shot-context";

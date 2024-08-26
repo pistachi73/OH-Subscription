@@ -1,5 +1,5 @@
 import { SpinnerIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export const DesktopLoadingChapterPlayer = ({
   className,

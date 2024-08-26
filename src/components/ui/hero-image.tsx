@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-import type { CustomImageProps } from "./custom-image";
-import { CustomImage } from "./custom-image";
+import { cn } from "@/lib/utils/cn";
+import type { ImageWithPlaceholderProps } from "./image-with-placeholder";
+import { ImageWithPlaceholder } from "./image-with-placeholder";
 
-type HeroImageProps = CustomImageProps & {
+type HeroImageProps = ImageWithPlaceholderProps & {
   containerClassname?: string;
 };
 
@@ -22,7 +22,7 @@ export const HeroImage = ({
         containerClassname,
       )}
     >
-      <CustomImage
+      <ImageWithPlaceholder
         src={src}
         fallbackSrc={fallbackSrc}
         sizes="(max-width: 1300px) 100vw, 75vw"

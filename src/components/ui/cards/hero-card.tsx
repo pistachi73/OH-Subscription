@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { useLikeProgram } from "@/components/programs/hooks/use-like-program";
 import { ProgramMainCTAButton } from "@/components/programs/program-play-button";
 import { Button } from "@/components/ui/button";
 import { HeroImage } from "@/components/ui/hero-image";
@@ -18,8 +17,9 @@ import {
 import { SubscribedBanner } from "@/components/ui/subscribed-banner";
 
 import { springTransition } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
+import { useLikeSource } from "@/hooks/use-like-source";
 import type { ProgramCard } from "@/server/db/schema.types";
 
 const DELAY_INCREMENT = 0.08;
@@ -51,7 +51,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
     const { id, title, slug, description, thumbnail, lastWatchedChapter } =
       program;
 
-    const { isLikedByUser, isLikeLoading, likeProgram } = useLikeProgram({
+    const { isLikedByUser, isLikeLoading, like } = useLikeSource({
       initialLiked: program.isLikedByUser,
     });
 
@@ -179,7 +179,7 @@ export const HeroCard = React.forwardRef<HTMLDivElement, HeroCardProps>(
                       className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
                       isLikedByUser={isLikedByUser ?? false}
                       isLikeLoading={isLikeLoading}
-                      likeProgram={() => likeProgram({ programId: program.id })}
+                      like={() => like({ programId: program.id })}
                     >
                       <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
                     </LikeButton>

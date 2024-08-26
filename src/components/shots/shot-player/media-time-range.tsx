@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { MediaTimeRange as MediaTimeRangeChrome } from "media-chrome/react";
 
 export const MediaTimeRange = () => {

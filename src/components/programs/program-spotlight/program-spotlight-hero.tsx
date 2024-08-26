@@ -25,18 +25,20 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { type RouterOutputs, getBaseUrl } from "@/trpc/shared";
+import { cn } from "@/lib/utils/cn";
+import { getUrl } from "@/lib/utils/get-url";
 import { format } from "date-fns";
-import { useLikeProgram } from "../hooks/use-like-program";
 import { ProgramMainCTAButton } from "../program-play-button";
+
+import { useLikeSource } from "@/hooks/use-like-source";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type ProgramSpotlightHero = {
   program: NonNullable<RouterOutputs["program"]["getBySlug"]>;
 };
 
 export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
-  const { isLikedByUser, isLikeLoading, likeProgram } = useLikeProgram({
+  const { isLikedByUser, isLikeLoading, like } = useLikeSource({
     initialLiked: program.isLikedByUser,
   });
 
@@ -138,7 +140,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
                     className="w-12 h-12 md:w-14 md:h-14 rounded-full p-0"
                     isLikedByUser={isLikedByUser ?? false}
                     isLikeLoading={isLikeLoading}
-                    likeProgram={() => likeProgram({ programId: program.id })}
+                    like={() => like({ programId: program.id })}
                   >
                     <LikeButtonIcon className="w-5 h-5 md:w-7 md:h-7" />
                   </LikeButton>
@@ -161,7 +163,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
                 description="Share this program with your friends and family."
                 videoTitle={title}
                 videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
-                url={`${getBaseUrl()}/programs/${program.slug}`}
+                url={getUrl(`/programs/${program.slug}`)}
                 config={{
                   link: true,
                   facebook: true,
@@ -214,7 +216,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               description="Share this program with your friends and family."
               videoTitle={title}
               videoThumbnailUrl="/images/hero-thumbnail-2.jpg"
-              url={`${getBaseUrl()}/programs/${program.slug}`}
+              url={getUrl(`/programs/${program.slug}`)}
               config={{
                 link: true,
                 facebook: true,
@@ -241,7 +243,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
               className="w-full text-base h-12 disabled:opacity-100"
               isLikedByUser={isLikedByUser ?? false}
               isLikeLoading={isLikeLoading}
-              likeProgram={() => likeProgram({ programId: program.id })}
+              like={() => like({ programId: program.id })}
             >
               <LikeButtonIcon className="mr-2 w-6 h-6" />
               <LikeButtonLabel

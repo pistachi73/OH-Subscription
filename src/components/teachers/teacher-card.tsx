@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { Teacher } from "@/server/db/schema.types";
 import { m } from "framer-motion";
 import Image from "next/image";

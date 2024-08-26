@@ -1,9 +1,4 @@
 "use client";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { regularEase } from "@/lib/animation";
-import { cn } from "@/lib/utils";
-import { SettingsSchema } from "@/schemas";
-import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, m } from "framer-motion";
 import { ChevronDown, Loader2, Lock } from "lucide-react";
@@ -12,14 +7,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Button } from "../button";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../card";
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -27,8 +23,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../form";
-import { PasswordInput } from "../password-input";
+} from "@/components/ui/form";
+import { PasswordInput } from "@/components/ui/password-input";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { regularEase } from "@/lib/animation";
+import { cn } from "@/lib/utils/cn";
+import { SettingsSchema } from "@/schemas";
+import { api } from "@/trpc/react";
 
 export const UpdatePassword = () => {
   const user = useCurrentUser();

@@ -4,7 +4,7 @@ import * as React from "react";
 import { Input } from "./input";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { passwordRegex } from "@/schemas";
 
 export type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement> & {

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import MuxVideo from "@mux/mux-video-react";
 import { useMediaRef } from "media-chrome/react/media-store";
 import { useDeviceType } from "../../ui/device-only/device-only-provider";

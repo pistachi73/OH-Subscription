@@ -15,7 +15,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { AnimatePresence, m } from "framer-motion";
 
 type MobileProgramFilterProps = {

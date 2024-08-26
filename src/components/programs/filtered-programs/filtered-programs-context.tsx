@@ -47,9 +47,9 @@ export const FilteredProgramsProvider = ({
     api.program.getProgramsForCards.useQuery(
       {
         ...(teachers && { teacherIds: teachers.split(",").map(Number) }),
-        ...(categories && {
+        ...((categories || initialCategory) && {
           categorySlugs: [
-            ...categories.split(",").map(String),
+            ...(categories ? categories.split(",") : []),
             ...(initialCategory ? [initialCategory] : []),
           ],
         }),

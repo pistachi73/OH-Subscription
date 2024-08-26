@@ -26,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { isNumber } from "@/lib/utils";
+import { isNumber } from "@/lib/utils/is-number";
 import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import type { ChapterDetails } from "./edit-program";

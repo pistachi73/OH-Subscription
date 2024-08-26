@@ -1,14 +1,12 @@
 "use client";
-import { regularEase } from "@/lib/animation";
-import { cn } from "@/lib/utils";
-import { api } from "@/trpc/react";
 import { AnimatePresence, m } from "framer-motion";
 import { ChevronDown, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "../button";
-import { Card, CardContent, CardHeader, CardTitle } from "../card";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -16,7 +14,10 @@ import {
   ResponsiveDialogFooter,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
-} from "../responsive-dialog";
+} from "@/components/ui/responsive-dialog";
+import { regularEase } from "@/lib/animation";
+import { cn } from "@/lib/utils/cn";
+import { api } from "@/trpc/react";
 
 export const DangerZone = () => {
   const [isOpen, setIsOpen] = useState(false);

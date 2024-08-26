@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { HSLtoString, generateHSL } from "@/lib/get-random-hsl";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
+import { HSLtoString, generateHSL } from "@/lib/utils/get-random-hsl";
 import { User } from "lucide-react";
 import { useMemo } from "react";
 

@@ -1,7 +1,7 @@
 import { CheckCheckIcon, Copy } from "lucide-react";
 import { useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export const SlugCell = ({ value }: { value: string }) => {
   const [copied, setCopied] = useState(false);

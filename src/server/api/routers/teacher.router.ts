@@ -9,7 +9,7 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
-import { isNumber } from "@/lib/utils";
+import { isNumber } from "@/lib/utils/is-number";
 import { TeacherSchema } from "@/schemas";
 import { teachers } from "@/server/db/schema";
 

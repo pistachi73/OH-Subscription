@@ -5,8 +5,8 @@ import { useMemo, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CustomImage } from "@/components/ui/custom-image";
 import { InfoOutlineIcon } from "@/components/ui/icons";
+import { ImageWithPlaceholder } from "@/components/ui/image-with-placeholder";
 import { LikeButton, LikeButtonIcon } from "@/components/ui/like-button";
 import { SubscribedBanner } from "@/components/ui/subscribed-banner";
 import {
@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/tooltip";
 import { UserProgressBar } from "@/components/ui/user-progress-bar";
 import { levelMap } from "@/lib/formatters/formatLevel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
-import { useLikeProgram } from "./hooks/use-like-program";
 import { ProgramMainCTAButton } from "./program-play-button";
 
+import { useLikeSource } from "@/hooks/use-like-source";
 import type { RouterOutputs } from "@/trpc/shared";
 
 const MotionLink = m(Link);
@@ -54,7 +54,7 @@ export const ProgramCard = ({
     firstChapter,
   } = program;
 
-  const { isLikedByUser, likeProgram, isLikeLoading } = useLikeProgram({
+  const { isLikedByUser, like, isLikeLoading } = useLikeSource({
     initialLiked: program.isLikedByUser,
   });
 
@@ -140,7 +140,7 @@ export const ProgramCard = ({
               },
             }}
           >
-            <CustomImage
+            <ImageWithPlaceholder
               src={thumbnail}
               fallbackSrc="/images/video-thumbnail.png"
               alt="video"
@@ -213,9 +213,7 @@ export const ProgramCard = ({
                         className="w-12 h-12 rounded-full p-0"
                         isLikedByUser={isLikedByUser ?? false}
                         isLikeLoading={isLikeLoading}
-                        likeProgram={() =>
-                          likeProgram({ programId: program.id })
-                        }
+                        like={() => like({ programId: program.id })}
                       >
                         <LikeButtonIcon className="w-6 h-6" />
                       </LikeButton>

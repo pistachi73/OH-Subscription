@@ -1,6 +1,5 @@
-import { BlockedShotCarousel } from "@/components/shots/shot-carousel/blocked-shot-carousel";
 import { ShotCarousel } from "@/components/shots/shot-carousel/index";
-import { isUserSubscribed } from "@/lib/auth";
+import { currentUser } from "@/lib/auth";
 import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
 
@@ -11,10 +10,10 @@ type ShotPageProps = {
 };
 
 const ShotPage = async ({ params: { shotSlug } }: ShotPageProps) => {
-  const isSubscribed = await isUserSubscribed();
+  const user = await currentUser();
 
-  if (!isSubscribed) {
-    return <BlockedShotCarousel />;
+  if (!user?.isSubscribed) {
+    redirect("/");
   }
 
   const { shot, embedding } =

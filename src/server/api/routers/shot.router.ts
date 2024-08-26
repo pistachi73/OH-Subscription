@@ -19,13 +19,14 @@ import {
   publicProcedure,
 } from "../trpc";
 
-import { toKebabCase } from "@/lib/case-converters";
-import { isNumber } from "@/lib/utils";
+import { toKebabCase } from "@/lib/utils/case-converters";
+import { isNumber } from "@/lib/utils/is-number";
 import { CategoriesOnShotsSchema, ShotSchema } from "@/schemas";
 import { categories, categoriesOnShots, shots } from "@/server/db/schema";
 import type { Category } from "@/server/db/schema.types";
 import { generateEmbedding } from "../lib/openai";
 import { withLimit } from "../query-utils/shared.query";
+import { isShotLikedByUserSubquery } from "../query-utils/shot.query";
 import {
   shotCategoriesSelect,
   shotSelectCarousel,
@@ -190,6 +191,10 @@ export const shotRouter = createTRPCRouter({
         .select({
           ...shotSelectCarousel,
           ...shotCategoriesSelect,
+          isLikedByUser: isShotLikedByUserSubquery({
+            db: ctx.db,
+            userId: ctx.session?.user?.id,
+          }),
         })
         .from(shots)
         .where(eq(shots.slug, input.initialShotSlug))
@@ -235,14 +240,13 @@ export const shotRouter = createTRPCRouter({
 
       let shotQuery = ctx.db
         .select({
-          id: shots.id,
-          playbackId: shots.playbackId,
-          slug: shots.slug,
-          title: shots.title,
-          transcript: shots.transcript,
-          description: shots.description,
-          similarity,
+          ...shotSelectCarousel,
           ...shotCategoriesSelect,
+          similarity,
+          isLikedByUser: isShotLikedByUserSubquery({
+            db: ctx.db,
+            userId: ctx.session?.user?.id,
+          }),
         })
         .from(shots)
         .where(and(...whereClauses))

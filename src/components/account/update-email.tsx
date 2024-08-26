@@ -1,25 +1,32 @@
 "use client";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
-import { SettingsSchema } from "@/schemas";
-import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Button } from "../button";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../card";
-import { CodeInput } from "../code-input";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "../form";
-import { Input } from "../input";
+} from "@/components/ui/card";
+import { CodeInput } from "@/components/ui/code-input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { cn } from "@/lib/utils/cn";
+import { SettingsSchema } from "@/schemas";
+import { api } from "@/trpc/react";
 
 export const UpdateEmail = () => {
   const user = useCurrentUser();

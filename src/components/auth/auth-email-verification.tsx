@@ -1,5 +1,5 @@
 import { login } from "@/actions/login";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { api } from "@/trpc/react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { Loader2 } from "lucide-react";

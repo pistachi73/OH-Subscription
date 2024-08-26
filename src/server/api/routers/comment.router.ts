@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
-import { isNumber } from "@/lib/utils";
+import { isNumber } from "@/lib/utils/is-number";
 import { CommentSchema } from "@/schemas";
 import { comments, likes, users } from "@/server/db/schema";
 import { alias } from "drizzle-orm/pg-core";

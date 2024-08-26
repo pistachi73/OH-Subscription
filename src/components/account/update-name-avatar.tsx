@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { SettingsSchema } from "@/schemas";
 import { api } from "@/trpc/react";
 

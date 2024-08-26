@@ -7,7 +7,7 @@ import {
   ResponsiveDialogContent,
 } from "@/components/ui/responsive-dialog";
 import { springTransition } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 type ShotSideWrapperProps = PropsWithChildren & {
   isDialogOpen: boolean;

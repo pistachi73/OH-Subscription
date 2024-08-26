@@ -6,7 +6,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { ShotCard as ShotCardProps } from "@/server/db/schema.types";
 import { useMemo } from "react";
 import { CarouselHeader } from "../ui/carousel/carousel-header";
@@ -18,12 +18,16 @@ export const useShotList = () => {
 
   const slidesPerView = useMemo(() => {
     switch (true) {
-      case deviceSize.includes("xl"):
+      case deviceSize.includes("2xl"):
         return 7;
-      case deviceSize.includes("lg"):
+      case deviceSize.includes("xl"):
         return 6;
-      case deviceSize.includes("sm"):
+      case deviceSize.includes("lg"):
+        return 5;
+      case deviceSize.includes("md"):
         return 4;
+      case deviceSize.includes("sm"):
+        return 3;
       default:
         return 2;
     }
@@ -31,7 +35,8 @@ export const useShotList = () => {
 
   return {
     slidesPerView,
-    slideSizeClassname: "basis-1/2 sm:basis-1/4 lg:basis-1/6 xl:basis-1/7",
+    slideSizeClassname:
+      "basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 2xl:basis-1/7",
   };
 };
 

@@ -1,18 +1,19 @@
-import type { getData } from "@/app/(app)/account/subscription/getData";
-import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Check, CreditCard } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { memberChecks } from "../../plans/constants";
-import { Button } from "../button";
+
+import type { getData } from "@/app/(app)/account/subscription/getData";
+import { memberChecks } from "@/components/plans/constants";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../card";
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils/cn";
 import { BillingPortalButton } from "./billing-portal-button";
 
 type SubscriptionProps = Awaited<ReturnType<typeof getData>>;

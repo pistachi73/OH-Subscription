@@ -35,7 +35,7 @@ import {
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
 import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import { useEffect } from "react";
 import { useChapterContext } from "../chapter-context";

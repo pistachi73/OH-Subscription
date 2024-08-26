@@ -3,7 +3,7 @@ import * as React from "react";
 import { useImperativeHandle } from "react";
 
 import { useAutosizeTextArea } from "@/hooks/use-autosize-textarea";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export type AutosizeTextAreaRef = {
   textArea: HTMLTextAreaElement;

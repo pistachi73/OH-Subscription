@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { regularEase } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { m } from "framer-motion";
 import { useEffect } from "react";
 import { useAuthContext } from "./auth-context";

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { Badge } from "../ui/badge";
 import "./plan-frequency-switch.css";
 

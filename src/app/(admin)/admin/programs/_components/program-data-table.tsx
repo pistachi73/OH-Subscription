@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
-import { getImageUrl } from "@/lib/utils";
+import { getImageUrl } from "@/lib/utils/get-image-url";
 import type { RouterOutputs } from "@/trpc/shared";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";

@@ -52,6 +52,7 @@ export const FilteredPrograms = async ({
       categoryOptions={CATEGORY_OPTIONS}
       teacherOptions={TEACHER_OPTIONS}
       levelOptions={LEVEL_OPTIONS}
+      initialCategory={initialCategory}
     >
       <ProgramFilter />
       <FilteredProgramsList />

@@ -17,7 +17,7 @@ import {
   ResponsiveDialogTitle,
   ResponsiveDialogTrigger,
 } from "@/components/ui/responsive-dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export type ShareOptions =
   | "link"
@@ -43,6 +43,7 @@ type ShareButtonProps = {
   videoThumbnailUrl?: string;
   asChild?: boolean;
   config: ShareItemsConfig;
+  className?: string;
 };
 
 export const ShareButton = ({
@@ -53,13 +54,14 @@ export const ShareButton = ({
   videoTitle,
   videoThumbnailUrl,
   asChild = false,
+  className,
   config,
 }: ShareButtonProps) => {
   const hasPreview = videoTitle && videoThumbnailUrl;
 
   return (
     <ResponsiveDialog>
-      <ResponsiveDialogTrigger asChild={asChild}>
+      <ResponsiveDialogTrigger asChild={asChild} className={className}>
         {children}
       </ResponsiveDialogTrigger>
       <ResponsiveDialogContent className="max-w-[500px] mx-auto">

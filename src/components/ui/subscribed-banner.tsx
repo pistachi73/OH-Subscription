@@ -1,7 +1,7 @@
 "use client";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { ShoppingBagPlayIcon } from "./icons";
 
 type SubscribedBannerProps = {

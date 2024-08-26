@@ -1,13 +1,16 @@
 "use client";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { SettingsSchema } from "@/schemas";
-import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Fingerprint } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Card, CardDescription, CardHeader, CardTitle } from "../card";
+
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -15,8 +18,11 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "../form";
-import { Switch } from "../switch";
+} from "@/components/ui/form";
+import { Switch } from "@/components/ui/switch";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { SettingsSchema } from "@/schemas";
+import { api } from "@/trpc/react";
 
 export const UpdateTFA = () => {
   const user = useCurrentUser();

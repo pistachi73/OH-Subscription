@@ -3,7 +3,7 @@ import { AnimatePresence, m } from "framer-motion";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { springTransition } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { ShotCarouselData } from "@/server/db/schema.types";
 import {
   MediaActionTypes,
@@ -49,6 +49,7 @@ const ShotTranscript = dynamic(
 
 const ShotContent = ({ shot, inView = false }: ShotProps) => {
   const { showComments, showTranscript } = useShotContext();
+
   const { deviceSize, isMobile } = useDeviceType();
   const inViewTimeoutRef = useRef<NodeJS.Timeout>();
   const inExitTimeoutRef = useRef<NodeJS.Timeout>();

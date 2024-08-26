@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { AppleIcon, FacebookIcon, GoogleIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { useSignals } from "@preact/signals-react/runtime";
 import { authModalRedirectToSignal } from "./auth-signals";

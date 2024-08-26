@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { HeroCard, heroCardHeightProps } from "@/components/ui/cards/hero-card";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import type { ProgramCard } from "@/server/db/schema.types";
 import type { RouterOutputs } from "@/trpc/shared";

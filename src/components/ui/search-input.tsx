@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { Input, type InputProps } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { useRef, useState } from "react";
 import { SearchIcon } from "./icons";
 

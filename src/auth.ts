@@ -25,14 +25,6 @@ export const {
     error: "/auth-error",
   },
   events: {
-    async linkAccount() {
-      // await db
-      //   .update(users)
-      //   .set({
-      //     emailVerified: new Date(),
-      //   })
-      //   .where(eq(users.id, user.id ?? ""));
-    },
     async createUser({ user }) {
       console.log("createUser");
 

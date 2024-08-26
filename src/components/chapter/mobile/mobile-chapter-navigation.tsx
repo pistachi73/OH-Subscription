@@ -1,5 +1,5 @@
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { useChapterContext } from "../chapter-context";
 
 export const MobileChapterNavigation = () => {

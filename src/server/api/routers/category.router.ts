@@ -8,8 +8,8 @@ import {
   publicProcedure,
 } from "../trpc";
 
-import { toKebabCase } from "@/lib/case-converters";
-import { isNumber } from "@/lib/utils";
+import { toKebabCase } from "@/lib/utils/case-converters";
+import { isNumber } from "@/lib/utils/is-number";
 import { CategorySchema } from "@/schemas";
 import { categories } from "@/server/db/schema";
 

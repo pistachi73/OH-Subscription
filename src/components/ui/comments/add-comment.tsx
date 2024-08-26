@@ -4,7 +4,7 @@ import type { AutosizeTextAreaProps } from "@/components/ui/autosize-textarea";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
 import { Button } from "../button";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { useState } from "react";
 
 type AddCommentProps = AutosizeTextAreaProps & {

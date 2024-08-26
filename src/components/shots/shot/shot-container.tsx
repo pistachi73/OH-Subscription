@@ -1,5 +1,5 @@
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export const ShotContainer = ({
   children,

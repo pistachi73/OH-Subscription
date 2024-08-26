@@ -9,7 +9,7 @@ import {
   MediaTimeDisplay,
 } from "media-chrome/react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import { MediaTimeRange } from "@/components/shots/shot-player/media-time-range";
 

@@ -13,7 +13,7 @@ import { useDeviceType } from "@/components/ui/device-only/device-only-provider"
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useIsSubscribed } from "@/hooks/use-is-subscribed";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import type { ShotProps } from ".";
 import { useShotContext } from "./shot-context";

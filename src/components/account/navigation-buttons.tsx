@@ -1,10 +1,11 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { CreditCard, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "../button";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/cn";
 
 export const NavigationButtons = () => {
   const pathname = usePathname();

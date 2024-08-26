@@ -3,19 +3,19 @@ import { Button, type ButtonProps } from "@/components/ui/button";
 import { HeartIcon, HeartOutlineIcon } from "@/components/ui/icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { createContext, forwardRef, useContext } from "react";
 
 type LikeButtonContextType = {
   isLikedByUser?: boolean;
   isLikeLoading?: boolean;
-  likeProgram?: (args: { programId: number }) => void;
+  like?: (args: { programId: number }) => void;
 };
 
 export const LikeButtonContext = createContext<LikeButtonContextType>({
   isLikedByUser: false,
   isLikeLoading: false,
-  likeProgram: () => {},
+  like: () => {},
 });
 
 export function useLikeButton() {
@@ -32,19 +32,28 @@ type LikeButtonProps = ButtonProps & {
   children: React.ReactNode;
   isLikedByUser: boolean;
   isLikeLoading: boolean;
-  likeProgram: () => void;
+  like: () => void;
+  asChild?: boolean;
 };
 
 export const LikeButton = forwardRef<HTMLButtonElement, LikeButtonProps>(
   (
-    { children, isLikeLoading, isLikedByUser, likeProgram, className, ...rest },
+    {
+      children,
+      isLikeLoading,
+      isLikedByUser,
+      like,
+      className,
+      asChild,
+      ...rest
+    },
     ref,
   ) => {
     const user = useCurrentUser();
     const isLoggedIn = user?.id;
     return (
       <LikeButtonContext.Provider
-        value={{ isLikedByUser, isLikeLoading, likeProgram }}
+        value={{ isLikedByUser, isLikeLoading, like }}
       >
         {isLoggedIn ? (
           <Button
@@ -52,7 +61,8 @@ export const LikeButton = forwardRef<HTMLButtonElement, LikeButtonProps>(
             className={cn("disabled:opacity-100", className)}
             {...rest}
             disabled={isLikeLoading}
-            onClick={() => likeProgram()}
+            onClick={() => like()}
+            asChild={asChild}
           >
             {children}
           </Button>
@@ -61,6 +71,7 @@ export const LikeButton = forwardRef<HTMLButtonElement, LikeButtonProps>(
             <Button
               ref={ref}
               className={cn("disabled:opacity-100", className)}
+              asChild={asChild}
               {...rest}
             >
               {children}

@@ -1,13 +1,13 @@
 "use client";
 
 import { buttonVariants } from "@/components/ui/button";
-import { CustomImage } from "@/components/ui/custom-image";
 import { PersonAccountsIcon, PlayIcon } from "@/components/ui/icons";
+import { ImageWithPlaceholder } from "@/components/ui/image-with-placeholder";
 import { SubscribedBanner } from "@/components/ui/subscribed-banner";
 import { UserProgressBar } from "@/components/ui/user-progress-bar";
 import { UserStatusLink } from "@/components/ui/user-status-link";
 import { useUserStatus } from "@/hooks/use-user-status";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { ProgramSpotlight } from "@/server/db/schema.types";
 
 type ChapterProps = {
@@ -33,7 +33,7 @@ export const Chapter = ({ chapter }: ChapterProps) => {
           "group relative block aspect-video w-full  rounded-xl overflow-hidden",
         )}
       >
-        <CustomImage
+        <ImageWithPlaceholder
           src={chapter.thumbnail}
           fallbackSrc="/images/hero-thumbnail-2.jpg"
           alt="Program Chapter Thumbnail"

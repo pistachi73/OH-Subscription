@@ -9,7 +9,7 @@ import {
   VerticalCarouselNext,
   VerticalCarouselPrevious,
 } from "@/components/ui/vertical-carousel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
 

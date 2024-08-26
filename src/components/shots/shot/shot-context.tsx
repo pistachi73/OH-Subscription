@@ -1,9 +1,4 @@
-import {
-  HeartIcon,
-  ShareIcon,
-  SpeachBubbleIcon,
-  TranscriptIcon,
-} from "@/components/ui/icons";
+import { SpeachBubbleIcon, TranscriptIcon } from "@/components/ui/icons";
 import React, { useState } from "react";
 
 const ShotContext = React.createContext<{
@@ -61,11 +56,6 @@ export const useShotContext = () => {
         context.setShowTranscript(false);
         context.setShowComments((prev) => !prev);
       },
-    },
-    { icon: HeartIcon, label: "Like" },
-    {
-      icon: ShareIcon,
-      label: "Share",
     },
   ] as const;
 

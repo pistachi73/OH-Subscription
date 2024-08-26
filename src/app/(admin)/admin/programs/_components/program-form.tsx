@@ -38,7 +38,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { ProgramSchema } from "@/schemas/index";
 import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";

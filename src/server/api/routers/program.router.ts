@@ -32,8 +32,8 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
-import { toKebabCase } from "@/lib/case-converters";
-import { isNumber } from "@/lib/utils";
+import { toKebabCase } from "@/lib/utils/case-converters";
+import { isNumber } from "@/lib/utils/is-number";
 import {
   CategoriesOnProgramsSchema,
   ProgramSchema,
@@ -262,6 +262,8 @@ export const programRouter = createTRPCRouter({
 
       programsForCardsQuery = programsWithTeachers(programsForCardsQuery);
       programsForCardsQuery = programsWithCategories(programsForCardsQuery);
+
+      console.log({ categorySlugs, l: categorySlugs?.length });
 
       const whereClauses = [
         teacherIds?.length ? inArray(teachers.id, teacherIds) : undefined,

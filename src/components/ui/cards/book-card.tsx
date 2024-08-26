@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cardsEase } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { Heart, InfoIcon, PlayIcon, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";

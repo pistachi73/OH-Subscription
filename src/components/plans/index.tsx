@@ -1,7 +1,7 @@
 "use client";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { api } from "@/trpc/react";
 import { Check, Loader2, X } from "lucide-react";
 import Image from "next/image";

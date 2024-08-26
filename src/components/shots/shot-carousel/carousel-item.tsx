@@ -1,6 +1,6 @@
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { VerticalCarouselItem } from "@/components/ui/vertical-carousel";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 export const CarouselItem = ({ children }: { children: React.ReactNode }) => {
   const { deviceType } = useDeviceType();

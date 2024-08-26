@@ -3,7 +3,7 @@ import type { PropsWithChildren } from "react";
 
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { springTransition } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Button } from "../../ui/button";

@@ -9,7 +9,7 @@ import {
   AdminMultipleSelect,
   type Option,
 } from "@/components/ui/admin/admin-multiple-select";
-import { isNumber } from "@/lib/utils";
+import { isNumber } from "@/lib/utils/is-number";
 import { api } from "@/trpc/react";
 
 type ProgramTeacherSelectProps = {

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 const DrawerContext = React.createContext<{
   direction?: "top" | "right" | "bottom" | "left";

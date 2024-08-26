@@ -16,7 +16,7 @@ import { UserStatusLink } from "@/components/ui/user-status-link";
 import type { ButtonProps } from "@/components/ui/button";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { type UserStatus, useUserStatus } from "@/hooks/use-user-status";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { RouterOutputs } from "@/trpc/shared";
 import { useCanRenderFooter } from "../helpers";
 

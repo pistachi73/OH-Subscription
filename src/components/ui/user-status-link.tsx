@@ -10,7 +10,7 @@ type UserStatusLinkProps = {
   className?: string;
   asChild?: boolean;
   requiredSubscription?: boolean;
-};
+} & React.ButtonHTMLAttributes<HTMLAnchorElement>;
 
 export const UserStatusLink = ({
   children,

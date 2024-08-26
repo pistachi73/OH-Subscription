@@ -8,13 +8,13 @@ import {
   TranscriptIcon,
 } from "@/components/ui/icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useLikeSource } from "@/hooks/use-like-source";
 import type {
   ProgramChapter,
   ProgramSpotlight,
 } from "@/server/db/schema.types";
 import React, { useState } from "react";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
-import { useLikeChapter } from "./hooks/use-like-chapter";
 import { useUserProgress } from "./hooks/use-user-progress";
 
 export type ChapterTab = "details" | "comments" | "transcript" | "chapters";
@@ -26,7 +26,7 @@ const ChapterContext = React.createContext<{
   setAutoPlay: React.Dispatch<React.SetStateAction<boolean>>;
   isLikedByUser: boolean;
   isLikeLoading: boolean;
-  likeChapter: ReturnType<typeof useLikeChapter>["likeChapter"];
+  like: ReturnType<typeof useLikeSource>["like"];
   chapter: NonNullable<ProgramChapter>;
   program: NonNullable<ProgramSpotlight>;
 }>({
@@ -36,7 +36,7 @@ const ChapterContext = React.createContext<{
   setAutoPlay: () => {},
   isLikedByUser: false,
   isLikeLoading: false,
-  likeChapter: () => {},
+  like: () => {},
   chapter: {} as any,
   program: {} as any,
 });
@@ -58,7 +58,7 @@ export const ChapterContextProvider = ({
     isMobile ? "details" : null,
   );
 
-  const { isLikedByUser, isLikeLoading, likeChapter } = useLikeChapter({
+  const { isLikedByUser, isLikeLoading, like } = useLikeSource({
     initialLiked: chapter.isLikedByUser,
   });
 
@@ -78,20 +78,12 @@ export const ChapterContextProvider = ({
       setAutoPlay,
       isLikedByUser: isLikedByUser ?? false,
       isLikeLoading,
-      likeChapter,
+      like,
       chapter,
       program,
     }),
 
-    [
-      activeTab,
-      autoPlay,
-      chapter,
-      program,
-      isLikedByUser,
-      isLikeLoading,
-      likeChapter,
-    ],
+    [activeTab, autoPlay, chapter, program, isLikedByUser, isLikeLoading, like],
   );
 
   return (

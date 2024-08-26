@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import {
   ResponsiveTooltip,
@@ -19,15 +19,14 @@ import {
 export const DesktopLikeChapterButton = ({
   className,
 }: { className?: string }) => {
-  const { chapter, isLikedByUser, isLikeLoading, likeChapter } =
-    useChapterContext();
+  const { chapter, isLikedByUser, isLikeLoading, like } = useChapterContext();
   return (
     <ResponsiveTooltip>
       <ResponsiveTooltipTrigger asChild>
         <LikeButton
           isLikeLoading={isLikeLoading}
           isLikedByUser={isLikedByUser ?? false}
-          likeProgram={() => likeChapter({ videoId: chapter.id })}
+          like={() => like({ videoId: chapter.id })}
           className={cn(
             "p-0 bg-transparent hover:bg-transparent",
             chapterButtonClassname,

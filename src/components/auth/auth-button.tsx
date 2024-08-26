@@ -4,7 +4,7 @@ import { useSignals } from "@preact/signals-react/runtime";
 
 import { useRouter } from "next/navigation";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { Slot } from "@radix-ui/react-slot";
 import {
   authModalRedirectToIfNotSubscribed,

@@ -1,8 +1,8 @@
-import { DangerZone } from "@/components/ui/account/danger-zone";
-import { UpdateEmail } from "@/components/ui/account/update-email";
-import { UpdateNameAvatar } from "@/components/ui/account/update-name-avatar";
-import { UpdatePassword } from "@/components/ui/account/update-password";
-import { UpdateTFA } from "@/components/ui/account/update-tfa";
+import { DangerZone } from "@/components/account/danger-zone";
+import { UpdateEmail } from "@/components/account/update-email";
+import { UpdateNameAvatar } from "@/components/account/update-name-avatar";
+import { UpdatePassword } from "@/components/account/update-password";
+import { UpdateTFA } from "@/components/account/update-tfa";
 
 export const Account = () => {
   return (

@@ -12,7 +12,7 @@ import {
   useCarouselBorders,
   useCarouselSettings,
 } from "@/components/ui/carousel/carousel.hooks";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { RouterOutputs } from "@/trpc/shared";
 import type { ProgramCardProps } from "./program-card";
 import { ProgramCard } from "./program-card";

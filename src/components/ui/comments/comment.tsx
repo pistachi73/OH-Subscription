@@ -24,7 +24,7 @@ import {
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { regularEase } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { api } from "@/trpc/react";
 import { m } from "framer-motion";
 import type { CommentProps, ExclusiveCommentSource } from "./comment.types";

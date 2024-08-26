@@ -4,7 +4,7 @@ import { m } from "framer-motion";
 import dynamic from "next/dynamic";
 
 import { springTransition } from "@/lib/animation";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import { useChapterContext } from "../chapter-context";
 import { ChapterPlayerContainer } from "../player/chapter-player-container";

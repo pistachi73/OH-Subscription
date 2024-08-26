@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
-import { getImageUrl } from "@/lib/utils";
+import { getImageUrl } from "@/lib/utils/get-image-url";
 import type { SelectVideo } from "@/server/db/schema";
 
 export const columns: ColumnDef<SelectVideo>[] = [

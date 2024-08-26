@@ -1,4 +1,4 @@
-import { Subscription } from "@/components/ui/account/subscription";
+import { Subscription } from "@/components/account/subscription";
 import { getData } from "./getData";
 
 export default async function SubscriptionPage() {

@@ -8,7 +8,7 @@ import {
   MediaVolumeRange,
 } from "media-chrome/react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import { DeviceOnly } from "@/components/ui/device-only/device-only";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";

@@ -14,7 +14,7 @@ import { mobileNavItems, useCanRenderHeader } from "./helpers";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useMobileHeaderHide } from "@/hooks/use-mobile-header-hide";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import { UserButton } from "../auth/user-button";
 import { MaxWidthWrapper } from "../ui/max-width-wrapper";
 

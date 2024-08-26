@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 
 import { SpinnerIcon } from "@/components/ui/icons";
 import { useMobileHeaderHide } from "@/hooks/use-mobile-header-hide";

@@ -8,7 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { CarouselHeader } from "@/components/ui/carousel/carousel-header";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/cn";
 import type { Teacher } from "@/server/db/schema.types";
 import { useCarouselSettings } from "../ui/carousel/carousel.hooks";
 import { TeacherCard } from "./teacher-card";

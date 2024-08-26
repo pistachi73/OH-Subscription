@@ -9,8 +9,8 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
-import { toKebabCase } from "@/lib/case-converters";
-import { isNumber } from "@/lib/utils";
+import { toKebabCase } from "@/lib/utils/case-converters";
+import { isNumber } from "@/lib/utils/is-number";
 import { VideoSchema } from "@/schemas";
 import { videos, videosOnPrograms } from "@/server/db/schema";
 import { isVideoLikedByUserSubquery } from "../query-utils/video.query";
