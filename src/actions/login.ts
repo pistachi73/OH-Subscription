@@ -6,13 +6,13 @@ import type { z } from "zod";
 
 import { signIn } from "@/auth";
 import { sendTwoFactorTokenEmail } from "@/lib/mail";
-import { LoginSchema } from "@/schemas";
 import { generateTwoFactorToken } from "@/server/api/lib/tokens";
 import { getTwoFactorConirmationByUserId } from "@/server/api/lib/two-factor-confirmation";
 import { getTwoFactorTokenByEmail } from "@/server/api/lib/two-factor-token";
 import { getUserByEmail } from "@/server/api/lib/user";
 import { db } from "@/server/db";
-import { twoFactorConirmations, twoFactorTokens } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
+import { LoginSchema } from "@/types";
 
 export const login = async (
   credentials: z.infer<typeof LoginSchema>,
@@ -49,7 +49,9 @@ export const login = async (
         return { error: "Code expired! " };
       }
 
-      await db.delete(twoFactorTokens).where(eq(twoFactorTokens.token, code));
+      await db
+        .delete(schema.twoFactorToken)
+        .where(eq(schema.twoFactorToken.token, code));
 
       const existingConfirmation = await getTwoFactorConirmationByUserId({
         db,
@@ -57,12 +59,12 @@ export const login = async (
       });
 
       if (existingConfirmation) {
-        db.delete(twoFactorConirmations).where(
-          eq(twoFactorConirmations.id, existingConfirmation.id),
+        db.delete(schema.twoFactorConirmation).where(
+          eq(schema.twoFactorConirmation.id, existingConfirmation.id),
         );
       }
 
-      await db.insert(twoFactorConirmations).values({
+      await db.insert(schema.twoFactorConirmation).values({
         id: uuid(),
         userId: existingUser.id,
       });

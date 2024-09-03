@@ -17,6 +17,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useSelectedLayoutSegment } from "next/navigation";
+import ThemeSwitch from "../theme-switch";
 
 type DesktopHeaderProps = {
   renderAsScrolled?: boolean;
@@ -86,7 +87,7 @@ export const DesktopHeader = ({
               openWidth="w-full"
               className="max-w-[320px]"
             />
-            {/* <ThemeSwitch /> */}
+            <ThemeSwitch />
 
             {user ? (
               <div className="ml-2 flex gap-1 items-center h-9">
@@ -113,7 +114,7 @@ const NavButton = React.forwardRef<
       ref={ref}
       className={cn(
         "text-base hover:no-underline font-medium",
-        isActive && "bg-accent/60",
+        isActive && "bg-accent",
         justIcon ? "h-9 w-9 px-2" : "h-[42px] px-4",
         className,
       )}

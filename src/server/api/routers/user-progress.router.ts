@@ -1,11 +1,11 @@
-import { UserProgressSchema } from "@/schemas";
-import { userProgresses } from "@/server/db/schema";
+import { userProgress } from "@/server/db/schema";
+import { UserProgressInsertSchema } from "@/types";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const userProgressRouter = createTRPCRouter({
   setProgress: protectedProcedure
-    .input(UserProgressSchema)
+    .input(UserProgressInsertSchema)
     .mutation(async ({ input, ctx }) => {
       if (!input.userId || !input.programId || !input.videoId) {
         throw new TRPCError({
@@ -15,13 +15,13 @@ export const userProgressRouter = createTRPCRouter({
       }
 
       await ctx.db
-        .insert(userProgresses)
+        .insert(userProgress)
         .values(input)
         .onConflictDoUpdate({
           target: [
-            userProgresses.userId,
-            userProgresses.programId,
-            userProgresses.videoId,
+            userProgress.userId,
+            userProgress.programId,
+            userProgress.videoId,
           ],
           set: {
             lastWatchedAt: input.lastWatchedAt,

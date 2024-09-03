@@ -1,16 +1,17 @@
 "use client";
-import { useUserStatus } from "@/hooks/use-user-status";
-import { cn } from "@/lib/utils/cn";
-import type { ShotCard as ShotCardProps } from "@/server/db/schema.types";
-import Image from "next/image";
-import { useRef, useState } from "react";
-import { SubscribedBanner } from "../ui/subscribed-banner";
-import { UserStatusLink } from "../ui/user-status-link";
 
-export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
-  const userStatus = useUserStatus();
+import Image from "next/image";
+import { useState } from "react";
+
+import { SubscribedBanner } from "@/components/ui/subscribed-banner";
+import { UserStatusLink } from "@/components/ui/user-status-link";
+import { useIsMounted } from "@/hooks/use-is-mounted";
+import { cn } from "@/lib/utils/cn";
+import type { ShotCard as ShotCardType } from "@/types";
+
+export const ShotCard = ({ shot }: { shot: ShotCardType }) => {
+  const isMounted = useIsMounted();
   const [showPreview, setShowPreview] = useState(false);
-  const previewTimeoutRef = useRef<NodeJS.Timeout>();
 
   const thumbnailUrl = `https://image.mux.com/${shot.playbackId}/thumbnail.webp?width=900&height=1600&time=4`;
   const shotPreviewUrl = `https://image.mux.com/${shot.playbackId}/animated.webp?width=320`;
@@ -20,16 +21,10 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
       href={`/shots/${shot.slug}`}
       className="w-full aspect-[9/16] bg-muted rounded-md relative overflow-hidden flex items-end z-0"
       onMouseEnter={() => {
-        if (previewTimeoutRef.current) {
-          clearTimeout(previewTimeoutRef.current);
-        }
-        previewTimeoutRef.current = setTimeout(() => setShowPreview(true), 400);
+        setShowPreview(true);
       }}
       onMouseLeave={() => {
         setShowPreview(false);
-        if (previewTimeoutRef.current) {
-          clearTimeout(previewTimeoutRef.current);
-        }
       }}
     >
       <div
@@ -50,10 +45,9 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
         src={thumbnailUrl}
         alt="Shot card thumbnail"
         fill
-        priority
         className={cn(
-          "absolute top-0 left-0 z-10 object-cover transition-all w-full h-full",
-          showPreview ? "opacity-0" : "opacity-100",
+          "absolute top-0 left-0 z-10 object-cover ease-in-out transition-opacity duration-300 w-full h-full",
+          showPreview ? "opacity-0 delay-400" : "opacity-100 delay-0",
         )}
       />
       <Image
@@ -61,7 +55,10 @@ export const ShotCard = ({ shot }: { shot: ShotCardProps }) => {
         alt="Shot card preview"
         fill
         loading="lazy"
-        className="object-cover absolute top-0 left-0 z-0 w-full h-full"
+        className={cn(
+          "object-cover absolute top-0 left-0 z-0 w-full h-full ",
+          isMounted() ? "opacity-100 " : "opacity-0",
+        )}
       />
     </UserStatusLink>
   );

@@ -12,21 +12,19 @@ import { isVideoDeleteModalOpenSignal, videoIdSignal } from "./video-signals";
 import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { uploadToS3 } from "@/lib/upload-to-s3";
-import { VideoSchema } from "@/schemas";
-import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { type Video, VideoInsertSchema } from "@/types";
 
 type EditVideoProps = {
-  video: SelectVideo;
+  video: Video;
 };
 
 export const EditVideo = ({ video }: EditVideoProps) => {
-  const form = useForm<z.infer<typeof VideoSchema>>({
-    resolver: zodResolver(VideoSchema),
+  const form = useForm<z.infer<typeof VideoInsertSchema>>({
+    resolver: zodResolver(VideoInsertSchema),
     defaultValues: {
       title: video.title,
       description: video.description,
-      categories: video.categories || undefined,
       url: video.url,
       transcript: video.transcript || undefined,
       duration: video.duration,
@@ -41,7 +39,7 @@ export const EditVideo = ({ video }: EditVideoProps) => {
     },
   });
 
-  const onSave = async (values: z.infer<typeof VideoSchema>) => {
+  const onSave = async (values: z.infer<typeof VideoInsertSchema>) => {
     startTransition(async () => {
       const thumbnail = values.thumbnail;
 

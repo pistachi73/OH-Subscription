@@ -71,29 +71,6 @@ export const columns: ColumnDef<
     },
   },
   {
-    accessorKey: "categories",
-    header: "Categories",
-    cell: (row) => {
-      const val = row.getValue() as { category: { name: string } }[];
-
-      if (!val) return null;
-
-      const categories = val.map(({ category }) => category.name).join(",");
-
-      if (!categories.length) return null;
-
-      return (
-        <div className="flex flex-row flex-wrap gap-1">
-          {categories.split(",").map((category) => (
-            <Badge key={category} className="uppercase" variant="accent">
-              {category}
-            </Badge>
-          ))}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "updatedAt",
     header: "Updated at",
     cell: (row) => {

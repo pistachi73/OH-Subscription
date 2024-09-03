@@ -25,15 +25,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
-import { SettingsSchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import { AccountSettingsSchema } from "@/types";
 
 export const UpdateEmail = () => {
   const user = useCurrentUser();
   const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
   const [counter, setCounter] = useState(60);
-  const form = useForm<z.infer<typeof SettingsSchema>>({
-    resolver: zodResolver(SettingsSchema),
+  const form = useForm<z.infer<typeof AccountSettingsSchema>>({
+    resolver: zodResolver(AccountSettingsSchema),
     defaultValues: {
       email: user.email ?? "",
       verifycationToken: "",
@@ -65,7 +65,7 @@ export const UpdateEmail = () => {
     setCounter(60);
   };
 
-  const onSubmit = async (values: z.infer<typeof SettingsSchema>) => {
+  const onSubmit = async (values: z.infer<typeof AccountSettingsSchema>) => {
     const { verifyEmail } = await updateEmail.mutateAsync({
       email: values.email,
       verifycationToken: values.verifycationToken,

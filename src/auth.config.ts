@@ -5,10 +5,9 @@ import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
-import { users } from "./server/db/schema";
-
-import { LoginSchema } from "@/schemas";
 import { db } from "@/server/db";
+import { LoginSchema } from "@/types";
+import { user } from "./server/db/schema";
 
 export default {
   providers: [
@@ -29,14 +28,14 @@ export default {
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 
-          const user = await db.query.users.findFirst({
-            where: eq(users.email, email),
+          const res = await db.query.user.findFirst({
+            where: eq(user.email, email),
           });
-          if (!user || !user.password) return null;
+          if (!res || !res.password) return null;
 
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+          const passwordsMatch = await bcrypt.compare(password, res.password);
           if (passwordsMatch) {
-            return user;
+            return res;
           }
         }
 

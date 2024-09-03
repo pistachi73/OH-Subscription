@@ -15,18 +15,17 @@ import {
 import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { uploadToS3 } from "@/lib/upload-to-s3";
-import { TeacherSchema } from "@/schemas";
-import type { SelectTeacher } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { type Teacher, TeacherInsertSchema } from "@/types";
 
 type EditTeacherProps = {
-  teacher: SelectTeacher;
+  teacher: Teacher;
 };
 
 export const EditTeacher = ({ teacher }: EditTeacherProps) => {
   useSignals();
-  const form = useForm<z.infer<typeof TeacherSchema>>({
-    resolver: zodResolver(TeacherSchema),
+  const form = useForm<z.infer<typeof TeacherInsertSchema>>({
+    resolver: zodResolver(TeacherInsertSchema),
     defaultValues: {
       name: teacher.name,
       bio: teacher.bio,
@@ -41,7 +40,7 @@ export const EditTeacher = ({ teacher }: EditTeacherProps) => {
     },
   });
 
-  const onSave = async (values: z.infer<typeof TeacherSchema>) => {
+  const onSave = async (values: z.infer<typeof TeacherInsertSchema>) => {
     startTransition(async () => {
       const image = values.image;
 

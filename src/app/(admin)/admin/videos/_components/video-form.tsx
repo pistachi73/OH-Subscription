@@ -2,10 +2,7 @@ import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
 import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
-import {
-  AdminMultipleSelect,
-  type Option,
-} from "@/components/ui/admin/admin-multiple-select";
+import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import {
   Card,
   CardContent,
@@ -22,10 +19,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { VideoSchema } from "@/schemas";
+import type { VideoInsertSchema } from "@/types";
 
 type VideoFormProps = {
-  form: UseFormReturn<z.infer<typeof VideoSchema>>;
+  form: UseFormReturn<z.infer<typeof VideoInsertSchema>>;
 };
 
 const CATEGORY_OPTIONS: Option[] = [
@@ -173,33 +170,6 @@ export const VideoForm = ({ form }: VideoFormProps) => {
                 );
               }}
             />
-          </CardContent>
-        </Card>
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Video Categories</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-3">
-              <FormField
-                control={form.control}
-                name="categories"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <AdminMultipleSelect
-                        value={field.value}
-                        onChange={field.onChange}
-                        options={CATEGORY_OPTIONS}
-                      >
-                        Select categories
-                      </AdminMultipleSelect>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
           </CardContent>
         </Card>
       </div>

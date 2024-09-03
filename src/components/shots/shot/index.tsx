@@ -4,7 +4,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { springTransition } from "@/lib/animation";
 import { cn } from "@/lib/utils/cn";
-import type { ShotCarouselData } from "@/server/db/schema.types";
+import type { ShotCarousel } from "@/types";
 import {
   MediaActionTypes,
   MediaProvider,
@@ -18,7 +18,7 @@ import { ShotContextProvider, useShotContext } from "./shot-context";
 import { ShotLayout } from "./shot-layout";
 
 export type ShotProps = {
-  shot: NonNullable<ShotCarouselData>;
+  shot: NonNullable<ShotCarousel>;
   inView?: boolean;
 };
 

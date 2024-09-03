@@ -21,14 +21,15 @@ import { Input } from "@/components/ui/input";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
-import { SettingsSchema } from "@/schemas";
+import { AccountSettingsSchema } from "@/types";
+
 import { api } from "@/trpc/react";
 
 export const UpdateNameAvatar = () => {
   const user = useCurrentUser();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const nameForm = useForm<z.infer<typeof SettingsSchema>>({
-    resolver: zodResolver(SettingsSchema),
+  const nameForm = useForm<z.infer<typeof AccountSettingsSchema>>({
+    resolver: zodResolver(AccountSettingsSchema),
     defaultValues: {
       name: user.name ?? "",
     },
@@ -40,7 +41,7 @@ export const UpdateNameAvatar = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof SettingsSchema>) => {
+  const onSubmit = async (values: z.infer<typeof AccountSettingsSchema>) => {
     await updateUserName.mutateAsync({
       name: values.name,
     });

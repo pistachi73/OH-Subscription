@@ -10,7 +10,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
 
 import type { ButtonProps } from "@/components/ui/button";
-import type { ProgramCard, ProgramSpotlight } from "@/server/db/schema.types";
+import type { ProgramCard, ProgramSpotlight } from "@/types";
 
 const buttonVariants = cva("py-2", {
   variants: {
@@ -42,8 +42,22 @@ const fontVariants = cva("font-medium tracking-tight", {
   },
 });
 
+type LastWatchedChapterSchema = {
+  chapterNumber: number;
+  slug: string;
+  watchedDuration: number;
+};
+
+type FirstChapterSchema = {
+  chapterNumber: number;
+  slug: string;
+};
+
+//TODO: Update last watched chapter and first chapter
 type ProgramPlayButtonProps = {
   program: NonNullable<ProgramCard | ProgramSpotlight>;
+  lastWatchedChapter?: LastWatchedChapterSchema;
+  firstChapter?: FirstChapterSchema;
   navigationMode: "details" | "auth";
   className?: string;
 } & VariantProps<typeof buttonVariants>;
@@ -58,15 +72,17 @@ export const ProgramMainCTAButton = forwardRef<
 
   const programDetailsHref = `/programs/${slug}`;
 
-  const chapterHref = lastWatchedChapter
-    ? `${programDetailsHref}/chapters/${lastWatchedChapter.chapterSlug}?start=${Math.floor(lastWatchedChapter.watchedDuration)}`
-    : firstChapter
-      ? `${programDetailsHref}/chapters/${firstChapter.chapterSlug}`
-      : programDetailsHref;
+  // const chapterHref = lastWatchedChapter
+  //   ? `${programDetailsHref}/chapters/${lastWatchedChapter.slug}?start=${Math.floor(lastWatchedChapter.)}`
+  //   : firstChapter
+  //     ? `${programDetailsHref}/chapters/${firstChapter.slug}`
+  //     : programDetailsHref;
+
+  const chapterHref = "/";
 
   const AuthButtonContent = (
     <span className="font-medium text-center md:text-left">
-      <span className="block"> Watch with OH Premium</span>
+      <span className="block">Watch with OH Premium</span>
       <span className="block text-sm md:text-base">
         Start your 30-day free trial
       </span>

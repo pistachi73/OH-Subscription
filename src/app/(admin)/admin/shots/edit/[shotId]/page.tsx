@@ -21,7 +21,7 @@ type EditShotPageProps = {
 };
 
 const EditShotPage = async ({ params: { shotId } }: EditShotPageProps) => {
-  const shot = await api.shot.getByIdAdmin.query(Number(shotId));
+  const shot = await api.shot._getById.query(Number(shotId));
 
   if (!shot) {
     redirect("/admin/shots");

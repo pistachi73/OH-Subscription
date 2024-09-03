@@ -8,12 +8,11 @@ import {
   ResponsiveTooltipTrigger,
 } from "@/components/ui/responsive-tooltip";
 
+import { Button } from "@/components/ui/button";
 import type { Icon } from "../../ui/icons/icons.type";
 
 export const chapterButtonClassname = cn(
   "group/chapter-button px-2 flex items-center justify-center gap-2 pointer-events-auto",
-  "h-10 rounded-md text-sm",
-  "text-background/70 hover:text-background dark:text-foreground/70 dark:hover:text-foreground",
 );
 
 export const chapterButtonIconClassname = cn("w-7 h-7 lg:w-9 lg:h-9 ");
@@ -27,13 +26,13 @@ export const ChapterButton = ({
   return (
     <ResponsiveTooltip>
       <ResponsiveTooltipTrigger asChild>
-        <button
-          type="button"
+        <Button
+          variant={"text-ghost"}
           className={cn(chapterButtonClassname, lastButton && "pr-0")}
           {...rest}
         >
           <Icon className={cn(chapterButtonIconClassname)} />
-        </button>
+        </Button>
       </ResponsiveTooltipTrigger>
       <ResponsiveTooltipContent
         side="top"

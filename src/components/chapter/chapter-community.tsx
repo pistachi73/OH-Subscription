@@ -4,16 +4,16 @@ import { useState } from "react";
 
 import { Comment } from "@/components/ui/comments/comment";
 
+import { Button } from "@/components/ui/button";
+import { AddComment } from "@/components/ui/comments/add-comment";
+import { FirstToComment } from "@/components/ui/comments/first-to-comment";
+import { useComments } from "@/components/ui/comments/hooks/use-comments";
+import { MustBeSubscribed } from "@/components/ui/comments/must-be-subscribed";
+import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
+import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import { Loader2, SendHorizonal } from "lucide-react";
-import { Button } from "../ui/button";
-import { AddComment } from "../ui/comments/add-comment";
-import { FirstToComment } from "../ui/comments/first-to-comment";
-import { useComments } from "../ui/comments/hooks/use-comments";
-import { MustBeSubscribed } from "../ui/comments/must-be-subscribed";
-import { SkeletonComment } from "../ui/comments/skeleton-comment";
-import { UserAvatar } from "../ui/user-avatar";
 import { useChapterContext } from "./chapter-context";
 
 export const ChapterCommunity = () => {

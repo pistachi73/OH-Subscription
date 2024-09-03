@@ -14,7 +14,7 @@ import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useIsSubscribed } from "@/hooks/use-is-subscribed";
-import type { ProgramSpotlight } from "@/server/db/schema.types";
+import type { ProgramSpotlight } from "@/types";
 import { RelatedPrograms } from "./program-related";
 
 type ProgramCommunityProps = {

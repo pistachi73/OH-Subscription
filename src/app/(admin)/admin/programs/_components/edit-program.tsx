@@ -16,17 +16,16 @@ import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import { uploadToS3 } from "@/lib/upload-to-s3";
-import { ProgramSchema } from "@/schemas";
-import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
+import { ProgramInsertSchema, type Video } from "@/types";
 
 type EditProgramProps = {
   program: NonNullable<RouterOutputs["program"]["getById"]>;
   teacherOptions: Option[];
   videoOptions: Option[];
   categoryOptions: Option[];
-  videos: SelectVideo[];
+  videos: Video[];
 };
 
 export type ChapterDetails = Record<
@@ -43,8 +42,8 @@ export const EditProgram = ({
 }: EditProgramProps) => {
   const trpcUtils = api.useUtils();
 
-  const form = useForm<z.infer<typeof ProgramSchema>>({
-    resolver: zodResolver(ProgramSchema),
+  const form = useForm<z.infer<typeof ProgramInsertSchema>>({
+    resolver: zodResolver(ProgramInsertSchema),
     defaultValues: {
       title: program.title,
       description: program.description,
@@ -69,32 +68,28 @@ export const EditProgram = ({
     },
   });
 
-  const initialTeachers = program.teachers
-    .map(({ teacher }) => teacher.id.toString())
-    .join(",");
+  const initialTeachers =
+    program?.teachers?.map((teacher) => teacher.id.toString()).join(",") ?? "";
 
-  const initialCategories = program.categories
-    .map(({ category }) => category.id.toString())
-    .join(",");
+  const initialCategories =
+    program?.categories?.map((category) => category.id.toString()).join(",") ??
+    "";
 
-  const initialChapters = program.chapters
-    .map(({ videoId }) => videoId.toString())
-    .join(",");
+  const initialChapters =
+    program?.chapters?.map((chapter) => chapter.id.toString()).join(",") ?? "";
 
-  const chapterDetails: ChapterDetails = program.chapters.reduce(
-    (acc, { videoId, chapterNumber, isFree }) => {
+  const chapterDetails: ChapterDetails =
+    program?.chapters?.reduce((acc, { id, chapterNumber, isFree }) => {
       Object.assign(acc, {
-        [videoId]: {
+        [id]: {
           isFree,
           chapterNumber,
         },
       });
       return acc;
-    },
-    {},
-  );
+    }, {}) ?? {};
 
-  const onSave = async (values: z.infer<typeof ProgramSchema>) => {
+  const onSave = async (values: z.infer<typeof ProgramInsertSchema>) => {
     startTransition(async () => {
       const thumbnail = values.thumbnail;
 

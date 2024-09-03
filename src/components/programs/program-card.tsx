@@ -21,14 +21,14 @@ import { cn } from "@/lib/utils/cn";
 import { ProgramMainCTAButton } from "./program-play-button";
 
 import { useLikeSource } from "@/hooks/use-like-source";
-import type { RouterOutputs } from "@/trpc/shared";
+import type { ProgramCard as ProgramCardType } from "@/types";
 
 const MotionLink = m(Link);
 
 export type ProgramCardProps = {
   isLeftBorder?: boolean;
   isRightBorder?: boolean;
-  program: RouterOutputs["program"]["getProgramsForCards"][0];
+  program: ProgramCardType;
   index?: number;
   priority?: boolean;
 };

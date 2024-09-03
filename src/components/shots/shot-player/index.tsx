@@ -37,7 +37,7 @@ export const ShotPlayer = ({ shot }: ShotProps) => {
           slot="centered-chrome"
           class="w-full flex items-center justify-center z-10 pointer-events-none"
         >
-          <MediaPlayButton class="pointer-events-auto h-20 w-20 text-2xl rounded-full bg-foreground/70 dark:bg-background/70 text-background">
+          <MediaPlayButton class="pointer-events-auto h-20 w-20 text-2xl rounded-full bg-foreground/70 dark:bg-foreground/70 text-background">
             <div slot="play">
               <PlayIcon className="w-8 h-8 " />
             </div>

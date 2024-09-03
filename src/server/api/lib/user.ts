@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import type { DB } from "@/server/db";
-import { users } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
 
 export const getUserByEmail = async ({
   db,
@@ -11,8 +11,8 @@ export const getUserByEmail = async ({
   email: string;
 }) => {
   try {
-    const user = await db.query.users.findFirst({
-      where: eq(users.email, email),
+    const user = await db.query.user.findFirst({
+      where: eq(schema.user.email, email),
     });
 
     return user;
@@ -22,8 +22,8 @@ export const getUserByEmail = async ({
 };
 export const getUserById = async ({ db, id }: { db: DB; id: string }) => {
   try {
-    const user = await db.query.users.findFirst({
-      where: eq(users.id, id),
+    const user = await db.query.user.findFirst({
+      where: eq(schema.user.id, id),
     });
 
     return user;

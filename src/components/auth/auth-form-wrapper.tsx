@@ -37,7 +37,7 @@ export const AuthFormWrapper = ({
 
   useEffect(() => {
     setAnimationDir(1);
-  }, []);
+  }, [setAnimationDir]);
 
   return (
     <MotionCard

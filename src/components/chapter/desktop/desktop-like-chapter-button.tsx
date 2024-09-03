@@ -24,6 +24,7 @@ export const DesktopLikeChapterButton = ({
     <ResponsiveTooltip>
       <ResponsiveTooltipTrigger asChild>
         <LikeButton
+          variant={"text-ghost"}
           isLikeLoading={isLikeLoading}
           isLikedByUser={isLikedByUser ?? false}
           like={() => like({ videoId: chapter.id })}

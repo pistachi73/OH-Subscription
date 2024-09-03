@@ -10,8 +10,8 @@ import {
 
 import { deleteFile } from "@/actions/delete-file";
 import { isNumber } from "@/lib/utils/is-number";
-import { TeacherSchema } from "@/schemas";
-import { teachers } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
+import { TeacherInsertSchema } from "@/types";
 
 export const teacherRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -27,25 +27,25 @@ export const teacherRouter = createTRPCRouter({
 
       const teacher = await db
         .select()
-        .from(teachers)
-        .where(eq(teachers.id, id));
+        .from(schema.teacher)
+        .where(eq(schema.teacher.id, id));
       const image = teacher?.[0]?.image;
 
       if (image) {
         await deleteFile({ fileName: image });
       }
 
-      await db.delete(teachers).where(eq(teachers.id, id));
+      await db.delete(schema.teacher).where(eq(schema.teacher.id, id));
 
       return { success: true };
     }),
   create: adminProtectedProcedure
-    .input(TeacherSchema)
+    .input(TeacherInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { image, ...values } = input;
 
-      await db.insert(teachers).values({
+      await db.insert(schema.teacher).values({
         ...values,
         image: typeof image === "string" ? image : null,
       });
@@ -54,7 +54,7 @@ export const teacherRouter = createTRPCRouter({
     }),
 
   update: adminProtectedProcedure
-    .input(TeacherSchema)
+    .input(TeacherInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, image, ...values } = input;
@@ -68,8 +68,8 @@ export const teacherRouter = createTRPCRouter({
 
       const teacher = await db
         .select()
-        .from(teachers)
-        .where(eq(teachers.id, Number(id)));
+        .from(schema.teacher)
+        .where(eq(schema.teacher.id, Number(id)));
 
       let currentTeacherImage = teacher?.[0]?.image;
 
@@ -83,19 +83,19 @@ export const teacherRouter = createTRPCRouter({
       }
 
       await db
-        .update(teachers)
+        .update(schema.teacher)
         .set({
           ...values,
           image: image ? currentTeacherImage : null,
         })
-        .where(eq(teachers.id, Number(id)));
+        .where(eq(schema.teacher.id, Number(id)));
 
       return { success: true };
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
-    const allTeachers = await db.select().from(teachers);
+    const allTeachers = await db.select().from(schema.teacher);
     return allTeachers;
   }),
 
@@ -105,8 +105,12 @@ export const teacherRouter = createTRPCRouter({
       const { db } = ctx;
       const teacher = await db
         .select()
-        .from(teachers)
-        .where(eq(teachers.id, id));
+        .from(schema.teacher)
+        .where(eq(schema.teacher.id, id));
       return teacher[0];
     }),
+
+  getLandingPageTeachers: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.teacher.findMany({ limit: 7 });
+  }),
 });

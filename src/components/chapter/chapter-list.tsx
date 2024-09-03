@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/icons";
 import { useIsSubscribed } from "@/hooks/use-is-subscribed";
 import { cn } from "@/lib/utils/cn";
-import type { ProgramSpotlight } from "@/server/db/schema.types";
+import type { ProgramSpotlight } from "@/types";
 import { useParams } from "next/navigation";
 import { buttonVariants } from "../ui/button";
 import { ImageWithPlaceholder } from "../ui/image-with-placeholder";

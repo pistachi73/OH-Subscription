@@ -16,10 +16,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { CategorySchema } from "@/schemas";
+import type { CategoryInsertSchema } from "@/types";
 
 type CategoryFormProps = {
-  form: UseFormReturn<z.infer<typeof CategorySchema>>;
+  form: UseFormReturn<z.infer<typeof CategoryInsertSchema>>;
 };
 
 export const CategoryForm = ({ form }: CategoryFormProps) => {

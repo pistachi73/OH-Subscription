@@ -9,13 +9,13 @@ import { useRouter } from "next/navigation";
 import { TeacherForm } from "./teacher-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { TeacherSchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import { TeacherInsertSchema } from "@/types";
 
 export const NewTeacher = () => {
   const trpcUtils = api.useUtils();
-  const form = useForm<z.infer<typeof TeacherSchema>>({
-    resolver: zodResolver(TeacherSchema),
+  const form = useForm<z.infer<typeof TeacherInsertSchema>>({
+    resolver: zodResolver(TeacherInsertSchema),
     defaultValues: {
       name: "",
       bio: "",
@@ -34,7 +34,7 @@ export const NewTeacher = () => {
   });
   const router = useRouter();
 
-  const onSave = async (values: z.infer<typeof TeacherSchema>) => {
+  const onSave = async (values: z.infer<typeof TeacherInsertSchema>) => {
     await mutateAsync(values);
   };
 

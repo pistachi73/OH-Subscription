@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { VerticalCarouselApi } from "@/components/ui/vertical-carousel";
-import type { ShotCarouselData } from "@/server/db/schema.types";
+import type { ShotCarousel as ShotCarouselType } from "@/types";
 import { api as trpcApi } from "../../../trpc/react";
 import { Shot } from "../shot";
 import { LoadingShot } from "../shot/loading-shot";
@@ -11,12 +11,11 @@ import { CarouselContainer } from "./carousel-container";
 import { CarouselItem } from "./carousel-item";
 
 type ShotCarouselProps = {
-  initialShot: ShotCarouselData;
+  initialShot: ShotCarouselType;
   embedding: number[];
-  className?: string;
 };
 
-export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
+export const ShotCarousel = ({ initialShot }: ShotCarouselProps) => {
   const [api, setApi] = useState<VerticalCarouselApi>();
   const [current, setCurrent] = useState(0);
 

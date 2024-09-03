@@ -6,8 +6,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 import { isNumber } from "@/lib/utils/is-number";
-import { CommentSchema } from "@/schemas";
-import { comments, likes, users } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
+import { CommentInsertSchema } from "@/types";
 import { alias } from "drizzle-orm/pg-core";
 import { deleteRecursiveComments } from "../lib/comments.lib";
 import { withLimit } from "../query-utils/shared.query";
@@ -33,7 +33,7 @@ export const commentRouter = createTRPCRouter({
       return { success: true, deletedComments };
     }),
   create: protectedProcedure
-    .input(CommentSchema)
+    .input(CommentInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db, session } = ctx;
       const { programId, videoId, shotId, parentCommentId, ...values } = input;
@@ -52,7 +52,7 @@ export const commentRouter = createTRPCRouter({
       }
 
       const createdComments = await db
-        .insert(comments)
+        .insert(schema.comment)
         .values({
           ...values,
           ...(programId ? { programId } : {}),
@@ -62,16 +62,16 @@ export const commentRouter = createTRPCRouter({
           userId: session.user.id,
         })
         .returning({
-          id: comments.id,
-          content: comments.content,
-          updatedAt: comments.updatedAt,
-          likes: comments.likes,
+          id: schema.comment.id,
+          content: schema.comment.content,
+          updatedAt: schema.comment.updatedAt,
+          likes: schema.comment.likes,
         });
       return { comment: createdComments[0] };
     }),
 
   update: protectedProcedure
-    .input(CommentSchema)
+    .input(CommentInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, ...values } = input;
@@ -84,18 +84,18 @@ export const commentRouter = createTRPCRouter({
       }
 
       await db
-        .update(comments)
+        .update(schema.comment)
         .set({
           ...values,
         })
-        .where(eq(comments.id, Number(id)));
+        .where(eq(schema.comment.id, Number(id)));
 
       return { success: true };
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
-    const allComments = await db.select().from(comments);
+    const allComments = await db.select().from(schema.comment);
     return allComments;
   }),
 
@@ -129,55 +129,55 @@ export const commentRouter = createTRPCRouter({
           });
         }
 
-        const replies = alias(comments, "replies");
+        const replies = alias(schema.comment, "replies");
         const likedByUserSubquery = sql<boolean>`exists(${ctx.db
           .select({ n: sql`1` })
-          .from(likes)
+          .from(schema.like)
           .where(
             and(
-              eq(likes.commentId, comments.id),
-              eq(likes.userId, ctx.session?.user?.id ?? ""),
+              eq(schema.like.commentId, schema.comment.id),
+              eq(schema.like.userId, ctx.session?.user?.id ?? ""),
             ),
           )})`.as("likedByUser");
 
         let commentsQuery = ctx.db
-          .selectDistinctOn([comments.updatedAt], {
-            id: comments.id,
-            content: comments.content,
-            updatedAt: comments.updatedAt,
-            parentCommentId: comments.parentCommentId,
-            likes: comments.likes,
+          .selectDistinctOn([schema.comment.updatedAt], {
+            id: schema.comment.id,
+            content: schema.comment.content,
+            updatedAt: schema.comment.updatedAt,
+            parentCommentId: schema.comment.parentCommentId,
+            likes: schema.comment.likes,
             user: {
-              id: users.id,
-              name: users.name,
-              image: users.image,
+              id: schema.user.id,
+              name: schema.user.name,
+              image: schema.user.image,
             },
             totalReplies: sql<number>`count(${replies.id})`,
             isLikeByUser: likedByUserSubquery,
           })
-          .from(comments)
-          .leftJoin(replies, eq(replies.parentCommentId, comments.id))
-          .leftJoin(users, eq(users.id, comments.userId))
-          .groupBy(comments.id, users.id)
+          .from(schema.comment)
+          .leftJoin(replies, eq(replies.parentCommentId, schema.comment.id))
+          .leftJoin(schema.user, eq(schema.user.id, schema.comment.userId))
+          .groupBy(schema.comment.id, schema.user.id)
           .$dynamic();
 
         const filterBySourceClauses = [
-          programId ? eq(comments.programId, programId) : null,
-          videoId ? eq(comments.videoId, videoId) : null,
-          shotId ? eq(comments.shotId, shotId) : null,
+          programId ? eq(schema.comment.programId, programId) : null,
+          videoId ? eq(schema.comment.videoId, videoId) : null,
+          shotId ? eq(schema.comment.shotId, shotId) : null,
           parentCommentId
-            ? eq(comments.parentCommentId, parentCommentId)
+            ? eq(schema.comment.parentCommentId, parentCommentId)
             : null,
         ].filter(Boolean) as SQL<unknown>[];
 
         const whereClauses = [...filterBySourceClauses];
 
         if (cursor) {
-          whereClauses.push(lt(comments.updatedAt, cursor));
+          whereClauses.push(lt(schema.comment.updatedAt, cursor));
         }
 
         commentsQuery = commentsQuery.where(and(...whereClauses));
-        commentsQuery = commentsQuery.orderBy(desc(comments.updatedAt));
+        commentsQuery = commentsQuery.orderBy(desc(schema.comment.updatedAt));
 
         if (pageSize) {
           commentsQuery = withLimit(commentsQuery, pageSize);
@@ -188,13 +188,16 @@ export const commentRouter = createTRPCRouter({
 
         if (nextCursor) {
           const nextCursorCount = await ctx.db
-            .select({ count: count(comments.id) })
-            .from(comments)
+            .select({ count: count(schema.comment.id) })
+            .from(schema.comment)
             .where(
-              and(...filterBySourceClauses, lt(comments.updatedAt, nextCursor)),
+              and(
+                ...filterBySourceClauses,
+                lt(schema.comment.updatedAt, nextCursor),
+              ),
             )
-            .orderBy(desc(comments.updatedAt))
-            .groupBy(comments.updatedAt)
+            .orderBy(desc(schema.comment.updatedAt))
+            .groupBy(schema.comment.updatedAt)
             .execute();
 
           if (!nextCursorCount[0]?.count) {
@@ -220,23 +223,23 @@ export const commentRouter = createTRPCRouter({
     .query(async ({ input: { videoId, programId, shotId }, ctx }) => {
       if (!videoId && !programId && !shotId) return null;
 
-      const replies = alias(comments, "replies");
+      const replies = alias(schema.comment, "replies");
       let commentsQuery = ctx.db
         .select({
           totalReplies: sql<number>`count(${replies.id})`,
         })
-        .from(comments)
-        .leftJoin(replies, eq(replies.parentCommentId, comments.id))
+        .from(schema.comment)
+        .leftJoin(replies, eq(replies.parentCommentId, schema.comment.id))
         .$dynamic();
 
       const whereClauses = [
-        videoId ? eq(comments.videoId, videoId) : undefined,
-        programId ? eq(comments.programId, programId) : undefined,
-        shotId ? eq(comments.shotId, shotId) : undefined,
+        videoId ? eq(schema.comment.videoId, videoId) : undefined,
+        programId ? eq(schema.comment.programId, programId) : undefined,
+        shotId ? eq(schema.comment.shotId, shotId) : undefined,
       ];
 
       commentsQuery = commentsQuery.where(and(...whereClauses));
-      commentsQuery = commentsQuery.groupBy(comments.id);
+      commentsQuery = commentsQuery.groupBy(schema.comment.id);
       const resComments = await commentsQuery.execute();
 
       console.log({ resComments });
@@ -255,8 +258,8 @@ export const commentRouter = createTRPCRouter({
 
       const commentList = await db
         .select()
-        .from(comments)
-        .where(eq(comments.id, id));
+        .from(schema.comment)
+        .where(eq(schema.comment.id, id));
       const comment = commentList?.[0];
       return comment;
     }),

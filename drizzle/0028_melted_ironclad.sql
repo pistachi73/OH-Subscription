@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "likes_userId_index" ON "likes" USING btree ("userId");

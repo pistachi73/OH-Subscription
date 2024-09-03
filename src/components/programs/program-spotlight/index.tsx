@@ -3,7 +3,7 @@ import { ProgramSpotlightHero } from "./program-spotlight-hero";
 
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ProgramSpotlight as ProgramSpotlightType } from "@/server/db/schema.types";
+import type { ProgramSpotlight as ProgramSpotlightType } from "@/types";
 import dynamic from "next/dynamic";
 
 type ProgramSpotlightProps = {

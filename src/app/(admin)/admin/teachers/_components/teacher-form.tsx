@@ -18,10 +18,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { TeacherSchema } from "@/schemas";
+import type { TeacherInsertSchema } from "@/types";
 
 type TeacherFormProps = {
-  form: UseFormReturn<z.infer<typeof TeacherSchema>>;
+  form: UseFormReturn<z.infer<typeof TeacherInsertSchema>>;
 };
 
 export const TeacherForm = ({ form }: TeacherFormProps) => {

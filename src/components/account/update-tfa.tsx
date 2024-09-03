@@ -21,13 +21,13 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { SettingsSchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import { AccountSettingsSchema } from "@/types";
 
 export const UpdateTFA = () => {
   const user = useCurrentUser();
-  const form = useForm<z.infer<typeof SettingsSchema>>({
-    resolver: zodResolver(SettingsSchema),
+  const form = useForm<z.infer<typeof AccountSettingsSchema>>({
+    resolver: zodResolver(AccountSettingsSchema),
     defaultValues: {
       isTwoFactorEnabled: user.isTwoFactorEnabled ?? false,
     },

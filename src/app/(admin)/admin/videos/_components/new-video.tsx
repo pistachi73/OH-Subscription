@@ -12,16 +12,15 @@ import { VideoForm } from "./video-form";
 import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { uploadToS3 } from "@/lib/upload-to-s3";
-import { VideoSchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import { VideoInsertSchema } from "@/types";
 
 export const NewVideo = () => {
-  const form = useForm<z.infer<typeof VideoSchema>>({
-    resolver: zodResolver(VideoSchema),
+  const form = useForm<z.infer<typeof VideoInsertSchema>>({
+    resolver: zodResolver(VideoInsertSchema),
     defaultValues: {
       title: "",
       description: "",
-      categories: "",
       url: "",
       transcript: "",
       duration: undefined,
@@ -39,7 +38,7 @@ export const NewVideo = () => {
     },
   });
 
-  const onSave = async (values: z.infer<typeof VideoSchema>) => {
+  const onSave = async (values: z.infer<typeof VideoInsertSchema>) => {
     startTransition(async () => {
       const thumbnail = values.thumbnail;
 

@@ -9,9 +9,9 @@ import { getTwoFactorTokenByEmail } from "./two-factor-token";
 import { getVerificationTokenByEmail } from "./verification-token";
 
 import {
-  passwordResetTokens,
-  twoFactorTokens,
-  verificationTokens,
+  passwordResetToken,
+  twoFactorToken,
+  verificationToken,
 } from "@/server/db/schema";
 
 export const generateVerificationToken = async ({
@@ -25,12 +25,12 @@ export const generateVerificationToken = async ({
 
   if (existingToken) {
     await db
-      .delete(verificationTokens)
-      .where(eq(verificationTokens.email, email));
+      .delete(verificationToken)
+      .where(eq(verificationToken.email, email));
   }
 
   const data = { token, email, expires };
-  await db.insert(verificationTokens).values(data);
+  await db.insert(verificationToken).values(data);
 
   return data;
 };
@@ -46,13 +46,13 @@ export const generatePasswordResetToken = async ({
 
   if (existingToken) {
     await db
-      .delete(passwordResetTokens)
-      .where(eq(passwordResetTokens.email, email));
+      .delete(passwordResetToken)
+      .where(eq(passwordResetToken.email, email));
   }
 
   const data = { token, email, expires };
 
-  await db.insert(passwordResetTokens).values(data);
+  await db.insert(passwordResetToken).values(data);
 
   return data;
 };
@@ -68,13 +68,13 @@ export const generateTwoFactorToken = async ({
 
   if (existingToken) {
     await db
-      .delete(twoFactorTokens)
-      .where(eq(twoFactorTokens.token, existingToken.token));
+      .delete(twoFactorToken)
+      .where(eq(twoFactorToken.token, existingToken.token));
   }
 
   const data = { token, email, expires };
 
-  await db.insert(twoFactorTokens).values(data);
+  await db.insert(twoFactorToken).values(data);
 
   return data;
 };

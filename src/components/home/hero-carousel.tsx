@@ -7,11 +7,10 @@ import { HeroCard, heroCardHeightProps } from "@/components/ui/cards/hero-card";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils/cn";
 
-import type { ProgramCard } from "@/server/db/schema.types";
-import type { RouterOutputs } from "@/trpc/shared";
+import type { ProgramCard } from "@/types";
 
 type HeroCarouselProps = {
-  programs: RouterOutputs["program"]["getProgramsForCards"];
+  programs: ProgramCard[];
 };
 
 export const HeroCarousel = ({ programs }: HeroCarouselProps) => {

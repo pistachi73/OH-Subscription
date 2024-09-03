@@ -9,10 +9,7 @@ import {
 } from "@/components/ui/icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useLikeSource } from "@/hooks/use-like-source";
-import type {
-  ProgramChapter,
-  ProgramSpotlight,
-} from "@/server/db/schema.types";
+import type { Chapter, ProgramSpotlight } from "@/types";
 import React, { useState } from "react";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { useUserProgress } from "./hooks/use-user-progress";
@@ -27,7 +24,7 @@ const ChapterContext = React.createContext<{
   isLikedByUser: boolean;
   isLikeLoading: boolean;
   like: ReturnType<typeof useLikeSource>["like"];
-  chapter: NonNullable<ProgramChapter>;
+  chapter: NonNullable<Chapter>;
   program: NonNullable<ProgramSpotlight>;
 }>({
   activeTab: null,
@@ -47,7 +44,7 @@ export const ChapterContextProvider = ({
   program,
 }: {
   children: React.ReactNode;
-  chapter: NonNullable<ProgramChapter>;
+  chapter: NonNullable<Chapter>;
   program: NonNullable<ProgramSpotlight>;
 }) => {
   const user = useCurrentUser();

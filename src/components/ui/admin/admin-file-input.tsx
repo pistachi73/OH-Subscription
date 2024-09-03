@@ -10,7 +10,7 @@ import { getImageUrl } from "@/lib/utils/get-image-url";
 
 interface AdminFileInputProps extends Omit<InputProps, "onChange" | "value"> {
   onChange: (...event: any[]) => void;
-  value?: string | File;
+  value?: string | File | null;
 }
 
 export const AdminFileInput = React.forwardRef<

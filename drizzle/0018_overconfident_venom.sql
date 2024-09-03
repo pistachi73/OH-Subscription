@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "comments_parentCommentId_index" ON "comments" ("parentCommentId");

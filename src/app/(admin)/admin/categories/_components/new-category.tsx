@@ -9,13 +9,13 @@ import { useRouter } from "next/navigation";
 import { CategoryForm } from "./category-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { CategorySchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import { CategoryInsertSchema } from "@/types";
 
 export const NewCategory = () => {
   const trpcUtils = api.useUtils();
-  const form = useForm<z.infer<typeof CategorySchema>>({
-    resolver: zodResolver(CategorySchema),
+  const form = useForm<z.infer<typeof CategoryInsertSchema>>({
+    resolver: zodResolver(CategoryInsertSchema),
     defaultValues: {
       name: "",
     },
@@ -33,7 +33,7 @@ export const NewCategory = () => {
   });
   const router = useRouter();
 
-  const onSave = async (values: z.infer<typeof CategorySchema>) => {
+  const onSave = async (values: z.infer<typeof CategoryInsertSchema>) => {
     await mutateAsync(values);
   };
 

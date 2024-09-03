@@ -20,9 +20,9 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
 import { getImageUrl } from "@/lib/utils/get-image-url";
-import type { SelectVideo } from "@/server/db/schema";
+import type { Video } from "@/types";
 
-export const columns: ColumnDef<SelectVideo>[] = [
+export const columns: ColumnDef<Video>[] = [
   {
     accessorKey: "thumbnail",
     header: "Thumbnail",
@@ -97,7 +97,7 @@ export const columns: ColumnDef<SelectVideo>[] = [
   }),
 ];
 
-export const VideosTable = ({ data }: { data: SelectVideo[] }) => {
+export const VideosTable = ({ data }: { data: Video[] }) => {
   return (
     <Card>
       <CardHeader>

@@ -29,9 +29,12 @@ export const AuthLanding = ({ authForm }: AuthLandingProps) => {
     if (!success) return;
 
     startTransition(async () => {
+      console.log("email", authForm.getValues("email"));
       const { user: existingUser, account } = await getUserByEmail.mutateAsync({
         email: authForm.getValues("email"),
       });
+
+      console.log({ existingUser, account });
 
       if (existingUser && account) {
         return;

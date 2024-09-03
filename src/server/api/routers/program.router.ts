@@ -12,7 +12,7 @@ import {
 } from "drizzle-orm";
 import { z } from "zod";
 
-import type { ProgramLevel } from "../../db/schema.types";
+import { sortChaptersByChapterNumber } from "../formatters/format-program";
 import {
   firstChapterSubquery,
   isProgramLikedByUserSubquery,
@@ -23,6 +23,7 @@ import {
   programsWithCategories,
   programsWithChapters,
   programsWithTeachers,
+  sharedProgramSelect,
 } from "../query-utils/programs.query";
 import { withLimit, withOffset } from "../query-utils/shared.query";
 import {
@@ -32,22 +33,17 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
-import { toKebabCase } from "@/lib/utils/case-converters";
 import { isNumber } from "@/lib/utils/is-number";
+
+import * as schema from "@/server/db/schema";
 import {
-  CategoriesOnProgramsSchema,
-  ProgramSchema,
-  TeachersOnProgramsSchema,
-  VideosOnProgramsSchema,
-} from "@/schemas";
-import {
-  categories,
-  categoriesOnPrograms,
-  programs,
-  teachers,
-  teachersOnPrograms,
-  videosOnPrograms,
-} from "@/server/db/schema";
+  CategoryProgramInsertSchema,
+  ProgramInsertSchema,
+  type ProgramLevel,
+  TeacherProgramInsertSchema,
+  VideoProgramInsertSchema,
+} from "@/types";
+import { sortChaptersByLastWatched } from "../formatters/format-program";
 import { generateEmbedding } from "../lib/openai";
 
 export const programRouter = createTRPCRouter({
@@ -64,27 +60,26 @@ export const programRouter = createTRPCRouter({
 
       const program = await db
         .select()
-        .from(programs)
-        .where(eq(programs.id, id));
+        .from(schema.program)
+        .where(eq(schema.program.id, id));
       const thumbnail = program?.[0]?.thumbnail;
 
       if (thumbnail) {
         await deleteFile({ fileName: thumbnail });
       }
 
-      await db.delete(programs).where(eq(programs.id, id));
+      await db.delete(schema.program).where(eq(schema.program.id, id));
 
       return { success: true };
     }),
   create: adminProtectedProcedure
-    .input(ProgramSchema)
+    .input(ProgramInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { thumbnail, ...values } = input;
 
-      await db.insert(programs).values({
+      await db.insert(schema.program).values({
         ...values,
-        slug: toKebabCase(values.title) as string,
         thumbnail: typeof thumbnail === "string" ? thumbnail : null,
       });
 
@@ -110,13 +105,13 @@ export const programRouter = createTRPCRouter({
           categories: programCategoriesSelect,
           teachers: programTeachersSelect,
         })
-        .from(programs)
-        .where(eq(programs.id, id))
+        .from(schema.program)
+        .where(eq(schema.program.id, id))
         .$dynamic();
 
       programQuery = programsWithTeachers(programQuery);
       programQuery = programsWithCategories(programQuery);
-      programQuery = programQuery.groupBy(programs.id);
+      programQuery = programQuery.groupBy(schema.program.id);
       const programList = await programQuery.execute();
       const program = programList[0];
 
@@ -135,13 +130,16 @@ export const programRouter = createTRPCRouter({
 
       const embedding = await generateEmbedding(embeddingInput);
 
-      await db.update(programs).set({ embedding }).where(eq(programs.id, id));
+      await db
+        .update(schema.program)
+        .set({ embedding })
+        .where(eq(schema.program.id, id));
 
       return { success: true };
     }),
 
   update: adminProtectedProcedure
-    .input(ProgramSchema)
+    .input(ProgramInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, thumbnail, ...values } = input;
@@ -155,8 +153,8 @@ export const programRouter = createTRPCRouter({
 
       const program = await db
         .select()
-        .from(programs)
-        .where(eq(programs.id, Number(id)));
+        .from(schema.program)
+        .where(eq(schema.program.id, Number(id)));
 
       let currentProgramThumbnail = program?.[0]?.thumbnail;
 
@@ -170,13 +168,12 @@ export const programRouter = createTRPCRouter({
       }
 
       await db
-        .update(programs)
+        .update(schema.program)
         .set({
           ...values,
-          slug: toKebabCase(values.title) as string,
           thumbnail: thumbnail ? currentProgramThumbnail : null,
         })
-        .where(eq(programs.id, Number(id)));
+        .where(eq(schema.program.id, Number(id)));
 
       return { success: true, id: Number(id) };
     }),
@@ -184,7 +181,7 @@ export const programRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
 
-    const allPrograms = await db.query.programs.findMany();
+    const allPrograms = await db.query.program.findMany();
 
     return allPrograms;
   }),
@@ -206,8 +203,6 @@ export const programRouter = createTRPCRouter({
         .optional(),
     )
     .query(async ({ input, ctx }) => {
-      const isLoggedIn = Boolean(ctx.session?.user);
-
       const {
         teacherIds,
         categoryIds,
@@ -226,7 +221,7 @@ export const programRouter = createTRPCRouter({
 
         if (embedding) {
           similarity = sql<number>`1 - (${cosineDistance(
-            programs.embedding,
+            schema.program.embedding,
             embedding,
           )})`;
         }
@@ -234,13 +229,13 @@ export const programRouter = createTRPCRouter({
 
       let programsForCardsQuery = ctx.db
         .select({
-          id: programs.id,
-          title: programs.title,
-          description: programs.description,
-          thumbnail: programs.thumbnail,
-          level: programs.level,
-          slug: programs.slug,
-          totalChapters: programs.totalChapters,
+          id: schema.program.id,
+          title: schema.program.title,
+          description: schema.program.description,
+          thumbnail: schema.program.thumbnail,
+          level: schema.program.level,
+          slug: schema.program.slug,
+          totalChapters: schema.program.totalChapters,
           teachers: programTeachersSelect,
           categories: programCategoriesSelect,
           isLikedByUser: isProgramLikedByUserSubquery({
@@ -257,28 +252,28 @@ export const programRouter = createTRPCRouter({
           }),
           ...(similarity && { similarity }),
         })
-        .from(programs)
+        .from(schema.program)
         .$dynamic();
 
       programsForCardsQuery = programsWithTeachers(programsForCardsQuery);
       programsForCardsQuery = programsWithCategories(programsForCardsQuery);
 
-      console.log({ categorySlugs, l: categorySlugs?.length });
-
       const whereClauses = [
-        teacherIds?.length ? inArray(teachers.id, teacherIds) : undefined,
-        categoryIds?.length ? inArray(categories.id, categoryIds) : undefined,
+        teacherIds?.length ? inArray(schema.teacher.id, teacherIds) : undefined,
+        categoryIds?.length
+          ? inArray(schema.category.id, categoryIds)
+          : undefined,
         levelIds?.length
-          ? inArray(programs.level, levelIds as ProgramLevel[])
+          ? inArray(schema.program.level, levelIds as ProgramLevel[])
           : undefined,
         categoryNames?.length
           ? inArray(
-              sql`lower(${categories.name})`,
+              sql`lower(${schema.category.name})`,
               categoryNames.map((name) => name.toLowerCase()),
             )
           : undefined,
         categorySlugs?.length
-          ? inArray(categories.slug, categorySlugs)
+          ? inArray(schema.category.slug, categorySlugs)
           : undefined,
       ];
 
@@ -304,7 +299,7 @@ export const programRouter = createTRPCRouter({
         programsForCardsQuery = withOffset(programsForCardsQuery, offset);
       }
 
-      programsForCardsQuery = programsForCardsQuery.groupBy(programs.id);
+      programsForCardsQuery = programsForCardsQuery.groupBy(schema.program.id);
 
       const startTime = Date.now();
 
@@ -325,109 +320,129 @@ export const programRouter = createTRPCRouter({
     .input(z.number())
     .query(async ({ input: id, ctx }) => {
       const { db } = ctx;
+      let programQuery = db
+        .select({
+          ...sharedProgramSelect,
+          published: schema.program.published,
+          duration: schema.program.duration,
+          teachers: programTeachersSelect,
+          categories: programCategoriesSelect,
+          chapters: programChaptersSelect(),
+        })
+        .from(schema.program)
+        .where(eq(schema.program.id, id))
+        .$dynamic();
 
-      const program = await db.query.programs.findFirst({
-        where: eq(programs.id, id),
-        with: {
-          teachers: {
-            columns: {
-              teacherId: false,
-              programId: false,
-            },
-            with: {
-              teacher: {
-                columns: {
-                  name: true,
-                  id: true,
-                },
-              },
-            },
-          },
-          categories: {
-            columns: {
-              categoryId: false,
-              programId: false,
-            },
-            with: {
-              category: {
-                columns: {
-                  name: true,
-                  id: true,
-                },
-              },
-            },
-          },
-          chapters: {
-            columns: {
-              chapterNumber: true,
-              videoId: true,
-              isFree: true,
-            },
-          },
-        },
-      });
+      programQuery = programsWithTeachers(programQuery);
+      programQuery = programsWithCategories(programQuery);
+      programQuery = programsWithChapters(programQuery);
+      programQuery = programQuery.groupBy(schema.program.id);
 
-      return program;
+      const res = await programQuery.execute();
+      const program = res[0];
+      if (!program) return null;
+
+      const { chapters, ...rest } = program;
+      const sortedByChapterNumber = sortChaptersByChapterNumber(chapters);
+
+      return {
+        ...rest,
+        chapters: sortedByChapterNumber,
+      };
     }),
 
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
-    .query(async ({ input: { slug }, ctx }) => {
-      const user = ctx.session?.user;
-      const isLoggedIn = Boolean(user);
-
-      let programQuery = ctx.db
+    .query(async ({ input: { slug }, ctx: { db, session } }) => {
+      const user = session?.user;
+      let programQuery = db
         .select({
-          id: programs.id,
-          title: programs.title,
-          description: programs.description,
-          thumbnail: programs.thumbnail,
-          level: programs.level,
-          slug: programs.slug,
-          totalChapters: programs.totalChapters,
-          updatedAt: programs.updatedAt,
+          ...sharedProgramSelect,
           teachers: programTeachersSelect,
           categories: programCategoriesSelect,
-          chapters: programChaptersSelect(isLoggedIn),
+          chapters: programChaptersSelect(Boolean(user)),
           isLikedByUser: isProgramLikedByUserSubquery({
-            db: ctx.db,
-            userId: ctx.session?.user?.id,
-          }),
-          lastWatchedChapter: lastWatchedChapterSubquery({
-            db: ctx.db,
-            userId: ctx.session?.user?.id,
-          }),
-          firstChapter: firstChapterSubquery({
-            db: ctx.db,
+            db,
+            userId: user?.id,
           }),
         })
-        .from(programs)
-        .where(eq(programs.slug, slug))
+        .from(schema.program)
+        .where(eq(schema.program.slug, slug))
         .$dynamic();
 
       programQuery = programsWithTeachers(programQuery);
       programQuery = programsWithCategories(programQuery);
       programQuery = programsWithChapters(programQuery, user?.id);
-
-      programQuery = programQuery.groupBy(programs.id);
+      programQuery = programQuery.groupBy(schema.program.id);
 
       const res = await programQuery.execute();
-      const p = res[0];
-      if (!p) return null;
+      const program = res[0];
+      if (!program) return null;
 
-      if (p.chapters?.length) {
-        p.chapters = p.chapters.sort(
-          (a, b) => a.chapterNumber - b.chapterNumber,
-        );
-      }
+      const { chapters, ...rest } = program;
+      const sortedByChapterNumber = sortChaptersByChapterNumber(chapters);
+      const sortedByLastWatched = sortChaptersByLastWatched(chapters);
+      const firstChapter = sortedByChapterNumber?.[0];
+      const lastWatchedChapter = sortedByLastWatched?.[0];
 
-      return p;
+      return {
+        ...rest,
+        chapters: sortedByChapterNumber,
+        firstChapter,
+        lastWatchedChapter,
+      };
     }),
 
+  getLandingPagePrograms: publicProcedure.query(
+    async ({ ctx: { db, session } }) => {
+      let programsForCardsQuery = db
+        .select({
+          ...sharedProgramSelect,
+          teachers: programTeachersSelect,
+          categories: programCategoriesSelect,
+          isLikedByUser: isProgramLikedByUserSubquery({
+            db,
+            userId: session?.user?.id,
+          }),
+          lastWatchedChapter: lastWatchedChapterSubquery({
+            db,
+            userId: session?.user?.id,
+          }),
+          firstChapter: firstChapterSubquery({
+            db,
+          }),
+        })
+        .from(schema.program)
+        .$dynamic();
+
+      programsForCardsQuery = programsWithTeachers(programsForCardsQuery);
+      programsForCardsQuery = programsWithCategories(programsForCardsQuery);
+      programsForCardsQuery = programsForCardsQuery.groupBy(schema.program.id);
+
+      const programs = await programsForCardsQuery.execute();
+
+      const heroPrograms = [...programs].slice(0, 5);
+
+      const vocabularyPrograms = programs.filter((p) =>
+        p.categories?.some((c) => c.slug === "vocabulary"),
+      );
+
+      const grammarPrograms = programs.filter((p) =>
+        p.categories?.some((c) => c.slug === "grammar"),
+      );
+
+      return {
+        heroPrograms,
+        vocabularyPrograms,
+        grammarPrograms,
+      };
+    },
+  ),
+
   addTeacher: adminProtectedProcedure
-    .input(TeachersOnProgramsSchema)
+    .input(TeacherProgramInsertSchema)
     .mutation(async ({ input: { programId, teacherId }, ctx: { db } }) => {
-      await db.insert(teachersOnPrograms).values({
+      await db.insert(schema.teacherProgram).values({
         programId,
         teacherId,
       });
@@ -436,14 +451,14 @@ export const programRouter = createTRPCRouter({
     }),
 
   removeTeacher: adminProtectedProcedure
-    .input(TeachersOnProgramsSchema)
+    .input(TeacherProgramInsertSchema)
     .mutation(async ({ input: { programId, teacherId }, ctx: { db } }) => {
       await db
-        .delete(teachersOnPrograms)
+        .delete(schema.teacherProgram)
         .where(
           and(
-            eq(teachersOnPrograms.programId, programId),
-            eq(teachersOnPrograms.teacherId, teacherId),
+            eq(schema.teacherProgram.programId, programId),
+            eq(schema.teacherProgram.teacherId, teacherId),
           ),
         );
 
@@ -451,9 +466,9 @@ export const programRouter = createTRPCRouter({
     }),
 
   addCategory: adminProtectedProcedure
-    .input(CategoriesOnProgramsSchema)
+    .input(CategoryProgramInsertSchema)
     .mutation(async ({ input: { programId, categoryId }, ctx: { db } }) => {
-      await db.insert(categoriesOnPrograms).values({
+      await db.insert(schema.categoryProgram).values({
         programId,
         categoryId,
       });
@@ -462,61 +477,59 @@ export const programRouter = createTRPCRouter({
     }),
 
   removeCategory: adminProtectedProcedure
-    .input(CategoriesOnProgramsSchema)
+    .input(CategoryProgramInsertSchema)
     .mutation(async ({ input: { programId, categoryId }, ctx: { db } }) => {
       await db
-        .delete(categoriesOnPrograms)
+        .delete(schema.categoryProgram)
         .where(
           and(
-            eq(categoriesOnPrograms.programId, programId),
-            eq(categoriesOnPrograms.categoryId, categoryId),
+            eq(schema.categoryProgram.programId, programId),
+            eq(schema.categoryProgram.categoryId, categoryId),
           ),
         );
 
       return true;
     }),
 
-  addChapter: adminProtectedProcedure
-    .input(VideosOnProgramsSchema)
+  setChapter: adminProtectedProcedure
+    .input(VideoProgramInsertSchema)
     .mutation(
-      async ({ input: { videoId, programId, chapterNumber }, ctx: { db } }) => {
-        await db.insert(videosOnPrograms).values({
-          programId,
-          videoId,
-          chapterNumber: chapterNumber || 1,
-        });
-
-        return true;
-      },
-    ),
-
-  updateChapter: adminProtectedProcedure
-    .input(VideosOnProgramsSchema)
-    .mutation(
-      async ({ input: { videoId, programId, ...data }, ctx: { db } }) => {
+      async ({
+        input: { videoId, programId, chapterNumber, isFree },
+        ctx: { db },
+      }) => {
         await db
-          .update(videosOnPrograms)
-          .set(data)
-          .where(
-            and(
-              eq(videosOnPrograms.programId, programId),
-              eq(videosOnPrograms.videoId, videoId),
-            ),
-          );
+          .insert(schema.videoProgram)
+          .values({
+            programId,
+            videoId,
+            chapterNumber: chapterNumber || 1,
+            isFree: isFree || false,
+          })
+          .onConflictDoUpdate({
+            target: [
+              schema.videoProgram.programId,
+              schema.videoProgram.videoId,
+            ],
+            set: {
+              chapterNumber: chapterNumber || 1,
+              isFree: isFree || false,
+            },
+          });
 
         return true;
       },
     ),
 
   removeChapter: adminProtectedProcedure
-    .input(VideosOnProgramsSchema)
+    .input(VideoProgramInsertSchema)
     .mutation(async ({ input: { videoId, programId }, ctx: { db } }) => {
       await db
-        .delete(videosOnPrograms)
+        .delete(schema.videoProgram)
         .where(
           and(
-            eq(videosOnPrograms.programId, programId),
-            eq(videosOnPrograms.videoId, videoId),
+            eq(schema.videoProgram.programId, programId),
+            eq(schema.videoProgram.videoId, videoId),
           ),
         );
 

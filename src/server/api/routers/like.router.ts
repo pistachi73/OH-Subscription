@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { comments, likes, programs, shots, videos } from "@/server/db/schema";
+import { comment, like, program, shot, video } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { decrement, increment } from "../query-utils/shared.query";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -25,27 +25,27 @@ const schema = z
 
 const getAddLikeCountWhereClauses = (input: z.infer<typeof schema>) => {
   return [
-    input.videoId ? eq(videos.id, input.videoId) : undefined,
-    input.programId ? eq(programs.id, input.programId) : undefined,
-    input.shotId ? eq(shots.id, input.shotId) : undefined,
-    input.commentId ? eq(comments.id, input.commentId) : undefined,
+    input.videoId ? eq(video.id, input.videoId) : undefined,
+    input.programId ? eq(program.id, input.programId) : undefined,
+    input.shotId ? eq(shot.id, input.shotId) : undefined,
+    input.commentId ? eq(comment.id, input.commentId) : undefined,
   ];
 };
 
 const getAddLikeWhereClauses = (input: z.infer<typeof schema>) => {
   return [
-    input.videoId ? eq(likes.videoId, input.videoId) : undefined,
-    input.programId ? eq(likes.programId, input.programId) : undefined,
-    input.shotId ? eq(likes.shotId, input.shotId) : undefined,
-    input.commentId ? eq(likes.commentId, input.commentId) : undefined,
+    input.videoId ? eq(like.videoId, input.videoId) : undefined,
+    input.programId ? eq(like.programId, input.programId) : undefined,
+    input.shotId ? eq(like.shotId, input.shotId) : undefined,
+    input.commentId ? eq(like.commentId, input.commentId) : undefined,
   ];
 };
 
 const getLikedSourceTable = (input: z.infer<typeof schema>) => {
-  if (input.videoId) return videos;
-  if (input.programId) return programs;
-  if (input.shotId) return shots;
-  return comments;
+  if (input.videoId) return video;
+  if (input.programId) return program;
+  if (input.shotId) return shot;
+  return comment;
 };
 
 export const likeRouter = createTRPCRouter({
@@ -57,28 +57,28 @@ export const likeRouter = createTRPCRouter({
     await db.transaction(async (tx) => {
       const res = await db
         .select({
-          isLike: likes.isLike,
+          isLike: like.isLike,
         })
-        .from(likes)
+        .from(like)
         .where(
           and(
             ...getAddLikeWhereClauses(input),
-            eq(likes.userId, session.user.id),
+            eq(like.userId, session.user.id),
           ),
         );
 
       const isLikedByUser = res?.[0]?.isLike;
       if (isLikedByUser) {
         await tx
-          .delete(likes)
+          .delete(like)
           .where(
             and(
               ...getAddLikeWhereClauses(input),
-              eq(likes.userId, session.user.id),
+              eq(like.userId, session.user.id),
             ),
           );
       } else {
-        await tx.insert(likes).values({
+        await tx.insert(like).values({
           userId: session.user.id,
           ...input,
         });
@@ -105,7 +105,7 @@ export const likeRouter = createTRPCRouter({
       const likedSourceTable = getLikedSourceTable(input);
 
       await db.transaction(async (tx) => {
-        await tx.insert(likes).values({
+        await tx.insert(like).values({
           userId: session.user.id,
           ...input,
         });
@@ -127,11 +127,11 @@ export const likeRouter = createTRPCRouter({
 
       await db.transaction(async (tx) => {
         await db
-          .delete(likes)
+          .delete(like)
           .where(
             and(
               ...getAddLikeWhereClauses(input),
-              eq(likes.userId, session.user.id),
+              eq(like.userId, session.user.id),
             ),
           );
 

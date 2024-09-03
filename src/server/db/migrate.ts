@@ -3,14 +3,15 @@ import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
 import { migrate } from "drizzle-orm/neon-http/migrator";
 
+import { env } from "@/env";
 import * as schema from "./schema";
 
-const client = neon(process.env.DATABASE_URL as string);
+const client = neon(env.DATABASE_URL);
 const db = drizzle(client, { schema });
 
 const main = async () => {
   console.log("Running migrations...");
-  await migrate(db, { migrationsFolder: "drizzle" });
+  await migrate(db, { migrationsFolder: "src/server/db/migrations" });
 };
 
 main().catch((error) => {

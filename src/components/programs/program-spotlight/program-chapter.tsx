@@ -8,7 +8,7 @@ import { UserProgressBar } from "@/components/ui/user-progress-bar";
 import { UserStatusLink } from "@/components/ui/user-status-link";
 import { useUserStatus } from "@/hooks/use-user-status";
 import { cn } from "@/lib/utils/cn";
-import type { ProgramSpotlight } from "@/server/db/schema.types";
+import type { ProgramSpotlight } from "@/types";
 
 type ChapterProps = {
   chapter: NonNullable<NonNullable<ProgramSpotlight>["chapters"]>[0];

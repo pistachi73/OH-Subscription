@@ -8,10 +8,10 @@ import { getUserById } from "./server/api/lib/user";
 
 import authConfig from "@/auth.config";
 import { db } from "@/server/db";
-import { twoFactorConirmations, users } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
+import type { UserRole } from "@/types";
 import { Stripe } from "stripe";
 import { env } from "./env";
-import type { UserRole } from "./server/db/schema.types";
 
 export const {
   handlers: { GET, POST },
@@ -39,9 +39,9 @@ export const {
         })
         .then(async (customer) => {
           await db
-            .update(users)
+            .update(schema.user)
             .set({ stripeCustomerId: customer.id })
-            .where(eq(users.id, user.id as string));
+            .where(eq(schema.user.id, user.id as string));
         });
     },
   },
@@ -68,8 +68,8 @@ export const {
         }
 
         await db
-          .delete(twoFactorConirmations)
-          .where(eq(twoFactorConirmations.id, twoFactorConfirmation.id));
+          .delete(schema.twoFactorConirmation)
+          .where(eq(schema.twoFactorConirmation.id, twoFactorConfirmation.id));
       }
 
       return true;

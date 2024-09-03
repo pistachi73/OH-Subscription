@@ -28,14 +28,15 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils/cn";
-import { SettingsSchema } from "@/schemas";
+import { AccountSettingsSchema } from "@/types";
+
 import { api } from "@/trpc/react";
 
 export const UpdatePassword = () => {
   const user = useCurrentUser();
   const [isOpen, setIsOpen] = useState(false);
-  const form = useForm<z.infer<typeof SettingsSchema>>({
-    resolver: zodResolver(SettingsSchema),
+  const form = useForm<z.infer<typeof AccountSettingsSchema>>({
+    resolver: zodResolver(AccountSettingsSchema),
     defaultValues: {
       currentPassword: "",
       password: "",
@@ -46,7 +47,7 @@ export const UpdatePassword = () => {
 
   const update = api.user.update.useMutation();
 
-  const onSubmit = async (values: z.infer<typeof SettingsSchema>) => {
+  const onSubmit = async (values: z.infer<typeof AccountSettingsSchema>) => {
     await update.mutateAsync({
       currentPassword: values.currentPassword,
       password: values.password,

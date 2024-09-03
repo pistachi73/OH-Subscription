@@ -2,8 +2,8 @@
 
 import type { z } from "zod";
 
-import type { UserProgressSchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import type { UserProgressInsertSchema } from "@/types";
 import {
   useMediaSelector,
   useMediaStore,
@@ -35,7 +35,7 @@ export const useUserProgress = ({
   const setUserProgress = useCallback(
     (
       input: Omit<
-        z.infer<typeof UserProgressSchema>,
+        z.infer<typeof UserProgressInsertSchema>,
         "userId" | "programId" | "videoId"
       >,
     ) => setProgress({ userId, programId, videoId, ...input }),

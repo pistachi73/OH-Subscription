@@ -2,18 +2,16 @@ import { eq } from "drizzle-orm";
 
 import type { SharedLib } from "./lib.types";
 
-import { twoFactorTokens } from "@/server/db/schema";
+import { twoFactorToken } from "@/server/db/schema";
 
 export const getTwoFactorTokenByToken = async ({
   db,
   token,
 }: { token: string } & SharedLib) => {
   try {
-    const twoFactorToken = await db.query.twoFactorTokens.findFirst({
-      where: eq(twoFactorTokens.token, token),
+    return await db.query.twoFactorToken.findFirst({
+      where: eq(twoFactorToken.token, token),
     });
-
-    return twoFactorToken;
   } catch {
     return null;
   }
@@ -24,11 +22,9 @@ export const getTwoFactorTokenByEmail = async ({
   email,
 }: { email: string } & SharedLib) => {
   try {
-    const twoFactorToken = await db.query.twoFactorTokens.findFirst({
-      where: eq(twoFactorTokens.email, email),
+    return await db.query.twoFactorToken.findFirst({
+      where: eq(twoFactorToken.email, email),
     });
-
-    return twoFactorToken;
   } catch {
     return null;
   }

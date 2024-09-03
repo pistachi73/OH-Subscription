@@ -36,6 +36,7 @@ export function TRPCReactProvider(props: {
                 error instanceof TRPCError ||
                 error instanceof TRPCClientError
               ) {
+                console.log(error.message);
                 toast.error(error.message);
               }
             },

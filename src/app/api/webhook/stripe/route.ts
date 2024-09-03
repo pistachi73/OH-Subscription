@@ -1,8 +1,8 @@
 import { env } from "@/env";
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { user } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 type Metadata = {
@@ -63,12 +63,12 @@ const webhookHandler = async (req: NextRequest) => {
         );
 
         await db
-          .update(users)
+          .update(user)
           .set({
             stripeSubscriptionId,
             stripeSubscriptionEndsOn,
           })
-          .where(eq(users.id, userId));
+          .where(eq(user.id, userId));
 
         break;
       }
@@ -85,11 +85,11 @@ const webhookHandler = async (req: NextRequest) => {
         );
 
         await db
-          .update(users)
+          .update(user)
           .set({
             stripeSubscriptionEndsOn,
           })
-          .where(eq(users.stripeSubscriptionId, subscriptionId));
+          .where(eq(user.stripeSubscriptionId, subscriptionId));
 
         break;
       }

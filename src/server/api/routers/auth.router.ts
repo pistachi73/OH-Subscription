@@ -14,9 +14,13 @@ import { getVerificationTokenByToken } from "../lib/verification-token";
 
 import { env } from "@/env";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
-import { AuthRegisterSchema, NewPasswordSchema, ResetSchema } from "@/schemas";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { passwordResetTokens, users } from "@/server/db/schema";
+import { passwordResetToken, user } from "@/server/db/schema";
+import {
+  AuthRegisterSchema,
+  AuthResetPasswordSchema,
+  AuthUpdatePasswordSchema,
+} from "@/types";
 import { Stripe } from "stripe";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
@@ -104,7 +108,7 @@ export const authRouter = createTRPCRouter({
         name,
       });
 
-      await db.insert(users).values({
+      await db.insert(user).values({
         id: userId,
         name,
         email,
@@ -116,7 +120,7 @@ export const authRouter = createTRPCRouter({
     }),
 
   reset: publicProcedure
-    .input(ResetSchema)
+    .input(AuthResetPasswordSchema)
     .mutation(async ({ input: { email }, ctx: { db } }) => {
       const existingUser = await getUserByEmail({ email, db });
 
@@ -152,7 +156,7 @@ export const authRouter = createTRPCRouter({
     .input(
       z.object({
         token: z.nullable(z.string()),
-        values: NewPasswordSchema,
+        values: AuthUpdatePasswordSchema,
       }),
     )
     .mutation(async ({ input: { token, values }, ctx: { db } }) => {
@@ -198,15 +202,15 @@ export const authRouter = createTRPCRouter({
       const hashedPassword = await bcrypt.hash(password, 10);
 
       await db
-        .update(users)
+        .update(user)
         .set({
           password: hashedPassword,
         })
-        .where(eq(users.id, existingUser.id));
+        .where(eq(user.id, existingUser.id));
 
       await db
-        .delete(passwordResetTokens)
-        .where(eq(passwordResetTokens.token, token));
+        .delete(passwordResetToken)
+        .where(eq(passwordResetToken.token, token));
 
       return { success: "Password updated!" };
     }),

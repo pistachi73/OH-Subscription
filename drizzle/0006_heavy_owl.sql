@@ -1,1 +1,0 @@
-ALTER TABLE "programs" RENAME COLUMN "role" TO "level";

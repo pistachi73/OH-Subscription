@@ -9,10 +9,9 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
-import { toKebabCase } from "@/lib/utils/case-converters";
 import { isNumber } from "@/lib/utils/is-number";
-import { VideoSchema } from "@/schemas";
-import { videos, videosOnPrograms } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
+import { VideoInsertSchema } from "@/types";
 import { isVideoLikedByUserSubquery } from "../query-utils/video.query";
 
 export const videoRouter = createTRPCRouter({
@@ -26,26 +25,28 @@ export const videoRouter = createTRPCRouter({
           message: "Video ID is required",
         });
       }
-      const video = await db.select().from(videos).where(eq(videos.id, id));
+      const video = await db
+        .select()
+        .from(schema.video)
+        .where(eq(schema.video.id, id));
       const thumbnail = video?.[0]?.thumbnail;
 
       if (thumbnail) {
         await deleteFile({ fileName: thumbnail });
       }
 
-      await db.delete(videos).where(eq(videos.id, id));
+      await db.delete(schema.video).where(eq(schema.video.id, id));
 
       return { success: true };
     }),
   create: adminProtectedProcedure
-    .input(VideoSchema)
+    .input(VideoInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { thumbnail, ...values } = input;
 
-      await db.insert(videos).values({
+      await db.insert(schema.video).values({
         ...values,
-        slug: toKebabCase(values.title) as string,
         thumbnail: typeof thumbnail === "string" ? thumbnail : null,
       });
 
@@ -53,7 +54,7 @@ export const videoRouter = createTRPCRouter({
     }),
 
   update: adminProtectedProcedure
-    .input(VideoSchema)
+    .input(VideoInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, thumbnail, ...values } = input;
@@ -67,8 +68,8 @@ export const videoRouter = createTRPCRouter({
 
       const video = await db
         .select()
-        .from(videos)
-        .where(eq(videos.id, Number(id)));
+        .from(schema.video)
+        .where(eq(schema.video.id, Number(id)));
 
       let currentVideoThumbnail = video?.[0]?.thumbnail;
 
@@ -82,20 +83,19 @@ export const videoRouter = createTRPCRouter({
       }
 
       await db
-        .update(videos)
+        .update(schema.video)
         .set({
           ...values,
-          slug: toKebabCase(values.title) as string,
           thumbnail: thumbnail ? currentVideoThumbnail : null,
         })
-        .where(eq(videos.id, Number(id)));
+        .where(eq(schema.video.id, Number(id)));
 
       return { success: true };
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
-    const allVideos = await db.select().from(videos);
+    const allVideos = await db.select().from(schema.video);
     return allVideos;
   }),
 
@@ -104,7 +104,10 @@ export const videoRouter = createTRPCRouter({
     .query(async ({ input: id, ctx }) => {
       const { db } = ctx;
 
-      const videoList = await db.select().from(videos).where(eq(videos.id, id));
+      const videoList = await db
+        .select()
+        .from(schema.video)
+        .where(eq(schema.video.id, id));
       const video = videoList?.[0];
       return video;
     }),
@@ -123,23 +126,25 @@ export const videoRouter = createTRPCRouter({
 
       const res = await db
         .select({
-          ...getTableColumns(videos),
-          chapterNumber: videosOnPrograms.chapterNumber,
-          isFree: videosOnPrograms.isFree,
+          ...getTableColumns(schema.video),
+          chapterNumber: schema.videoProgram.chapterNumber,
+          isFree: schema.videoProgram.isFree,
           isLikedByUser: isVideoLikedByUserSubquery({
             db: ctx.db,
             userId: ctx.session?.user?.id,
           }),
         })
-        .from(videos)
+        .from(schema.video)
         .leftJoin(
-          videosOnPrograms,
+          schema.videoProgram,
           and(
-            eq(videos.id, videosOnPrograms.videoId),
-            programId ? eq(videosOnPrograms.programId, programId) : undefined,
+            eq(schema.video.id, schema.videoProgram.videoId),
+            programId
+              ? eq(schema.videoProgram.programId, programId)
+              : undefined,
           ),
         )
-        .where(and(eq(videos.slug, videoSlug)));
+        .where(and(eq(schema.video.slug, videoSlug)));
 
       console.log({ res });
 

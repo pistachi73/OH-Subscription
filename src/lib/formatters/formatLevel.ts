@@ -1,5 +1,5 @@
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
-import type { ProgramLevel } from "@/server/db/schema.types";
+import type { ProgramLevel } from "@/types";
 
 export const LEVEL_OPTIONS: Option[] = [
   { label: "A1 - A2 Beginner", value: "BEGINNER" },

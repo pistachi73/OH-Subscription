@@ -21,9 +21,9 @@ import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
 import { getImageUrl } from "@/lib/utils/get-image-url";
 
-import type { SelectTeacher } from "@/server/db/schema";
+import type { Teacher } from "@/types";
 
-export const columns: ColumnDef<SelectTeacher>[] = [
+export const columns: ColumnDef<Teacher>[] = [
   {
     accessorKey: "image",
     header: "Image",
@@ -62,7 +62,7 @@ export const columns: ColumnDef<SelectTeacher>[] = [
   }),
 ];
 
-export const TeachersTable = ({ data }: { data: SelectTeacher[] }) => {
+export const TeachersTable = ({ data }: { data: Teacher[] }) => {
   useSignals();
   return (
     <Card>

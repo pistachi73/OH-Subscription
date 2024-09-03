@@ -10,16 +10,16 @@ import { ProgramForm } from "./program-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
-import { ProgramSchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import { ProgramInsertSchema } from "@/types";
 
 type NewProgramProps = {
   teacherOptions: Option[];
 };
 
 export const NewProgram = ({ teacherOptions }: NewProgramProps) => {
-  const form = useForm<z.infer<typeof ProgramSchema>>({
-    resolver: zodResolver(ProgramSchema),
+  const form = useForm<z.infer<typeof ProgramInsertSchema>>({
+    resolver: zodResolver(ProgramInsertSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -41,7 +41,7 @@ export const NewProgram = ({ teacherOptions }: NewProgramProps) => {
     },
   });
 
-  const onSave = async (values: z.infer<typeof ProgramSchema>) => {
+  const onSave = async (values: z.infer<typeof ProgramInsertSchema>) => {
     await mutateAsync(values);
   };
 

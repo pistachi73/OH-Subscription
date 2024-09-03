@@ -8,10 +8,9 @@ import {
   publicProcedure,
 } from "../trpc";
 
-import { toKebabCase } from "@/lib/utils/case-converters";
 import { isNumber } from "@/lib/utils/is-number";
-import { CategorySchema } from "@/schemas";
-import { categories } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
+import { CategoryInsertSchema } from "@/types";
 
 export const categoryRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -25,26 +24,25 @@ export const categoryRouter = createTRPCRouter({
         });
       }
 
-      await db.delete(categories).where(eq(categories.id, id));
+      await db.delete(schema.category).where(eq(schema.category.id, id));
 
       return { success: true };
     }),
   create: adminProtectedProcedure
-    .input(CategorySchema)
+    .input(CategoryInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { ...values } = input;
 
-      await db.insert(categories).values({
+      await db.insert(schema.category).values({
         ...values,
-        slug: toKebabCase(values.name) as string,
       });
 
       return { success: true };
     }),
 
   update: adminProtectedProcedure
-    .input(CategorySchema)
+    .input(CategoryInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, ...values } = input;
@@ -52,24 +50,23 @@ export const categoryRouter = createTRPCRouter({
       if (!id || !isNumber(id)) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Video ID is required",
+          message: "Category ID is required",
         });
       }
 
       await db
-        .update(categories)
+        .update(schema.category)
         .set({
           ...values,
-          slug: toKebabCase(values.name) as string,
         })
-        .where(eq(categories.id, Number(id)));
+        .where(eq(schema.category.id, Number(id)));
 
       return { success: true };
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
-    const allVideos = await db.select().from(categories);
+    const allVideos = await db.select().from(schema.category);
     return allVideos;
   }),
 
@@ -78,31 +75,28 @@ export const categoryRouter = createTRPCRouter({
     .query(async ({ input: id, ctx }) => {
       const { db } = ctx;
 
-      const categorieList = await db
+      const list = await db
         .select()
-        .from(categories)
-        .where(eq(categories.id, id));
-      const category = categorieList?.[0];
+        .from(schema.category)
+        .where(eq(schema.category.id, id));
+      const category = list?.[0];
       return category;
     }),
 
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input: { slug }, ctx }) => {
-      console.log({ slug });
       if (!slug) return null;
 
       const { db } = ctx;
 
-      const categorieList = await db
+      const list = await db
         .select()
-        .from(categories)
-        .where(eq(categories.slug, slug))
+        .from(schema.category)
+        .where(eq(schema.category.slug, slug))
         .limit(1);
 
-      console.log({ categorieList });
-
-      const category = categorieList?.[0];
+      const category = list?.[0];
       return category;
     }),
 });

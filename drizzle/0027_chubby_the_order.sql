@@ -1,1 +1,0 @@
-ALTER TABLE "likes" ADD COLUMN "id" serial NOT NULL;

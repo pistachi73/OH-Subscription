@@ -48,7 +48,7 @@ export const ShotSideWrapper = ({
         className={cn(
           "max-h-[95%] w-full p-0 pt-2",
           deviceType === "mobile"
-            ? "w-full"
+            ? "w-full max-w-[500px] mx-auto"
             : "w-[500px] pt-0 h-[80%] rounded-md",
         )}
         hideClose

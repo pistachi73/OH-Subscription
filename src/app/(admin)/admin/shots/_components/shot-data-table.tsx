@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { actionColumn } from "@/components/ui/data-table/actions-column";
-import type { Shot } from "@/server/db/schema.types";
+import type { RouterOutputs } from "@/trpc/shared";
 
-export const columns: ColumnDef<Shot>[] = [
+export const columns: ColumnDef<RouterOutputs["shot"]["getAll"][0]>[] = [
   {
     accessorKey: "slug",
     header: "Slug",
@@ -57,12 +57,14 @@ export const columns: ColumnDef<Shot>[] = [
   },
   actionColumn({
     label: "shot",
-    openDeleteModalSignal: isShotDeleteModalOpenSignal,
     dataPointIdSignal: shotIdSignal,
+    openDeleteModalSignal: isShotDeleteModalOpenSignal,
   }),
 ];
 
-export const ShotsTable = ({ data }: { data: Shot[] }) => {
+export const ShotsTable = ({
+  data,
+}: { data: RouterOutputs["shot"]["getAll"] }) => {
   useSignals();
   return (
     <Card>

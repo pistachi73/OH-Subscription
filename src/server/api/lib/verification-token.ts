@@ -1,19 +1,16 @@
 import { eq } from "drizzle-orm";
 
+import { verificationToken } from "@/server/db/schema";
 import type { SharedLib } from "./lib.types";
-
-import { verificationTokens } from "@/server/db/schema";
 
 export const getVerificationTokenByToken = async ({
   db,
   token,
 }: { token: string } & SharedLib) => {
   try {
-    const verificationToken = await db.query.verificationTokens.findFirst({
-      where: eq(verificationTokens.token, token),
+    return await db.query.verificationToken.findFirst({
+      where: eq(verificationToken.token, token),
     });
-
-    return verificationToken;
   } catch {
     return null;
   }
@@ -24,11 +21,9 @@ export const getVerificationTokenByEmail = async ({
   email,
 }: { email: string } & SharedLib) => {
   try {
-    const verificationToken = await db.query.verificationTokens.findFirst({
-      where: eq(verificationTokens.email, email),
+    return await db.query.verificationToken.findFirst({
+      where: eq(verificationToken.email, email),
     });
-
-    return verificationToken;
   } catch {
     return null;
   }

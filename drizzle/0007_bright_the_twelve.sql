@@ -1,1 +1,0 @@
-ALTER TABLE "programs" ADD COLUMN "document" tsvector generated always as (to_tsvector('english', title || ' ' || description)) stored;

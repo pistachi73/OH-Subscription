@@ -1,12 +1,10 @@
 "use client";
-import type { UseFormReturn } from "react-hook-form";
-import type { z } from "zod";
 
+import { Loader2 } from "lucide-react";
 import { usePathname } from "next/navigation";
-
-import { ChaptersTable } from "./chapters-table";
-import { ProgramCategorySelect } from "./program-category-select";
-import { ProgramTeacherSelect } from "./program-teachers-select";
+import type { UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 
 import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
@@ -39,20 +37,22 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils/cn";
-import type { ProgramSchema } from "@/schemas/index";
-import type { SelectVideo } from "@/server/db/schema";
 import { api } from "@/trpc/react";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+
+import { CategorySelect } from "./category-select";
+import { ChapterSelect } from "./chapter-select";
+import { TeacherSelect } from "./teacher-select";
+
+import type { ProgramInsertSchema, Video } from "@/types";
 import type { ChapterDetails } from "./edit-program";
 
 type ProgramFormProps = {
-  form: UseFormReturn<z.infer<typeof ProgramSchema>>;
+  form: UseFormReturn<z.infer<typeof ProgramInsertSchema>>;
   programId?: number;
   teacherOptions: Option[];
   videoOptions?: Option[];
   categoryOptions?: Option[];
-  videos?: SelectVideo[];
+  videos?: Video[];
   initialTeachers?: string;
   initialChapters?: string;
   initialCategories?: string;
@@ -231,11 +231,11 @@ export const ProgramForm = ({
               <CardDescription>Add chapters to the Program.</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChaptersTable
+              <ChapterSelect
                 videoOptions={videoOptions}
                 videos={videos}
                 initialChapters={initialChapters}
-                chapterDetails={chapterDetails}
+                initialChapterDetails={chapterDetails}
               />
             </CardContent>
           </Card>
@@ -269,7 +269,7 @@ export const ProgramForm = ({
                       </div>
                       <FormControl>
                         <Switch
-                          checked={field.value}
+                          checked={field.value ?? false}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
@@ -315,7 +315,7 @@ export const ProgramForm = ({
               <CardTitle>Program Teachers</CardTitle>
             </CardHeader>
             <CardContent>
-              <ProgramTeacherSelect
+              <TeacherSelect
                 teacherOptions={teacherOptions}
                 initialTeachers={initialTeachers}
               />
@@ -330,7 +330,7 @@ export const ProgramForm = ({
               <CardTitle>Program Categories</CardTitle>
             </CardHeader>
             <CardContent>
-              <ProgramCategorySelect
+              <CategorySelect
                 categoryOptions={categoryOptions}
                 initialCategories={initialCategories}
               />

@@ -10,9 +10,8 @@ import { isShotDeleteModalOpenSignal, shotIdSignal } from "./shot-signals";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
-import { ShotSchema } from "@/schemas";
-import type { AdminShot } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
+import { type AdminShot, ShotInsertSchema } from "@/types";
 
 type EditShotProps = {
   shot: NonNullable<AdminShot>;
@@ -21,8 +20,8 @@ type EditShotProps = {
 
 export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
   useSignals();
-  const form = useForm<z.infer<typeof ShotSchema>>({
-    resolver: zodResolver(ShotSchema),
+  const form = useForm<z.infer<typeof ShotInsertSchema>>({
+    resolver: zodResolver(ShotInsertSchema),
     defaultValues: {
       id: shot.id,
       playbackId: shot.playbackId,
@@ -47,7 +46,7 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
     },
   });
 
-  const onSave = async (values: z.infer<typeof ShotSchema>) => {
+  const onSave = async (values: z.infer<typeof ShotInsertSchema>) => {
     await saveShot.mutateAsync({ ...values, id: shot.id });
   };
 

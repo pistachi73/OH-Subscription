@@ -31,10 +31,10 @@ import { format } from "date-fns";
 import { ProgramMainCTAButton } from "../program-play-button";
 
 import { useLikeSource } from "@/hooks/use-like-source";
-import type { RouterOutputs } from "@/trpc/shared";
+import type { ProgramSpotlightSchema } from "@/server/api/types";
 
 type ProgramSpotlightHero = {
-  program: NonNullable<RouterOutputs["program"]["getBySlug"]>;
+  program: NonNullable<ProgramSpotlightSchema>;
 };
 
 export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {

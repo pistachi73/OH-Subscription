@@ -20,7 +20,7 @@ import { springTransition } from "@/lib/animation";
 import { cn } from "@/lib/utils/cn";
 
 import { useLikeSource } from "@/hooks/use-like-source";
-import type { ProgramCard } from "@/server/db/schema.types";
+import type { ProgramCard } from "@/types";
 
 const DELAY_INCREMENT = 0.08;
 const DELAY_START = 0.8;

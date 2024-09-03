@@ -1,4 +1,7 @@
 "use client";
+
+import { useMemo } from "react";
+
 import {
   Carousel,
   CarouselContent,
@@ -6,12 +9,13 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { CarouselHeader } from "@/components/ui/carousel/carousel-header";
+import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { cn } from "@/lib/utils/cn";
-import type { ShotCard as ShotCardProps } from "@/server/db/schema.types";
-import { useMemo } from "react";
-import { CarouselHeader } from "../ui/carousel/carousel-header";
-import { useDeviceType } from "../ui/device-only/device-only-provider";
+
 import { ShotCard } from "./shot-card";
+
+import type { ShotCard as ShotCardType } from "@/types";
 
 export const useShotList = () => {
   const { deviceSize } = useDeviceType();
@@ -41,7 +45,7 @@ export const useShotList = () => {
 };
 
 type ShotListProps = {
-  shots?: ShotCardProps[];
+  shots?: ShotCardType[];
 };
 
 export const ShotList = ({ shots }: ShotListProps) => {

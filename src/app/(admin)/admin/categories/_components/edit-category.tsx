@@ -13,9 +13,9 @@ import {
 } from "./category-signals";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { CategorySchema } from "@/schemas";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
+import { CategoryInsertSchema } from "@/types";
 
 type EditCategoryProps = {
   category: NonNullable<RouterOutputs["category"]["getById"]>;
@@ -23,8 +23,8 @@ type EditCategoryProps = {
 
 export const EditCategory = ({ category }: EditCategoryProps) => {
   useSignals();
-  const form = useForm<z.infer<typeof CategorySchema>>({
-    resolver: zodResolver(CategorySchema),
+  const form = useForm<z.infer<typeof CategoryInsertSchema>>({
+    resolver: zodResolver(CategoryInsertSchema),
     defaultValues: {
       name: category.name,
     },
@@ -37,7 +37,7 @@ export const EditCategory = ({ category }: EditCategoryProps) => {
     },
   });
 
-  const onSave = async (values: z.infer<typeof CategorySchema>) => {
+  const onSave = async (values: z.infer<typeof CategoryInsertSchema>) => {
     startTransition(async () => {
       await saveCategory({ ...values, id: category.id });
     });

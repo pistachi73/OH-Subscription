@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils/cn";
-import type { Teacher } from "@/server/db/schema.types";
+import type { Teacher } from "@/types";
 import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";

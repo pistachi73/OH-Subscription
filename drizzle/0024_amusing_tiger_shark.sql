@@ -1,1 +1,0 @@
-ALTER TABLE "likes" ADD COLUMN "isLike" boolean DEFAULT true NOT NULL;

@@ -1,1 +1,0 @@
-ALTER TABLE "videos_programs" ADD COLUMN "isFree" boolean DEFAULT false;

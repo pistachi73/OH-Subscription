@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils/cn";
-import { AuthSchema } from "@/schemas";
+import { AuthFormSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence } from "framer-motion";
 import { BadgeCheck } from "lucide-react";
@@ -36,7 +36,7 @@ export type AuthSteps =
   | "RESET_PASSWORD"
   | "UPDATE_PASSWORD";
 
-type AuthForm = UseFormReturn<z.infer<typeof AuthSchema>>;
+type AuthForm = UseFormReturn<z.infer<typeof AuthFormSchema>>;
 
 export type AuthFormSharedProps = {
   authForm: AuthForm;
@@ -44,8 +44,8 @@ export type AuthFormSharedProps = {
 
 export const AuthContent = ({ className }: { className?: string }) => {
   const { formType } = useAuthContext();
-  const authForm: AuthForm = useForm<z.infer<typeof AuthSchema>>({
-    resolver: zodResolver(AuthSchema),
+  const authForm: AuthForm = useForm<z.infer<typeof AuthFormSchema>>({
+    resolver: zodResolver(AuthFormSchema),
     defaultValues: {
       email: "",
       registerPassword: "",
@@ -71,7 +71,7 @@ export const AuthContent = ({ className }: { className?: string }) => {
             </h3>
             <ul className="space-y-4 py-4 text-white">
               {checkPoints.map((checkPoint, index) => (
-                <li key={index} className="flex items-start gap-2 text-lg">
+                <li key={checkPoint} className="flex items-start gap-2 text-lg">
                   <div className="flex h-7 items-center justify-center text-secondary">
                     <BadgeCheck size={20} strokeWidth={2} />{" "}
                   </div>

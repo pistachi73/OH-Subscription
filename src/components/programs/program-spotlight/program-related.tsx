@@ -1,6 +1,6 @@
 "use client";
-import type { ProgramSpotlight } from "@/server/db/schema.types";
 import { api } from "@/trpc/react";
+import type { ProgramSpotlight } from "@/types";
 import { ProgramList } from "../program-list";
 
 type RelatedProgramsProps = {

@@ -10,7 +10,7 @@ import {
   VerticalCarouselPrevious,
 } from "@/components/ui/vertical-carousel";
 import { cn } from "@/lib/utils/cn";
-import type { ShotCarouselData } from "@/server/db/schema.types";
+import type { ShotCarousel as ShotCarouselType } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { api as trpcApi } from "../../trpc/react";
@@ -20,7 +20,7 @@ import { Shot } from "./shot";
 import { LoadingShot } from "./shot/loading-shot";
 
 type ShotCarouselProps = {
-  initialShot: ShotCarouselData;
+  initialShot: ShotCarouselType;
   embedding: number[];
   className?: string;
 };

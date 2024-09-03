@@ -7,13 +7,13 @@ import { getUserByEmail, getUserById } from "../lib/user";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 import { sendVerificationEmail } from "@/lib/mail";
-import { SettingsSchema } from "@/schemas";
-import { accounts, users } from "@/server/db/schema";
+import * as schema from "@/server/db/schema";
+import { AccountSettingsSchema } from "@/types";
 import { z } from "zod";
 import { getVerificationTokenByToken } from "../lib/verification-token";
 
 export const userRouter = createTRPCRouter({
-  update: protectedProcedure.input(SettingsSchema).mutation(
+  update: protectedProcedure.input(AccountSettingsSchema).mutation(
     async ({
       input,
       ctx: {
@@ -133,7 +133,10 @@ export const userRouter = createTRPCRouter({
         input.confirmPassword = undefined;
       }
 
-      await db.update(users).set(input).where(eq(users.id, dbUser.id));
+      await db
+        .update(schema.user)
+        .set(input)
+        .where(eq(schema.user.id, dbUser.id));
 
       return { success: "User settings updated!" };
     },
@@ -146,7 +149,9 @@ export const userRouter = createTRPCRouter({
       });
     }
 
-    await ctx.db.delete(users).where(eq(users.id, ctx.session.user.id));
+    await ctx.db
+      .delete(schema.user)
+      .where(eq(schema.user.id, ctx.session.user.id));
 
     return { success: "User deleted successfully" };
   }),
@@ -158,8 +163,8 @@ export const userRouter = createTRPCRouter({
       if (user) {
         const userAccount = await db
           .select()
-          .from(accounts)
-          .where(eq(accounts.userId, user.id));
+          .from(schema.account)
+          .where(eq(schema.account.userId, user.id));
         return {
           user,
           account: userAccount[0],

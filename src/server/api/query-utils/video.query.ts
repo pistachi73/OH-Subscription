@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 
 import type { DB } from "@/server/db";
-import { likes, videos } from "@/server/db/schema";
+import { like, video } from "@/server/db/schema";
 
 export const isVideoLikedByUserSubquery = ({
   db,
@@ -11,8 +11,8 @@ export const isVideoLikedByUserSubquery = ({
 
   return sql<boolean>`exists(${db
     .select({ n: sql`1` })
-    .from(likes)
+    .from(like)
     .where(
-      and(eq(likes.videoId, videos.id), eq(likes.userId, userId ?? "")),
+      and(eq(like.videoId, video.id), eq(like.userId, userId ?? "")),
     )})`.as("isLikedByUser");
 };

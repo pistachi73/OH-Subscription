@@ -37,6 +37,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils/cn";
 
+import { buttonVariants } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useChapterContext } from "../chapter-context";
 import { ChapterMediaFullScreen } from "../player/chapter-media-full-screen";
@@ -57,16 +58,7 @@ export const topButtonClassname = cn(
   "shrink-0 p-0 h-10 px-2 bg-transparent group/top-button",
 );
 
-export const topButtonIconClassname = cn(
-  "transition-colors text-background/70 dark:text-foreground/70",
-  "group-hover/top-button:text-background dark:group-hover/top-button:text-foreground",
-);
-
-export const topButtonIconFillClassname = cn(
-  "w-5 h-5",
-  "transition-colors fill-background/70 dark:fill-foreground/70",
-  "group-hover/top-button:fill-background dark:group-hover/top-button:fill-foreground",
-);
+export const topButtonIconFillClassname = cn("w-5 h-5");
 
 export const DesktopChapterPlayer = () => {
   const { autoPlay, setAutoPlay, bottomButtons, chapter, program } =
@@ -103,7 +95,10 @@ export const DesktopChapterPlayer = () => {
         <Popover>
           <PopoverTrigger className="h-10 w-10 flex items-center justify-center">
             <MediaMuteButton
-              class={cn(topButtonClassname)}
+              class={cn(
+                buttonVariants({ variant: "text-ghost" }),
+                topButtonClassname,
+              )}
               onClick={() => {
                 console.log("clicked");
               }}
@@ -147,13 +142,13 @@ export const DesktopChapterPlayer = () => {
               aria-label="Close player"
               href={`/programs/${program.slug}`}
               className={cn(
+                buttonVariants({ variant: "text-ghost" }),
                 topButtonClassname,
-                topButtonIconClassname,
                 "flex items-center justify-center pr-0",
               )}
               type="button"
             >
-              <X className={cn(topButtonIconClassname)} strokeWidth={1.5} />
+              <X strokeWidth={1.5} />
             </Link>
           </ResponsiveTooltipTrigger>
           <ResponsiveTooltipContent

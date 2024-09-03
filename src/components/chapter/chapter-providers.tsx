@@ -2,10 +2,7 @@
 
 import { MediaProvider } from "media-chrome/react/media-store";
 
-import type {
-  ProgramChapter,
-  ProgramSpotlight,
-} from "@/server/db/schema.types";
+import type { Chapter, ProgramSpotlight } from "@/types";
 import { ChapterContextProvider } from "./chapter-context";
 
 export const ChapterProviders = ({
@@ -14,7 +11,7 @@ export const ChapterProviders = ({
   program,
 }: {
   children: React.ReactNode;
-  chapter: NonNullable<ProgramChapter>;
+  chapter: NonNullable<Chapter>;
   program: NonNullable<ProgramSpotlight>;
 }) => {
   return (

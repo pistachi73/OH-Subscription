@@ -9,13 +9,13 @@ import { useRouter } from "next/navigation";
 import { ShotForm } from "./shot-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { ShotSchema } from "@/schemas";
 import { api } from "@/trpc/react";
+import { ShotInsertSchema } from "@/types";
 
 export const NewShot = () => {
   const trpcUtils = api.useUtils();
-  const form = useForm<z.infer<typeof ShotSchema>>({
-    resolver: zodResolver(ShotSchema),
+  const form = useForm<z.infer<typeof ShotInsertSchema>>({
+    resolver: zodResolver(ShotInsertSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -36,7 +36,7 @@ export const NewShot = () => {
   });
   const router = useRouter();
 
-  const onSave = async (values: z.infer<typeof ShotSchema>) => {
+  const onSave = async (values: z.infer<typeof ShotInsertSchema>) => {
     await mutateAsync(values);
   };
 

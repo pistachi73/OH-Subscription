@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "user_stripeSubscriptionId_index" ON "user" ("stripeSubscriptionId");

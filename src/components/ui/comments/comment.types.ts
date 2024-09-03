@@ -1,4 +1,4 @@
-import type { Comment } from "@/server/db/schema.types";
+import type { ApiComment } from "@/types";
 
 type XOR<T, U> = T | U extends object
   ? T extends object
@@ -16,7 +16,7 @@ export type ExclusiveCommentSource = XOR<
 >;
 
 export type CommentProps = ExclusiveCommentSource & {
-  comment: Comment;
+  comment: ApiComment;
   level?: number;
   className?: string;
   optionsButtonClassname?: string;

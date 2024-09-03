@@ -2,14 +2,14 @@ import { eq } from "drizzle-orm";
 
 import type { SharedLib } from "./lib.types";
 
-import { twoFactorConirmations } from "@/server/db/schema";
+import { twoFactorConirmation } from "@/server/db/schema";
 export const getTwoFactorConirmationByUserId = async ({
   userId,
   db,
 }: { userId: string } & SharedLib) => {
   try {
-    return await db.query.twoFactorConirmations.findFirst({
-      where: eq(twoFactorConirmations.userId, userId),
+    return await db.query.twoFactorConirmation.findFirst({
+      where: eq(twoFactorConirmation.userId, userId),
     });
   } catch {
     return null;

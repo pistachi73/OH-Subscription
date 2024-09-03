@@ -35,6 +35,7 @@ type AdminMultipleSelectProps = {
   showSelected?: boolean;
   disableSelected?: boolean;
   disabled?: boolean;
+  hideSelectedInDropdown?: boolean;
 };
 
 const getSelectedOptionsValues = (value?: string) => {
@@ -55,6 +56,7 @@ export const AdminMultipleSelect = ({
   disableSelected = false,
   showSelected = true,
   disabled = false,
+  hideSelectedInDropdown = false,
 }: AdminMultipleSelectProps) => {
   const mappedOptions = useMemo(
     () =>
@@ -123,6 +125,7 @@ export const AdminMultipleSelect = ({
               <CommandGroup>
                 {options.map(({ value, label, disabled }) => {
                   const selected = selectedOptionsValues?.includes(value);
+                  if (selected && hideSelectedInDropdown) return null;
                   return (
                     <CommandItem
                       key={value}
@@ -134,7 +137,6 @@ export const AdminMultipleSelect = ({
                       className="flex flex-row justify-between"
                     >
                       {label}
-
                       {selected && <Check size={14} />}
                     </CommandItem>
                   );
@@ -149,7 +151,7 @@ export const AdminMultipleSelect = ({
           {selectedOptionsValues?.map((value) => (
             <Badge
               key={value}
-              variant={"secondary"}
+              variant={"accent"}
               className="h-8 cursor-pointer text-sm hover:bg-destructive hover:text-destructive-foreground"
               onClick={() => onBadgeClick(value)}
             >

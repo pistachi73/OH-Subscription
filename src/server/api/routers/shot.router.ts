@@ -19,19 +19,20 @@ import {
   publicProcedure,
 } from "../trpc";
 
-import { toKebabCase } from "@/lib/utils/case-converters";
 import { isNumber } from "@/lib/utils/is-number";
-import { CategoriesOnShotsSchema, ShotSchema } from "@/schemas";
-import { categories, categoriesOnShots, shots } from "@/server/db/schema";
-import type { Category } from "@/server/db/schema.types";
-import { generateEmbedding } from "../lib/openai";
-import { withLimit } from "../query-utils/shared.query";
-import { isShotLikedByUserSubquery } from "../query-utils/shot.query";
+import * as schema from "@/server/db/schema";
 import {
+  type Category,
+  CategoryShotInsertSchema,
+  ShotInsertSchema,
+} from "@/types";
+import { generateEmbedding } from "../lib/openai";
+import {
+  isShotLikedByUserSubquery,
   shotCategoriesSelect,
   shotSelectCarousel,
   shotsWithCategories,
-} from "../query-utils/shots.query";
+} from "../query-utils/shot.query";
 
 export const shotRouter = createTRPCRouter({
   delete: adminProtectedProcedure
@@ -44,26 +45,25 @@ export const shotRouter = createTRPCRouter({
           message: "shot ID is required",
         });
       }
-      await db.delete(shots).where(eq(shots.id, id));
+      await db.delete(schema.shot).where(eq(schema.shot.id, id));
 
       return { success: true };
     }),
   create: adminProtectedProcedure
-    .input(ShotSchema)
+    .input(ShotInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { ...values } = input;
 
-      await db.insert(shots).values({
+      await db.insert(schema.shot).values({
         ...values,
-        slug: toKebabCase(values.title) as string,
       });
 
       return { success: true };
     }),
 
   update: adminProtectedProcedure
-    .input(ShotSchema)
+    .input(ShotInsertSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, ...values } = input;
@@ -76,19 +76,18 @@ export const shotRouter = createTRPCRouter({
       }
 
       await db
-        .update(shots)
+        .update(schema.shot)
         .set({
           ...values,
-          slug: toKebabCase(values.title) as string,
         })
-        .where(eq(shots.id, Number(id)));
+        .where(eq(schema.shot.id, Number(id)));
 
       return { success: true };
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const { db } = ctx;
-    const allshots = await db.select().from(shots);
+    const allshots = await db.select().from(schema.shot);
     return allshots;
   }),
 
@@ -97,44 +96,42 @@ export const shotRouter = createTRPCRouter({
     .query(async ({ input: id, ctx }) => {
       let shotQuery = ctx.db
         .select({
-          ...getTableColumns(shots),
+          ...getTableColumns(schema.shot),
           categories: sql<Category[]>`json_agg(DISTINCT
             jsonb_build_object(
-              'id', ${categories.id},
-              'name', ${categories.name})
+              'id', ${schema.category.id},
+              'name', ${schema.category.name})
            )`,
         })
-        .from(shots)
+        .from(schema.shot)
         .$dynamic();
 
       shotQuery = shotsWithCategories(shotQuery);
-      shotQuery = shotQuery.where(eq(shots.id, id));
+      shotQuery = shotQuery.where(eq(schema.shot.id, id));
 
       const shot = await shotQuery.execute();
 
       return shot[0];
     }),
 
-  getByIdAdmin: adminProtectedProcedure
+  _getById: adminProtectedProcedure
     .input(z.number())
     .query(async ({ input: id, ctx }) => {
-      const { slug, createdAt, updatedAt, ...rest } = getTableColumns(shots);
+      const { slug, createdAt, updatedAt, ...rest } = getTableColumns(
+        schema.shot,
+      );
 
       let shotQuery = ctx.db
         .select({
           ...rest,
-          categories: sql<Category[] | null>`nullif(json_agg(DISTINCT
-              nullif(jsonb_strip_nulls(jsonb_build_object(
-                'id', ${categories.id},
-                'name', ${categories.name}))::jsonb, '{}'::jsonb)
-        )::jsonb, '[null]'::jsonb)`,
+          categories: shotCategoriesSelect,
         })
-        .from(shots)
-        .where(eq(shots.id, id))
+        .from(schema.shot)
+        .where(eq(schema.shot.id, id))
         .$dynamic();
 
       shotQuery = shotsWithCategories(shotQuery);
-      shotQuery = shotQuery.groupBy(shots.id);
+      shotQuery = shotQuery.groupBy(schema.shot.id);
 
       const shotList = await shotQuery.execute();
 
@@ -144,14 +141,10 @@ export const shotRouter = createTRPCRouter({
   getAllAdmin: adminProtectedProcedure.query(async ({ ctx }) => {
     let shotQuery = ctx.db
       .select({
-        ...getTableColumns(shots),
-        categories: sql<Category[]>`json_agg(DISTINCT
-        jsonb_build_object(
-          'id', ${categories.id},
-          'name', ${categories.name})
-       )`,
+        ...getTableColumns(schema.shot),
+        categories: shotCategoriesSelect,
       })
-      .from(shots)
+      .from(schema.shot)
       .$dynamic();
 
     shotQuery = shotsWithCategories(shotQuery);
@@ -160,24 +153,18 @@ export const shotRouter = createTRPCRouter({
     return shotList;
   }),
 
-  getShotForCards: publicProcedure.query(async ({ ctx }) => {
-    let shotQuery = ctx.db
-      .select({
-        playbackId: shots.playbackId,
-        slug: shots.slug,
-        title: shots.title,
-        ...shotCategoriesSelect,
-      })
-      .from(shots)
-      .$dynamic();
-
-    shotQuery = shotsWithCategories(shotQuery);
-    shotQuery = shotQuery.groupBy(shots.id);
-    shotQuery = withLimit(shotQuery, 6);
-
-    const allShots = await shotQuery.execute();
-
-    return allShots;
+  getLandingPageShots: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.shot.findMany({
+      limit: 8,
+      columns: {
+        playbackId: true,
+        slug: true,
+        title: true,
+      },
+      with: {
+        categories: true,
+      },
+    });
   }),
 
   getInitialCarouselShot: publicProcedure
@@ -190,18 +177,18 @@ export const shotRouter = createTRPCRouter({
       let initialShotQuery = ctx.db
         .select({
           ...shotSelectCarousel,
-          ...shotCategoriesSelect,
+          categories: shotCategoriesSelect,
           isLikedByUser: isShotLikedByUserSubquery({
             db: ctx.db,
             userId: ctx.session?.user?.id,
           }),
         })
-        .from(shots)
-        .where(eq(shots.slug, input.initialShotSlug))
+        .from(schema.shot)
+        .where(eq(schema.shot.slug, input.initialShotSlug))
         .$dynamic();
 
       initialShotQuery = shotsWithCategories(initialShotQuery);
-      initialShotQuery = initialShotQuery.groupBy(shots.id);
+      initialShotQuery = initialShotQuery.groupBy(schema.shot.id);
       const initialShot = (await initialShotQuery.execute())[0];
 
       if (!initialShot) return null;
@@ -225,13 +212,13 @@ export const shotRouter = createTRPCRouter({
       const embedding = await generateEmbedding(initialShotTitle);
 
       const similarity = sql<number>`1 - (${cosineDistance(
-        shots.embedding,
+        schema.shot.embedding,
         embedding,
       )})`;
 
       const whereClauses = [
         gt(similarity, 0.5),
-        ne(shots.slug, input.initialShotSlug),
+        ne(schema.shot.slug, input.initialShotSlug),
       ];
 
       if (cursor) {
@@ -241,19 +228,19 @@ export const shotRouter = createTRPCRouter({
       let shotQuery = ctx.db
         .select({
           ...shotSelectCarousel,
-          ...shotCategoriesSelect,
+          categories: shotCategoriesSelect,
           similarity,
           isLikedByUser: isShotLikedByUserSubquery({
             db: ctx.db,
             userId: ctx.session?.user?.id,
           }),
         })
-        .from(shots)
+        .from(schema.shot)
         .where(and(...whereClauses))
         .$dynamic();
 
       shotQuery = shotsWithCategories(shotQuery);
-      shotQuery = shotQuery.groupBy(shots.id);
+      shotQuery = shotQuery.groupBy(schema.shot.id);
       shotQuery = shotQuery.orderBy((t) => desc(t.similarity));
       shotQuery = shotQuery.limit(input.pageSize ?? 3);
       const shotList = await shotQuery.execute();
@@ -264,10 +251,10 @@ export const shotRouter = createTRPCRouter({
 
       if (nextCursor) {
         const nextCursorCount = await ctx.db
-          .select({ count: count(shots.id) })
-          .from(shots)
+          .select({ count: count(schema.shot.id) })
+          .from(schema.shot)
           .where(and(...whereClauses, lt(similarity, nextCursor)))
-          .groupBy(shots.id)
+          .groupBy(schema.shot.id)
           .execute();
 
         if (!nextCursorCount[0]?.count) {
@@ -282,9 +269,9 @@ export const shotRouter = createTRPCRouter({
     }),
 
   addCategory: adminProtectedProcedure
-    .input(CategoriesOnShotsSchema)
+    .input(CategoryShotInsertSchema)
     .mutation(async ({ input: { shotId, categoryId }, ctx: { db } }) => {
-      await db.insert(categoriesOnShots).values({
+      await db.insert(schema.categoryShot).values({
         shotId,
         categoryId,
       });
@@ -293,14 +280,14 @@ export const shotRouter = createTRPCRouter({
     }),
 
   removeCategory: adminProtectedProcedure
-    .input(CategoriesOnShotsSchema)
+    .input(CategoryShotInsertSchema)
     .mutation(async ({ input: { shotId, categoryId }, ctx: { db } }) => {
       await db
-        .delete(categoriesOnShots)
+        .delete(schema.categoryShot)
         .where(
           and(
-            eq(categoriesOnShots.shotId, shotId),
-            eq(categoriesOnShots.categoryId, categoryId),
+            eq(schema.categoryShot.shotId, shotId),
+            eq(schema.categoryShot.categoryId, categoryId),
           ),
         );
 
@@ -323,14 +310,14 @@ export const shotRouter = createTRPCRouter({
 
       let shotQuery = db
         .select({
-          ...shotCategoriesSelect,
+          categories: shotCategoriesSelect,
         })
-        .from(shots)
-        .where(eq(shots.id, id))
+        .from(schema.shot)
+        .where(eq(schema.shot.id, id))
         .$dynamic();
 
       shotQuery = shotsWithCategories(shotQuery);
-      shotQuery = shotQuery.groupBy(shots.id);
+      shotQuery = shotQuery.groupBy(schema.shot.id);
       const shotList = await shotQuery.execute();
       const shot = shotList[0];
 
@@ -344,7 +331,10 @@ export const shotRouter = createTRPCRouter({
 
       const embedding = await generateEmbedding(embeddingInput);
 
-      await db.update(shots).set({ embedding }).where(eq(shots.id, id));
+      await db
+        .update(schema.shot)
+        .set({ embedding })
+        .where(eq(schema.shot.id, id));
 
       return { success: true };
     }),

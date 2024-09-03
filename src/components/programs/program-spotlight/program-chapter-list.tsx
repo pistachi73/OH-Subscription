@@ -1,4 +1,4 @@
-import type { ProgramSpotlight } from "@/server/db/schema.types";
+import type { ProgramSpotlight } from "@/types";
 import { Chapter } from "./program-chapter";
 import { RelatedPrograms } from "./program-related";
 

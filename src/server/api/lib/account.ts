@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import type { DB } from "@/server/db";
-import { accounts } from "@/server/db/schema";
+import { account } from "@/server/db/schema";
 
 export const getAccountByUserId = async ({
   db,
@@ -11,11 +11,9 @@ export const getAccountByUserId = async ({
   userId: string;
 }) => {
   try {
-    const account = await db.query.accounts.findFirst({
-      where: eq(accounts.userId, userId),
+    return await db.query.account.findFirst({
+      where: eq(account.userId, userId),
     });
-
-    return account;
   } catch {
     return null;
   }

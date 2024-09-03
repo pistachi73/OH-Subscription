@@ -3,45 +3,58 @@ import type { PgSelect } from "drizzle-orm/pg-core";
 
 import type { DB } from "@/server/db";
 import {
-  categories,
-  categoriesOnPrograms,
-  likes,
-  programs,
-  teachers,
-  teachersOnPrograms,
-  userProgresses,
-  videos,
-  videosOnPrograms,
+  category,
+  categoryProgram,
+  like,
+  program,
+  teacher,
+  teacherProgram,
+  userProgress,
+  video,
+  videoProgram,
 } from "@/server/db/schema";
-import type {
-  Category,
-  Teacher,
-  UserProgress,
-  Video,
-} from "@/server/db/schema.types";
+import type { Category, Teacher, UserProgress, Video } from "@/types";
+
+export const sharedProgramSelect = {
+  id: program.id,
+  title: program.title,
+  description: program.description,
+  thumbnail: program.thumbnail,
+  level: program.level,
+  slug: program.slug,
+  totalChapters: program.totalChapters,
+  updatedAt: program.updatedAt,
+};
 
 export const programCategoriesSelect = sql<Category[] | null>`json_agg(DISTINCT
   jsonb_build_object(
-    'id', ${categories.id},
-    'name', ${categories.name})
-  ) FILTER (WHERE ${categories.id} IS NOT NULL)`;
+    'id', ${category.id},
+    'name', ${category.name},
+    'slug', ${category.slug})
+  ) FILTER (WHERE ${category.id} IS NOT NULL)`;
 
 export const programTeachersSelect = sql<Omit<Teacher, "bio">[] | null>`json_agg(DISTINCT
   jsonb_build_object(
-    'id', ${teachers.id},
-    'image', ${teachers.image},
-    'name', ${teachers.name})
-  ) FILTER (WHERE ${teachers.id} IS NOT NULL)`;
+    'id', ${teacher.id},
+    'image', ${teacher.image},
+    'name', ${teacher.name})
+  ) FILTER (WHERE ${teacher.id} IS NOT NULL)`;
 
 type UserProgressSelect = Pick<
   UserProgress,
-  "progress" | "completed" | "watchedDuration"
+  "progress" | "completed" | "watchedDuration" | "lastWatchedAt"
 > | null;
 
-type ChapterSelect =
+export type ChapterSelect =
   | (Pick<
       Video,
-      "updatedAt" | "slug" | "duration" | "description" | "thumbnail" | "title"
+      | "id"
+      | "updatedAt"
+      | "slug"
+      | "duration"
+      | "description"
+      | "thumbnail"
+      | "title"
     > & {
       chapterNumber: number;
       isFree: boolean;
@@ -52,25 +65,27 @@ type ChapterSelect =
 export const programChaptersSelect = (withUserProgress = false) => {
   const userProgressFields = withUserProgress
     ? sql`,'userProgress',
-        case when ${userProgresses.progress} is not null then (jsonb_build_object(
-          'watchedDuration', ${userProgresses.watchedDuration},
-          'progress', ${userProgresses.progress},
-          'completed', ${userProgresses.completed}
+        case when ${userProgress.progress} is not null then (jsonb_build_object(
+          'lastWatchedAt', ${userProgress.lastWatchedAt},
+          'watchedDuration', ${userProgress.watchedDuration},
+          'progress', ${userProgress.progress},
+          'completed', ${userProgress.completed}
         )) else null end`
     : sql``;
 
   return sql<ChapterSelect>`json_agg(DISTINCT
       jsonb_build_object(
-        'updatedAt', ${videos.updatedAt},
-        'slug', ${videos.slug},
-        'duration', ${videos.duration},
-        'description', ${videos.description},
-        'thumbnail', ${videos.thumbnail},
-        'title', ${videos.title},
-        'chapterNumber', ${videosOnPrograms.chapterNumber},
-        'isFree', ${videosOnPrograms.isFree}
+        'id', ${video.id},
+        'slug', ${video.slug},
+        'updatedAt', ${video.updatedAt},
+        'duration', ${video.duration},
+        'description', ${video.description},
+        'thumbnail', ${video.thumbnail},
+        'title', ${video.title},
+        'chapterNumber', ${videoProgram.chapterNumber},
+        'isFree', ${videoProgram.isFree}
         ${userProgressFields})
-      ) FILTER (WHERE ${videos.id} IS NOT NULL)`;
+      ) FILTER (WHERE ${video.id} IS NOT NULL)`;
 };
 
 export const isProgramLikedByUserSubquery = ({
@@ -80,9 +95,9 @@ export const isProgramLikedByUserSubquery = ({
   if (!userId) return sql<boolean>`false`.as("isLikedByUser");
   return sql<boolean>`exists(${db
     .select({ n: sql`1` })
-    .from(likes)
+    .from(like)
     .where(
-      and(eq(likes.programId, programs.id), eq(likes.userId, userId ?? "")),
+      and(eq(like.programId, program.id), eq(like.userId, userId ?? "")),
     )})`.as("isLikedByUser");
 };
 
@@ -93,91 +108,87 @@ export const lastWatchedChapterSubquery = ({
   if (!userId) return sql<null>`null`.as("lastWatchedChapter");
   return sql<{
     chapterNumber: number;
-    chapterSlug: string;
+    slug: string;
     watchedDuration: number;
     progress: number;
   } | null>`${db
     .select({
       lastWatchedChater: sql`
       jsonb_build_object(
-        'chapterNumber', ${videosOnPrograms.chapterNumber},
-        'chapterSlug', ${videos.slug},
-        'watchedDuration', ${userProgresses.watchedDuration},
-        'progress', ${userProgresses.progress}
+        'chapterNumber', ${videoProgram.chapterNumber},
+        'slug', ${video.slug},
+        'watchedDuration', ${userProgress.watchedDuration},
+        'progress', ${userProgress.progress}
       )
      `,
     })
-    .from(userProgresses)
+    .from(userProgress)
     .leftJoin(
-      videosOnPrograms,
+      videoProgram,
       and(
-        eq(userProgresses.videoId, videosOnPrograms.videoId),
-        eq(userProgresses.programId, programs.id),
+        eq(userProgress.videoId, videoProgram.videoId),
+        eq(userProgress.programId, program.id),
       ),
     )
-    .leftJoin(videos, eq(videos.id, videosOnPrograms.videoId))
+    .leftJoin(video, eq(video.id, videoProgram.videoId))
     .where(
       and(
-        eq(userProgresses.userId, userId ?? ""),
-        eq(videos.id, videosOnPrograms.videoId),
+        eq(userProgress.userId, userId ?? ""),
+        eq(video.id, videoProgram.videoId),
       ),
     )
-    .orderBy(desc(userProgresses.lastWatchedAt))
+    .orderBy(desc(userProgress.lastWatchedAt))
     .limit(1)}`.as("lastChapterWatched");
 };
 
 export const firstChapterSubquery = ({ db }: { db: DB }) => {
   return sql<{
     chapterNumber: number;
-    chapterSlug: string;
-    watchedDuration: number;
+    slug: string;
   } | null>`${db
     .select({
       firstChapter: sql`
       jsonb_build_object(
-        'chapterNumber', ${videosOnPrograms.chapterNumber},
-        'chapterSlug', ${videos.slug}
+        'chapterNumber', ${videoProgram.chapterNumber},
+        'slug', ${video.slug}        
       )
      `,
     })
-    .from(videosOnPrograms)
-    .leftJoin(videos, eq(videos.id, videosOnPrograms.videoId))
-    .where(eq(videos.id, videosOnPrograms.videoId))
-    .orderBy(asc(videosOnPrograms.chapterNumber))
+    .from(videoProgram)
+    .leftJoin(video, eq(video.id, videoProgram.videoId))
+    .where(eq(video.id, videoProgram.videoId))
+    .orderBy(asc(videoProgram.chapterNumber))
     .limit(1)}`.as("firstChapter");
 };
 
 export const programsWithCategories = <T extends PgSelect>(qb: T) => {
   return qb
-    .leftJoin(
-      categoriesOnPrograms,
-      eq(programs.id, categoriesOnPrograms.programId),
-    )
-    .leftJoin(categories, eq(categories.id, categoriesOnPrograms.categoryId));
+    .leftJoin(categoryProgram, eq(program.id, categoryProgram.programId))
+    .leftJoin(category, eq(category.id, categoryProgram.categoryId));
 };
 
 export const programsWithTeachers = <T extends PgSelect>(qb: T) => {
   return qb
-    .leftJoin(teachersOnPrograms, eq(programs.id, teachersOnPrograms.programId))
-    .leftJoin(teachers, eq(teachers.id, teachersOnPrograms.teacherId));
+    .leftJoin(teacherProgram, eq(program.id, teacherProgram.programId))
+    .leftJoin(teacher, eq(teacher.id, teacherProgram.teacherId));
 };
 
 export const programsWithChapters = <T extends PgSelect>(
   qb: T,
   userId?: string,
 ) => {
-  qb.leftJoin(
-    videosOnPrograms,
-    eq(programs.id, videosOnPrograms.programId),
-  ).leftJoin(videos, eq(videos.id, videosOnPrograms.videoId));
+  qb.leftJoin(videoProgram, eq(program.id, videoProgram.programId)).leftJoin(
+    video,
+    eq(video.id, videoProgram.videoId),
+  );
 
   if (userId) {
     qb.leftJoin(
-      userProgresses,
+      userProgress,
       and(
-        eq(programs.id, userProgresses.programId),
-        eq(userProgresses.videoId, videos.id),
-        eq(userProgresses.userId, userId),
+        eq(program.id, userProgress.programId),
+        eq(userProgress.videoId, video.id),
+        eq(userProgress.userId, userId),
       ),
     );
   }
@@ -189,10 +200,10 @@ export const filterProgramsByTeacher = <T extends PgSelect>(
   teacherIds: number | number[],
 ) => {
   if (Array.isArray(teacherIds)) {
-    return qb.where(inArray(teachers.id, teacherIds));
+    return qb.where(inArray(teacher.id, teacherIds));
   }
 
-  return qb.where(eq(teachers.id, teacherIds));
+  return qb.where(eq(teacher.id, teacherIds));
 };
 
 export const filterProgramsByCategoryId = <T extends PgSelect>(
@@ -200,10 +211,10 @@ export const filterProgramsByCategoryId = <T extends PgSelect>(
   categoryIds: number | number[],
 ) => {
   if (Array.isArray(categoryIds)) {
-    return qb.where(inArray(categories.id, categoryIds));
+    return qb.where(inArray(category.id, categoryIds));
   }
 
-  return qb.where(eq(categories.id, categoryIds));
+  return qb.where(eq(category.id, categoryIds));
 };
 
 export const filterProgramsByCategoryName = <T extends PgSelect>(
@@ -212,12 +223,10 @@ export const filterProgramsByCategoryName = <T extends PgSelect>(
 ) => {
   if (Array.isArray(categoryNames)) {
     const lowerCategoryNames = categoryNames.map((name) => name.toLowerCase());
-    return qb.where(
-      inArray(sql`lower(${categories.name})`, lowerCategoryNames),
-    );
+    return qb.where(inArray(sql`lower(${category.name})`, lowerCategoryNames));
   }
 
   return qb.where(
-    eq(sql`lower(${categories.name})`, sql`lower(${categoryNames})`),
+    eq(sql`lower(${category.name})`, sql`lower(${categoryNames})`),
   );
 };

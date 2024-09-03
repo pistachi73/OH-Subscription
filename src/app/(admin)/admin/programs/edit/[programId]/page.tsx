@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 
 import { EditProgram } from "../../_components/edit-program";
 
-import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getSelectOptions } from "@/lib/formatters/get-select-options";
 import { api } from "@/trpc/server";
 
 type EditProgramPageProps = {
@@ -23,29 +23,34 @@ type EditProgramPageProps = {
 const EditProgramPage = async ({
   params: { programId },
 }: EditProgramPageProps) => {
-  const program = await api.program.getById.query(Number(programId));
+  const [program, teachers, videos, categories] = await Promise.all([
+    api.program.getById.query(Number(programId)),
+    api.teacher.getAll.query(),
+    api.video.getAll.query(),
+    api.category.getAll.query(),
+  ]);
 
   if (!program) {
     redirect("/admin/programs");
   }
 
-  const teachers = await api.teacher.getAll.query();
-  const videos = await api.video.getAll.query();
-  const categories = await api.category.getAll.query();
+  const teachersOptions = getSelectOptions({
+    objectArr: teachers,
+    valueKey: "id",
+    labelKey: "name",
+  });
 
-  const teachersOptions: Option[] = teachers.map((teacher) => ({
-    value: teacher.id.toString(),
-    label: teacher.name,
-  }));
-  const videoOptions: Option[] = videos.map((video) => ({
-    value: video.id.toString(),
-    label: video.title,
-  }));
+  const videoOptions = getSelectOptions({
+    objectArr: videos,
+    valueKey: "id",
+    labelKey: "title",
+  });
 
-  const categoryOptions: Option[] = categories.map((category) => ({
-    value: category.id.toString(),
-    label: category.name,
-  }));
+  const categoryOptions = getSelectOptions({
+    objectArr: categories,
+    valueKey: "id",
+    labelKey: "name",
+  });
 
   return (
     <>
