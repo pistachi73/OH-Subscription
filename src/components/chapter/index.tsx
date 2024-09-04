@@ -19,7 +19,7 @@ export const Chapter = async ({ programSlug, chapterSlug }: ChapterProps) => {
 
   const isSubscribed = await isUserSubscribed();
 
-  const program = await api.program.getBySlug.query({
+  const program = await api.program.getProgramSpotlight.query({
     slug: programSlug,
   });
 

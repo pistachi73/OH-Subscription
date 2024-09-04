@@ -47,146 +47,7 @@ import { sortChaptersByLastWatched } from "../formatters/format-program";
 import { generateEmbedding } from "../lib/openai";
 
 export const programRouter = createTRPCRouter({
-  delete: adminProtectedProcedure
-    .input(z.number())
-    .mutation(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Program ID is required",
-        });
-      }
-
-      const program = await db
-        .select()
-        .from(schema.program)
-        .where(eq(schema.program.id, id));
-      const thumbnail = program?.[0]?.thumbnail;
-
-      if (thumbnail) {
-        await deleteFile({ fileName: thumbnail });
-      }
-
-      await db.delete(schema.program).where(eq(schema.program.id, id));
-
-      return { success: true };
-    }),
-  create: adminProtectedProcedure
-    .input(ProgramInsertSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
-      const { thumbnail, ...values } = input;
-
-      await db.insert(schema.program).values({
-        ...values,
-        thumbnail: typeof thumbnail === "string" ? thumbnail : null,
-      });
-
-      return { success: true };
-    }),
-
-  generateEmbedding: adminProtectedProcedure
-    .input(
-      z.object({ description: z.string(), title: z.string(), id: z.number() }),
-    )
-    .mutation(async ({ input: { description, title, id }, ctx }) => {
-      const { db } = ctx;
-
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Program ID is required",
-        });
-      }
-
-      let programQuery = db
-        .select({
-          categories: programCategoriesSelect,
-          teachers: programTeachersSelect,
-        })
-        .from(schema.program)
-        .where(eq(schema.program.id, id))
-        .$dynamic();
-
-      programQuery = programsWithTeachers(programQuery);
-      programQuery = programsWithCategories(programQuery);
-      programQuery = programQuery.groupBy(schema.program.id);
-      const programList = await programQuery.execute();
-      const program = programList[0];
-
-      const teachersEmbedding = program?.teachers
-        ?.map(({ name }) => name)
-        .join(",");
-
-      const categoriesEmbedding = program?.categories
-        ?.map(({ name }) => name)
-        .join(",");
-
-      let embeddingInput = `${title}|${description}`;
-
-      if (teachersEmbedding) embeddingInput += `|${teachersEmbedding}`;
-      if (categoriesEmbedding) embeddingInput += `|${categoriesEmbedding}`;
-
-      const embedding = await generateEmbedding(embeddingInput);
-
-      await db
-        .update(schema.program)
-        .set({ embedding })
-        .where(eq(schema.program.id, id));
-
-      return { success: true };
-    }),
-
-  update: adminProtectedProcedure
-    .input(ProgramInsertSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
-      const { id, thumbnail, ...values } = input;
-
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Program ID is required",
-        });
-      }
-
-      const program = await db
-        .select()
-        .from(schema.program)
-        .where(eq(schema.program.id, Number(id)));
-
-      let currentProgramThumbnail = program?.[0]?.thumbnail;
-
-      if (typeof thumbnail === "string") {
-        currentProgramThumbnail = thumbnail;
-      }
-
-      if (!thumbnail && currentProgramThumbnail) {
-        await deleteFile({ fileName: currentProgramThumbnail });
-        currentProgramThumbnail = null;
-      }
-
-      await db
-        .update(schema.program)
-        .set({
-          ...values,
-          thumbnail: thumbnail ? currentProgramThumbnail : null,
-        })
-        .where(eq(schema.program.id, Number(id)));
-
-      return { success: true, id: Number(id) };
-    }),
-
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const { db } = ctx;
-
-    const allPrograms = await db.query.program.findMany();
-
-    return allPrograms;
-  }),
-
-  getProgramsForCards: publicProcedure
+  getProgramCards: publicProcedure
     .input(
       z
         .object({
@@ -316,42 +177,7 @@ export const programRouter = createTRPCRouter({
       return res;
     }),
 
-  getById: publicProcedure
-    .input(z.number())
-    .query(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      let programQuery = db
-        .select({
-          ...sharedProgramSelect,
-          published: schema.program.published,
-          duration: schema.program.duration,
-          teachers: programTeachersSelect,
-          categories: programCategoriesSelect,
-          chapters: programChaptersSelect(),
-        })
-        .from(schema.program)
-        .where(eq(schema.program.id, id))
-        .$dynamic();
-
-      programQuery = programsWithTeachers(programQuery);
-      programQuery = programsWithCategories(programQuery);
-      programQuery = programsWithChapters(programQuery);
-      programQuery = programQuery.groupBy(schema.program.id);
-
-      const res = await programQuery.execute();
-      const program = res[0];
-      if (!program) return null;
-
-      const { chapters, ...rest } = program;
-      const sortedByChapterNumber = sortChaptersByChapterNumber(chapters);
-
-      return {
-        ...rest,
-        chapters: sortedByChapterNumber,
-      };
-    }),
-
-  getBySlug: publicProcedure
+  getProgramSpotlight: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input: { slug }, ctx: { db, session } }) => {
       const user = session?.user;
@@ -393,53 +219,185 @@ export const programRouter = createTRPCRouter({
       };
     }),
 
-  getLandingPagePrograms: publicProcedure.query(
-    async ({ ctx: { db, session } }) => {
-      let programsForCardsQuery = db
+  _getAll: adminProtectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.query.program.findMany();
+  }),
+
+  _getById: adminProtectedProcedure
+    .input(z.number())
+    .query(async ({ input: id, ctx }) => {
+      const { db } = ctx;
+      let programQuery = db
         .select({
           ...sharedProgramSelect,
+          published: schema.program.published,
+          duration: schema.program.duration,
           teachers: programTeachersSelect,
           categories: programCategoriesSelect,
-          isLikedByUser: isProgramLikedByUserSubquery({
-            db,
-            userId: session?.user?.id,
-          }),
-          lastWatchedChapter: lastWatchedChapterSubquery({
-            db,
-            userId: session?.user?.id,
-          }),
-          firstChapter: firstChapterSubquery({
-            db,
-          }),
+          chapters: programChaptersSelect(),
         })
         .from(schema.program)
+        .where(eq(schema.program.id, id))
         .$dynamic();
 
-      programsForCardsQuery = programsWithTeachers(programsForCardsQuery);
-      programsForCardsQuery = programsWithCategories(programsForCardsQuery);
-      programsForCardsQuery = programsForCardsQuery.groupBy(schema.program.id);
+      programQuery = programsWithTeachers(programQuery);
+      programQuery = programsWithCategories(programQuery);
+      programQuery = programsWithChapters(programQuery);
+      programQuery = programQuery.groupBy(schema.program.id);
 
-      const programs = await programsForCardsQuery.execute();
+      const res = await programQuery.execute();
+      const program = res[0];
+      if (!program) return null;
 
-      const heroPrograms = [...programs].slice(0, 5);
-
-      const vocabularyPrograms = programs.filter((p) =>
-        p.categories?.some((c) => c.slug === "vocabulary"),
-      );
-
-      const grammarPrograms = programs.filter((p) =>
-        p.categories?.some((c) => c.slug === "grammar"),
-      );
+      const { chapters, ...rest } = program;
+      const sortedByChapterNumber = sortChaptersByChapterNumber(chapters);
 
       return {
-        heroPrograms,
-        vocabularyPrograms,
-        grammarPrograms,
+        ...rest,
+        chapters: sortedByChapterNumber,
       };
-    },
-  ),
+    }),
 
-  addTeacher: adminProtectedProcedure
+  _update: adminProtectedProcedure
+    .input(ProgramInsertSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { db } = ctx;
+      const { id, thumbnail, ...values } = input;
+
+      if (!id || !isNumber(id)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Program ID is required",
+        });
+      }
+
+      const program = await db
+        .select()
+        .from(schema.program)
+        .where(eq(schema.program.id, Number(id)));
+
+      let currentProgramThumbnail = program?.[0]?.thumbnail;
+
+      if (typeof thumbnail === "string") {
+        currentProgramThumbnail = thumbnail;
+      }
+
+      if (!thumbnail && currentProgramThumbnail) {
+        await deleteFile({ fileName: currentProgramThumbnail });
+        currentProgramThumbnail = null;
+      }
+
+      await db
+        .update(schema.program)
+        .set({
+          ...values,
+          thumbnail: thumbnail ? currentProgramThumbnail : null,
+        })
+        .where(eq(schema.program.id, Number(id)));
+
+      return { success: true, id: Number(id) };
+    }),
+
+  _create: adminProtectedProcedure
+    .input(ProgramInsertSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { db } = ctx;
+      const { thumbnail, ...values } = input;
+
+      await db.insert(schema.program).values({
+        ...values,
+        thumbnail: typeof thumbnail === "string" ? thumbnail : null,
+      });
+
+      return { success: true };
+    }),
+
+  _delete: adminProtectedProcedure
+    .input(z.number())
+    .mutation(async ({ input: id, ctx }) => {
+      const { db } = ctx;
+      if (!id || !isNumber(id)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Program ID is required",
+        });
+      }
+
+      const program = await db
+        .select()
+        .from(schema.program)
+        .where(eq(schema.program.id, id));
+      const thumbnail = program?.[0]?.thumbnail;
+
+      if (thumbnail) {
+        await deleteFile({ fileName: thumbnail });
+      }
+
+      await db.delete(schema.program).where(eq(schema.program.id, id));
+
+      return { success: true };
+    }),
+
+  _generateEmbedding: adminProtectedProcedure
+    .input(
+      z.object({ description: z.string(), title: z.string(), id: z.number() }),
+    )
+    .mutation(async ({ input: { description, title, id }, ctx }) => {
+      const { db } = ctx;
+
+      if (!id || !isNumber(id)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Program ID is required",
+        });
+      }
+
+      let programQuery = db
+        .select({
+          categories: programCategoriesSelect,
+          teachers: programTeachersSelect,
+        })
+        .from(schema.program)
+        .where(eq(schema.program.id, id))
+        .$dynamic();
+
+      programQuery = programsWithTeachers(programQuery);
+      programQuery = programsWithCategories(programQuery);
+      programQuery = programQuery.groupBy(schema.program.id);
+
+      const [program] = await programQuery.execute();
+
+      if (!program) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Program not found!",
+        });
+      }
+
+      const teachersEmbedding = program?.teachers
+        ?.map(({ name }) => name)
+        .join(",");
+
+      const categoriesEmbedding = program?.categories
+        ?.map(({ name }) => name)
+        .join(",");
+
+      let embeddingInput = `${title}|${description}`;
+
+      if (teachersEmbedding) embeddingInput += `|${teachersEmbedding}`;
+      if (categoriesEmbedding) embeddingInput += `|${categoriesEmbedding}`;
+
+      const embedding = await generateEmbedding(embeddingInput);
+
+      await db
+        .update(schema.program)
+        .set({ embedding })
+        .where(eq(schema.program.id, id));
+
+      return { success: true };
+    }),
+
+  _addTeacher: adminProtectedProcedure
     .input(TeacherProgramInsertSchema)
     .mutation(async ({ input: { programId, teacherId }, ctx: { db } }) => {
       await db.insert(schema.teacherProgram).values({
@@ -450,7 +408,7 @@ export const programRouter = createTRPCRouter({
       return true;
     }),
 
-  removeTeacher: adminProtectedProcedure
+  _removeTeacher: adminProtectedProcedure
     .input(TeacherProgramInsertSchema)
     .mutation(async ({ input: { programId, teacherId }, ctx: { db } }) => {
       await db
@@ -465,7 +423,7 @@ export const programRouter = createTRPCRouter({
       return true;
     }),
 
-  addCategory: adminProtectedProcedure
+  _addCategory: adminProtectedProcedure
     .input(CategoryProgramInsertSchema)
     .mutation(async ({ input: { programId, categoryId }, ctx: { db } }) => {
       await db.insert(schema.categoryProgram).values({
@@ -476,7 +434,7 @@ export const programRouter = createTRPCRouter({
       return true;
     }),
 
-  removeCategory: adminProtectedProcedure
+  _removeCategory: adminProtectedProcedure
     .input(CategoryProgramInsertSchema)
     .mutation(async ({ input: { programId, categoryId }, ctx: { db } }) => {
       await db
@@ -491,7 +449,7 @@ export const programRouter = createTRPCRouter({
       return true;
     }),
 
-  setChapter: adminProtectedProcedure
+  _setChapter: adminProtectedProcedure
     .input(VideoProgramInsertSchema)
     .mutation(
       async ({
@@ -521,7 +479,7 @@ export const programRouter = createTRPCRouter({
       },
     ),
 
-  removeChapter: adminProtectedProcedure
+  _removeChapter: adminProtectedProcedure
     .input(VideoProgramInsertSchema)
     .mutation(async ({ input: { videoId, programId }, ctx: { db } }) => {
       await db

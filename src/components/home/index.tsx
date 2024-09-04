@@ -5,7 +5,7 @@ import { HeroCarousel } from "./hero-carousel";
 
 export const Home = async () => {
   const [programs, shots, teachers] = await Promise.all([
-    api.program.getProgramsForCards.query(),
+    api.program.getProgramCards.query(),
     api.shot.getLandingPageShots.query(),
     api.teacher.getLandingPageTeachers.query(),
   ]);

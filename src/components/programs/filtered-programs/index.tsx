@@ -15,7 +15,7 @@ export const FilteredPrograms = async ({
   searchParams?: { [key: string]: string | undefined };
 }) => {
   const [initialPrograms, categories, teachers] = await Promise.all([
-    api.program.getProgramsForCards.query({
+    api.program.getProgramCards.query({
       limit: 20,
       ...((searchParams?.categories || initialCategory) && {
         categorySlugs: [

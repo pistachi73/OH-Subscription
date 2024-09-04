@@ -24,8 +24,8 @@ export const TeacherSelect = ({
   const { programId } = useParams<{ programId: string }>();
   const [teachers, setTeachers] = useState(initialTeachers);
 
-  const { mutate: addTeacher } = api.program.addTeacher.useMutation();
-  const { mutate: removeTeacher } = api.program.removeTeacher.useMutation();
+  const { mutate: addTeacher } = api.program._addTeacher.useMutation();
+  const { mutate: removeTeacher } = api.program._removeTeacher.useMutation();
 
   const handleAddTeacher = (teacherId: number) => {
     if (!isNumber(programId)) {

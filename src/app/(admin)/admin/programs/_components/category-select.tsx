@@ -24,8 +24,8 @@ export const CategorySelect = ({
   const { programId } = useParams<{ programId: string }>();
   const [categories, setCategories] = useState(initialCategories);
 
-  const { mutate: addCategory } = api.program.addCategory.useMutation();
-  const { mutate: removeCategory } = api.program.removeCategory.useMutation();
+  const { mutate: addCategory } = api.program._addCategory.useMutation();
+  const { mutate: removeCategory } = api.program._removeCategory.useMutation();
 
   const handleAddCategory = (categoryId: number) => {
     if (!isNumber(programId)) {

@@ -24,7 +24,7 @@ const EditProgramPage = async ({
   params: { programId },
 }: EditProgramPageProps) => {
   const [program, teachers, videos, categories] = await Promise.all([
-    api.program.getById.query(Number(programId)),
+    api.program._getById.query(Number(programId)),
     api.teacher.getAll.query(),
     api.video.getAll.query(),
     api.category.getAll.query(),

@@ -7,7 +7,7 @@ type ChapterRelatedProps = {
 };
 
 export const ChapterRelated = ({ program }: ChapterRelatedProps) => {
-  const { data, isLoading } = api.program.getProgramsForCards.useQuery(
+  const { data, isLoading } = api.program.getProgramCards.useQuery(
     {
       searchQuery: program.title,
       limit: 4,

@@ -49,9 +49,9 @@ export const ChapterTableRow = ({
   const { programId } = useParams<{ programId: string }>();
 
   const { mutateAsync: setChapter, isLoading: isUpdating } =
-    api.program.setChapter.useMutation({});
+    api.program._setChapter.useMutation({});
   const { mutateAsync: removeChapter, isLoading: isDeleting } =
-    api.program.removeChapter.useMutation();
+    api.program._removeChapter.useMutation();
 
   const handleUpdateChapter = () => {
     if (!isNumber(programId)) {
@@ -165,7 +165,7 @@ export const ChapterSelect = ({
     initialChapterDetails ?? {},
   );
 
-  const { mutate: setChapter } = api.program.setChapter.useMutation({
+  const { mutate: setChapter } = api.program._setChapter.useMutation({
     onError: () => {
       setChapters((prev) => {
         return prev.split(",").splice(-1).join(",");

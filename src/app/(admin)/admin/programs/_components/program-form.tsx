@@ -73,7 +73,7 @@ export const ProgramForm = ({
 }: ProgramFormProps) => {
   const pathname = usePathname();
 
-  const generateEmbedding = api.program.generateEmbedding.useMutation({
+  const generateEmbedding = api.program._generateEmbedding.useMutation({
     onSuccess: () => {
       toast.success("Embedding generated successfully");
     },

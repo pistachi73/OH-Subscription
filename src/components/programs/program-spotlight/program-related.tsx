@@ -8,7 +8,7 @@ type RelatedProgramsProps = {
 };
 
 export const RelatedPrograms = ({ program }: RelatedProgramsProps) => {
-  const { data, isLoading } = api.program.getProgramsForCards.useQuery({
+  const { data, isLoading } = api.program.getProgramCards.useQuery({
     searchQuery: program.title,
     limit: 7,
   });

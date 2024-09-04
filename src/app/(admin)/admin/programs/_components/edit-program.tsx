@@ -21,7 +21,7 @@ import type { RouterOutputs } from "@/trpc/shared";
 import { ProgramInsertSchema, type Video } from "@/types";
 
 type EditProgramProps = {
-  program: NonNullable<RouterOutputs["program"]["getById"]>;
+  program: NonNullable<RouterOutputs["program"]["_getById"]>;
   teacherOptions: Option[];
   videoOptions: Option[];
   categoryOptions: Option[];
@@ -57,10 +57,10 @@ export const EditProgram = ({
 
   const [isSaving, startTransition] = useTransition();
 
-  const { mutateAsync: saveVideo } = api.program.update.useMutation({
+  const { mutateAsync: saveVideo } = api.program._update.useMutation({
     onSuccess: ({ id }) => {
-      trpcUtils.program.getById.invalidate(id);
-      trpcUtils.program.getAll.invalidate();
+      trpcUtils.program._getById.invalidate(id);
+      trpcUtils.program._getAll.invalidate();
       toast.success("Program updated successfully");
     },
     onError: (error) => {

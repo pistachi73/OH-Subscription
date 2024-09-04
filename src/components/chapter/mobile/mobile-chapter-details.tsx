@@ -11,7 +11,7 @@ export const MobileChapterDetails = () => {
   const isLandscape = useMediaQuery("(orientation: landscape)");
   const { activeTab, program } = useChapterContext();
 
-  const { data, isLoading } = api.program.getProgramsForCards.useQuery(
+  const { data, isLoading } = api.program.getProgramCards.useQuery(
     {
       searchQuery: program.title,
       limit: 4,

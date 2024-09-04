@@ -6,10 +6,10 @@ import { useSearchParams } from "next/navigation";
 
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import { api } from "@/trpc/react";
-import type { RouterOutputs } from "@/trpc/shared";
+import type { ProgramCard } from "@/types";
 
 const FilteredProgramsContext = React.createContext<{
-  filteredPrograms: RouterOutputs["program"]["getProgramsForCards"];
+  filteredPrograms: ProgramCard[];
   isFiltering: boolean;
   categoryOptions: Option[];
   teacherOptions: Option[];
@@ -31,7 +31,7 @@ export const FilteredProgramsProvider = ({
   levelOptions,
 }: {
   children: React.ReactNode;
-  initialPrograms: RouterOutputs["program"]["getProgramsForCards"];
+  initialPrograms: ProgramCard[];
   categoryOptions: Option[];
   teacherOptions: Option[];
   levelOptions: Option[];
@@ -44,7 +44,7 @@ export const FilteredProgramsProvider = ({
   const search = params.get("search");
 
   const { data: filteredPrograms, isFetching: isFiltering } =
-    api.program.getProgramsForCards.useQuery(
+    api.program.getProgramCards.useQuery(
       {
         ...(teachers && { teacherIds: teachers.split(",").map(Number) }),
         ...((categories || initialCategory) && {

@@ -13,7 +13,7 @@ import {
 import { api } from "@/trpc/server";
 
 const SeriesAdminPage = async () => {
-  const programs = await api.program.getAll.query();
+  const programs = await api.program._getAll.query();
   return (
     <>
       <Breadcrumb className="hidden md:flex">

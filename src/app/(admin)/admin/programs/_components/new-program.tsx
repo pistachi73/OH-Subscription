@@ -32,7 +32,7 @@ export const NewProgram = ({ teacherOptions }: NewProgramProps) => {
 
   const router = useRouter();
 
-  const { mutateAsync, isLoading: isSaving } = api.program.create.useMutation({
+  const { mutateAsync, isLoading: isSaving } = api.program._create.useMutation({
     onSuccess: () => {
       router.push("/admin/programs");
     },

@@ -14,7 +14,7 @@ export const metadata = {
 };
 
 const ProgramsPage = async ({ params }: ProgramsPageProps) => {
-  const program = await api.program.getBySlug.query({
+  const program = await api.program.getProgramSpotlight.query({
     slug: params.programSlug,
   });
 
