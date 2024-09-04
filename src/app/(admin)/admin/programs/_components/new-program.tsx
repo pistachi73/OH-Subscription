@@ -1,7 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import type { z } from "zod";
 
 import { useRouter } from "next/navigation";
@@ -35,9 +34,6 @@ export const NewProgram = ({ teacherOptions }: NewProgramProps) => {
   const { mutateAsync, isLoading: isSaving } = api.program._create.useMutation({
     onSuccess: () => {
       router.push("/admin/programs");
-    },
-    onError: (error) => {
-      toast.error(error.message);
     },
   });
 

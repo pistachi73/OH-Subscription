@@ -38,8 +38,10 @@ import { isNumber } from "@/lib/utils/is-number";
 import * as schema from "@/server/db/schema";
 import {
   CategoryProgramInsertSchema,
+  ProgramDeleteSchema,
   ProgramInsertSchema,
   type ProgramLevel,
+  ProgramUpdateSchema,
   TeacherProgramInsertSchema,
   VideoProgramInsertSchema,
 } from "@/types";
@@ -259,17 +261,10 @@ export const programRouter = createTRPCRouter({
     }),
 
   _update: adminProtectedProcedure
-    .input(ProgramInsertSchema)
+    .input(ProgramUpdateSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, thumbnail, ...values } = input;
-
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Program ID is required",
-        });
-      }
 
       const program = await db
         .select()
@@ -287,15 +282,23 @@ export const programRouter = createTRPCRouter({
         currentProgramThumbnail = null;
       }
 
-      await db
+      const [updatedProgram] = await db
         .update(schema.program)
         .set({
           ...values,
           thumbnail: thumbnail ? currentProgramThumbnail : null,
         })
-        .where(eq(schema.program.id, Number(id)));
+        .where(eq(schema.program.id, Number(id)))
+        .returning();
 
-      return { success: true, id: Number(id) };
+      if (!updatedProgram) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Program not found",
+        });
+      }
+
+      return updatedProgram;
     }),
 
   _create: adminProtectedProcedure
@@ -304,38 +307,44 @@ export const programRouter = createTRPCRouter({
       const { db } = ctx;
       const { thumbnail, ...values } = input;
 
-      await db.insert(schema.program).values({
-        ...values,
-        thumbnail: typeof thumbnail === "string" ? thumbnail : null,
-      });
+      const [createdProgram] = await db
+        .insert(schema.program)
+        .values({
+          ...values,
+          thumbnail: typeof thumbnail === "string" ? thumbnail : null,
+        })
+        .returning();
 
-      return { success: true };
+      return createdProgram;
     }),
 
   _delete: adminProtectedProcedure
-    .input(z.number())
-    .mutation(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      if (!id || !isNumber(id)) {
+    .input(ProgramDeleteSchema)
+    .mutation(async ({ input: { id }, ctx }) => {
+      const [program] = await ctx.db
+        .select({
+          thumbnail: schema.program.thumbnail,
+        })
+        .from(schema.program)
+        .where(eq(schema.program.id, id));
+
+      if (!program) {
         throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Program ID is required",
+          code: "NOT_FOUND",
+          message: "Program not found",
         });
       }
 
-      const program = await db
-        .select()
-        .from(schema.program)
-        .where(eq(schema.program.id, id));
-      const thumbnail = program?.[0]?.thumbnail;
-
-      if (thumbnail) {
-        await deleteFile({ fileName: thumbnail });
+      if (program?.thumbnail) {
+        await deleteFile({ fileName: program.thumbnail });
       }
 
-      await db.delete(schema.program).where(eq(schema.program.id, id));
+      const [deletedProgram] = await ctx.db
+        .delete(schema.program)
+        .where(eq(schema.program.id, id))
+        .returning();
 
-      return { success: true };
+      return deletedProgram;
     }),
 
   _generateEmbedding: adminProtectedProcedure

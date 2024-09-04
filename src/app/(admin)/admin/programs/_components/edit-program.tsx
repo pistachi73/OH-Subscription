@@ -63,9 +63,6 @@ export const EditProgram = ({
       trpcUtils.program._getAll.invalidate();
       toast.success("Program updated successfully");
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
   });
 
   const initialTeachers =

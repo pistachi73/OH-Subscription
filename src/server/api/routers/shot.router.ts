@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import {
   and,
   cosineDistance,
@@ -19,13 +18,14 @@ import {
   publicProcedure,
 } from "../trpc";
 
-import { isNumber } from "@/lib/utils/is-number";
 import * as schema from "@/server/db/schema";
 import {
-  type Category,
   CategoryShotInsertSchema,
+  ShotDeleteSchema,
   ShotInsertSchema,
+  ShotUpdateSchema,
 } from "@/types";
+import { TRPCError } from "@trpc/server";
 import { generateEmbedding } from "../lib/openai";
 import {
   isShotLikedByUserSubquery,
@@ -35,136 +35,23 @@ import {
 } from "../query-utils/shot.query";
 
 export const shotRouter = createTRPCRouter({
-  delete: adminProtectedProcedure
-    .input(z.number())
-    .mutation(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "shot ID is required",
-        });
-      }
-      await db.delete(schema.shot).where(eq(schema.shot.id, id));
-
-      return { success: true };
-    }),
-  create: adminProtectedProcedure
-    .input(ShotInsertSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
-      const { ...values } = input;
-
-      await db.insert(schema.shot).values({
-        ...values,
-      });
-
-      return { success: true };
-    }),
-
-  update: adminProtectedProcedure
-    .input(ShotInsertSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
-      const { id, ...values } = input;
-
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "shot ID is required",
-        });
-      }
-
-      await db
-        .update(schema.shot)
-        .set({
-          ...values,
-        })
-        .where(eq(schema.shot.id, Number(id)));
-
-      return { success: true };
-    }),
-
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const { db } = ctx;
-    const allshots = await db.select().from(schema.shot);
-    return allshots;
-  }),
-
-  getById: publicProcedure
-    .input(z.number())
-    .query(async ({ input: id, ctx }) => {
-      let shotQuery = ctx.db
-        .select({
-          ...getTableColumns(schema.shot),
-          categories: sql<Category[]>`json_agg(DISTINCT
-            jsonb_build_object(
-              'id', ${schema.category.id},
-              'name', ${schema.category.name})
-           )`,
-        })
-        .from(schema.shot)
-        .$dynamic();
-
-      shotQuery = shotsWithCategories(shotQuery);
-      shotQuery = shotQuery.where(eq(schema.shot.id, id));
-
-      const shot = await shotQuery.execute();
-
-      return shot[0];
-    }),
-
-  _getById: adminProtectedProcedure
-    .input(z.number())
-    .query(async ({ input: id, ctx }) => {
-      const { slug, createdAt, updatedAt, ...rest } = getTableColumns(
-        schema.shot,
-      );
-
-      let shotQuery = ctx.db
-        .select({
-          ...rest,
-          categories: shotCategoriesSelect,
-        })
-        .from(schema.shot)
-        .where(eq(schema.shot.id, id))
-        .$dynamic();
-
-      shotQuery = shotsWithCategories(shotQuery);
-      shotQuery = shotQuery.groupBy(schema.shot.id);
-
-      const shotList = await shotQuery.execute();
-
-      return shotList[0];
-    }),
-
-  getAllAdmin: adminProtectedProcedure.query(async ({ ctx }) => {
-    let shotQuery = ctx.db
+  getShotCards: publicProcedure.query(async ({ ctx }) => {
+    let shotCardsQuery = ctx.db
       .select({
-        ...getTableColumns(schema.shot),
+        slug: schema.shot.slug,
+        title: schema.shot.title,
+        playbackId: schema.shot.playbackId,
         categories: shotCategoriesSelect,
       })
       .from(schema.shot)
       .$dynamic();
 
-    shotQuery = shotsWithCategories(shotQuery);
+    shotCardsQuery = shotsWithCategories(shotCardsQuery);
+    shotCardsQuery = shotCardsQuery.groupBy(schema.shot.id);
 
-    const shotList = await shotQuery.execute();
-    return shotList;
-  }),
+    const shots = await shotCardsQuery.execute();
 
-  getLandingPageShots: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.query.shot.findMany({
-      limit: 8,
-      columns: {
-        playbackId: true,
-        slug: true,
-        title: true,
-      },
-      with: {
-        categories: true,
-      },
-    });
+    return shots;
   }),
 
   getInitialCarouselShot: publicProcedure
@@ -189,14 +76,15 @@ export const shotRouter = createTRPCRouter({
 
       initialShotQuery = shotsWithCategories(initialShotQuery);
       initialShotQuery = initialShotQuery.groupBy(schema.shot.id);
-      const initialShot = (await initialShotQuery.execute())[0];
 
+      const [initialShot] = await initialShotQuery.execute();
       if (!initialShot) return null;
 
       const embedding = await generateEmbedding(initialShot.title);
 
       return { shot: initialShot, embedding };
     }),
+
   getCarouselShots: publicProcedure
     .input(
       z.object({
@@ -208,8 +96,13 @@ export const shotRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { initialShotTitle, cursor } = input;
+      let embedding: number[] = [];
 
-      const embedding = await generateEmbedding(initialShotTitle);
+      try {
+        embedding = await generateEmbedding(initialShotTitle);
+      } catch (e) {
+        console.error("Could not generate embedding");
+      }
 
       const similarity = sql<number>`1 - (${cosineDistance(
         schema.shot.embedding,
@@ -268,45 +161,103 @@ export const shotRouter = createTRPCRouter({
       };
     }),
 
-  addCategory: adminProtectedProcedure
-    .input(CategoryShotInsertSchema)
-    .mutation(async ({ input: { shotId, categoryId }, ctx: { db } }) => {
-      await db.insert(schema.categoryShot).values({
-        shotId,
-        categoryId,
-      });
+  _getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.select().from(schema.shot);
+  }),
 
-      return true;
+  _getById: adminProtectedProcedure
+    .input(z.number())
+    .query(async ({ input: id, ctx }) => {
+      const { slug, createdAt, updatedAt, ...rest } = getTableColumns(
+        schema.shot,
+      );
+
+      let shotQuery = ctx.db
+        .select({
+          ...rest,
+          categories: shotCategoriesSelect,
+        })
+        .from(schema.shot)
+        .where(eq(schema.shot.id, id))
+        .$dynamic();
+
+      shotQuery = shotsWithCategories(shotQuery);
+      shotQuery = shotQuery.groupBy(schema.shot.id);
+
+      const [shot] = await shotQuery.execute();
+
+      if (!shot)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Shot not found",
+        });
+
+      return shot;
     }),
 
-  removeCategory: adminProtectedProcedure
+  _update: adminProtectedProcedure
+    .input(ShotUpdateSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { db } = ctx;
+      const { id, ...values } = input;
+
+      await db
+        .update(schema.shot)
+        .set({
+          ...values,
+        })
+        .where(eq(schema.shot.id, Number(id)));
+
+      return { success: true };
+    }),
+
+  _create: adminProtectedProcedure
+    .input(ShotInsertSchema)
+    .mutation(async ({ input, ctx }) => {
+      return await ctx.db.insert(schema.shot).values(input).returning();
+    }),
+
+  _delete: adminProtectedProcedure
+    .input(ShotDeleteSchema)
+    .mutation(async ({ input: { id }, ctx }) => {
+      return await ctx.db
+        .delete(schema.shot)
+        .where(eq(schema.shot.id, id))
+        .returning();
+    }),
+
+  _addCategory: adminProtectedProcedure
     .input(CategoryShotInsertSchema)
     .mutation(async ({ input: { shotId, categoryId }, ctx: { db } }) => {
-      await db
+      return await db
+        .insert(schema.categoryShot)
+        .values({
+          shotId,
+          categoryId,
+        })
+        .returning();
+    }),
+
+  _removeCategory: adminProtectedProcedure
+    .input(CategoryShotInsertSchema)
+    .mutation(async ({ input: { shotId, categoryId }, ctx: { db } }) => {
+      return await db
         .delete(schema.categoryShot)
         .where(
           and(
             eq(schema.categoryShot.shotId, shotId),
             eq(schema.categoryShot.categoryId, categoryId),
           ),
-        );
-
-      return true;
+        )
+        .returning();
     }),
 
-  generateEmbedding: adminProtectedProcedure
+  _generateEmbedding: adminProtectedProcedure
     .input(
       z.object({ description: z.string(), title: z.string(), id: z.number() }),
     )
     .mutation(async ({ input: { description, title, id }, ctx }) => {
       const { db } = ctx;
-
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Shot ID is required",
-        });
-      }
 
       let shotQuery = db
         .select({
@@ -318,18 +269,32 @@ export const shotRouter = createTRPCRouter({
 
       shotQuery = shotsWithCategories(shotQuery);
       shotQuery = shotQuery.groupBy(schema.shot.id);
-      const shotList = await shotQuery.execute();
-      const shot = shotList[0];
+
+      const [shot] = await shotQuery.execute();
+
+      if (!shot) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Shot not found",
+        });
+      }
 
       const categoriesEmbedding = shot?.categories
         ?.map(({ name }) => name)
         .join(",");
 
       let embeddingInput = `${title}|${description}`;
-
       if (categoriesEmbedding) embeddingInput += `|${categoriesEmbedding}`;
 
-      const embedding = await generateEmbedding(embeddingInput);
+      let embedding: number[];
+      try {
+        embedding = await generateEmbedding(embeddingInput);
+      } catch (e) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Could not generate embedding",
+        });
+      }
 
       await db
         .update(schema.shot)

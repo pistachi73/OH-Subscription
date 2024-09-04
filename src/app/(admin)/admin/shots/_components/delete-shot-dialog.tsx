@@ -13,18 +13,16 @@ export const DeleteShotDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutateAsync, isLoading: isDeleting } = api.shot.delete.useMutation({
-    onSuccess: () => {
-      isShotDeleteModalOpenSignal.value = false;
-      trpcUtils.shot.getAll.invalidate();
-      toast.success("Shot deleted successfully");
-      router.push("/admin/shots");
-      router.refresh();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const { mutate: deleteShot, isLoading: isDeleting } =
+    api.shot._delete.useMutation({
+      onSuccess: () => {
+        isShotDeleteModalOpenSignal.value = false;
+        trpcUtils.shot._getAll.invalidate();
+        toast.success("Shot deleted successfully");
+        router.push("/admin/shots");
+        router.refresh();
+      },
+    });
 
   const onDelete = async () => {
     const id = shotIdSignal.value;
@@ -32,7 +30,7 @@ export const DeleteShotDialog = () => {
       toast.error("Please provide a shot id to delete.");
       return;
     }
-    await mutateAsync(id);
+    deleteShot({ id });
   };
 
   return (

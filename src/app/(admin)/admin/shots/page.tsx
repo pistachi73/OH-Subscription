@@ -13,7 +13,7 @@ import {
 import { api } from "@/trpc/server";
 
 const ShotAdminPage = async () => {
-  const shots = await api.shot.getAll.query();
+  const shots = await api.shot._getAll.query();
 
   return (
     <>

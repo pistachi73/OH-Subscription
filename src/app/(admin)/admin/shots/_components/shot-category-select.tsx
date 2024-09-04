@@ -24,8 +24,9 @@ export const ShotCategorySelect = ({
   const { shotId } = useParams<{ shotId: string }>();
   const [categories, setCategories] = useState(initialCategories);
 
-  const { mutateAsync: addCategory } = api.shot.addCategory.useMutation();
-  const { mutateAsync: removeCategory } = api.shot.removeCategory.useMutation();
+  const { mutateAsync: addCategory } = api.shot._addCategory.useMutation();
+  const { mutateAsync: removeCategory } =
+    api.shot._removeCategory.useMutation();
 
   const [isSelecting, startTransition] = useTransition();
 

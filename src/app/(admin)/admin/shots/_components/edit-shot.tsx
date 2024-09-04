@@ -34,13 +34,13 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
   const initialCategories =
     shot?.categories?.map(({ id }) => id.toString()).join(",") ?? "";
 
-  const generateShotEmbedding = api.shot.generateEmbedding.useMutation({
+  const generateShotEmbedding = api.shot._generateEmbedding.useMutation({
     onSuccess: () => {
       toast.success("Shot embedding generated successfully");
     },
   });
 
-  const saveShot = api.shot.update.useMutation({
+  const saveShot = api.shot._update.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },

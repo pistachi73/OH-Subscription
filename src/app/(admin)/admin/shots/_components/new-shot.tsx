@@ -24,11 +24,11 @@ export const NewShot = () => {
     },
   });
 
-  const { mutateAsync, isLoading: isSaving } = api.shot.create.useMutation({
+  const { mutateAsync, isLoading: isSaving } = api.shot._create.useMutation({
     onSuccess: () => {
       router.push("/admin/shots");
       toast.success("Shot created successfully");
-      trpcUtils.shot.getAll.invalidate();
+      trpcUtils.shot._getAll.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);
