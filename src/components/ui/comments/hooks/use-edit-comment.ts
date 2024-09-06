@@ -6,11 +6,11 @@ import type { ExclusiveCommentSource } from "../comment.types";
 
 type UseEditCommentProps = ExclusiveCommentSource & {
   initialCommentContent: string;
-  commentId: number;
+  id: number;
 };
 
 export const useEditComment = ({
-  commentId,
+  id,
   initialCommentContent,
   ...commentSource
 }: UseEditCommentProps) => {
@@ -35,7 +35,7 @@ export const useEditComment = ({
               pages: data.pages.map((page) => ({
                 ...page,
                 comments: page.comments.map((filteredComment) => {
-                  if (filteredComment.id === commentId) {
+                  if (filteredComment.id === id) {
                     return {
                       ...filteredComment,
                       content: input,

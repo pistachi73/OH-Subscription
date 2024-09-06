@@ -12,7 +12,7 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 
 export type ExclusiveCommentSource = XOR<
   { programId: number },
-  XOR<{ videoId: number }, XOR<{ shotId: number }, { parentCommentId: number }>>
+  XOR<{ videoId: number }, XOR<{ shotId: number }, { commentId: number }>>
 >;
 
 export type CommentProps = ExclusiveCommentSource & {

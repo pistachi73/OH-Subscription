@@ -22,7 +22,7 @@ import {
 } from "./program-signals";
 
 export const columns: ColumnDef<
-  NonNullable<RouterOutputs["program"]["getAll"][0]>
+  NonNullable<RouterOutputs["program"]["_getAll"][0]>
 >[] = [
   {
     accessorKey: "thumbnail",
@@ -89,7 +89,7 @@ export const columns: ColumnDef<
 export const ProgramsTable = ({
   data,
 }: {
-  data: RouterOutputs["program"]["getAll"];
+  data: RouterOutputs["program"]["_getAll"];
 }) => {
   return (
     <Card>

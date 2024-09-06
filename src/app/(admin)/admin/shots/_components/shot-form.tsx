@@ -19,12 +19,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils/cn";
-import type { ShotInsertSchema } from "@/types";
+import type { ShotUpdateSchema } from "@/types";
 import { usePathname } from "next/navigation";
 import { ShotCategorySelect } from "./shot-category-select";
 
 type ShotFormProps = {
-  form: UseFormReturn<z.infer<typeof ShotInsertSchema>>;
+  form: UseFormReturn<z.infer<typeof ShotUpdateSchema>>;
   categoryOptions?: Option[];
   initialCategories?: string;
 };

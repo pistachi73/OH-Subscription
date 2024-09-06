@@ -27,9 +27,28 @@ export function TRPCReactProvider(props: {
     const { zodError, cause } = customError.data;
 
     switch (true) {
-      case Boolean(zodError):
-        toast.error((zodError as any).formErrors.join(", "));
+      case Boolean(zodError): {
+        let errorString = "";
+
+        for (const [key, value] of Object.entries(
+          zodError?.fieldErrors ?? {},
+        )) {
+          errorString += `${value
+            ?.map((v) => {
+              if (typeof v === "string") return v;
+              return null;
+            })
+            .filter(Boolean)
+            .join(", ")}, `;
+        }
+
+        for (const error of zodError?.formErrors ?? []) {
+          errorString += `${error}, `;
+        }
+
+        toast.error(errorString.slice(0, -2));
         break;
+      }
       case Boolean(cause):
         toast.error(cause);
         break;

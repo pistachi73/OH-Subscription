@@ -4,7 +4,7 @@ import type { DeviceSize } from "@/components/ui/device-only/device-only-provide
 import { useDeviceType } from "@/components/ui/device-only/device-only-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { regularEase } from "@/lib/animation";
-import type { RouterOutputs } from "@/trpc/shared";
+import type { ProgramCard as ProgramCardType } from "@/types";
 import { m } from "framer-motion";
 import { useCallback, useMemo } from "react";
 import { ProgramCard } from "./program-card";
@@ -14,7 +14,7 @@ type PartialRecord<K extends keyof any, T> = {
 };
 type CardListProps = {
   cardsPerRow: PartialRecord<DeviceSize, number>;
-  programs?: RouterOutputs["program"]["getProgramsForCards"];
+  programs?: ProgramCardType[];
   isLoading?: boolean;
   initialAnimation?: boolean;
   loadingRows?: number;

@@ -50,25 +50,25 @@ export const extendBaseSchemasWithSourceId = <T extends z.ZodRawShape>(
         programId: z.number(),
         videoId: z.never().optional(),
         shotId: z.never().optional(),
-        parentCommentId: z.never().optional(),
+        commentId: z.never().optional(),
       }).strict(),
       BaseSchema.extend({
         programId: z.never().optional(),
         videoId: z.number(),
         shotId: z.never().optional(),
-        parentCommentId: z.never().optional(),
+        commentId: z.never().optional(),
       }).strict(),
       BaseSchema.extend({
         programId: z.never().optional(),
         videoId: z.never().optional(),
         shotId: z.number(),
-        parentCommentId: z.never().optional(),
+        commentId: z.never().optional(),
       }).strict(),
       BaseSchema.extend({
         programId: z.never().optional(),
         videoId: z.never().optional(),
         shotId: z.never().optional(),
-        parentCommentId: z.number(),
+        commentId: z.number(),
       }),
     ],
     {
@@ -101,8 +101,8 @@ export const isFromShotSource = <T>(
   return (data as any).shotId !== undefined;
 };
 
-export const isFromParentCommentSource = <T>(
+export const isFromCommentSource = <T>(
   data: T,
-): data is T & { parentCommentId: number } => {
-  return (data as any).parentCommentId !== undefined;
+): data is T & { commentId: number } => {
+  return (data as any).commentId !== undefined;
 };

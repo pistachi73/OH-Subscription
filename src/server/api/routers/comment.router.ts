@@ -9,7 +9,7 @@ import {
   CommentInsertSchema,
   CommentUpdateSchema,
   GetCommentBySourceIdSchema,
-  isFromParentCommentSource,
+  isFromCommentSource,
   isFromProgramSource,
   isFromShotSource,
   isFromVideoSource,
@@ -50,8 +50,8 @@ export const commentRouter = createTRPCRouter({
         ...(isFromProgramSource(input) && { programId: input.programId }),
         ...(isFromVideoSource(input) && { videoId: input.videoId }),
         ...(isFromShotSource(input) && { shotId: input.shotId }),
-        ...(isFromParentCommentSource(input) && {
-          parentCommentId: input.parentCommentId,
+        ...(isFromCommentSource(input) && {
+          parentCommentId: input.commentId,
         }),
       };
 
@@ -114,8 +114,8 @@ export const commentRouter = createTRPCRouter({
         isFromShotSource(input)
           ? eq(schema.comment.shotId, input.shotId)
           : undefined,
-        isFromParentCommentSource(input)
-          ? eq(schema.comment.parentCommentId, input.parentCommentId)
+        isFromCommentSource(input)
+          ? eq(schema.comment.parentCommentId, input.commentId)
           : undefined,
       ];
 

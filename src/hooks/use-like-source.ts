@@ -8,14 +8,15 @@ type UseLikeSourceProps = {
 export const useLikeSource = ({ initialLiked = false }: UseLikeSourceProps) => {
   const [isLikedByUser, setIsLikedByUser] = useState(initialLiked);
 
-  const { mutate: like, isLoading: isLikeLoading } = api.like.like.useMutation({
-    onMutate: () => {
-      setIsLikedByUser(!isLikedByUser);
-    },
-    onError: () => {
-      setIsLikedByUser(!isLikedByUser);
-    },
-  });
+  const { mutate: like, isLoading: isLikeLoading } =
+    api.like.likeBySourceId.useMutation({
+      onMutate: () => {
+        setIsLikedByUser(!isLikedByUser);
+      },
+      onError: () => {
+        setIsLikedByUser(!isLikedByUser);
+      },
+    });
 
   return {
     isLikedByUser,

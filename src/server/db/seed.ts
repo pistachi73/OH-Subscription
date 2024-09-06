@@ -14,7 +14,6 @@ const db = drizzle(connection, { schema });
 export type DB = typeof db;
 
 async function resetTable(db: DB, table: Table) {
-  console.log(getTableName(table));
   return db.execute(
     sql.raw(`TRUNCATE TABLE ${getTableName(table)} RESTART IDENTITY CASCADE`),
   );

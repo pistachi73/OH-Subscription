@@ -31,10 +31,10 @@ import { format } from "date-fns";
 import { ProgramMainCTAButton } from "../program-play-button";
 
 import { useLikeSource } from "@/hooks/use-like-source";
-import type { ProgramSpotlightSchema } from "@/server/api/types";
+import type { ProgramSpotlight } from "@/types";
 
 type ProgramSpotlightHero = {
-  program: NonNullable<ProgramSpotlightSchema>;
+  program: NonNullable<ProgramSpotlight>;
 };
 
 export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {

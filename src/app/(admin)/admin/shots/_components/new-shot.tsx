@@ -10,12 +10,12 @@ import { ShotForm } from "./shot-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { api } from "@/trpc/react";
-import { ShotInsertSchema } from "@/types";
+import { ShotUpdateSchema } from "@/types";
 
 export const NewShot = () => {
   const trpcUtils = api.useUtils();
-  const form = useForm<z.infer<typeof ShotInsertSchema>>({
-    resolver: zodResolver(ShotInsertSchema),
+  const form = useForm<z.infer<typeof ShotUpdateSchema>>({
+    resolver: zodResolver(ShotUpdateSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -36,7 +36,7 @@ export const NewShot = () => {
   });
   const router = useRouter();
 
-  const onSave = async (values: z.infer<typeof ShotInsertSchema>) => {
+  const onSave = async (values: z.infer<typeof ShotUpdateSchema>) => {
     await mutateAsync(values);
   };
 

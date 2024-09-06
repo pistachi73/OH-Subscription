@@ -14,11 +14,10 @@ import {
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { api } from "@/trpc/react";
-import type { RouterOutputs } from "@/trpc/shared";
-import { CategoryInsertSchema } from "@/types";
+import { type AdminCategory, CategoryInsertSchema } from "@/types";
 
 type EditCategoryProps = {
-  category: NonNullable<RouterOutputs["category"]["getById"]>;
+  category: NonNullable<AdminCategory>;
 };
 
 export const EditCategory = ({ category }: EditCategoryProps) => {

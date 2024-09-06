@@ -3,11 +3,11 @@ import { COMMENTS_PAGE_SIZE } from "../comment";
 import type { ExclusiveCommentSource } from "../comment.types";
 
 type UseDeleteCommentProps = ExclusiveCommentSource & {
-  commentId: number;
+  id: number;
 };
 
 export const useDeleteComment = ({
-  commentId,
+  id,
   ...commentSource
 }: UseDeleteCommentProps) => {
   const apiUtils = api.useUtils();
@@ -36,7 +36,7 @@ export const useDeleteComment = ({
               pages: data.pages.map((page) => ({
                 ...page,
                 comments: page.comments.filter(
-                  (filteredComment) => filteredComment.id !== commentId,
+                  (filteredComment) => filteredComment.id !== id,
                 ),
               })),
             };

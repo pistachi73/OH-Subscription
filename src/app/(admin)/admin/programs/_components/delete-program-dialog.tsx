@@ -16,7 +16,7 @@ export const DeleteProgramDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutateAsync, isLoading: isDeleting } =
+  const { mutate: deleteProgram, isLoading: isDeleting } =
     api.program._delete.useMutation({
       onSuccess: () => {
         isProgramDeleteModalOpenSignal.value = false;
@@ -36,7 +36,7 @@ export const DeleteProgramDialog = () => {
       toast.error("Please provide a program id to delete.");
       return;
     }
-    await mutateAsync(id);
+    deleteProgram({ id });
   };
 
   return (

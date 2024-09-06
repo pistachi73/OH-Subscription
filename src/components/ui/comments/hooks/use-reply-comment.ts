@@ -5,12 +5,12 @@ import { COMMENTS_PAGE_SIZE } from "../comment";
 import type { ExclusiveCommentSource } from "../comment.types";
 
 type UseReplyCommentProps = ExclusiveCommentSource & {
-  commentId: number;
+  id: number;
   totalReplies: number;
 };
 
 export const useReplyComment = ({
-  commentId,
+  id,
   totalReplies,
   ...commentSource
 }: UseReplyCommentProps) => {
@@ -28,7 +28,7 @@ export const useReplyComment = ({
       const reply = newComment
         ? {
             ...newComment,
-            parentCommentId: commentId,
+            parentCommentId: id,
             totalReplies: 0,
             user: {
               id: user.id as string,
@@ -50,7 +50,7 @@ export const useReplyComment = ({
       );
 
       apiUtils.comment.getCommentsBySourceId.setInfiniteData(
-        { parentCommentId: commentId, pageSize: COMMENTS_PAGE_SIZE },
+        { commentId: id, pageSize: COMMENTS_PAGE_SIZE },
         (data) => {
           if (!reply) return data;
           return {
@@ -78,7 +78,7 @@ export const useReplyComment = ({
             pages: data.pages.map((page) => ({
               ...page,
               comments: page.comments.map((c) => {
-                if (commentId === c.id) {
+                if (id === c.id) {
                   return {
                     ...c,
                     totalReplies: (Number(c.totalReplies) ?? 0) + 1,

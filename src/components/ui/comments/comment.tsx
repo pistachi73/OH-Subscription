@@ -41,7 +41,7 @@ export const Comment = ({
   programId,
   videoId,
   shotId,
-  parentCommentId,
+  commentId: parentCommentId,
   className,
   level = 0,
   optionsButtonClassname,
@@ -53,7 +53,7 @@ export const Comment = ({
       ...(programId && { programId }),
       ...(videoId && { videoId }),
       ...(shotId && { shotId }),
-      ...(parentCommentId && { parentCommentId }),
+      ...(parentCommentId && { commentId: parentCommentId }),
     }),
     [programId, videoId, shotId, parentCommentId],
   );
@@ -65,7 +65,7 @@ export const Comment = ({
     setShowAddReply,
     setShowReplies,
   } = useReplyComment({
-    commentId: comment.id,
+    id: comment.id,
     totalReplies: comment.totalReplies,
     ...(commentSource as ExclusiveCommentSource),
   });
@@ -79,18 +79,18 @@ export const Comment = ({
     setInput,
     inputRef,
   } = useEditComment({
-    commentId: comment.id,
+    id: comment.id,
     initialCommentContent: comment.content,
     ...(commentSource as ExclusiveCommentSource),
   });
 
   const { likeComment, isLikeLoading } = useLikeComment({
-    commentId: comment.id,
+    id: comment.id,
     ...(commentSource as ExclusiveCommentSource),
   });
 
   const { deleteComment, isDeletingComment } = useDeleteComment({
-    commentId: comment.id,
+    id: comment.id,
     ...(commentSource as ExclusiveCommentSource),
   });
 
@@ -103,7 +103,7 @@ export const Comment = ({
     error,
   } = api.comment.getCommentsBySourceId.useInfiniteQuery(
     {
-      parentCommentId: comment.id,
+      commentId: comment.id,
       pageSize: COMMENTS_PAGE_SIZE,
     },
     {
@@ -138,7 +138,7 @@ export const Comment = ({
     if (!comment?.id || !content) return;
 
     await addReply({
-      parentCommentId: comment.id,
+      commentId: comment.id,
       content,
     });
   };
@@ -335,7 +335,7 @@ export const Comment = ({
             <Comment
               key={`reply-${reply.id}`}
               comment={reply}
-              parentCommentId={comment.id}
+              commentId={comment.id}
               className={className}
               optionsButtonClassname={optionsButtonClassname}
               level={level + 1}

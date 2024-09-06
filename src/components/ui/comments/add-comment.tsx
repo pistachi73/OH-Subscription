@@ -74,6 +74,7 @@ export const AddComment = ({
             variant="default"
             size="sm"
             className="w-7 h-7 px-0 sm:h-8 text-sm sm:w-fit sm:px-3"
+            disabled={!value}
             onClick={async () => {
               await onComment?.(value);
               setInternalValue("");

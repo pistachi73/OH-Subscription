@@ -13,13 +13,12 @@ import {
   useCarouselSettings,
 } from "@/components/ui/carousel/carousel.hooks";
 import { cn } from "@/lib/utils/cn";
-import type { RouterOutputs } from "@/trpc/shared";
-import type { ProgramCardProps } from "./program-card";
-import { ProgramCard } from "./program-card";
+import type { ProgramCard as ProgramCardType } from "@/types";
+import { ProgramCard, type ProgramCardProps } from "./program-card";
 
 type ProgramCarouselProps = {
   title: string;
-  programs?: RouterOutputs["program"]["getProgramsForCards"];
+  programs?: ProgramCardType[];
   href?: string;
   priority?: boolean;
 };
