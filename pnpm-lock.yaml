@@ -79,7 +79,7 @@ importers:
         version: 0.0.15(@types/react@18.2.66)(react-email@2.1.0(@babel/core@7.24.3)(@swc/helpers@0.5.5)(eslint@8.57.0))(react@18.2.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
-        version: 0.11.1(typescript@5.4.2)(zod@3.22.4)
+        version: 0.11.1(typescript@5.4.2)(zod@3.23.8)
       '@tanstack/react-query':
         specifier: ^4.36.1
         version: 4.36.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -122,9 +122,6 @@ importers:
       drizzle-orm:
         specifier: ^0.32.0
         version: 0.32.0(@libsql/client@0.5.6)(@neondatabase/serverless@0.9.1)(@types/pg@8.6.6)(@types/react@18.2.66)(mysql2@3.9.2)(pg@8.11.5)(react@18.2.0)
-      drizzle-zod:
-        specifier: ^0.5.1
-        version: 0.5.1(drizzle-orm@0.32.0(@libsql/client@0.5.6)(@neondatabase/serverless@0.9.1)(@types/pg@8.6.6)(@types/react@18.2.66)(mysql2@3.9.2)(pg@8.11.5)(react@18.2.0))(zod@3.22.4)
       embla-carousel-react:
         specifier: ^8.0.0
         version: 8.0.0(react@18.2.0)
@@ -201,8 +198,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(@types/react-dom@18.2.22)(@types/react@18.2.66)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@biomejs/biome':
         specifier: ~1.8.3
@@ -3080,12 +3077,6 @@ packages:
       sqlite3:
         optional: true
 
-  drizzle-zod@0.5.1:
-    resolution: {integrity: sha512-C/8bvzUH/zSnVfwdSibOgFjLhtDtbKYmkbPbUCq46QZyZCH6kODIMSOgZ8R7rVjoI+tCj3k06MRJMDqsIeoS4A==}
-    peerDependencies:
-      drizzle-orm: '>=0.23.13'
-      zod: '*'
-
   duplexer@0.1.2:
     resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
 
@@ -4918,8 +4909,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
 
@@ -7556,16 +7547,16 @@ snapshots:
 
   '@swc/types@0.1.5': {}
 
-  '@t3-oss/env-core@0.11.1(typescript@5.4.2)(zod@3.22.4)':
+  '@t3-oss/env-core@0.11.1(typescript@5.4.2)(zod@3.23.8)':
     dependencies:
-      zod: 3.22.4
+      zod: 3.23.8
     optionalDependencies:
       typescript: 5.4.2
 
-  '@t3-oss/env-nextjs@0.11.1(typescript@5.4.2)(zod@3.22.4)':
+  '@t3-oss/env-nextjs@0.11.1(typescript@5.4.2)(zod@3.23.8)':
     dependencies:
-      '@t3-oss/env-core': 0.11.1(typescript@5.4.2)(zod@3.22.4)
-      zod: 3.22.4
+      '@t3-oss/env-core': 0.11.1(typescript@5.4.2)(zod@3.23.8)
+      zod: 3.23.8
     optionalDependencies:
       typescript: 5.4.2
 
@@ -8254,11 +8245,6 @@ snapshots:
       mysql2: 3.9.2
       pg: 8.11.5
       react: 18.2.0
-
-  drizzle-zod@0.5.1(drizzle-orm@0.32.0(@libsql/client@0.5.6)(@neondatabase/serverless@0.9.1)(@types/pg@8.6.6)(@types/react@18.2.66)(mysql2@3.9.2)(pg@8.11.5)(react@18.2.0))(zod@3.22.4):
-    dependencies:
-      drizzle-orm: 0.32.0(@libsql/client@0.5.6)(@neondatabase/serverless@0.9.1)(@types/pg@8.6.6)(@types/react@18.2.66)(mysql2@3.9.2)(pg@8.11.5)(react@18.2.0)
-      zod: 3.22.4
 
   duplexer@0.1.2: {}
 
@@ -10473,4 +10459,4 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod@3.22.4: {}
+  zod@3.23.8: {}

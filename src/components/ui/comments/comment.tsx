@@ -2,7 +2,7 @@
 
 import "@github/relative-time-element";
 import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { AddComment } from "./add-comment";
 
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
@@ -100,7 +100,8 @@ export const Comment = ({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = api.comment.getBySourceId.useInfiniteQuery(
+    error,
+  } = api.comment.getCommentsBySourceId.useInfiniteQuery(
     {
       parentCommentId: comment.id,
       pageSize: COMMENTS_PAGE_SIZE,
@@ -112,11 +113,15 @@ export const Comment = ({
     },
   );
 
+  useEffect(() => {
+    if (error) setShowReplies(false);
+  }, [error, setShowReplies]);
+
   const onCommentDelete = async () => {
     if (!comment?.id) return;
 
     await deleteComment({
-      commentId: comment.id,
+      id: comment.id,
     });
   };
 
@@ -128,8 +133,6 @@ export const Comment = ({
       content: input,
     });
   };
-
-  const onCommentLike = () => {};
 
   const onReply = async (content: string) => {
     if (!comment?.id || !content) return;

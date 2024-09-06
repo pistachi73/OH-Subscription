@@ -23,7 +23,7 @@ export const useEditComment = ({
   const { mutateAsync: editComment, isLoading: isEditingComment } =
     api.comment.update.useMutation({
       onSuccess: async () => {
-        apiUtils.comment.getBySourceId.setInfiniteData(
+        apiUtils.comment.getCommentsBySourceId.setInfiniteData(
           {
             pageSize: COMMENTS_PAGE_SIZE,
             ...commentSource,

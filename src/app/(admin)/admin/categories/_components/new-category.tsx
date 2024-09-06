@@ -21,16 +21,18 @@ export const NewCategory = () => {
     },
   });
 
-  const { mutateAsync, isLoading: isSaving } = api.category.create.useMutation({
-    onSuccess: () => {
-      router.push("/admin/categories");
-      toast.success("Category created successfully");
-      trpcUtils.category.getAll.invalidate();
+  const { mutateAsync, isLoading: isSaving } = api.category._create.useMutation(
+    {
+      onSuccess: () => {
+        router.push("/admin/categories");
+        toast.success("Category created successfully");
+        trpcUtils.category.getAll.invalidate();
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  );
   const router = useRouter();
 
   const onSave = async (values: z.infer<typeof CategoryInsertSchema>) => {

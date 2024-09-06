@@ -4,6 +4,11 @@ import { z } from "zod";
 export type Category = typeof category.$inferSelect;
 
 export const CategoryInsertSchema = z.object({
-  id: z.number().optional(),
   name: z.string().min(1, { message: "Name is required" }),
 });
+
+export const CategoryUpdateSchema = CategoryInsertSchema.extend({
+  id: z.number(),
+});
+
+export const CategoryDeleteSchema = CategoryUpdateSchema.pick({ id: true });

@@ -13,18 +13,18 @@ export const useDeleteComment = ({
   const apiUtils = api.useUtils();
   const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
     api.comment.delete.useMutation({
-      onSuccess: ({ deletedComments }) => {
+      onSuccess: ({ numberOfDeletedComments }) => {
         apiUtils.comment.getTotalCommentsBySourceId.setData(
           {
             ...commentSource,
           },
           (data) => {
             if (!data) return data;
-            return data - deletedComments;
+            return data - numberOfDeletedComments;
           },
         );
 
-        apiUtils.comment.getBySourceId.setInfiniteData(
+        apiUtils.comment.getCommentsBySourceId.setInfiniteData(
           {
             pageSize: COMMENTS_PAGE_SIZE,
             ...commentSource,

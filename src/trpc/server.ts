@@ -14,7 +14,7 @@ import { cookies, headers } from "next/headers";
 
 import { transformer } from "./shared";
 
-import { appRouter, type AppRouter } from "@/server/api/root";
+import { type AppRouter, appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 
 /**

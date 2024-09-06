@@ -22,7 +22,7 @@ type EditCategoryPageProps = {
 const EditCategoryPage = async ({
   params: { categoryId },
 }: EditCategoryPageProps) => {
-  const category = await api.category.getById.query(Number(categoryId));
+  const category = await api.category._getById.query(Number(categoryId));
 
   if (!category) {
     redirect("/admin/categories");

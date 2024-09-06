@@ -15,6 +15,10 @@ import { auth } from "@/auth";
 import { isAdminAuthenticated } from "@/lib/is-admin-authenticated";
 import { db } from "@/server/db";
 import type { Session } from "next-auth";
+import type {
+  DefaultErrorShape,
+  ErrorFormatter,
+} from "node_modules/@trpc/server/dist/error/formatter";
 
 /**
  * 1. CONTEXT
@@ -45,19 +49,33 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
+
+type ErrorData = {
+  cause: string | null;
+  zodError: ReturnType<ZodError["flatten"]> | null;
+};
+
+export interface CustomErrorShape extends DefaultErrorShape {
+  data: DefaultErrorShape["data"] & ErrorData;
+}
+
+const errorFormatter: ErrorFormatter<any, CustomErrorShape> = ({
+  shape,
+  error,
+}: { shape: DefaultErrorShape; error: any }) => {
+  return {
+    ...shape,
+    data: {
+      ...shape.data,
+      cause: error.cause instanceof Error ? error.cause.message : null,
+      zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+    },
+  };
+};
+
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        cause: error.cause instanceof Error ? error.cause.message : null,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
-      },
-    };
-  },
+  errorFormatter,
 });
 
 /**

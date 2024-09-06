@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -8,95 +7,87 @@ import {
   publicProcedure,
 } from "../trpc";
 
-import { isNumber } from "@/lib/utils/is-number";
 import * as schema from "@/server/db/schema";
-import { CategoryInsertSchema } from "@/types";
+import {
+  CategoryDeleteSchema,
+  CategoryInsertSchema,
+  CategoryUpdateSchema,
+} from "@/types";
+import { TRPCError } from "@trpc/server";
 
 export const categoryRouter = createTRPCRouter({
-  delete: adminProtectedProcedure
-    .input(z.number())
-    .mutation(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Video ID is required",
-        });
-      }
-
-      await db.delete(schema.category).where(eq(schema.category.id, id));
-
-      return { success: true };
-    }),
-  create: adminProtectedProcedure
-    .input(CategoryInsertSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
-      const { ...values } = input;
-
-      await db.insert(schema.category).values({
-        ...values,
-      });
-
-      return { success: true };
-    }),
-
-  update: adminProtectedProcedure
-    .input(CategoryInsertSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
-      const { id, ...values } = input;
-
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Category ID is required",
-        });
-      }
-
-      await db
-        .update(schema.category)
-        .set({
-          ...values,
-        })
-        .where(eq(schema.category.id, Number(id)));
-
-      return { success: true };
-    }),
-
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const { db } = ctx;
-    const allVideos = await db.select().from(schema.category);
-    return allVideos;
-  }),
-
-  getById: publicProcedure
-    .input(z.number())
-    .query(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-
-      const list = await db
-        .select()
-        .from(schema.category)
-        .where(eq(schema.category.id, id));
-      const category = list?.[0];
-      return category;
-    }),
-
   getBySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ input: { slug }, ctx }) => {
-      if (!slug) return null;
-
       const { db } = ctx;
 
-      const list = await db
+      const [category] = await db
         .select()
         .from(schema.category)
         .where(eq(schema.category.slug, slug))
         .limit(1);
 
-      const category = list?.[0];
+      if (!category) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Category not found",
+        });
+      }
+
       return category;
+    }),
+
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.select().from(schema.category);
+  }),
+
+  _getById: adminProtectedProcedure
+    .input(z.number())
+    .query(async ({ input: id, ctx }) => {
+      const [category] = await ctx.db
+        .select()
+        .from(schema.category)
+        .where(eq(schema.category.id, id));
+
+      if (!category) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Category not found",
+        });
+      }
+
+      return category;
+    }),
+  _update: adminProtectedProcedure
+    .input(CategoryUpdateSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { db } = ctx;
+      const { id, ...values } = input;
+
+      const [updatedCategory] = await db
+        .update(schema.category)
+        .set({
+          ...values,
+        })
+        .where(eq(schema.category.id, Number(id)))
+        .returning();
+
+      return updatedCategory;
+    }),
+
+  _create: adminProtectedProcedure
+    .input(CategoryInsertSchema)
+    .mutation(async ({ input, ctx }) => {
+      return await ctx.db.insert(schema.category).values(input).returning();
+    }),
+
+  _delete: adminProtectedProcedure
+    .input(CategoryDeleteSchema)
+    .mutation(async ({ input: { id }, ctx }) => {
+      const [deletedCategory] = await ctx.db
+        .delete(schema.category)
+        .where(eq(schema.category.id, id))
+        .returning();
+      return deletedCategory;
     }),
 });

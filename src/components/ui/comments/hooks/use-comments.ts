@@ -11,7 +11,7 @@ export const useComments = (commentSource: ExclusiveCommentSource) => {
   const apiUtils = api.useUtils();
 
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    api.comment.getBySourceId.useInfiniteQuery(
+    api.comment.getCommentsBySourceId.useInfiniteQuery(
       {
         ...commentSource,
         pageSize: COMMENTS_PAGE_SIZE,
@@ -23,7 +23,7 @@ export const useComments = (commentSource: ExclusiveCommentSource) => {
     );
 
   const { mutateAsync: addComment } = api.comment.create.useMutation({
-    onSuccess: ({ comment: newComment }) => {
+    onSuccess: (newComment) => {
       const reply = newComment
         ? {
             ...newComment,
@@ -48,7 +48,7 @@ export const useComments = (commentSource: ExclusiveCommentSource) => {
         },
       );
 
-      apiUtils.comment.getBySourceId.setInfiniteData(
+      apiUtils.comment.getCommentsBySourceId.setInfiniteData(
         {
           ...commentSource,
           pageSize: COMMENTS_PAGE_SIZE,

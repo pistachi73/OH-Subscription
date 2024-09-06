@@ -14,4 +14,4 @@ export type AdminShot = RouterOutputs["shot"]["_getById"];
 
 // COMMENTS
 export type ApiComment =
-  RouterOutputs["comment"]["getBySourceId"]["comments"][0];
+  RouterOutputs["comment"]["getCommentsBySourceId"]["comments"][0];

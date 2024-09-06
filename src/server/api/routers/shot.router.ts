@@ -201,14 +201,15 @@ export const shotRouter = createTRPCRouter({
       const { db } = ctx;
       const { id, ...values } = input;
 
-      await db
+      const [updatedShot] = await db
         .update(schema.shot)
         .set({
           ...values,
         })
-        .where(eq(schema.shot.id, Number(id)));
+        .where(eq(schema.shot.id, Number(id)))
+        .returning();
 
-      return { success: true };
+      return updatedShot;
     }),
 
   _create: adminProtectedProcedure

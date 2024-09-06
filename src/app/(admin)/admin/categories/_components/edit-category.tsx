@@ -31,7 +31,7 @@ export const EditCategory = ({ category }: EditCategoryProps) => {
   });
   const [isSaving, startTransition] = useTransition();
 
-  const { mutateAsync: saveCategory } = api.category.update.useMutation({
+  const { mutateAsync: saveCategory } = api.category._update.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },

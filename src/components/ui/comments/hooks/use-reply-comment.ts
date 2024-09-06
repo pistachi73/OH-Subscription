@@ -21,7 +21,7 @@ export const useReplyComment = ({
   const apiUtils = api.useUtils();
 
   const { mutateAsync: addReply } = api.comment.create.useMutation({
-    onSuccess: ({ comment: newComment }) => {
+    onSuccess: (newComment) => {
       setShowAddReply(false);
       setShowReplies(true);
 
@@ -49,7 +49,7 @@ export const useReplyComment = ({
         },
       );
 
-      apiUtils.comment.getBySourceId.setInfiniteData(
+      apiUtils.comment.getCommentsBySourceId.setInfiniteData(
         { parentCommentId: commentId, pageSize: COMMENTS_PAGE_SIZE },
         (data) => {
           if (!reply) return data;
@@ -66,7 +66,7 @@ export const useReplyComment = ({
         },
       );
 
-      apiUtils.comment.getBySourceId.setInfiniteData(
+      apiUtils.comment.getCommentsBySourceId.setInfiniteData(
         {
           pageSize: COMMENTS_PAGE_SIZE,
           ...commentSource,

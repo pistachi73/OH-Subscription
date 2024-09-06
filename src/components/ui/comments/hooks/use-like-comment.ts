@@ -9,7 +9,7 @@ export const useLikeComment = ({ commentId, ...rest }: UseLikeCommentProps) => {
   const apiUtils = api.useUtils();
 
   const handleLikeCommentUpdate = () => {
-    apiUtils.comment.getBySourceId.setInfiniteData(
+    apiUtils.comment.getCommentsBySourceId.setInfiniteData(
       {
         pageSize: COMMENTS_PAGE_SIZE,
         ...rest,
@@ -51,7 +51,7 @@ export const useLikeComment = ({ commentId, ...rest }: UseLikeCommentProps) => {
   const { mutateAsync: unlikeComment, isLoading: isUnlikeLoading } =
     api.like.unlikeBySourceId.useMutation({
       onSuccess: () => {
-        apiUtils.comment.getBySourceId.setInfiniteData(
+        apiUtils.comment.getCommentsBySourceId.setInfiniteData(
           {
             pageSize: COMMENTS_PAGE_SIZE,
             ...rest,

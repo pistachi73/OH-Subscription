@@ -16,17 +16,14 @@ export const DeleteCategoryDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutateAsync, isLoading: isDeleting } =
-    api.category.delete.useMutation({
+  const { mutate: deleteCategory, isLoading: isDeleting } =
+    api.category._delete.useMutation({
       onSuccess: () => {
         isCategoryDeleteModalOpenSignal.value = false;
         trpcUtils.category.getAll.invalidate();
         toast.success("Category deleted successfully");
         router.push("/admin/categories");
         router.refresh();
-      },
-      onError: (error) => {
-        toast.error(error.message);
       },
     });
 
@@ -36,7 +33,7 @@ export const DeleteCategoryDialog = () => {
       toast.error("Please provide a category id to delete.");
       return;
     }
-    await mutateAsync(id);
+    deleteCategory({ id });
   };
 
   return (

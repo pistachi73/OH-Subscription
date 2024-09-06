@@ -40,3 +40,69 @@ export const PasswordSchema = z
   .regex(passwordRegex[1].regex, { message: passwordRegex[1].message })
   .regex(passwordRegex[2].regex, { message: passwordRegex[2].message })
   .regex(passwordRegex[3].regex, { message: passwordRegex[3].message });
+
+export const extendBaseSchemasWithSourceId = <T extends z.ZodRawShape>(
+  BaseSchema: z.ZodObject<T>,
+) => {
+  return z.union(
+    [
+      BaseSchema.extend({
+        programId: z.number(),
+        videoId: z.never().optional(),
+        shotId: z.never().optional(),
+        parentCommentId: z.never().optional(),
+      }).strict(),
+      BaseSchema.extend({
+        programId: z.never().optional(),
+        videoId: z.number(),
+        shotId: z.never().optional(),
+        parentCommentId: z.never().optional(),
+      }).strict(),
+      BaseSchema.extend({
+        programId: z.never().optional(),
+        videoId: z.never().optional(),
+        shotId: z.number(),
+        parentCommentId: z.never().optional(),
+      }).strict(),
+      BaseSchema.extend({
+        programId: z.never().optional(),
+        videoId: z.never().optional(),
+        shotId: z.never().optional(),
+        parentCommentId: z.number(),
+      }),
+    ],
+    {
+      errorMap: () => {
+        return {
+          code: "BAD_REQUEST",
+          message:
+            "Invalid input. Specify one of the following source Ids: programId, videoId, shotId, parentCommentId",
+        };
+      },
+    },
+  );
+};
+
+export const isFromProgramSource = <T>(
+  data: T,
+): data is T & { programId: number } => {
+  return (data as any).programId !== undefined;
+};
+
+export const isFromVideoSource = <T>(
+  data: T,
+): data is T & { videoId: number } => {
+  return (data as any).videoId !== undefined;
+};
+
+export const isFromShotSource = <T>(
+  data: T,
+): data is T & { shotId: number } => {
+  return (data as any).shotId !== undefined;
+};
+
+export const isFromParentCommentSource = <T>(
+  data: T,
+): data is T & { parentCommentId: number } => {
+  return (data as any).parentCommentId !== undefined;
+};

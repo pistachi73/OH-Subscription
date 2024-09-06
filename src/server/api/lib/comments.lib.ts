@@ -5,11 +5,11 @@ import { eq } from "drizzle-orm";
 export const deleteRecursiveComments = async ({
   db,
   commentId,
-  deletedComments,
+  numberOfDeletedComments,
 }: {
   db: DB;
   commentId: number;
-  deletedComments: number;
+  numberOfDeletedComments: number;
 }) => {
   await db.delete(comment).where(eq(comment.id, commentId));
 
@@ -20,15 +20,15 @@ export const deleteRecursiveComments = async ({
     .from(comment)
     .where(eq(comment.parentCommentId, commentId));
 
-  deletedComments += childComments?.length ?? 0;
+  numberOfDeletedComments += childComments?.length ?? 0;
 
   for (const childComment of childComments) {
     await deleteRecursiveComments({
       db,
       commentId: childComment.id,
-      deletedComments,
+      numberOfDeletedComments,
     });
   }
 
-  return deletedComments;
+  return numberOfDeletedComments;
 };
