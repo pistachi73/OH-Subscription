@@ -28,7 +28,7 @@ import {
 import { cn } from "@/lib/utils/cn";
 import { getUrl } from "@/lib/utils/get-url";
 import { format } from "date-fns";
-import { ProgramMainCTAButton } from "../program-play-button";
+import { ProgramMainCTAButton } from "../program-main-cta-button";
 
 import { useLikeSource } from "@/hooks/use-like-source";
 import type { ProgramSpotlight } from "@/types";
@@ -49,6 +49,7 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
     totalChapters,
     updatedAt,
     thumbnail,
+    lastWatchedChapter,
   } = program;
 
   return (

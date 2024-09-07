@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PlayIcon } from "@/components/ui/icons";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
+import { getProgramChapterUrl } from "@/lib/utils/get-url";
 
 import type { ButtonProps } from "@/components/ui/button";
 import type { ProgramCard, ProgramSpotlight } from "@/types";
@@ -42,22 +43,8 @@ const fontVariants = cva("font-medium tracking-tight", {
   },
 });
 
-type LastWatchedChapterSchema = {
-  chapterNumber: number;
-  slug: string;
-  watchedDuration: number;
-};
-
-type FirstChapterSchema = {
-  chapterNumber: number;
-  slug: string;
-};
-
-//TODO: Update last watched chapter and first chapter
 type ProgramPlayButtonProps = {
   program: NonNullable<ProgramCard | ProgramSpotlight>;
-  lastWatchedChapter?: LastWatchedChapterSchema;
-  firstChapter?: FirstChapterSchema;
   navigationMode: "details" | "auth";
   className?: string;
 } & VariantProps<typeof buttonVariants>;
@@ -66,19 +53,18 @@ export const ProgramMainCTAButton = forwardRef<
   HTMLButtonElement,
   ProgramPlayButtonProps
 >(({ program, className, navigationMode = "details", size = "card" }, ref) => {
-  const { lastWatchedChapter, firstChapter, slug } = program;
   const user = useCurrentUser();
   const isSubscribed = user?.isSubscribed;
 
+  const { slug, lastWatchedChapter, firstChapter } = program;
+
   const programDetailsHref = `/programs/${slug}`;
 
-  // const chapterHref = lastWatchedChapter
-  //   ? `${programDetailsHref}/chapters/${lastWatchedChapter.slug}?start=${Math.floor(lastWatchedChapter.)}`
-  //   : firstChapter
-  //     ? `${programDetailsHref}/chapters/${firstChapter.slug}`
-  //     : programDetailsHref;
-
-  const chapterHref = "/";
+  const chapterHref = getProgramChapterUrl({
+    programSlug: slug,
+    lastWatchedChapter,
+    firstChapterSlug: firstChapter?.slug,
+  });
 
   const AuthButtonContent = (
     <span className="font-medium text-center md:text-left">
@@ -108,8 +94,8 @@ export const ProgramMainCTAButton = forwardRef<
       >
         <PlayIcon className={cn(iconVariants({ size }), "ml-0.5")} />
         <span>
-          {program.lastWatchedChapter
-            ? `Resume E${program.lastWatchedChapter.chapterNumber}`
+          {lastWatchedChapter
+            ? `Resume E${lastWatchedChapter.chapterNumber}`
             : "Start watching"}
         </span>
       </Link>

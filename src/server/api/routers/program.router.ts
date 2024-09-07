@@ -38,6 +38,7 @@ import { isNumber } from "@/lib/utils/is-number";
 import * as schema from "@/server/db/schema";
 import {
   CategoryProgramInsertSchema,
+  type LastWatchedChapter,
   ProgramDeleteSchema,
   ProgramInsertSchema,
   type ProgramLevel,
@@ -211,7 +212,13 @@ export const programRouter = createTRPCRouter({
       const sortedByChapterNumber = sortChaptersByChapterNumber(chapters);
       const sortedByLastWatched = sortChaptersByLastWatched(chapters);
       const firstChapter = sortedByChapterNumber?.[0];
-      const lastWatchedChapter = sortedByLastWatched?.[0];
+
+      const lastWatchedChapter: LastWatchedChapter = {
+        chapterNumber: sortedByLastWatched?.[0]?.chapterNumber,
+        slug: sortedByLastWatched?.[0]?.slug,
+        watchedDuration:
+          sortedByLastWatched?.[0]?.userProgress?.watchedDuration ?? undefined,
+      };
 
       return {
         ...rest,

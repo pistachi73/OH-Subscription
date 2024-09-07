@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { ProgramMainCTAButton } from "@/components/programs/program-play-button";
+import { ProgramMainCTAButton } from "@/components/programs/program-main-cta-button";
 import { Button } from "@/components/ui/button";
 import { HeroImage } from "@/components/ui/hero-image";
 import { InfoOutlineIcon } from "@/components/ui/icons";

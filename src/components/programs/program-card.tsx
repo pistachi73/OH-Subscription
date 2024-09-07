@@ -18,7 +18,7 @@ import { UserProgressBar } from "@/components/ui/user-progress-bar";
 import { levelMap } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils/cn";
 
-import { ProgramMainCTAButton } from "./program-play-button";
+import { ProgramMainCTAButton } from "./program-main-cta-button";
 
 import { useLikeSource } from "@/hooks/use-like-source";
 import type { ProgramCard as ProgramCardType } from "@/types";
