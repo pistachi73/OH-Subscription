@@ -34,7 +34,7 @@ export const EditTeacher = ({ teacher }: EditTeacherProps) => {
   });
   const [isSaving, startTransition] = useTransition();
 
-  const { mutateAsync: saveTeacher } = api.teacher.update.useMutation({
+  const { mutateAsync: saveTeacher } = api.teacher._update.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },

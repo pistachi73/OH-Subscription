@@ -14,7 +14,7 @@ import {
 import { api } from "@/trpc/server";
 
 const EditSeriesPage = async () => {
-  const teachers = await api.teacher.getAll.query();
+  const teachers = await api.teacher._getAll.query();
 
   const teachersOptions: Option[] = teachers.map((teacher) => ({
     value: teacher.id.toString(),

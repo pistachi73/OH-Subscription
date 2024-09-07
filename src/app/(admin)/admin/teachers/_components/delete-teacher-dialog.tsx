@@ -16,20 +16,16 @@ export const DeleteTeacherDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutateAsync, isLoading: isDeleting } = api.teacher.delete.useMutation(
-    {
+  const { mutate: deleteTeacher, isLoading: isDeleting } =
+    api.teacher._delete.useMutation({
       onSuccess: () => {
         isTeacherDeleteModalOpenSignal.value = false;
-        trpcUtils.teacher.getAll.invalidate();
+        trpcUtils.teacher._getAll.invalidate();
         toast.success("Teacher deleted successfully");
         router.push("/admin/teachers");
         router.refresh();
       },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    },
-  );
+    });
 
   const onDelete = async () => {
     const id = teacherIdSignal.value;
@@ -37,7 +33,7 @@ export const DeleteTeacherDialog = () => {
       toast.error("Please provide a teacher id to delete.");
       return;
     }
-    await mutateAsync(id);
+    deleteTeacher({ id });
   };
 
   return (

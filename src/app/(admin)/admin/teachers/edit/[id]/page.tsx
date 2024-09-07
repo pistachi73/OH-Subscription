@@ -20,7 +20,7 @@ type EditTeacherPageProps = {
 };
 
 const EditTeacherPage = async ({ params: { id } }: EditTeacherPageProps) => {
-  const teacher = await api.teacher.getById.query(Number(id));
+  const teacher = await api.teacher._getById.query(Number(id));
 
   if (!teacher) {
     redirect("/admin/teachers");

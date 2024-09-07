@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
-import { z } from "zod";
 
 import {
   adminProtectedProcedure,
@@ -9,69 +8,56 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
-import { isNumber } from "@/lib/utils/is-number";
 import * as schema from "@/server/db/schema";
-import { TeacherInsertSchema } from "@/types";
+import {
+  TeacherDeleteSchema,
+  TeacherInsertSchema,
+  TeacherUpdateSchema,
+} from "@/types";
+import { z } from "zod";
 
 export const teacherRouter = createTRPCRouter({
-  delete: adminProtectedProcedure
-    .input(z.number())
-    .mutation(async ({ input: id, ctx }) => {
-      const { db } = ctx;
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Teacher ID is required",
-        });
-      }
+  getTeacherCards: publicProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.teacher.findMany({ limit: 7 });
+  }),
 
-      const teacher = await db
+  _getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.select().from(schema.teacher);
+  }),
+
+  _getById: publicProcedure
+    .input(z.number())
+    .query(async ({ input: id, ctx }) => {
+      const { db } = ctx;
+      const [teacher] = await db
         .select()
         .from(schema.teacher)
         .where(eq(schema.teacher.id, id));
-      const image = teacher?.[0]?.image;
 
-      if (image) {
-        await deleteFile({ fileName: image });
-      }
-
-      await db.delete(schema.teacher).where(eq(schema.teacher.id, id));
-
-      return { success: true };
-    }),
-  create: adminProtectedProcedure
-    .input(TeacherInsertSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { db } = ctx;
-      const { image, ...values } = input;
-
-      await db.insert(schema.teacher).values({
-        ...values,
-        image: typeof image === "string" ? image : null,
-      });
-
-      return { success: true };
+      return teacher;
     }),
 
-  update: adminProtectedProcedure
-    .input(TeacherInsertSchema)
+  _update: adminProtectedProcedure
+    .input(TeacherUpdateSchema)
     .mutation(async ({ input, ctx }) => {
       const { db } = ctx;
       const { id, image, ...values } = input;
 
-      if (!id || !isNumber(id)) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Teacher ID is required",
-        });
-      }
-
-      const teacher = await db
-        .select()
+      const [toUpdateTeacher] = await db
+        .select({
+          image: schema.teacher.image,
+        })
         .from(schema.teacher)
         .where(eq(schema.teacher.id, Number(id)));
 
-      let currentTeacherImage = teacher?.[0]?.image;
+      if (!toUpdateTeacher) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Teacher not found",
+        });
+      }
+
+      let currentTeacherImage = toUpdateTeacher.image;
 
       if (typeof image === "string") {
         currentTeacherImage = image;
@@ -82,35 +68,60 @@ export const teacherRouter = createTRPCRouter({
         currentTeacherImage = null;
       }
 
-      await db
+      const [updatedTeacher] = await db
         .update(schema.teacher)
         .set({
           ...values,
           image: image ? currentTeacherImage : null,
         })
-        .where(eq(schema.teacher.id, Number(id)));
+        .where(eq(schema.teacher.id, id))
+        .returning();
 
-      return { success: true };
+      return updatedTeacher;
+    }),
+  _create: adminProtectedProcedure
+    .input(TeacherInsertSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { db } = ctx;
+      const { image, ...values } = input;
+
+      const [createdTeacher] = await db
+        .insert(schema.teacher)
+        .values({
+          ...values,
+          image: typeof image === "string" ? image : null,
+        })
+        .returning();
+
+      return createdTeacher;
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const { db } = ctx;
-    const allTeachers = await db.select().from(schema.teacher);
-    return allTeachers;
-  }),
-
-  getById: publicProcedure
-    .input(z.number())
-    .query(async ({ input: id, ctx }) => {
+  _delete: adminProtectedProcedure
+    .input(TeacherDeleteSchema)
+    .mutation(async ({ input: { id }, ctx }) => {
       const { db } = ctx;
-      const teacher = await db
+
+      const [toDeleteTeacher] = await db
         .select()
         .from(schema.teacher)
         .where(eq(schema.teacher.id, id));
-      return teacher[0];
-    }),
 
-  getLandingPageTeachers: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.query.teacher.findMany({ limit: 7 });
-  }),
+      if (!toDeleteTeacher) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Teacher not found",
+        });
+      }
+
+      if (toDeleteTeacher.image) {
+        await deleteFile({ fileName: toDeleteTeacher.image });
+      }
+
+      const [deletedTeacher] = await db
+        .delete(schema.teacher)
+        .where(eq(schema.teacher.id, id))
+        .returning();
+
+      return deletedTeacher;
+    }),
 });

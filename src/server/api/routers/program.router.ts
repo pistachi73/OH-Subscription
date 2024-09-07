@@ -266,12 +266,19 @@ export const programRouter = createTRPCRouter({
       const { db } = ctx;
       const { id, thumbnail, ...values } = input;
 
-      const program = await db
+      const [toUpdateProgram] = await db
         .select()
         .from(schema.program)
         .where(eq(schema.program.id, Number(id)));
 
-      let currentProgramThumbnail = program?.[0]?.thumbnail;
+      if (!toUpdateProgram) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Program not found",
+        });
+      }
+
+      let currentProgramThumbnail = toUpdateProgram.thumbnail;
 
       if (typeof thumbnail === "string") {
         currentProgramThumbnail = thumbnail;
@@ -293,8 +300,8 @@ export const programRouter = createTRPCRouter({
 
       if (!updatedProgram) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Program not found",
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Could not update program",
         });
       }
 
@@ -335,7 +342,7 @@ export const programRouter = createTRPCRouter({
         });
       }
 
-      if (program?.thumbnail) {
+      if (program.thumbnail) {
         await deleteFile({ fileName: program.thumbnail });
       }
 

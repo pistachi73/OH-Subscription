@@ -13,7 +13,7 @@ import {
 import { api } from "@/trpc/server";
 
 const TeacherAdminPage = async () => {
-  const teachers = await api.teacher.getAll.query();
+  const teachers = await api.teacher._getAll.query();
 
   return (
     <>

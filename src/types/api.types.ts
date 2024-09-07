@@ -16,5 +16,8 @@ export type AdminShot = RouterOutputs["shot"]["_getById"];
 export type ApiComment =
   RouterOutputs["comment"]["getCommentsBySourceId"]["comments"][0];
 
+// TEACHERS
+export type TeacherCard = RouterOutputs["teacher"]["getTeacherCards"][0];
+
 // CATEGORY
 export type AdminCategory = RouterOutputs["category"]["_getById"];

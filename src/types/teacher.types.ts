@@ -5,8 +5,13 @@ import { FileSchema } from "./shared.types";
 export type Teacher = typeof teacher.$inferSelect;
 
 export const TeacherInsertSchema = z.object({
-  id: z.number().optional(),
   name: z.string().min(1, { message: "Name is required" }),
   bio: z.string().min(1, { message: "Bio is required" }),
   image: FileSchema,
 });
+
+export const TeacherUpdateSchema = TeacherInsertSchema.extend({
+  id: z.number(),
+});
+
+export const TeacherDeleteSchema = TeacherUpdateSchema.pick({ id: true });

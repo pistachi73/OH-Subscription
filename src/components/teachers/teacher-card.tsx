@@ -1,11 +1,13 @@
-import { cn } from "@/lib/utils/cn";
-import type { Teacher } from "@/types";
 import { m } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
+import { cn } from "@/lib/utils/cn";
+
+import type { TeacherCard as TeacherCardType } from "@/types";
+
 type TeacherCardProps = {
-  teacher: NonNullable<Teacher>;
+  teacher: NonNullable<TeacherCardType>;
 };
 
 export const TeacherCard = ({ teacher }: TeacherCardProps) => {

@@ -22,11 +22,11 @@ export const NewTeacher = () => {
     },
   });
 
-  const { mutateAsync, isLoading: isSaving } = api.teacher.create.useMutation({
+  const { mutateAsync, isLoading: isSaving } = api.teacher._create.useMutation({
     onSuccess: () => {
       router.push("/admin/teachers");
       toast.success("Teacher created successfully");
-      trpcUtils.teacher.getAll.invalidate();
+      trpcUtils.teacher._getAll.invalidate();
     },
     onError: (error) => {
       toast.error(error.message);

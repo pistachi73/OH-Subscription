@@ -8,7 +8,7 @@ export const Home = async () => {
   const [programs, shots, teachers] = await Promise.all([
     api.program.getProgramCards.query(),
     api.shot.getShotCards.query(),
-    api.teacher.getLandingPageTeachers.query(),
+    api.teacher.getTeacherCards.query(),
   ]);
 
   const heroPrograms = [...programs].slice(0, 5);

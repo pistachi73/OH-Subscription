@@ -32,7 +32,7 @@ export const FilteredPrograms = async ({
       ...(searchParams?.search && { searchQuery: searchParams.search }),
     }),
     api.category.getAll.query(),
-    api.teacher.getAll.query(),
+    api.teacher._getAll.query(),
   ]);
 
   const CATEGORY_OPTIONS: Option[] = categories.map((category) => ({
