@@ -13,7 +13,7 @@ import {
 import { api } from "@/trpc/server";
 
 const TeacherAdminPage = async () => {
-  const videos = await api.video.getAll.query();
+  const videos = await api.video._getAll.query();
 
   return (
     <>

@@ -33,7 +33,7 @@ export const EditVideo = ({ video }: EditVideoProps) => {
   });
   const [isSaving, startTransition] = useTransition();
 
-  const { mutateAsync: saveVideo } = api.video.update.useMutation({
+  const { mutateAsync: saveVideo } = api.video._update.useMutation({
     onError: (error) => {
       toast.error(error.message);
     },

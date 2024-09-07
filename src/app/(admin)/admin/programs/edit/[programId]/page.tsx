@@ -26,7 +26,7 @@ const EditProgramPage = async ({
   const [program, teachers, videos, categories] = await Promise.all([
     api.program._getById.query(Number(programId)),
     api.teacher._getAll.query(),
-    api.video.getAll.query(),
+    api.video._getAll.query(),
     api.category.getAll.query(),
   ]);
 

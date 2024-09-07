@@ -67,8 +67,8 @@ export const ShareButton = ({
       <ResponsiveDialogContent className="max-w-[500px] mx-auto">
         <div className={cn("flex flex-col gap-4")}>
           <div className="space-y-1">
-            <ResponsiveDialogTitle>
-              <h2 className="text-xl font-medium">{title}</h2>
+            <ResponsiveDialogTitle className="text-xl font-medium">
+              {title}
             </ResponsiveDialogTitle>
             {description && (
               <ResponsiveDialogDescription>

@@ -13,18 +13,16 @@ export const DeleteVideoDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutateAsync, isLoading: isDeleting } = api.video.delete.useMutation({
-    onSuccess: () => {
-      isVideoDeleteModalOpenSignal.value = false;
-      trpcUtils.video.getAll.invalidate();
-      toast.success("Video deleted successfully");
-      router.push("/admin/videos");
-      router.refresh();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const { mutate: deleteVideo, isLoading: isDeleting } =
+    api.video._delete.useMutation({
+      onSuccess: () => {
+        isVideoDeleteModalOpenSignal.value = false;
+        trpcUtils.video._getAll.invalidate();
+        toast.success("Video deleted successfully");
+        router.push("/admin/videos");
+        router.refresh();
+      },
+    });
 
   const onDelete = async () => {
     const id = videoIdSignal.value;
@@ -32,7 +30,7 @@ export const DeleteVideoDialog = () => {
       toast.error("Please provide a video id to delete.");
       return;
     }
-    await mutateAsync(id);
+    deleteVideo({ id });
   };
 
   return (

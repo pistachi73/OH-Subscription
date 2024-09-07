@@ -103,20 +103,31 @@ export const authRouter = createTRPCRouter({
       const userId = uuid();
       const name = existingToken.email.split("@")[0];
 
-      const customer = await stripe.customers.create({
-        email,
-        name,
-      });
+      let customer: Stripe.Response<Stripe.Customer>;
+      try {
+        customer = await stripe.customers.create({
+          email,
+          name,
+        });
+      } catch (e) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Could not create stripe customer. Please try again later.",
+        });
+      }
 
-      await db.insert(user).values({
-        id: userId,
-        name,
-        email,
-        password: hashedPassword,
-        stripeCustomerId: customer.id,
-      });
+      const [createdUser] = await db
+        .insert(user)
+        .values({
+          id: userId,
+          name,
+          email,
+          password: hashedPassword,
+          stripeCustomerId: customer.id,
+        })
+        .returning();
 
-      return { success: "User created!" };
+      return createdUser;
     }),
 
   reset: publicProcedure

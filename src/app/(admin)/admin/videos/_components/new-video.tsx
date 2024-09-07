@@ -29,7 +29,7 @@ export const NewVideo = () => {
   const router = useRouter();
   const [isSaving, startTransition] = useTransition();
 
-  const { mutateAsync } = api.video.create.useMutation({
+  const { mutateAsync } = api.video._create.useMutation({
     onSuccess: () => {
       router.push("/admin/videos");
     },
