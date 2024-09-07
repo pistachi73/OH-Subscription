@@ -1,9 +1,10 @@
 import { env } from "@/env";
+import { getUrl } from "@/lib/utils/get-url";
 import { getBaseUrl } from "@/trpc/shared";
 import { TRPCError } from "@trpc/server";
 import { Stripe } from "stripe";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-04-10",
@@ -52,7 +53,7 @@ export const paymentRouter = createTRPCRouter({
     };
   }),
 
-  createCheckoutSession: publicProcedure
+  createCheckoutSession: protectedProcedure
     .input(
       z.object({
         productId: z.string(),
@@ -60,13 +61,6 @@ export const paymentRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { session } = ctx;
-
-      if (!session) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "You are not logged in",
-        });
-      }
 
       const baseUrl = getBaseUrl();
 
@@ -82,8 +76,8 @@ export const paymentRouter = createTRPCRouter({
         metadata: {
           userId: session.user.id as string,
         },
-        success_url: `${baseUrl}/account/subscription/`,
-        cancel_url: `${baseUrl}/plans/`,
+        success_url: getUrl("/account/subscription/"),
+        cancel_url: getUrl("/plans/"),
         subscription_data: {
           trial_period_days: 7,
         },
@@ -101,21 +95,12 @@ export const paymentRouter = createTRPCRouter({
       };
     }),
 
-  createBillingPortalSession: publicProcedure.mutation(async ({ ctx }) => {
+  createBillingPortalSession: protectedProcedure.mutation(async ({ ctx }) => {
     const { session } = ctx;
-
-    if (!session || !session.user.stripeCustomerId) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "You are not logged in",
-      });
-    }
-
-    const baseUrl = getBaseUrl();
 
     const billingPortalSession = await stripe.billingPortal.sessions.create({
       customer: session.user.stripeCustomerId,
-      return_url: `${baseUrl}/account/subscription/`,
+      return_url: getUrl("/account/subscription/"),
     });
 
     if (!billingPortalSession.url) {
