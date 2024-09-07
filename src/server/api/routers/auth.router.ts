@@ -127,7 +127,7 @@ export const authRouter = createTRPCRouter({
         })
         .returning();
 
-      return createdUser;
+      return { createdUser };
     }),
 
   reset: publicProcedure
