@@ -54,16 +54,16 @@ export const AuthEmailVerification = ({
 
     if (!typecheckSuccess || !email || !password || !code) return;
 
-    const { success } = await register.mutateAsync({
+    const { createdUser } = await register.mutateAsync({
       email,
       password,
       code,
     });
 
-    if (!success) return;
+    if (!createdUser) return;
 
     await login({
-      email,
+      email: createdUser.email,
       password,
     });
 
