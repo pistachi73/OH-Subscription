@@ -61,7 +61,6 @@ export const ChapterContextProvider = ({
 
   if (user?.isSubscribed) {
     useUserProgress({
-      userId: user?.id as string,
       programId: program.id,
       videoId: chapter.id,
     });

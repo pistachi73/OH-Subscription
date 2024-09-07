@@ -4,7 +4,6 @@ import { z } from "zod";
 export type UserProgress = typeof userProgress.$inferSelect;
 
 export const UserProgressInsertSchema = z.object({
-  userId: z.string(),
   programId: z.number(),
   videoId: z.number(),
   lastWatchedAt: z.date().optional(),

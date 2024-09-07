@@ -11,13 +11,11 @@ import {
 import { useCallback, useEffect, useState } from "react";
 
 type UseUserProgressProps = {
-  userId: string;
   programId: number;
   videoId: number;
 };
 
 export const useUserProgress = ({
-  userId,
   programId,
   videoId,
 }: UseUserProgressProps) => {
@@ -36,10 +34,10 @@ export const useUserProgress = ({
     (
       input: Omit<
         z.infer<typeof UserProgressInsertSchema>,
-        "userId" | "programId" | "videoId"
+        "programId" | "videoId"
       >,
-    ) => setProgress({ userId, programId, videoId, ...input }),
-    [setProgress, userId, programId, videoId],
+    ) => setProgress({ programId, videoId, ...input }),
+    [setProgress, programId, videoId],
   );
 
   const setUserTimeProgress = useCallback(() => {
