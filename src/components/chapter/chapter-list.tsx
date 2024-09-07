@@ -51,7 +51,7 @@ export const InactiveChapterCard = ({
   const isSubscribed = useIsSubscribed();
   const canSeeChapter = isSubscribed || chapter.isFree;
 
-  const chapterHref = `/programs/${programSlug}/chapters/${chapter.slug}${chapter.userProgress && `?start=${chapter.userProgress.watchedDuration}`}`;
+  const chapterHref = `/programs/${programSlug}/chapters/${chapter.slug}${chapter.userProgress?.watchedDuration ? `?start=${chapter.userProgress?.watchedDuration}` : ""}`;
 
   if (!chapter) return null;
   return (

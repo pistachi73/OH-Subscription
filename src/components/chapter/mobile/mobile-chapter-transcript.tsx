@@ -1,15 +1,8 @@
 import { useChapterContext } from "../chapter-context";
+import { ChapterTranscript } from "../chapter-transcript";
 import { MobileChaterContentDrawer } from "./mobile-chapter-content-drawer";
 
-type ChapterTranscriptProps = {
-  transcript?: string | null;
-};
-
-export const MobileChapterTranscript = ({
-  transcript,
-}: ChapterTranscriptProps) => {
-  if (!transcript) return null;
-
+export const MobileChapterTranscript = () => {
   const { activeTab } = useChapterContext();
   return (
     <MobileChaterContentDrawer
@@ -17,7 +10,7 @@ export const MobileChapterTranscript = ({
       open={activeTab === "transcript"}
       className="p-0"
     >
-      <p className="overflow-auto p-4">{transcript ?? "transcript"}</p>
+      <ChapterTranscript />
     </MobileChaterContentDrawer>
   );
 };

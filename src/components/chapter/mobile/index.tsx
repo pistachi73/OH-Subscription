@@ -1,6 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+
+import { useChapterContext } from "../chapter-context";
 import { MobileChapterDetails } from "./mobile-chapter-details";
 import { MobileChapterNavigation } from "./mobile-chapter-navigation";
 import { MobileLoadingChapterPlayer } from "./mobile-loading-chapter-player";
@@ -30,7 +32,19 @@ const DynamicMobileChapterCommunity = dynamic(
     ssr: false,
   },
 );
+
+const DynamicMobileChapterTranscript = dynamic(
+  () =>
+    import("./mobile-chapter-transcript").then(
+      (mod) => mod.MobileChapterTranscript,
+    ),
+  {
+    ssr: false,
+  },
+);
 const MobileChapter = () => {
+  const { chapter, activeTab } = useChapterContext();
+
   return (
     <>
       <div className="fixed top-0 left-0 w-full z-50 sm:relative">
@@ -41,6 +55,8 @@ const MobileChapter = () => {
         <MobileChapterDetails />
         <DynamicMobileChapterList />
         <DynamicMobileChapterCommunity />
+        {activeTab}
+        {chapter.transcript && <DynamicMobileChapterTranscript />}
       </div>
     </>
   );

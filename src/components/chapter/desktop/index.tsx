@@ -51,7 +51,7 @@ const DesktopChapter = () => {
       <m.div
         className={cn(
           "w-full h-[100svh] bg-muted-background  overflow-hidden grid ",
-          "[--cols:1fr_400px] xl:[--cols:1fr_450px]",
+          "[--cols:1fr_0px] lg:[--cols:1fr_400px] xl:[--cols:1fr_450px]",
         )}
         initial="close"
         animate={activeTab ? "open" : "close"}

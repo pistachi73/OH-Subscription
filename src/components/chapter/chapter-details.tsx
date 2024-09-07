@@ -42,10 +42,7 @@ export const ChapterDetails = () => {
             </Badge>
           ))}
         </section>
-        <p className="mt-2 text-sm lg:text-base text-balance">
-          {chapter.description}
-        </p>
-
+        <p className="mt-2 text-sm lg:text-base">{chapter.description}</p>
         <div className="mt-4 flex gap-2 w-full">
           <ShareButton
             asChild
