@@ -32,6 +32,7 @@ import { ProgramMainCTAButton } from "../program-main-cta-button";
 
 import { useLikeSource } from "@/hooks/use-like-source";
 import type { ProgramSpotlight } from "@/types";
+import Link from "next/link";
 
 type ProgramSpotlightHero = {
   program: NonNullable<ProgramSpotlight>;
@@ -49,7 +50,6 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
     totalChapters,
     updatedAt,
     thumbnail,
-    lastWatchedChapter,
   } = program;
 
   return (
@@ -112,13 +112,14 @@ export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
             {totalChapters} chapters
           </p>
           {categories?.map((category) => (
-            <Badge
+            <Link
               key={`category-${category.name}`}
-              variant="accent"
-              className="text-xs sm:text-sm"
+              href={`/programs/c/${category.slug}`}
             >
-              {category.name}
-            </Badge>
+              <Badge variant="accent" className="text-xs sm:text-sm">
+                {category.name}
+              </Badge>
+            </Link>
           ))}
         </div>
 

@@ -7,7 +7,7 @@ export type Video = typeof video.$inferSelect;
 export const VideoInsertSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
-  url: z.string().min(1, { message: "URL is required" }),
+  playbackId: z.string().min(1, { message: "PlaybackId is required" }),
   duration: z.number().min(1, { message: "Duration is required" }),
   transcript: z.string().optional(),
   thumbnail: FileSchema,

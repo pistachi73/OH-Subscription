@@ -8,6 +8,13 @@
       "when": 1725393650212,
       "tag": "0000_purple_human_cannonball",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1725794190405,
+      "tag": "0001_thick_reaper",
+      "breakpoints": true
     }
   ]
 }

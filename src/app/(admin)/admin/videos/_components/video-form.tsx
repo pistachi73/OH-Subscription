@@ -2,7 +2,6 @@ import type { UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
 import { AdminFileInput } from "@/components/ui/admin/admin-file-input";
-import type { Option } from "@/components/ui/admin/admin-multiple-select";
 import {
   Card,
   CardContent,
@@ -24,16 +23,6 @@ import type { VideoInsertSchema } from "@/types";
 type VideoFormProps = {
   form: UseFormReturn<z.infer<typeof VideoInsertSchema>>;
 };
-
-const CATEGORY_OPTIONS: Option[] = [
-  { label: "Idioms", value: "idions" },
-  { label: "Voacabulary", value: "vocabulary" },
-  { label: "Grammar", value: "grammar" },
-  { label: "Listening", value: "listening" },
-  { label: "Conversation", value: "conversation" },
-  { label: "Quizz", value: "quizz" },
-  { label: "Pronunciation", value: "pronunciation" },
-];
 
 export const VideoForm = ({ form }: VideoFormProps) => {
   return (
@@ -67,7 +56,7 @@ export const VideoForm = ({ form }: VideoFormProps) => {
               />{" "}
               <FormField
                 control={form.control}
-                name="url"
+                name="playbackId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="block">Url</FormLabel>

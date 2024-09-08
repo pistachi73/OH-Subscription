@@ -251,13 +251,12 @@ export const ProgramCard = ({
                   {levelMap[level].shortFormat}
                 </Badge>
                 {categories?.map((category) => (
-                  <Badge
-                    key={`category-${category.name}`}
-                    variant="outline"
-                    className=""
+                  <Link
+                    key={`${program.id}-category-${category.name}`}
+                    href={`/programs/c/${category.slug}`}
                   >
-                    {category.name}
-                  </Badge>
+                    <Badge variant="outline">{category.name}</Badge>
+                  </Link>
                 ))}
                 <span className="text-sm text-muted-foreground">
                   {totalChapters} chapters

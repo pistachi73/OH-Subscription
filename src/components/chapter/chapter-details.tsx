@@ -33,13 +33,12 @@ export const ChapterDetails = () => {
             {levelMap[program.level].shortFormat}
           </Badge>
           {program.categories?.map((category) => (
-            <Badge
-              key={`category-${category.name}`}
-              variant="accent"
-              className=""
+            <Link
+              key={`${program.id}-category-${category.name}`}
+              href={`/programs/c/${category.slug}`}
             >
-              {category.name}
-            </Badge>
+              <Badge variant="accent">{category.name}</Badge>
+            </Link>
           ))}
         </section>
         <p className="mt-2 text-sm lg:text-base">{chapter.description}</p>

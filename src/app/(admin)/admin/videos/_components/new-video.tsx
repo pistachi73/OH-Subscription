@@ -21,7 +21,7 @@ export const NewVideo = () => {
     defaultValues: {
       title: "",
       description: "",
-      url: "",
+      playbackId: "",
       transcript: "",
       duration: undefined,
     },

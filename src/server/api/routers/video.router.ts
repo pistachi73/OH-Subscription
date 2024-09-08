@@ -1,4 +1,5 @@
 import { and, eq, getTableColumns } from "drizzle-orm";
+import jwt from "jsonwebtoken";
 import { z } from "zod";
 
 import {
@@ -8,6 +9,7 @@ import {
 } from "../trpc";
 
 import { deleteFile } from "@/actions/delete-file";
+import { env } from "@/env";
 import * as schema from "@/server/db/schema";
 import {
   VideoDeleteSchema,
@@ -24,6 +26,7 @@ export const videoRouter = createTRPCRouter({
     )
     .query(async ({ input: { videoSlug, programId }, ctx }) => {
       const { db } = ctx;
+      const { user } = ctx.session ?? {};
 
       const [video] = await db
         .select({
@@ -47,7 +50,29 @@ export const videoRouter = createTRPCRouter({
         )
         .where(and(eq(schema.video.slug, videoSlug)));
 
-      return video;
+      if (!video) return null;
+      let token: string | null = null;
+
+      if (user?.isSubscribed || video.isFree) {
+        const secretKey = Buffer.from(
+          env.MUX_SIGNING_KEY_SECRET,
+          "base64",
+        ).toString("ascii");
+
+        token = jwt.sign(
+          {
+            sub: video.playbackId,
+            aud: "v",
+            // Convert to seconds and add 1 hour
+            exp: Math.floor(Date.now() / 1000) + 60 * 60,
+            kid: env.MUX_SIGNING_KEY,
+          },
+          secretKey,
+          { algorithm: "RS256" },
+        );
+      }
+
+      return Object.assign(video, { playbackToken: token });
     }),
 
   _getAll: publicProcedure.query(async ({ ctx }) => {

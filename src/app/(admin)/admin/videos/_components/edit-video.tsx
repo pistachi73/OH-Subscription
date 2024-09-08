@@ -25,7 +25,7 @@ export const EditVideo = ({ video }: EditVideoProps) => {
     defaultValues: {
       title: video.title,
       description: video.description,
-      url: video.url,
+      playbackId: video.playbackId,
       transcript: video.transcript || undefined,
       duration: video.duration,
       thumbnail: video.thumbnail || undefined,

@@ -13,7 +13,7 @@ export const video = ohPgTable(
       .generatedAlwaysAs((): SQL => slugify(video.title))
       .notNull(),
     description: text("description").notNull(),
-    url: text("url").notNull(),
+    playbackId: text("playback_id").notNull(),
     duration: integer("duration").notNull(),
     thumbnail: text("thumbnail"),
     transcript: text("transcript"),

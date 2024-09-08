@@ -51,6 +51,10 @@ export const env = createEnv({
 
     // OPENAI
     OPENAI_API_KEY: z.string(),
+
+    // MUX
+    MUX_SIGNING_KEY: z.string(),
+    MUX_SIGNING_KEY_SECRET: z.string(),
   },
 
   /**
@@ -88,6 +92,8 @@ export const env = createEnv({
 
     NEXT_PUBLIC_AWS_CLOUDFRONT_URL: process.env.NEXT_PUBLIC_AWS_CLOUDFRONT_URL,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    MUX_SIGNING_KEY: process.env.MUX_SIGNING_KEY,
+    MUX_SIGNING_KEY_SECRET: process.env.MUX_SIGNING_KEY_SECRET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
