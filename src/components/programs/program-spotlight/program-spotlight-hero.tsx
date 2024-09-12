@@ -31,16 +31,13 @@ import { format } from "date-fns";
 import { ProgramMainCTAButton } from "../program-main-cta-button";
 
 import { useLikeSource } from "@/hooks/use-like-source";
-import type { ProgramSpotlight } from "@/types";
 import Link from "next/link";
+import { useProgramSpotlightContext } from "./program-spotlight-context";
 
-type ProgramSpotlightHero = {
-  program: NonNullable<ProgramSpotlight>;
-};
-
-export const ProgramSpotlightHero = ({ program }: ProgramSpotlightHero) => {
+export const ProgramSpotlightHero = () => {
+  const { data: program } = useProgramSpotlightContext();
   const { isLikedByUser, isLikeLoading, like } = useLikeSource({
-    initialLiked: program.isLikedByUser,
+    initialLiked: program?.isLikedByUser ?? false,
   });
 
   const {

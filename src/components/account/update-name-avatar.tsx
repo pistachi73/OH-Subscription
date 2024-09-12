@@ -23,7 +23,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
 import { AccountSettingsSchema } from "@/types";
 
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const UpdateNameAvatar = () => {
   const user = useCurrentUser();
@@ -96,7 +96,7 @@ export const UpdateNameAvatar = () => {
                       {...field}
                       autoComplete="name"
                       className="text-sm"
-                      disabled={updateUserName.isLoading}
+                      disabled={updateUserName.isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -107,11 +107,11 @@ export const UpdateNameAvatar = () => {
               <Button
                 size={"sm"}
                 disabled={
-                  !nameForm.formState.isDirty || updateUserName.isLoading
+                  !nameForm.formState.isDirty || updateUserName.isPending
                 }
                 type="submit"
               >
-                {updateUserName.isLoading && (
+                {updateUserName.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Save

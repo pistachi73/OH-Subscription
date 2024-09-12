@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { useMediaQuery } from "usehooks-ts";
 import { ProgramList } from "../../programs/program-list";
 import { MaxWidthWrapper } from "../../ui/max-width-wrapper";

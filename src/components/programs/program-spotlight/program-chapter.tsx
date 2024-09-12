@@ -85,7 +85,7 @@ export const Chapter = ({ chapter }: ChapterProps) => {
           {chapter.title}
         </h2>
 
-        <p className="mt-1 sm:mt-2 text-base leading-relaxed  text-foreground line-clamp-4">
+        <p className="mt-1 sm:mt-2 text-base leading-relaxed  text-foreground line-clamp-2">
           {chapter.description}
         </p>
       </section>

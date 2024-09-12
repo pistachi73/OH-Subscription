@@ -6,7 +6,7 @@ import { Providers } from "@/components/providers";
 import { DeviceOnlyProvider } from "@/components/ui/device-only/device-only-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { getHeaders } from "@/lib/get-headers";
-import { TRPCReactProvider } from "@/trpc/react";
+import { TRPCReactProvider } from "@/trpc/client";
 
 import "@/styles/globals.css";
 import { inter, mono } from "./fonts";

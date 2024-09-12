@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS "ohs_video" (
     '(^-+|-+$)', '', 'g' -- Remove leading and trailing hyphens
   )) STORED,
 	"description" text NOT NULL,
-	"url" text NOT NULL,
+	"playback_id" text NOT NULL,
 	"duration" integer NOT NULL,
 	"thumbnail" text,
 	"transcript" text,
@@ -193,6 +193,8 @@ CREATE TABLE IF NOT EXISTS "ohs_video" (
 CREATE TABLE IF NOT EXISTS "ohs_video_program" (
 	"program_id" integer NOT NULL,
 	"video_id" integer NOT NULL,
+	"video_slug" text NOT NULL,
+	"program_slug" text NOT NULL,
 	"chapter_number" integer NOT NULL,
 	"is_free" boolean DEFAULT false,
 	CONSTRAINT "ohs_video_program_video_id_program_id_pk" PRIMARY KEY("video_id","program_id"),
@@ -347,4 +349,6 @@ CREATE INDEX IF NOT EXISTS "ohs_user_stripe_subscription_id_index" ON "ohs_user"
 CREATE INDEX IF NOT EXISTS "ohs_user_progress_program_id_index" ON "ohs_user_progress" USING btree ("program_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "ohs_user_progress_video_id_index" ON "ohs_user_progress" USING btree ("video_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "ohs_user_progress_user_id_index" ON "ohs_user_progress" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "ohs_video_slug_index" ON "ohs_video" USING btree ("slug");
+CREATE INDEX IF NOT EXISTS "ohs_video_slug_index" ON "ohs_video" USING btree ("slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "ohs_video_program_video_slug_index" ON "ohs_video_program" USING btree ("video_slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "ohs_video_program_program_slug_index" ON "ohs_video_program" USING btree ("program_slug");

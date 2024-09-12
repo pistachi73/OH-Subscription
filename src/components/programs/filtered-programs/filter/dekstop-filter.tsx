@@ -25,7 +25,7 @@ export const DesktopProgramFilters = ({
   } = useProgramsUrlQueryFilters();
 
   return (
-    <MaxWidthWrapper className="relative z-10 flex flex-col overflow-hidden mb-6 sm:mb-12">
+    <MaxWidthWrapper className="relative z-10 flex flex-col overflow-hidden mb-6 sm:mb-10">
       <AnimatePresence initial={false} mode="sync">
         {isOpen ? (
           <m.div

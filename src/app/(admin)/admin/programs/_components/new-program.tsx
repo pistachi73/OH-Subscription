@@ -9,7 +9,7 @@ import { ProgramForm } from "./program-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { ProgramInsertSchema } from "@/types";
 
 type NewProgramProps = {
@@ -31,7 +31,7 @@ export const NewProgram = ({ teacherOptions }: NewProgramProps) => {
 
   const router = useRouter();
 
-  const { mutateAsync, isLoading: isSaving } = api.program._create.useMutation({
+  const { mutateAsync, isPending: isSaving } = api.program._create.useMutation({
     onSuccess: () => {
       router.push("/admin/programs");
     },

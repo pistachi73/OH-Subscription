@@ -21,5 +21,6 @@ export const GetCommentBySourceIdSchema = extendBaseSchemasWithSourceId(
   z.object({
     cursor: z.date().nullish(),
     pageSize: z.number().optional(),
+    direction: z.enum(["forward", "backward"]).optional(), // optional, useful for bi-directional query
   }),
 );

@@ -12,7 +12,7 @@ import { VideoForm } from "./video-form";
 import { createPresignedUrl } from "@/actions/create-presigned-url";
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import { uploadToS3 } from "@/lib/upload-to-s3";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { VideoInsertSchema } from "@/types";
 
 export const NewVideo = () => {

@@ -10,7 +10,7 @@ import {
   type Option,
 } from "@/components/ui/admin/admin-multiple-select";
 import { isNumber } from "@/lib/utils/is-number";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 type TeacherSelectProps = {
   teacherOptions: Option[];

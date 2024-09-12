@@ -10,13 +10,13 @@ import {
 } from "./category-signals";
 
 import { AdminDeleteDataDialog } from "@/components/ui/admin/admin-delete-data-dialog";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const DeleteCategoryDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutate: deleteCategory, isLoading: isDeleting } =
+  const { mutate: deleteCategory, isPending: isDeleting } =
     api.category._delete.useMutation({
       onSuccess: () => {
         isCategoryDeleteModalOpenSignal.value = false;

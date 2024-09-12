@@ -1,21 +1,17 @@
 import "server-only";
 
-import {
-  TRPCClientError,
-  createTRPCProxyClient,
-  loggerLink,
-} from "@trpc/client";
-import { callProcedure } from "@trpc/server";
+import { TRPCClientError, createTRPCClient, loggerLink } from "@trpc/client";
+import { createHydrationHelpers } from "@trpc/react-query/rsc";
+import { callTRPCProcedure } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import type { TRPCErrorResponse } from "@trpc/server/rpc";
 import { cache } from "react";
 
 import { cookies, headers } from "next/headers";
 
-import { transformer } from "./shared";
-
 import { type AppRouter, appRouter } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
+import { createCallerFactory, createTRPCContext } from "@/server/api/trpc";
+import { makeQueryClient } from "./query-client";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -32,9 +28,16 @@ const createContext = cache(() => {
   });
 });
 
+export const getQueryClient = cache(makeQueryClient);
+const caller = createCallerFactory(appRouter)(createContext);
+
+export const { trpc, HydrateClient } = createHydrationHelpers<typeof appRouter>(
+  caller,
+  getQueryClient,
+);
 const enableLogs = true;
-export const api = createTRPCProxyClient<AppRouter>({
-  transformer,
+
+export const api = createTRPCClient<AppRouter>({
   links: [
     loggerLink({
       enabled: (op) =>
@@ -52,10 +55,10 @@ export const api = createTRPCProxyClient<AppRouter>({
         observable((observer) => {
           createContext()
             .then((ctx) => {
-              return callProcedure({
+              return callTRPCProcedure({
                 procedures: appRouter._def.procedures,
                 path: op.path,
-                rawInput: op.input,
+                getRawInput: async () => op.input,
                 ctx,
                 type: op.type,
               });

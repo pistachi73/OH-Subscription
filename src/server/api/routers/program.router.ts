@@ -61,7 +61,7 @@ export const programRouter = createTRPCRouter({
           levelIds: z.array(z.string()).optional(),
           limit: z.number().optional(),
           offset: z.number().optional(),
-          searchQuery: z.string().optional(),
+          searchQuery: z.string().optional().nullable(),
           minQueryTime: z.number().optional(),
         })
         .optional(),
@@ -476,14 +476,36 @@ export const programRouter = createTRPCRouter({
     .input(VideoProgramInsertSchema)
     .mutation(
       async ({
-        input: { videoId, programId, chapterNumber, isFree },
+        input: { chapterNumber, isFree, videoId, programId },
         ctx: { db },
       }) => {
+        const [program] = await db
+          .select({
+            slug: schema.program.slug,
+          })
+          .from(schema.program)
+          .where(eq(schema.program.id, programId));
+
+        const [video] = await db
+          .select({
+            slug: schema.video.slug,
+          })
+          .from(schema.video)
+          .where(eq(schema.video.id, videoId));
+
+        if (!video || !program) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid program or video id",
+          });
+        }
         await db
           .insert(schema.videoProgram)
           .values({
             programId,
             videoId,
+            programSlug: program.slug,
+            videoSlug: video.slug,
             chapterNumber: chapterNumber || 1,
             isFree: isFree || false,
           })

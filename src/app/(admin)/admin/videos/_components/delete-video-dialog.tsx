@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import { isVideoDeleteModalOpenSignal, videoIdSignal } from "./video-signals";
 
 import { AdminDeleteDataDialog } from "@/components/ui/admin/admin-delete-data-dialog";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const DeleteVideoDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutate: deleteVideo, isLoading: isDeleting } =
+  const { mutate: deleteVideo, isPending: isDeleting } =
     api.video._delete.useMutation({
       onSuccess: () => {
         isVideoDeleteModalOpenSignal.value = false;

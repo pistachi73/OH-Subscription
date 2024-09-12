@@ -17,7 +17,6 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useSelectedLayoutSegment } from "next/navigation";
-import ThemeSwitch from "../theme-switch";
 
 type DesktopHeaderProps = {
   renderAsScrolled?: boolean;
@@ -87,7 +86,7 @@ export const DesktopHeader = ({
               openWidth="w-full"
               className="max-w-[320px]"
             />
-            <ThemeSwitch />
+            {/* <ThemeSwitch /> */}
 
             {user ? (
               <div className="ml-2 flex gap-1 items-center h-9">

@@ -1,4 +1,4 @@
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { useSignals } from "@preact/signals-react/runtime";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -66,7 +66,7 @@ export const AuthResetPassword = ({ authForm }: AuthResetPasswordProps) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} disabled={reset.isLoading} autoFocus />
+                <Input {...field} disabled={reset.isPending} autoFocus />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,9 +75,9 @@ export const AuthResetPassword = ({ authForm }: AuthResetPasswordProps) => {
         <Button
           className="w-full mt-4"
           type="submit"
-          disabled={reset.isLoading}
+          disabled={reset.isPending}
         >
-          {reset.isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {reset.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Send link to reset password
         </Button>
       </form>

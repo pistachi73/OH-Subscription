@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/carousel/carousel.hooks";
 import { cn } from "@/lib/utils/cn";
 import type { ProgramCard as ProgramCardType } from "@/types";
+import { Skeleton } from "../ui/skeleton";
 import { ProgramCard, type ProgramCardProps } from "./program-card";
 
 type ProgramCarouselProps = {
@@ -50,10 +51,6 @@ export const ProgramCarousel = ({
   const { slideSizeClassname, slidesToScroll, slidesPerView } =
     useCarouselSettings();
 
-  if (!programs?.length) {
-    return null;
-  }
-
   return (
     <div className="my-8 md:my-10 lg:my-12">
       <CarouselHeader title={title} href={href} />
@@ -68,20 +65,36 @@ export const ProgramCarousel = ({
         }}
       >
         <CarouselContent>
-          {programs?.map((program, index) => {
-            return (
-              <CarouselItem
-                key={`${title}-${program.slug}`}
-                className={cn(slideSizeClassname)}
-              >
-                <CarouselProgramCard
-                  index={index}
-                  priority={priority && index < slidesPerView}
-                  program={program}
-                />
-              </CarouselItem>
-            );
-          })}
+          {programs?.length
+            ? programs?.map((program, index) => {
+                return (
+                  <CarouselItem
+                    key={`${title}-${program.slug}`}
+                    className={cn(slideSizeClassname)}
+                  >
+                    <CarouselProgramCard
+                      index={index}
+                      priority={priority && index < slidesPerView}
+                      program={program}
+                    />
+                  </CarouselItem>
+                );
+              })
+            : Array.from({ length: slidesPerView + 3 }).map((_, index) => {
+                return (
+                  <CarouselItem
+                    key={`program-carousel-skeleton-item${index}`}
+                    className={cn(slideSizeClassname)}
+                  >
+                    <Skeleton
+                      className="animate-pulse-carousel aspect-video h-full w-full"
+                      style={{
+                        animationDelay: `${index * 100}ms`,
+                      }}
+                    />
+                  </CarouselItem>
+                );
+              })}
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />

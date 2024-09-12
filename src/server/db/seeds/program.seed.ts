@@ -24,14 +24,14 @@ async function getTeacherId(db: DB, teacherName: string) {
   return teacher.id;
 }
 
-async function getVideoId(db: DB, videoTitle: string) {
+async function getVideoIdAndSlug(db: DB, videoTitle: string) {
   const video = await db.query.video.findFirst({
     where: eq(schema.video.title, videoTitle),
   });
   if (!video) {
     throw new Error(`Unknown video: ${videoTitle}`);
   }
-  return video.id;
+  return [video.id, video.slug] as const;
 }
 
 export default async function seed(db: DB) {
@@ -57,10 +57,13 @@ export default async function seed(db: DB) {
 
       await Promise.all(
         chapters.map(async ({ chapterNumber, title, isFree }) => {
-          const videoId = await getVideoId(db, title);
+          const [videoId, videoSlug] = await getVideoIdAndSlug(db, title);
+
           await db.insert(schema.videoProgram).values({
             programId: insertedProgram.id,
             videoId,
+            videoSlug,
+            programSlug: insertedProgram.slug,
             chapterNumber,
             isFree,
           });

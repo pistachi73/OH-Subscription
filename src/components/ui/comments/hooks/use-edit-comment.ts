@@ -1,5 +1,5 @@
 import type { AutosizeTextAreaRef } from "@/components/ui/autosize-textarea";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { useRef, useState } from "react";
 import { COMMENTS_PAGE_SIZE } from "../comment";
 import type { ExclusiveCommentSource } from "../comment.types";
@@ -20,7 +20,7 @@ export const useEditComment = ({
   const [input, setInput] = useState(initialCommentContent ?? "");
   const apiUtils = api.useUtils();
 
-  const { mutateAsync: editComment, isLoading: isEditingComment } =
+  const { mutateAsync: editComment, isPending: isEditingComment } =
     api.comment.update.useMutation({
       onSuccess: async () => {
         apiUtils.comment.getCommentsBySourceId.setInfiniteData(

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 type BillingPortalButtonProps = {
   type: "PAYMENT" | "PLAN";
@@ -51,10 +51,10 @@ export const BillingPortalButton = ({ type }: BillingPortalButtonProps) => {
       variant="ghost"
       className="flex flex-row justify-between items-center w-full h-14"
       onClick={onCreateBillingPortalSession}
-      disabled={createBillingPortalSession.isLoading}
+      disabled={createBillingPortalSession.isPending}
     >
       <p className="flex gap-2 items-center text-lg font-medium tracking-tighter">
-        {createBillingPortalSession.isLoading ? (
+        {createBillingPortalSession.isPending ? (
           <Loader2 size={20} className="animate-spin" />
         ) : (
           <Icon size={20} />

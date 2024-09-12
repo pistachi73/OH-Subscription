@@ -37,7 +37,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { LEVEL_OPTIONS } from "@/lib/formatters/formatLevel";
 import { cn } from "@/lib/utils/cn";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 import { CategorySelect } from "./category-select";
 import { ChapterSelect } from "./chapter-select";
@@ -244,11 +244,11 @@ export const ProgramForm = ({
           <Button
             className="w-full h-14 text-sm"
             variant="outline"
-            disabled={generateEmbedding.isLoading || !programId}
+            disabled={generateEmbedding.isPending || !programId}
             onClick={onGenerateEmbedding}
             type="button"
           >
-            {generateEmbedding.isLoading && (
+            {generateEmbedding.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
             Generate embeding

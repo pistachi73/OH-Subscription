@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { COMMENTS_PAGE_SIZE } from "@/components/ui/comments/comment";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import type { ExclusiveCommentSource } from "../comment.types";
 
 export const useComments = (commentSource: ExclusiveCommentSource) => {

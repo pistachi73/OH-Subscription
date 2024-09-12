@@ -10,13 +10,13 @@ import {
 } from "./teacher-signals";
 
 import { AdminDeleteDataDialog } from "@/components/ui/admin/admin-delete-data-dialog";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const DeleteTeacherDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutate: deleteTeacher, isLoading: isDeleting } =
+  const { mutate: deleteTeacher, isPending: isDeleting } =
     api.teacher._delete.useMutation({
       onSuccess: () => {
         isTeacherDeleteModalOpenSignal.value = false;

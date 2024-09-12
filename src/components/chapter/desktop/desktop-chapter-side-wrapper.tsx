@@ -13,7 +13,7 @@ import { useChapterContext } from "../chapter-context";
 type ChapterSideWrapperProps = PropsWithChildren & {
   isDialogOpen: boolean;
   onDialogOpenChange: (open: boolean) => void;
-  header: string;
+  header: string | JSX.Element;
 };
 
 export const ChapterSideWrapper = ({

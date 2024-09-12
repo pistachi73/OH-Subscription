@@ -6,9 +6,9 @@ import { ProgramList } from "../program-list";
 import { useFilteredPrograms } from "./filtered-programs-context";
 
 export const FilteredProgramsList = () => {
-  const { filteredPrograms, isFiltering } = useFilteredPrograms();
+  const { filteredPrograms, isFetched } = useFilteredPrograms();
 
-  if (!filteredPrograms?.length && !isFiltering)
+  if (!filteredPrograms?.length && isFetched)
     return (
       <MaxWidthWrapper className="mt-6 md:mt-12">
         <h2 className="text-left text-2x text-muted-foreground">
@@ -21,7 +21,7 @@ export const FilteredProgramsList = () => {
     <MaxWidthWrapper className="relative z-10 grid grid-cols-2  gap-x-2 gap-y-6 sm:gap-y-12 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       <ProgramList
         programs={filteredPrograms}
-        isLoading={isFiltering}
+        isLoading={!isFetched}
         loadingRows={4}
         cardsPerRow={{
           xl: 5,

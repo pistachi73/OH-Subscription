@@ -51,7 +51,6 @@ export const ProgramCard = ({
     totalChapters,
     categories,
     lastWatchedChapter,
-    firstChapter,
   } = program;
 
   const { isLikedByUser, like, isLikeLoading } = useLikeSource({
@@ -178,7 +177,7 @@ export const ProgramCard = ({
                 top: "100%",
                 transition: {
                   ease: "easeOut",
-                  duration: 0.1,
+                  duration: 0.15,
                 },
               }}
               className={cn(
@@ -247,9 +246,14 @@ export const ProgramCard = ({
               </section>
 
               <section className="mb-3 flex flex-row items-center gap-x-1 gap-y-2 flex-wrap">
-                <Badge variant={"accent"} className="">
-                  {levelMap[level].shortFormat}
-                </Badge>
+                <Link
+                  key={`${program.id}-category-${levelMap[level].shortFormat}`}
+                  href={`/programs/l/${level}`}
+                >
+                  <Badge variant={"accent"} className="">
+                    {levelMap[level].shortFormat}
+                  </Badge>
+                </Link>
                 {categories?.map((category) => (
                   <Link
                     key={`${program.id}-category-${category.name}`}

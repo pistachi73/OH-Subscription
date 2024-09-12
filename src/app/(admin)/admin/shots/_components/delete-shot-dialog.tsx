@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import { isShotDeleteModalOpenSignal, shotIdSignal } from "./shot-signals";
 
 import { AdminDeleteDataDialog } from "@/components/ui/admin/admin-delete-data-dialog";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const DeleteShotDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutate: deleteShot, isLoading: isDeleting } =
+  const { mutate: deleteShot, isPending: isDeleting } =
     api.shot._delete.useMutation({
       onSuccess: () => {
         isShotDeleteModalOpenSignal.value = false;

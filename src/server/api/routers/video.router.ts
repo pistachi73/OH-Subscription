@@ -22,9 +22,9 @@ import { isVideoLikedByUserSubquery } from "../query-utils/video.query";
 export const videoRouter = createTRPCRouter({
   getBySlug: publicProcedure
     .input(
-      z.object({ videoSlug: z.string(), programId: z.number().optional() }),
+      z.object({ videoSlug: z.string(), programSlug: z.string().optional() }),
     )
-    .query(async ({ input: { videoSlug, programId }, ctx }) => {
+    .query(async ({ input: { videoSlug, programSlug }, ctx }) => {
       const { db } = ctx;
       const { user } = ctx.session ?? {};
 
@@ -43,8 +43,8 @@ export const videoRouter = createTRPCRouter({
           schema.videoProgram,
           and(
             eq(schema.video.id, schema.videoProgram.videoId),
-            programId
-              ? eq(schema.videoProgram.programId, programId)
+            programSlug
+              ? eq(schema.videoProgram.programSlug, programSlug)
               : undefined,
           ),
         )

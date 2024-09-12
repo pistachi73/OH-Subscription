@@ -1,4 +1,4 @@
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -78,7 +78,7 @@ export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
                   {...field}
                   autoFocus
                   placeholder="******"
-                  disabled={register.isLoading}
+                  disabled={register.isPending}
                   autoComplete="new-password"
                   withValidation={
                     authForm.formState.dirtyFields.registerPassword ||
@@ -101,7 +101,7 @@ export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
                 <PasswordInput
                   {...field}
                   placeholder="******"
-                  disabled={register.isLoading}
+                  disabled={register.isPending}
                   autoComplete="confirm-password"
                 />
               </FormControl>
@@ -112,9 +112,9 @@ export const AuthCreatePassword = ({ authForm }: AuthCreatePasswordProps) => {
         <Button
           className="w-full mt-4"
           type="submit"
-          disabled={register.isLoading}
+          disabled={register.isPending}
         >
-          {register.isLoading && (
+          {register.isPending && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           )}
           Register

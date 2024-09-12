@@ -19,20 +19,21 @@ export const Chapter = async ({ programSlug, chapterSlug }: ChapterProps) => {
 
   const isSubscribed = await isUserSubscribed();
 
-  const program = await api.program.getProgramSpotlight.query({
-    slug: programSlug,
-  });
+  const [program, chapter] = await Promise.all([
+    api.program.getProgramSpotlight.query({
+      slug: programSlug,
+    }),
+    api.video.getBySlug.query({
+      videoSlug: chapterSlug,
+      programSlug,
+    }),
+  ]);
 
-  if (!program) {
+  if (!program || !chapter) {
     redirect("/");
   }
 
-  const chapter = await api.video.getBySlug.query({
-    videoSlug: chapterSlug,
-    programId: program.id,
-  });
-
-  if (!chapter || !(chapter.isFree || isSubscribed)) {
+  if (!(chapter.isFree || isSubscribed)) {
     redirect(`/programs/${program.slug}`);
   }
 

@@ -30,7 +30,7 @@ import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils/cn";
 import { AccountSettingsSchema } from "@/types";
 
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const UpdatePassword = () => {
   const user = useCurrentUser();
@@ -120,7 +120,7 @@ export const UpdatePassword = () => {
                             {...field}
                             autoComplete="current-password"
                             className="text-sm"
-                            disabled={update.isLoading}
+                            disabled={update.isPending}
                             autoFocus
                           />
                         </FormControl>
@@ -151,7 +151,7 @@ export const UpdatePassword = () => {
                               form.formState.dirtyFields.password ||
                               form.formState.errors.password !== undefined
                             }
-                            disabled={update.isLoading}
+                            disabled={update.isPending}
                           />
                         </FormControl>
                       </FormItem>
@@ -169,7 +169,7 @@ export const UpdatePassword = () => {
                           <PasswordInput
                             {...field}
                             autoComplete="confirm-password"
-                            disabled={update.isLoading}
+                            disabled={update.isPending}
                           />
                         </FormControl>
                         <FormMessage />
@@ -179,10 +179,10 @@ export const UpdatePassword = () => {
                   <div className="w-full flex flex-row items-center justify-end">
                     <Button
                       size={"sm"}
-                      disabled={!form.formState.isDirty || update.isLoading}
+                      disabled={!form.formState.isDirty || update.isPending}
                       type="submit"
                     >
-                      {update.isLoading && (
+                      {update.isPending && (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       )}
                       Save

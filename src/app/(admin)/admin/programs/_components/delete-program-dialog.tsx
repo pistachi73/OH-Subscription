@@ -10,13 +10,13 @@ import {
 } from "./program-signals";
 
 import { AdminDeleteDataDialog } from "@/components/ui/admin/admin-delete-data-dialog";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const DeleteProgramDialog = () => {
   useSignals();
   const trpcUtils = api.useUtils();
   const router = useRouter();
-  const { mutate: deleteProgram, isLoading: isDeleting } =
+  const { mutate: deleteProgram, isPending: isDeleting } =
     api.program._delete.useMutation({
       onSuccess: () => {
         isProgramDeleteModalOpenSignal.value = false;

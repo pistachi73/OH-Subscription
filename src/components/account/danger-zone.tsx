@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/responsive-dialog";
 import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils/cn";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 export const DangerZone = () => {
   const [isOpen, setIsOpen] = useState(false);

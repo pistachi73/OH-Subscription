@@ -25,7 +25,7 @@ import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { regularEase } from "@/lib/animation";
 import { cn } from "@/lib/utils/cn";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { m } from "framer-motion";
 import type { CommentProps, ExclusiveCommentSource } from "./comment.types";
 import { useDeleteComment } from "./hooks/use-delete-comment";
@@ -96,7 +96,7 @@ export const Comment = ({
 
   const {
     data: repliesData,
-    isInitialLoading: isInitialLoadingReplies,
+    isLoading: isInitialLoadingReplies,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,

@@ -106,3 +106,18 @@ export const isFromCommentSource = <T>(
 ): data is T & { commentId: number } => {
   return (data as any).commentId !== undefined;
 };
+
+type XOR<T, U> = T | U extends object
+  ? T extends object
+    ? U extends object
+      ? (Without<T, U> & U) | (Without<U, T> & T)
+      : T
+    : U
+  : T | U;
+
+type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+
+export type SourceId = XOR<
+  { programId: number },
+  XOR<{ videoId: number }, XOR<{ shotId: number }, { commentId: number }>>
+>;

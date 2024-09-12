@@ -13,7 +13,7 @@ import {
 } from "./category-signals";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { type AdminCategory, CategoryInsertSchema } from "@/types";
 
 type EditCategoryProps = {

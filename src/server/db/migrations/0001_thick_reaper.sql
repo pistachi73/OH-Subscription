@@ -1,1 +1,0 @@
-ALTER TABLE "ohs_video" RENAME COLUMN "url" TO "playback_id";

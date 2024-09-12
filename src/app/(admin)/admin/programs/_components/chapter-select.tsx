@@ -22,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { isNumber } from "@/lib/utils/is-number";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 import { cn } from "@/lib/utils/cn";
 import type { Video } from "@/types";
@@ -48,9 +48,9 @@ export const ChapterTableRow = ({
 
   const { programId } = useParams<{ programId: string }>();
 
-  const { mutateAsync: setChapter, isLoading: isUpdating } =
+  const { mutateAsync: setChapter, isPending: isUpdating } =
     api.program._setChapter.useMutation({});
-  const { mutateAsync: removeChapter, isLoading: isDeleting } =
+  const { mutateAsync: removeChapter, isPending: isDeleting } =
     api.program._removeChapter.useMutation();
 
   const handleUpdateChapter = () => {

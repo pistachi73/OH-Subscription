@@ -2,7 +2,7 @@
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { Check, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -119,7 +119,7 @@ export const Plans = () => {
                 asChild
                 variant="outline"
                 className="h-16 text-sm w-full mt-9"
-                disabled={createCheckoutSession.isLoading}
+                disabled={createCheckoutSession.isPending}
               >
                 {user ? (
                   <Link href="/">Continue as a guest</Link>
@@ -180,9 +180,9 @@ export const Plans = () => {
                 variant="default"
                 className="h-16 text-sm w-full mt-9"
                 {...(user && { onClick: onCreateCheckoutSession })}
-                disabled={createCheckoutSession.isLoading}
+                disabled={createCheckoutSession.isPending}
               >
-                {createCheckoutSession.isLoading && (
+                {createCheckoutSession.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Become a member

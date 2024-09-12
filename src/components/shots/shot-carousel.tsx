@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils/cn";
 import type { ShotCarousel as ShotCarouselType } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { api as trpcApi } from "../../trpc/react";
+import { api as trpcApi } from "../../trpc/client";
 import { DeviceOnly } from "../ui/device-only/device-only";
 import { useDeviceType } from "../ui/device-only/device-only-provider";
 import { Shot } from "./shot";
@@ -35,6 +35,7 @@ export const ShotCarousel = ({ initialShot, className }: ShotCarouselProps) => {
       {
         initialShotSlug: initialShot.slug,
         initialShotTitle: initialShot.title,
+
         pageSize: 3,
       },
       {

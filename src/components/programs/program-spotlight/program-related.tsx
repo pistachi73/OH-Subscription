@@ -1,13 +1,10 @@
 "use client";
-import { api } from "@/trpc/react";
-import type { ProgramSpotlight } from "@/types";
-import { ProgramList } from "../program-list";
+import { api } from "@/trpc/client";
+import { ProgramCarousel } from "../program-carousel";
+import { useProgramSpotlightContext } from "./program-spotlight-context";
 
-type RelatedProgramsProps = {
-  program: NonNullable<ProgramSpotlight>;
-};
-
-export const RelatedPrograms = ({ program }: RelatedProgramsProps) => {
+export const RelatedPrograms = () => {
+  const { data: program } = useProgramSpotlightContext();
   const { data, isLoading } = api.program.getProgramCards.useQuery({
     searchQuery: program.title,
     limit: 7,
@@ -15,23 +12,11 @@ export const RelatedPrograms = ({ program }: RelatedProgramsProps) => {
 
   const relatedPrograms = data?.filter((p) => p.slug !== program.slug);
 
+  console.log({ relatedPrograms });
+
   return (
     <section className="w-full my-8 sm:my-12">
-      <h2 className="text-lg font-semibold sm:text-xl">You might also like</h2>
-
-      <div className="grid grid-cols-2  gap-x-2 gap-y-6 py-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        <ProgramList
-          programs={relatedPrograms}
-          isLoading={isLoading}
-          initialAnimation={false}
-          cardsPerRow={{
-            sm: 2,
-            md: 3,
-            lg: 4,
-            xl: 5,
-          }}
-        />
-      </div>
+      <ProgramCarousel programs={relatedPrograms} title="You might also like" />
     </section>
   );
 };

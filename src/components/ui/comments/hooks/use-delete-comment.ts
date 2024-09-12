@@ -1,4 +1,4 @@
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { COMMENTS_PAGE_SIZE } from "../comment";
 import type { ExclusiveCommentSource } from "../comment.types";
 
@@ -11,7 +11,7 @@ export const useDeleteComment = ({
   ...commentSource
 }: UseDeleteCommentProps) => {
   const apiUtils = api.useUtils();
-  const { mutateAsync: deleteComment, isLoading: isDeletingComment } =
+  const { mutateAsync: deleteComment, isPending: isDeletingComment } =
     api.comment.delete.useMutation({
       onSuccess: ({ numberOfDeletedComments }) => {
         apiUtils.comment.getTotalCommentsBySourceId.setData(

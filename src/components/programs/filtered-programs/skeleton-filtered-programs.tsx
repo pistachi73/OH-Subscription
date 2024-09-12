@@ -2,6 +2,7 @@ import { FilterIcon } from "@/components/ui/icons";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
 
 import { ProgramList } from "../program-list";
+import { SearchFilter } from "./filter/search-filter";
 
 export const SkeletonFilteredPrograms = () => {
   return (
@@ -17,6 +18,7 @@ export const SkeletonFilteredPrograms = () => {
               Apply Filters
             </span>
           </div>
+          <SearchFilter className="hidden md:flex" />
         </div>
       </MaxWidthWrapper>
 

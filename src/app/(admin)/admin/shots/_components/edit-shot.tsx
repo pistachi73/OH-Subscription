@@ -10,7 +10,7 @@ import { isShotDeleteModalOpenSignal, shotIdSignal } from "./shot-signals";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
 import type { Option } from "@/components/ui/admin/admin-multiple-select";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { type AdminShot, ShotUpdateSchema } from "@/types";
 
 type EditShotProps = {
@@ -71,10 +71,10 @@ export const EditShot = ({ shot, categoryOptions }: EditShotProps) => {
       title="Edit shot"
       backHref="/admin/shots"
       onSave={onSave}
-      isSaving={saveShot.isLoading}
+      isSaving={saveShot.isPending}
       onDelete={onDelete}
       onGenerateEmbedding={onGenerateEmbedding}
-      isGenerateEmbedding={generateShotEmbedding.isLoading}
+      isGenerateEmbedding={generateShotEmbedding.isPending}
       id={shot.id}
     >
       <ShotForm

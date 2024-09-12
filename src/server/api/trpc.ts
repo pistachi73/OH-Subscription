@@ -15,10 +15,6 @@ import { auth } from "@/auth";
 import { isAdminAuthenticated } from "@/lib/is-admin-authenticated";
 import { db } from "@/server/db";
 import type { Session } from "next-auth";
-import type {
-  DefaultErrorShape,
-  ErrorFormatter,
-} from "node_modules/@trpc/server/dist/error/formatter";
 
 /**
  * 1. CONTEXT
@@ -55,27 +51,25 @@ type ErrorData = {
   zodError: ReturnType<ZodError["flatten"]> | null;
 };
 
-export interface CustomErrorShape extends DefaultErrorShape {
-  data: DefaultErrorShape["data"] & ErrorData;
-}
-
-const errorFormatter: ErrorFormatter<any, CustomErrorShape> = ({
-  shape,
-  error,
-}: { shape: DefaultErrorShape; error: any }) => {
-  return {
-    ...shape,
-    data: {
-      ...shape.data,
-      cause: error.cause instanceof Error ? error.cause.message : null,
-      zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
-    },
-  };
+export type CustomErrorShape = {
+  code: number;
+  message: string;
+  data: ErrorData;
 };
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
-  errorFormatter,
+  errorFormatter: ({ shape, error }) => {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        cause: error.cause instanceof Error ? error.cause.message : null,
+        zodError:
+          error.cause instanceof ZodError ? error.cause.flatten() : null,
+      },
+    };
+  },
 });
 
 /**
@@ -100,7 +94,7 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
-
+export const createCallerFactory = t.createCallerFactory;
 /**
  * Protected (authenticated) procedure
  *

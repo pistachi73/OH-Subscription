@@ -1,5 +1,5 @@
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { useState } from "react";
 import { COMMENTS_PAGE_SIZE } from "../comment";
 import type { ExclusiveCommentSource } from "../comment.types";

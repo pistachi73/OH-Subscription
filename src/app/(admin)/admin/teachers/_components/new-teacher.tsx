@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { TeacherForm } from "./teacher-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { TeacherInsertSchema } from "@/types";
 
 export const NewTeacher = () => {
@@ -22,7 +22,7 @@ export const NewTeacher = () => {
     },
   });
 
-  const { mutateAsync, isLoading: isSaving } = api.teacher._create.useMutation({
+  const { mutateAsync, isPending: isSaving } = api.teacher._create.useMutation({
     onSuccess: () => {
       router.push("/admin/teachers");
       toast.success("Teacher created successfully");

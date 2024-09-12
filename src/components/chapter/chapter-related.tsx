@@ -1,4 +1,4 @@
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import type { ProgramSpotlight } from "@/types";
 import { ProgramList } from "../programs/program-list";
 

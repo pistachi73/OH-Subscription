@@ -13,7 +13,7 @@ import { useChapterContext } from "../chapter-context";
 type MobileChapterContentDrawerProps = {
   children: React.ReactNode;
   open: boolean;
-  header: string;
+  header: string | JSX.Element;
   className?: string;
 };
 

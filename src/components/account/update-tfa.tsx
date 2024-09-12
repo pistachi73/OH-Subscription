@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { AccountSettingsSchema } from "@/types";
 
 export const UpdateTFA = () => {
@@ -92,7 +92,7 @@ export const UpdateTFA = () => {
                       field.onChange(value);
                       await onSubmit(value);
                     }}
-                    disabled={update.isLoading}
+                    disabled={update.isPending}
                   />
                 </FormControl>
               </FormItem>

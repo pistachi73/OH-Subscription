@@ -11,44 +11,41 @@ import { useComments } from "@/components/ui/comments/hooks/use-comments";
 import { useCommentsCount } from "@/components/ui/comments/hooks/use-comments-count";
 import { MustBeSubscribed } from "@/components/ui/comments/must-be-subscribed";
 import { SkeletonComment } from "@/components/ui/comments/skeleton-comment";
+import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useIsSubscribed } from "@/hooks/use-is-subscribed";
-import type { ProgramSpotlight } from "@/types";
 import { RelatedPrograms } from "./program-related";
+import { useProgramSpotlightContext } from "./program-spotlight-context";
 
-type ProgramCommunityProps = {
-  program: NonNullable<ProgramSpotlight>;
-};
-
-export const ProgramCommunity = ({ program }: ProgramCommunityProps) => {
+export const ProgramCommunity = () => {
   const isSubscribed = useIsSubscribed();
+  const { data: program } = useProgramSpotlightContext();
   const { commentsCount, isLoading } = useCommentsCount({
     programId: program.id,
   });
 
   return (
-    <div className="my-8 w-full sm:mt-12">
-      <div className="mb-4 flex flex-row items-center justify-between">
-        <h2 className="text-lg font-medium sm:text-xl">
-          Discussion {!isLoading && `(${commentsCount})`}
-        </h2>
-      </div>
-      <div className="flex flex-col gap-5 w-full max-w-[750px] items-end">
-        {isSubscribed ? (
-          <ProgramCommunityComments program={program} />
-        ) : (
-          <MustBeSubscribed />
-        )}
-      </div>
-      <RelatedPrograms program={program} />
-    </div>
+    <>
+      <MaxWidthWrapper as="section" className="my-8 w-full sm:mt-12">
+        <div className="mb-4 flex flex-row items-center justify-between">
+          <h2 className="text-lg font-medium sm:text-xl flex items-center gap-2">
+            Discussion{" "}
+            {isLoading ? <Skeleton className="size-6" /> : `(${commentsCount})`}
+          </h2>
+        </div>
+        <div className="flex flex-col gap-5 w-full max-w-[750px] items-end">
+          {isSubscribed ? <ProgramCommunityComments /> : <MustBeSubscribed />}
+        </div>
+      </MaxWidthWrapper>
+      <RelatedPrograms />
+    </>
   );
 };
 
-export const ProgramCommunityComments = ({
-  program,
-}: ProgramCommunityProps) => {
+export const ProgramCommunityComments = () => {
+  const { data: program } = useProgramSpotlightContext();
   const user = useCurrentUser();
 
   const {

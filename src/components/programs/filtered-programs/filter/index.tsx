@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useProgramsUrlQueryFilters } from "../../hooks/use-programs-url-query-filters";
 import { DesktopProgramFilters } from "./dekstop-filter";
 import { MobileProgramFilter } from "./mobile-filter";
+import { SearchFilter } from "./search-filter";
 
 export const ProgramFilter = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +41,7 @@ export const ProgramFilter = () => {
               </>
             ) : null}
           </div>
+          <SearchFilter className="hidden md:flex" />
         </div>
       </MaxWidthWrapper>
 

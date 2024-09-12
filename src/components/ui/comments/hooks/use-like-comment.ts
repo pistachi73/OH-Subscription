@@ -1,4 +1,4 @@
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { COMMENTS_PAGE_SIZE } from "../comment";
 import type { ExclusiveCommentSource } from "../comment.types";
 export type UseLikeCommentProps = ExclusiveCommentSource & {
@@ -38,7 +38,7 @@ export const useLikeComment = ({ id, ...rest }: UseLikeCommentProps) => {
     );
   };
 
-  const { mutateAsync: likeComment, isLoading: isLikeLoading } =
+  const { mutateAsync: likeComment, isPending: isLikeLoading } =
     api.like.likeBySourceId.useMutation({
       onMutate: () => {
         handleLikeCommentUpdate();

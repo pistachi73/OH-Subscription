@@ -1,6 +1,6 @@
 import { login } from "@/actions/login";
 import { cn } from "@/lib/utils/cn";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { useSignals } from "@preact/signals-react/runtime";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -110,7 +110,7 @@ export const AuthEmailVerification = ({
                   {...field}
                   length={6}
                   autoFocus
-                  disabled={register.isLoading}
+                  disabled={register.isPending}
                 />
               </FormControl>
               <Button
@@ -133,9 +133,9 @@ export const AuthEmailVerification = ({
         <Button
           className="w-full mt-4"
           type="submit"
-          disabled={register.isLoading}
+          disabled={register.isPending}
         >
-          {register.isLoading && (
+          {register.isPending && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           )}
           Verify email

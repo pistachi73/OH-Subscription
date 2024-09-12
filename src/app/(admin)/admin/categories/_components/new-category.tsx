@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { CategoryForm } from "./category-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { CategoryInsertSchema } from "@/types";
 
 export const NewCategory = () => {
@@ -21,7 +21,7 @@ export const NewCategory = () => {
     },
   });
 
-  const { mutateAsync, isLoading: isSaving } = api.category._create.useMutation(
+  const { mutateAsync, isPending: isSaving } = api.category._create.useMutation(
     {
       onSuccess: () => {
         router.push("/admin/categories");

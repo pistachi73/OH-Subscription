@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils/cn";
 import { AnimatePresence, m } from "framer-motion";
+import { SearchFilter } from "./search-filter";
 
 type MobileProgramFilterProps = {
   isOpen: boolean;
@@ -63,6 +64,9 @@ export const MobileProgramFilter = ({
             </Button>
           </SheetTitle>
         </SheetHeader>
+        <div className="px-4 w-full pb-4">
+          <SearchFilter className="w-full" />
+        </div>
 
         <FilterAccordion
           title="Teachers"
@@ -92,7 +96,7 @@ export const MobileProgramFilter = ({
             onClick={() => clearFilters()}
             size="sm"
             className={cn(
-              "fixed bottom-0 right-0 border-l border-border flex h-10 w-[320px] items-center justify-start gap-2 rounded-none bg-background px-6 text-destructive ",
+              "fixed bottom-0 right-0 border-l border-border flex h-14 w-[320px] items-center justify-start gap-2 rounded-none bg-background px-6 text-destructive ",
               "hover:border-destructive hover:bg-destructive hover:text-destructive-foreground",
             )}
           >

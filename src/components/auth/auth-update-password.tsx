@@ -1,4 +1,4 @@
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { TRPCClientError } from "@trpc/client";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -78,7 +78,7 @@ export const AuthUpdatePassword = ({ authForm }: AuthUpdatePasswordProps) => {
                 <PasswordInput
                   {...field}
                   placeholder="******"
-                  disabled={updatePassword.isLoading}
+                  disabled={updatePassword.isPending}
                   autoComplete="new-password"
                   withValidation={
                     authForm.formState.dirtyFields.registerPassword ||
@@ -101,7 +101,7 @@ export const AuthUpdatePassword = ({ authForm }: AuthUpdatePasswordProps) => {
                 <PasswordInput
                   {...field}
                   placeholder="******"
-                  disabled={updatePassword.isLoading}
+                  disabled={updatePassword.isPending}
                   autoComplete="confirm-password"
                 />
               </FormControl>
@@ -111,11 +111,11 @@ export const AuthUpdatePassword = ({ authForm }: AuthUpdatePasswordProps) => {
         />
         <div className="space-y-3">
           <Button
-            disabled={updatePassword.isLoading}
+            disabled={updatePassword.isPending}
             type="submit"
             className="w-full"
           >
-            {updatePassword.isLoading && (
+            {updatePassword.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
             Update

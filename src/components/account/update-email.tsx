@@ -25,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils/cn";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { AccountSettingsSchema } from "@/types";
 
 export const UpdateEmail = () => {
@@ -138,7 +138,7 @@ export const UpdateEmail = () => {
                         {...field}
                         length={6}
                         autoFocus
-                        disabled={updateEmail.isLoading}
+                        disabled={updateEmail.isPending}
                       />
                     </FormControl>
                     <Button
@@ -151,7 +151,7 @@ export const UpdateEmail = () => {
                         },
                       )}
                       type="button"
-                      disabled={updateEmail.isLoading}
+                      disabled={updateEmail.isPending}
                       onClick={() => {
                         counter === 0 && sendVerificationCode();
                       }}
@@ -175,7 +175,7 @@ export const UpdateEmail = () => {
                         {...field}
                         autoComplete="email"
                         className="text-sm"
-                        disabled={updateEmail.isLoading}
+                        disabled={updateEmail.isPending}
                       />
                     </FormControl>
                     <FormMessage />
@@ -189,18 +189,18 @@ export const UpdateEmail = () => {
                   size="sm"
                   variant="ghost"
                   type="button"
-                  disabled={updateEmail.isLoading}
+                  disabled={updateEmail.isPending}
                   onClick={() => setIsVerifyingEmail(false)}
                 >
                   Back
                 </Button>
               )}
               <Button
-                disabled={!form.formState.isDirty || updateEmail.isLoading}
+                disabled={!form.formState.isDirty || updateEmail.isPending}
                 type="submit"
                 size="sm"
               >
-                {updateEmail.isLoading && (
+                {updateEmail.isPending && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 {isVerifyingEmail ? "Verify email" : "Save"}

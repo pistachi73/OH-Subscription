@@ -1,4 +1,4 @@
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { Loader2 } from "lucide-react";
 import { useTransition } from "react";
 import { Button } from "../ui/button";

@@ -46,7 +46,7 @@ export const useCarouselBorders = ({ index }: { index: number }) => {
   }
 
   const isLeftBorder = index === leftBorder;
-  const isRightBorder = index === rightBorder;
+  const isRightBorder = index === rightBorder && index + 1 >= slidesPerView;
 
   return { isLeftBorder, isRightBorder };
 };

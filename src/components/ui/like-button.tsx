@@ -60,6 +60,7 @@ export const LikeButton = forwardRef<HTMLButtonElement, LikeButtonProps>(
             ref={ref}
             className={cn("disabled:opacity-100", className)}
             {...rest}
+            //TODO: do we need to disable the button?
             disabled={isLikeLoading}
             onClick={() => like()}
             asChild={asChild}

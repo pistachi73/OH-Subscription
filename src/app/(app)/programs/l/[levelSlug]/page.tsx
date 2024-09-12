@@ -2,24 +2,23 @@ import { FilteredPrograms } from "@/components/programs/filtered-programs";
 import { SkeletonFilteredPrograms } from "@/components/programs/filtered-programs/skeleton-filtered-programs";
 import { ChevronRightIcon } from "@/components/ui/icons";
 import { MaxWidthWrapper } from "@/components/ui/max-width-wrapper";
-import { api } from "@/trpc/server";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+import { formatLevelBySlug } from "@/lib/formatters/formatLevel";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
-}: { params: { categorySlug: string } }) {
-  const category = await api.category.getBySlug.query({
-    slug: params.categorySlug,
-  });
+}: { params: { levelSlug: string } }) {
+  const level = formatLevelBySlug(params.levelSlug);
 
-  if (!category) {
+  if (!level) {
     return null;
   }
 
   return {
-    title: `${category.name} Programs | Filter & Search Programs`,
+    title: `${level.longFormat} Programs | Filter & Search Programs`,
     description:
       "Explore and filter a wide variety of educational programs by categories, teachers, and levels. Find the perfect program for your learning goals.",
     keywords:
@@ -29,15 +28,13 @@ export async function generateMetadata({
 
 type ProgramsPageProps = {
   searchParams: { [key: string]: string | undefined };
-  params: { categorySlug: string };
+  params: { levelSlug: string };
 };
 
 const ProgramsPage = async ({ searchParams, params }: ProgramsPageProps) => {
-  const category = await api.category.getBySlug.query({
-    slug: params.categorySlug,
-  });
+  const level = formatLevelBySlug(params.levelSlug);
 
-  if (!category) {
+  if (!level) {
     redirect("/programs");
   }
 
@@ -56,14 +53,14 @@ const ProgramsPage = async ({ searchParams, params }: ProgramsPageProps) => {
           </Link>
           <ChevronRightIcon className="w-4 h-4 text-muted-foreground" />
           <span className="text-foreground  text-xl sm:text-3xl font-semibold tracking-tight">
-            {category.name} Programs
+            {level.longFormat} Programs
           </span>
         </h1>
       </MaxWidthWrapper>
       <Suspense fallback={<SkeletonFilteredPrograms />}>
         <FilteredPrograms
           searchParams={searchParams}
-          initialCategory={category.slug}
+          initialLevel={level.slug}
         />
       </Suspense>
     </div>

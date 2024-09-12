@@ -63,8 +63,8 @@ export const AuthContent = ({ className }: { className?: string }) => {
         className,
       )}
     >
-      <div className="relative hidden min-h-full w-full basis-1/2 bg-red-100 bg-[url(/images/auth-left.jpeg)] bg-cover bg-left lg:block">
-        <div className="h-full bg-primary-800/70 dark:bg-primary-800/80 p-10">
+      <div className="relative hidden min-h-full w-full basis-1/2 bg-[url(/images/auth-left.png)] bg-opacity-35 bg-cover bg-right lg:block">
+        <div className="h-full bg-background/80 p-10">
           <>
             <h3 className="text-balance py-6 text-xl sm:text-2xl font-semibold leading-tight tracking-tight text-background dark:text-foreground">
               The only suscription you need.

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { ShotForm } from "./shot-form";
 
 import { AdminFormLayout } from "@/components/admin/admin-form-layout";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import { ShotUpdateSchema } from "@/types";
 
 export const NewShot = () => {
@@ -24,7 +24,7 @@ export const NewShot = () => {
     },
   });
 
-  const { mutateAsync, isLoading: isSaving } = api.shot._create.useMutation({
+  const { mutateAsync, isPending: isSaving } = api.shot._create.useMutation({
     onSuccess: () => {
       router.push("/admin/shots");
       toast.success("Shot created successfully");

@@ -1,5 +1,5 @@
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 
 import type { ExclusiveCommentSource } from "../comment.types";
 

@@ -2,7 +2,7 @@
 
 import type { z } from "zod";
 
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/client";
 import type { UserProgressInsertSchema } from "@/types";
 import {
   useMediaSelector,

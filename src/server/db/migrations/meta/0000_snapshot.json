@@ -1,5 +1,5 @@
 {
-  "id": "b09b4ece-3ed1-48e3-9b47-73beb91ff9d8",
+  "id": "f6f68a8c-e18d-43b4-9eb7-b09cd9f41d48",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -1412,8 +1412,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "url": {
-          "name": "url",
+        "playback_id": {
+          "name": "playback_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -1495,6 +1495,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "video_slug": {
+          "name": "video_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program_slug": {
+          "name": "program_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "chapter_number": {
           "name": "chapter_number",
           "type": "integer",
@@ -1509,7 +1521,38 @@
           "default": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "ohs_video_program_video_slug_index": {
+          "name": "ohs_video_program_video_slug_index",
+          "columns": [
+            {
+              "expression": "video_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ohs_video_program_program_slug_index": {
+          "name": "ohs_video_program_program_slug_index",
+          "columns": [
+            {
+              "expression": "program_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "ohs_video_program_program_id_ohs_program_id_fk": {
           "name": "ohs_video_program_program_id_ohs_program_id_fk",

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import type { VerticalCarouselApi } from "@/components/ui/vertical-carousel";
 import type { ShotCarousel as ShotCarouselType } from "@/types";
-import { api as trpcApi } from "../../../trpc/react";
+import { api as trpcApi } from "../../../trpc/client";
 import { Shot } from "../shot";
 import { LoadingShot } from "../shot/loading-shot";
 import { CarouselContainer } from "./carousel-container";

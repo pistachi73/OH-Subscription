@@ -1,5 +1,18 @@
 export default [
   {
+    id: "oscar",
+    name: "Oscar Pulido",
+    email: "oscarpulido98@gmail.com",
+    password: "password",
+    role: "USER",
+    isTwoFactorEnabled: false,
+    stripeCustomerId: "cus_1abc",
+    stripeSubscriptionId: "sub_1abc",
+    stripeSubscriptionEndsOn: new Date(
+      new Date().setFullYear(new Date().getFullYear() + 1),
+    ),
+  },
+  {
     id: "user1",
     name: "Alice Johnson",
     email: "test1@example.com",

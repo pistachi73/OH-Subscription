@@ -27,3 +27,13 @@ export const levelMap: Record<
     longFormat: "Advanced (C1 - C2)",
   },
 };
+
+export const formatLevelBySlug = (levelSlug: string) => {
+  const isCorrectLevel = (level: string): level is ProgramLevel => {
+    return Object.keys(levelMap).includes(level);
+  };
+
+  if (isCorrectLevel(levelSlug))
+    return { ...levelMap[levelSlug], slug: levelSlug };
+  return null;
+};
