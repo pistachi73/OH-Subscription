@@ -177,6 +177,8 @@ export const programRouter = createTRPCRouter({
         );
       }
 
+      console.log({ firstChapters: res.map((p) => p.firstChapter) });
+
       return res;
     }),
 

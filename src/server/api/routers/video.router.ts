@@ -28,6 +28,7 @@ export const videoRouter = createTRPCRouter({
       const { db } = ctx;
       const { user } = ctx.session ?? {};
 
+      console.log({ videoSlug, programSlug });
       const [video] = await db
         .select({
           ...getTableColumns(schema.video),
@@ -39,10 +40,10 @@ export const videoRouter = createTRPCRouter({
           }),
         })
         .from(schema.video)
-        .leftJoin(
+        .rightJoin(
           schema.videoProgram,
           and(
-            eq(schema.video.id, schema.videoProgram.videoId),
+            eq(schema.videoProgram.videoSlug, videoSlug),
             programSlug
               ? eq(schema.videoProgram.programSlug, programSlug)
               : undefined,

@@ -155,7 +155,13 @@ export const firstChapterSubquery = ({ db }: { db: DB }) => {
      `,
     })
     .from(videoProgram)
-    .leftJoin(video, eq(video.id, videoProgram.videoId))
+    .rightJoin(
+      video,
+      and(
+        eq(video.id, videoProgram.videoId),
+        eq(program.id, videoProgram.programId),
+      ),
+    )
     .where(eq(video.id, videoProgram.videoId))
     .orderBy(asc(videoProgram.chapterNumber))
     .limit(1)}`.as("firstChapter");

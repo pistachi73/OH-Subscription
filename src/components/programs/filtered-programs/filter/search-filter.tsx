@@ -20,10 +20,9 @@ export const SearchFilter = ({ className }: { className?: string }) => {
   };
 
   useEffect(() => {
-    console.log({ inputValue });
     const handler = setTimeout(() => {
       setDebouncedValue(inputValue);
-    }, 300); // 500ms debounce timeout
+    }, 300);
 
     return () => {
       clearTimeout(handler);
@@ -38,8 +37,7 @@ export const SearchFilter = ({ className }: { className?: string }) => {
     if (debouncedValue) {
       params.set("search", debouncedValue);
     }
-    const newPathname = `${pathname}?${params.toString()}`;
-    router.push(newPathname);
+    router.push(`${pathname}?${params.toString()}`);
   }, [debouncedValue, router, pathname, searchParams]);
 
   return (
